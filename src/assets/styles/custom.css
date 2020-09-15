@@ -1,0 +1,5 @@
+/* use this pattern for custom css/scss file */
+
+.custom-css-style {
+  background-color: red !important;
+}

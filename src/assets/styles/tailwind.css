@@ -1,0 +1,8 @@
+@tailwind base;
+
+@import '~antd/dist/antd.css';
+@import './custom.css';
+
+@tailwind components;
+
+@tailwind utilities;
