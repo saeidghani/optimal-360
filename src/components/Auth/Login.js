@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Button from '../Common/Button';
+import Checkbox from '../Common/Checkbox';
 
 const Login = (props) => (
   <div className="grid grid-rows-3 grid-flow-col gap-4 p-5">
@@ -15,6 +16,9 @@ const Login = (props) => (
     <Button onClick={() => console.log('button')} type="primary">
       Button
     </Button>
+
+    <Checkbox onChange={(e) => console.log('checked')}></Checkbox>
+    <Checkbox onChange={(e) => console.log('checked')}></Checkbox>
   </div>
 );
 
