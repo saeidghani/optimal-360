@@ -1,12 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Checkbox } from 'antd';
 
-const Checkbox = (props) => {
-  return <div>Hi</div>;
+const _Checkbox = ({ size, onChange }) => {
+  // return <div className="text-red-500 mt-2">negar</div>;
+  return <Checkbox size={size} onChange={onChange}></Checkbox>;
 };
 
-Checkbox.propTypes = {};
+_Checkbox.propTypes = {
+  size: PropTypes.number,
+  onChange: PropTypes.func.isRequired,
+};
 
-Checkbox.defaultProps = {};
+_Checkbox.defaultProps = {
+  size: 16,
+};
 
-export default Checkbox;
+export default _Checkbox;
