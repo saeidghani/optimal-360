@@ -11,7 +11,7 @@ import * as serviceWorker from './lib/service-worker';
 import Routes from './routes/index';
 
 // Load css
-import './assets/styles/main.css';
+import './assets/styles/main.less';
 
 const { persistor, store, dispatch } = configureStore();
 // persistor.purge(); // Debug to clear persist

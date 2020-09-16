@@ -2,12 +2,24 @@
   "name": "optimal360",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "npm run watch:css && craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject",
+    "predeploy": "craco build",
+    "deploy": "gh-pages -d build",
+    "build:css": "postcss src/assets/styles/tailwind.css -o src/assets/styles/main.less",
+    "watch:css": "postcss src/assets/styles/tailwind.css -o src/assets/styles/main.less"
+  },
   "dependencies": {
+    "@craco/craco": "^5.6.4",
     "@rematch/core": "^1.4.0",
     "@rematch/loading": "^1.2.1",
     "@rematch/persist": "^1.1.6",
     "antd": "^4.6.4",
     "axios": "^0.19.2",
+    "craco-less": "^1.17.0",
     "js-cookie": "^2.2.1",
     "node-sass": "^4.14.1",
     "prop-types": "^15.7.2",
@@ -19,16 +31,6 @@
     "react-scripts": "3.4.0",
     "redux-persist": "^6.0.0",
     "tailwindcss": "^1.4.6"
-  },
-  "scripts": {
-    "start": "npm run watch:css && react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "predeploy": "react-scripts build",
-    "deploy": "gh-pages -d build",
-    "build:css": "postcss src/assets/styles/tailwind.css -o src/assets/styles/main.css",
-    "watch:css": "postcss src/assets/styles/tailwind.css -o src/assets/styles/main.css"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -56,6 +58,8 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.19.0",
     "gh-pages": "^2.2.0",
+    "less": "^3.12.2",
+    "less-loader": "^7.0.1",
     "postcss-cli": "^7.1.1",
     "react-test-renderer": "^16.13.0",
     "snapshot-diff": "^0.7.0"
