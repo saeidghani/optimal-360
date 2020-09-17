@@ -2,7 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'antd';
 
-const _Button = ({ type, size, onClick, children, ghost, loading, light, gray, icon, reverse }) => {
+const _Button = ({
+  type,
+  size,
+  onClick,
+  children,
+  ghost,
+  loading,
+  light,
+  gray,
+  icon,
+  reverse,
+  rounded,
+}) => {
   let styler = {};
   if (gray) {
     styler = {
@@ -20,7 +32,7 @@ const _Button = ({ type, size, onClick, children, ghost, loading, light, gray, i
     <Button
       className={`flex justify-center items-center ${
         reverse ? `flex-row-reverse custom-reverse-icon` : ``
-      }`}
+      } ${rounded ? `c-rounded-button` : ``}`}
       onClick={onClick}
       size={size}
       type={type}

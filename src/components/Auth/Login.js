@@ -1,7 +1,14 @@
 import React from 'react';
 import Button from '../Common/Button';
 import Checkbox from '../Common/Checkbox';
-import { DownloadOutlined } from '@ant-design/icons';
+import {
+  DownloadOutlined,
+  DeleteOutlined,
+  IssuesCloseOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
+
+import Input from '../Common/Input';
 
 const Login = (props) => (
   <div className="grid grid-rows-3 grid-flow-col gap-4 p-5 ">
@@ -38,9 +45,24 @@ const Login = (props) => (
     >
       Button
     </Button>
-
-    <Checkbox onChange={(e) => console.log('checked')}></Checkbox>
-    <Checkbox onChange={(e) => console.log('checked')}></Checkbox>
+    <Input
+      placeholder={'placeholder'}
+      suffix={<DeleteOutlined />}
+      prefix={<IssuesCloseOutlined />}
+    />
+    <Input
+      placeholder={'placeholder'}
+      suffix={<DeleteOutlined />}
+      prefix={<IssuesCloseOutlined />}
+      gray
+    />
+    <Input placeholder={'placeholder'} />
+    <Input
+      placeholder={'placeholder'}
+      suffix={
+        <Button onClick={() => console.log('button')} icon={<SearchOutlined />} rounded></Button>
+      }
+    />
   </div>
 );
 
