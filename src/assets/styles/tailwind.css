@@ -1,8 +1,5 @@
 @tailwind base;
 
-@import '~antd/dist/antd.less';
-@import './custom.less';
-
 @tailwind components;
 
 @tailwind utilities;

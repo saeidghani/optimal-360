@@ -3,14 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "npm run watch:css && craco start",
+    "start": "craco start",
+    "watch:start": "npm run watch:css && craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject",
     "predeploy": "craco build",
     "deploy": "gh-pages -d build",
-    "build:css": "postcss src/assets/styles/tailwind.css -o src/assets/styles/main.less",
-    "watch:css": "postcss src/assets/styles/tailwind.css -o src/assets/styles/main.less"
+    "build:css": "postcss src/assets/styles/tailwind.css -o src/assets/styles/compiled-tailwind.css",
+    "watch:css": "postcss src/assets/styles/tailwind.css -o src/assets/styles/compiled-tailwind.css"
   },
   "dependencies": {
     "@craco/craco": "^5.6.4",

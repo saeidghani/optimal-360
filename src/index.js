@@ -11,7 +11,8 @@ import * as serviceWorker from './lib/service-worker';
 import Routes from './routes/index';
 
 // Load css
-import './assets/styles/main.less';
+import './assets/styles/compiled-tailwind.css';
+import './assets/styles/bundle.less';
 
 const { persistor, store, dispatch } = configureStore();
 // persistor.purge(); // Debug to clear persist
