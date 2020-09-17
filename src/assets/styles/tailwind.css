@@ -1,7 +1,7 @@
 @tailwind base;
 
 @import '~antd/dist/antd.less';
-@import './custom.css';
+@import './custom.less';
 
 @tailwind components;
 
