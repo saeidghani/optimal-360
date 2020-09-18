@@ -6,12 +6,13 @@ import Button from './Common/Button';
 import Sidebar from './Common/Sidebar';
 // FIX : put related import statements together
 import Input from './Common/Input';
+import BreadCrumb from './Common/BreadCrumb';
 
 const Login = () => (
   <div className="flex">
     <Sidebar />
     <div className="grid grid-rows-3 grid-flow-col gap-4 p-5">
-      <Button onClick={() => console.log('button')}> Button </Button>
+      {/* <Button onClick={() => console.log('button')}> Button </Button>
       <Button onClick={() => console.log('button')} type="gray">
         Button
       </Button>
@@ -61,6 +62,8 @@ const Login = () => (
         extrainfoLink="#"
         extrainfoText="generate password"
       />
+*/}
+      <BreadCrumb />
     </div>
   </div>
 );

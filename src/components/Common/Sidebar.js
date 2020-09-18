@@ -8,7 +8,9 @@ import logo from '../../assets/images/360-icon.svg';
 const Sidebar = () => (
   <div className="c-sidebar h-screen flex flex-col justify-between items-center">
     <div>
-      <img className="w-full p-2" alt="" src={logo} />
+      <Link to="/">
+        <img className="w-full p-2 hover:opacity-75" alt="" src={logo} />
+      </Link>
     </div>
     <div>
       <ul>
