@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input } from 'antd';
+
 const _Input = ({
   inputName,
   labelText,
@@ -12,7 +13,7 @@ const _Input = ({
   extrainfoText,
 }) => {
   return (
-    <Form.Item name={inputName} rules={rules} className={'flex flex-col'}>
+    <Form.Item name={inputName} rules={rules} className="flex flex-col">
       <div className="flex justify-between items-center mb-1">
         <label className="ant-typography" for={inputName}>
           {labelText}
@@ -28,7 +29,7 @@ const _Input = ({
         placeholder={placeholder}
         suffix={suffix}
         prefix={prefix}
-        className={'c-sufix-prefix-gray'}
+        className="c-sufix-prefix-gray"
       />
     </Form.Item>
   );
