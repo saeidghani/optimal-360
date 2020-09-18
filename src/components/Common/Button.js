@@ -16,7 +16,7 @@ const _Button = ({
   shape,
 }) => {
   const RICON = ICONS[icon];
-  if (typeof RICON === 'undefined' && !RICON) {
+  if (icon && typeof RICON === 'undefined' && !RICON) {
     console.warn(`icon name (${icon}) is not valid as an antd icon`);
   }
 
