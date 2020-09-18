@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input } from 'antd';
+
 const _Input = ({
   inputName,
   labelText,
@@ -30,8 +31,7 @@ const _Input = ({
         placeholder={placeholder}
         suffix={suffix}
         prefix={prefix}
-        // use the right syntax for here
-        className={'c-sufix-prefix-gray'}
+        className="c-sufix-prefix-gray"
       />
     </Form.Item>
   );
