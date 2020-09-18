@@ -14,49 +14,58 @@ import Input from './Common/Input';
 const Login = (props) => (
   <div className="grid grid-rows-3 grid-flow-col gap-4 p-5">
     <Button onClick={() => console.log('button')}>Button</Button>
-    <Button onClick={() => console.log('button')} type="gray" ghost icon="DownloadOutlined">
+    <Button onClick={() => console.log('button')} type="gray">
       Button
     </Button>
-    {/* <Button onClick={() => console.log('button')} gray icon={<DownloadOutlined />}>
+    <Button onClick={() => console.log('button')} ghost>
       Button
     </Button>
-    <Button onClick={() => console.log('button')} gray icon={<DownloadOutlined />} reverse>
-      XXX
-    </Button>
-    <Button onClick={() => console.log('button')} light icon={<DownloadOutlined />}>
+    <Button onClick={() => console.log('button')} light>
       Button
     </Button>
-    <Button onClick={() => console.log('button')} type="link" icon={<DownloadOutlined />}>
+    <Button onClick={() => console.log('button')} type="link">
       Button
     </Button>
-    <Button
-      onClick={() => console.log('button')}
-      type="primary"
-      icon={<DownloadOutlined />}
-      reverse
-      ghost
-      light
-    >
+    <Button onClick={() => console.log('button')} icon="CloseCircleOutlined">
       Button
     </Button>
+    <Button onClick={() => console.log('button')} icon="FileExcelOutlined" iconPosition="right">
+      Button
+    </Button>
+
     <Input
+      labelText="userName"
+      inputName="username"
       placeholder={'placeholder'}
       suffix={<DeleteOutlined />}
       prefix={<IssuesCloseOutlined />}
+      extrainfoLink={'#'}
+      extrainfoText={'generate password'}
     />
+
     <Input
+      placeholder={''}
+      labelText="userName"
+      inputName="name"
+      suffix={
+        <Button
+          onClick={() => console.log('button')}
+          icon="SearchOutlined"
+          shape="circle"
+          type="gray"
+        ></Button>
+      }
+    />
+
+    <Input
+      labelText="userName"
+      inputName="username"
       placeholder={'placeholder'}
       suffix={<DeleteOutlined />}
       prefix={<IssuesCloseOutlined />}
-      gray
-    /> */}
-    {/* <Input placeholder={'placeholder'} />
-    <Input
-      placeholder={'placeholder'}
-      suffix={
-        <Button onClick={() => console.log('button')} icon={<SearchOutlined />} rounded></Button>
-      }
-    /> */}
+      extrainfoLink={'#'}
+      extrainfoText={'generate password'}
+    />
   </div>
 );
 

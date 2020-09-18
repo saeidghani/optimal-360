@@ -1,19 +1,56 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input } from 'antd';
-const _Input = ({ placeholder, suffix, prefix, gray }) => {
+import { Form, Input } from 'antd';
+const _Input = ({
+  inputName,
+  labelText,
+  placeholder,
+  rules,
+  suffix,
+  prefix,
+  extrainfoLink,
+  extrainfoText,
+}) => {
   return (
-    <Input
-      placeholder={placeholder}
-      suffix={suffix}
-      prefix={prefix}
-      className={gray ? `c-sufix-prefix-gray` : ``}
-    />
+    <Form.Item name={inputName} rules={rules} className={'flex flex-col'}>
+      <div className="flex justify-between items-center mb-1">
+        <label className="ant-typography" for={inputName}>
+          {labelText}
+        </label>
+        <div>
+          <a className="c-input-extrainfo underline" href={extrainfoLink}>
+            {extrainfoText}
+          </a>
+        </div>
+      </div>
+      <Input
+        id={inputName}
+        placeholder={placeholder}
+        suffix={suffix}
+        prefix={prefix}
+        className={'c-sufix-prefix-gray'}
+      />
+    </Form.Item>
   );
 };
 
-Input.propTypes = {};
+_Input.propTypes = {
+  inputName: PropTypes.string.isRequired,
+  labelText: PropTypes.string,
+  placeholder: PropTypes.string,
+  rules: PropTypes.string,
+  extrainfoLink: PropTypes.string,
+  extrainfoText: PropTypes.string,
+};
 
-Input.defaultProps = {};
+_Input.defaultProps = {
+  labelText: '',
+  placeholder: '',
+  rules: '',
+  suffix: null,
+  prefix: null,
+  extrainfoLink: '',
+  extrainfoText: '',
+};
 
 export default _Input;

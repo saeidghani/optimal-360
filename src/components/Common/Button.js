@@ -11,18 +11,8 @@ const _Button = ({
   ghost,
   loading,
   light,
-  // use gray as a 'type' variant for button
-  gray, // remove this
-
-  icon, // should be string
-
-  iconPosition, // use the prop 'iconPosition' instead of 'reverse'
-  // TIP : do not use vague or ambiguous prop names
-  // like 'reverse'
-  reverse, // remove this
-  // antd buttons recive the prop 'shape'
-  // therefore there is no need for 'rouded' prop
-  rounded, // remove this
+  icon,
+  iconPosition,
   shape,
 }) => {
   const RICON = ICONS[icon];
@@ -30,15 +20,10 @@ const _Button = ({
     console.warn(`icon name (${icon}) is not valid as an antd icon`);
   }
 
-  // if (light)
-  //   styler = {
-  //     opacity: '65%',
-  //   };
-  // let styler= = {}; use meaningful names for variables
   let styles = {
     opacity: light ? '65%' : '100%',
   };
-  if (gray) {
+  if (type == 'gray') {
     styles = {
       ...styles,
       backgroundColor: 'whitesmoke',
@@ -49,21 +34,7 @@ const _Button = ({
 
   return (
     <Button
-      // avoid using 'Template literals (Template strings)'
-      // as much as possible as they are very messy and hard to maintain
       className="flex justify-center items-center"
-      // using iconPosition props will eliminate the need to
-      // use css reverse utilities like 'flex-row-reverse'
-
-      // antd buttons recive the prop 'shape'
-      // therefore there is no need for 'rouded' prop
-      // therefore removing the need
-      // to use 'Template literals (Template strings)' altogether
-
-      // className={`flex justify-center items-center ${
-      //   reverse ? `flex-row-reverse custom-reverse-icon` : ``
-      // } ${rounded ? `c-rounded-button` : ``}`}
-
       onClick={onClick}
       size={size}
       type={type}
@@ -71,7 +42,6 @@ const _Button = ({
       loading={loading}
       style={styles}
       shape={shape}
-      // icon={icon}
     >
       {iconPosition === 'left' && RICON ? <RICON className="inline-flex" /> : null}
       {children}
@@ -80,14 +50,17 @@ const _Button = ({
   );
 };
 
-// FIX : define every prop in propTypes and assign defult props
-
 _Button.propTypes = {
   type: PropTypes.string,
   size: PropTypes.number,
   onClick: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
   iconPosition: PropTypes.string,
+  shape: PropTypes.string,
+  icon: PropTypes.string,
+  ghost: PropTypes.bool,
+  loading: PropTypes.bool,
+  light: PropTypes.bool,
 };
 
 _Button.defaultProps = {
@@ -95,6 +68,10 @@ _Button.defaultProps = {
   size: 200,
   iconPosition: 'left',
   shape: '',
+  icon: null,
+  ghost: false,
+  loading: false,
+  light: false,
 };
 
 export default _Button;
