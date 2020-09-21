@@ -2,18 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox } from 'antd';
 
-const _Checkbox = ({ size, onChange }) => {
-  // return <div className="text-red-500 mt-2">negar</div>;
-  return <Checkbox size={size} onChange={onChange}></Checkbox>;
-};
+const _Checkbox = ({ onChange, className, children }) => (
+  <Checkbox onChange={onChange} className={` ${className}`}>
+    {children}
+  </Checkbox>
+);
 
 _Checkbox.propTypes = {
-  size: PropTypes.number,
   onChange: PropTypes.func.isRequired,
+  children: PropTypes.string,
+  className: PropTypes.string,
 };
 
 _Checkbox.defaultProps = {
-  size: 16,
+  children: '',
+  className: '',
 };
 
 export default _Checkbox;
