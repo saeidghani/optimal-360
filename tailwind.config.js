@@ -6,6 +6,14 @@ module.exports = {
     container: {
       center: true,
     },
+    extend: {
+      color: {
+        antgray: '#B8B8B8',
+      },
+      spacing: {
+        '10p': '10px',
+      },
+    },
   },
   variants: {},
   plugins: [

@@ -14,6 +14,7 @@ const _Button = ({
   icon,
   iconPosition,
   shape,
+  className,
 }) => {
   const RICON = ICONS[icon];
   if (icon && typeof RICON === 'undefined' && !RICON) {
@@ -23,7 +24,7 @@ const _Button = ({
   let styles = {
     opacity: light ? '65%' : '100%',
   };
-  if (type == 'gray') {
+  if (type === 'gray') {
     styles = {
       ...styles,
       backgroundColor: 'whitesmoke',
@@ -34,7 +35,7 @@ const _Button = ({
 
   return (
     <Button
-      className="flex justify-center items-center"
+      className={`flex justify-center items-center ${className}`}
       onClick={onClick}
       size={size}
       type={type}
@@ -61,6 +62,7 @@ _Button.propTypes = {
   ghost: PropTypes.bool,
   loading: PropTypes.bool,
   light: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 _Button.defaultProps = {
@@ -72,6 +74,7 @@ _Button.defaultProps = {
   ghost: false,
   loading: false,
   light: false,
+  className: '',
 };
 
 export default _Button;

@@ -46,7 +46,7 @@ const Login = (props) => (
               <p className="ml-2 text-gray-300">Remember Me</p>
             </div>
 
-            <Button>Log in</Button>
+            <Button className="ml-auto">Log in</Button>
           </Form>
         </Formik>
       </div>
