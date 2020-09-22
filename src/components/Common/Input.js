@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Input } from 'antd';
 
 const _Input = ({
-  inputName,
+  name,
   labelText,
   placeholder,
   suffix,
@@ -14,30 +14,24 @@ const _Input = ({
   wrapperClass,
   size,
 }) => (
-  <div name={inputName} className={`flex flex-col  ${wrapperClass}`}>
-    {/* put fisrt if in place for stopping unpredicted
-     positioning on only input filed (without label) */}
-    {labelText === '' && extrainfoText === '' ? null : (
-      <div className="flex justify-between items-center mb-10p ">
-        {labelText === '' ? null : (
-          <label className="" htmlFor={inputName}>
-            {labelText}
-          </label>
-        )}
-        {extrainfoText === '' ? null : (
-          <div>
-            <a className="c-input-extrainfo underline" href={extrainfoLink}>
-              {extrainfoText}
-            </a>
-          </div>
-        )}
-      </div>
-    )}
+  <div name={name} className={`flex flex-col  ${wrapperClass}`}>
+    <div className="flex justify-between items-center mb-10p ">
+      {labelText ? <label htmlFor={name}>{labelText}</label> : null}
+
+      {extrainfoText && extrainfoLink ? (
+        <div>
+          <a className="c-input-extrainfo underline" href={extrainfoLink}>
+            {extrainfoText}
+          </a>
+        </div>
+      ) : null}
+    </div>
 
     <Input
+      name={name}
       size={size}
       className={`c-sufix-prefix-gray ${inputClass}`}
-      id={inputName}
+      id={name}
       placeholder={placeholder}
       suffix={suffix}
       prefix={prefix}
@@ -46,7 +40,7 @@ const _Input = ({
 );
 
 _Input.propTypes = {
-  inputName: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
   labelText: PropTypes.string,
   placeholder: PropTypes.string,
   suffix: PropTypes.node,
