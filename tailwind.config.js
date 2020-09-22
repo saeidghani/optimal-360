@@ -8,9 +8,23 @@ module.exports = {
     },
     extend: {
       color: {
-        antgray: '#B8B8B8',
-        primary: '#1BB7D9',
-        primarylight: '#DDF4F9',
+        // color in color force to add color- before caller name for obviousness of using tailwind
+        color: {
+          heading: '#131627',
+          body: '#303854',
+          primary: {
+            200: '#F5F8FC',
+            400: '#DDF4F9',
+            500: '#1BB7D9',
+            900: '#1F2A44',
+          },
+          antgray: {
+            100: '#8D98BA',
+            200: '#B8B8B8',
+            300: '#D9D9D9',
+            400: '#F5F5F5',
+          },
+        },
       },
       spacing: {
         '6p': '6px',
