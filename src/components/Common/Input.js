@@ -21,7 +21,7 @@ const _Input = ({
 
       {extrainfoText && extrainfoLink ? (
         <div>
-          <a className="c-input-extrainfo underline" href={extrainfoLink}>
+          <a className="text-black opacity-45 underline" href={extrainfoLink}>
             {extrainfoText}
           </a>
         </div>
