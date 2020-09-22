@@ -7,6 +7,9 @@
 module.exports = {
   'primary-color': '#1BB7D9',
   'component-background': '#fff',
+  // 'primary-color': '#1BB7D9',
+  // 'link-color': '#1DA57A',
+  // 'border-radius-base': '2px',
   'font-size-base': '14',
 
   'link-color': '#1BB7D9',

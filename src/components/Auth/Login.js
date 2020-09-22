@@ -23,7 +23,7 @@ const Login = (props) => (
       <div className="col-start-8 col-span-3 flex flex-col justify-center items-center px-6">
         {/* <Form test="XXX" /> */}
 
-        <h1 className="font-medium text-2xl w-full block text-left mb-10">Login</h1>
+        <h1 className="font-medium text-3xl w-full block text-left mb-10">Login</h1>
         <Formik
           initialValues={{
             firstName: '',
@@ -36,15 +36,18 @@ const Login = (props) => (
           }}
         >
           <Form className="w-full">
-            <Input labelText="Email" placeholder="Email" />
+            <Input wrapperClassName="mb-12" labelText="Email" placeholder="Email" />
 
-            <Input labelText="Password" placeholder="Password" extrainfoText="Forgot Password ?" />
+            <Input
+              wrapperClassName="mb-6"
+              labelText="Password"
+              placeholder="Password"
+              extrainfoText="Forgot Password ?"
+            />
 
-            <div className="flex flex-row my-4">
-              <Checkbox className="text-gray-300">Remember Me</Checkbox>
-            </div>
+            <Checkbox className="text-gray-300 ">Remember Me</Checkbox>
 
-            <Button className="ml-auto">Log in</Button>
+            <Button className="ml-auto mt-16">Log in</Button>
           </Form>
         </Formik>
       </div>

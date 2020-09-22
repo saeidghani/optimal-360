@@ -1,2 +1,8 @@
 @import './compiled-tailwind.css';
 @import './extras/animations.css';
+
+html,
+:root {
+  font-family: 'Noto Sans' !important;
+  font-size: 14px !important;
+}

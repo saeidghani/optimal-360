@@ -1,11 +1,12 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+// import { Switch, Route } from 'react-router-dom';
+// use react-router-dom 'route' for 404 pages and such
+import { Switch } from 'react-router-dom';
 import CustomRoute from './Route';
 // import PrivateRoute from './PrivateRoute';
 
-// use react-router-dom 'route' for 404 pages and such
-
-import Auth from '../containers/Auth/Auth';
+import Login from '../containers/Auth/Login';
+import ForgotPassword from '../containers/Auth/ForgotPassword';
 import TestingArea from '../components/TestingArea';
 
 /**
@@ -15,7 +16,8 @@ const Index = () => (
   <Switch>
     <CustomRoute path="/" exact component={TestingArea} />
 
-    <CustomRoute path="/auth" exact component={Auth} />
+    <CustomRoute path="/login" exact component={Login} />
+    <CustomRoute path="/forgot-password" exact component={ForgotPassword} />
   </Switch>
 );
 

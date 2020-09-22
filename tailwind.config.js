@@ -1,7 +1,7 @@
 const plugin = require('tailwindcss/plugin');
 
 module.exports = {
-  purge: { enabled: false, content: ['./src/**/*.tsx'] },
+  purge: { enabled: false, content: ['./src/**/*.js'] },
   theme: {
     container: {
       center: true,
