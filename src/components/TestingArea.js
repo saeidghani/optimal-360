@@ -7,6 +7,7 @@ import Sidebar from './Common/Sidebar';
 // FIX : put related import statements together
 import Input from './Common/Input';
 import BreadCrumb from './Common/BreadCrumb';
+import RadioBtn from './Common/RadioBtn';
 
 const Login = () => (
   <div className="flex">
@@ -64,6 +65,7 @@ const Login = () => (
       />
 */}
       <BreadCrumb />
+      <RadioBtn>heloo world</RadioBtn>
     </div>
   </div>
 );

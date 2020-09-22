@@ -42,12 +42,10 @@ const Login = (props) => (
             <Input labelText="Password" placeholder="Password" extrainfoText="Forgot Password ?" />
 
             <div className="flex flex-row my-4">
-              <Checkbox />
-
-              <p className="ml-2 text-gray-300">Remember Me</p>
+              <Checkbox className="text-gray-300">Remember Me</Checkbox>
             </div>
 
-            <Button>Log in</Button>
+            <Button className="ml-auto">Log in</Button>
           </Form>
         </Formik>
       </div>
