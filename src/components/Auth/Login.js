@@ -43,6 +43,7 @@ const Login = (props) => (
               labelText="Password"
               placeholder="Password"
               extrainfoText="Forgot Password ?"
+              extrainfoLink="#"
             />
 
             <Checkbox className="text-gray-300 ">Remember Me</Checkbox>
