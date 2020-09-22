@@ -11,10 +11,10 @@ const _Input = ({
   extrainfoLink,
   extrainfoText,
   inputClass,
-  wrapperClass,
+  wrapperClassName,
   size,
 }) => (
-  <div name={name} className={`flex flex-col  ${wrapperClass}`}>
+  <div name={name} className={`flex flex-col  ${wrapperClassName}`}>
     <div className="flex justify-between items-center mb-10p ">
       {labelText ? <label htmlFor={name}>{labelText}</label> : null}
 
@@ -48,7 +48,7 @@ _Input.propTypes = {
   extrainfoLink: PropTypes.string,
   extrainfoText: PropTypes.string,
   inputClass: PropTypes.string,
-  wrapperClass: PropTypes.string,
+  wrapperClassName: PropTypes.string,
   size: PropTypes.string,
 };
 
@@ -60,7 +60,7 @@ _Input.defaultProps = {
   extrainfoLink: '',
   extrainfoText: '',
   inputClass: '',
-  wrapperClass: '',
+  wrapperClassName: '',
   size: 'large',
 };
 

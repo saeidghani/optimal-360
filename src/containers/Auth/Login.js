@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 
 import Login from '../../components/Auth/Login';
 
-class Auth extends Component {
+class _Login extends Component {
   state = {};
 
   render() {
-    return <Login testProp="test" />;
+    return <Login />;
   }
 }
 
-export default Auth;
+export default _Login;

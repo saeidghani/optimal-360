@@ -5,7 +5,7 @@
 // }
 
 module.exports = {
-  'primary-color': '#1BB7D9',
+  // 'primary-color': '#1BB7D9',
   // 'link-color': '#1DA57A',
   // 'border-radius-base': '2px',
   'font-size-base': '14',
