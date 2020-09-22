@@ -32,6 +32,14 @@ const _Button = ({
       borderColor: '#b8b8b8',
     };
   }
+  if (type === 'pagination') {
+    styles = {
+      ...styles,
+      backgroundColor: '#DDF4F9',
+      color: '#1BB7D9',
+      borderColor: '#DDF4F9',
+    };
+  }
 
   return (
     <Button
