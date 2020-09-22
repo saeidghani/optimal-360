@@ -9,8 +9,11 @@ module.exports = {
     extend: {
       color: {
         antgray: '#B8B8B8',
+        primary: '#1BB7D9',
+        primarylight: '#DDF4F9',
       },
       spacing: {
+        '6p': '6px',
         '10p': '10px',
       },
     },
