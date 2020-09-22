@@ -6,6 +6,7 @@ import Logo from '../Common/Logo';
 import Input from '../Common/Input';
 import Checkbox from '../Common/Checkbox';
 import Button from '../Common/Button';
+import Table from '../Common/Table';
 
 import Shape from './AnimatedShape';
 
@@ -52,6 +53,29 @@ const Login = (props) => (
       </div>
     </div>
   </div>
+  // <Table
+  //   renderHeader={() => <h1>HEADER</h1>}
+  //   columns={[
+  //     'name',
+  //     {
+  //       title: 'Age',
+  //       key: 'age',
+  //       render: (text) => <a>{text}</a>,
+  //       sorter: (a, b) => a.age - b.age,
+  //     },
+  //     {
+  //       title: 'Text',
+  //       key: 'text',
+  //       render: (text) => <a>{text}</a>,
+  //     },
+  //     {
+  //       title: 'Number',
+  //       key: 'number',
+  //       render: (text) => <a>{text}</a>,
+  //       sorter: (a, b) => a.number - b.number,
+  //     },
+  //   ]}
+  // />
 );
 
 export default Login;
