@@ -11,6 +11,7 @@ const _Input = ({
   extrainfoLink,
   extrainfoText,
   inputClass,
+  onChange,
   wrapperClassName,
   size,
 }) => (
@@ -28,6 +29,7 @@ const _Input = ({
     </div>
 
     <Input
+      onChange={onChange}
       name={name}
       size={size}
       className={`c-sufix-prefix-gray ${inputClass}`}
@@ -50,6 +52,7 @@ _Input.propTypes = {
   inputClass: PropTypes.string,
   wrapperClassName: PropTypes.string,
   size: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
 };
 
 _Input.defaultProps = {

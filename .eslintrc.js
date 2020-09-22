@@ -30,5 +30,6 @@ module.exports = {
     'react/jsx-fragments': 'off',
     'linebreak-style': 'off',
     'react/state-in-constructor': 'off',
+    'object-curly-newline': 'off',
   },
 };

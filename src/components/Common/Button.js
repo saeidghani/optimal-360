@@ -15,6 +15,7 @@ const _Button = ({
   iconPosition,
   shape,
   className,
+  text,
 }) => {
   const RICON = ICONS[icon];
   if (icon && typeof RICON === 'undefined' && !RICON) {
@@ -53,7 +54,7 @@ const _Button = ({
       shape={shape}
     >
       {iconPosition === 'left' && RICON ? <RICON className="inline-flex" /> : null}
-      {children}
+      {text ? <p className="font-normal text-lg leading-6">{text}</p> : children}
       {iconPosition !== 'left' && RICON ? <RICON className="inline-flex" /> : null}
     </Button>
   );
@@ -61,9 +62,9 @@ const _Button = ({
 
 _Button.propTypes = {
   type: PropTypes.string,
-  size: PropTypes.number,
+  size: PropTypes.oneOf(['large', 'middle', 'small']),
   onClick: PropTypes.func.isRequired,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   iconPosition: PropTypes.string,
   shape: PropTypes.string,
   icon: PropTypes.string,
@@ -71,11 +72,12 @@ _Button.propTypes = {
   loading: PropTypes.bool,
   light: PropTypes.bool,
   className: PropTypes.string,
+  text: PropTypes.string,
 };
 
 _Button.defaultProps = {
   type: 'primary',
-  size: 200,
+  size: 'large',
   iconPosition: 'left',
   shape: '',
   icon: null,
@@ -83,6 +85,8 @@ _Button.defaultProps = {
   loading: false,
   light: false,
   className: '',
+  text: '',
+  children: '',
 };
 
 export default _Button;
