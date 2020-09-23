@@ -21,6 +21,7 @@ module.exports = {
           200: '#B8B8B8',
           300: '#D9D9D9',
           400: '#F5F5F5',
+          500: '#C4C4C4', // all input borders
         },
       },
       spacing: {

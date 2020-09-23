@@ -9,6 +9,7 @@ import Input from './Common/Input';
 import BreadCrumb from './Common/BreadCrumb';
 import RadioBtn from './Common/RadioBtn';
 import Pagination from './Common/Pagination';
+import Dropdown from './Common/Dropdown';
 
 const Login = () => (
   <div className="flex">
@@ -70,6 +71,7 @@ const Login = () => (
       <BreadCrumb />
       <RadioBtn>heloo world</RadioBtn>
       <Pagination pageNumber="1" totalNumberPages="22" />
+      <Dropdown />
     </div>
   </div>
 );
