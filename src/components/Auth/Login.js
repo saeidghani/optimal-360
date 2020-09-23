@@ -12,7 +12,7 @@ import Shape from './AnimatedShape';
 const Login = () => (
   <div className="min-h-screen bg-white relative flex flex-row items-center justify-center">
     <div className="absolute top-0 left-0 flex flex-row pl-8 md:pl-20 lg:pl-40 pt-6 lg:pt-8">
-      <Logo />
+      <Logo white />
     </div>
 
     <div className="grid grid-cols-12 gap-x-4x w-full xl:mt-16">
