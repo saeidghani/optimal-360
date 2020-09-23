@@ -57,4 +57,8 @@ module.exports = {
 
   // Steps
   'process-tail-color': '#f0f0f0',
+
+  // Tabs
+
+  'tabs-card-tab-active-border-top': '2px solid transparent',
 };

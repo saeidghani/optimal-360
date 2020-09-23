@@ -11,6 +11,7 @@ import RadioBtn from './Common/RadioBtn';
 import Pagination from './Common/Pagination';
 import Dropdown from './Common/Dropdown';
 import Steps from './Common/Steps';
+import Tabs from './Common/Tabs';
 
 const Login = () => (
   <div className="flex">
@@ -68,12 +69,14 @@ const Login = () => (
         extrainfoLink="#"
         extrainfoText="generate password"
       /> */}
-      {/* 
+      {/*
       <BreadCrumb />
       <RadioBtn>heloo world</RadioBtn>
       <Pagination pageNumber="1" totalNumberPages="22" />
       <Dropdown /> */}
       <Steps currentPosition={2} />
+
+      <Tabs />
     </div>
   </div>
 );
