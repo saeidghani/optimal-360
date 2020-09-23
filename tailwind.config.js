@@ -31,6 +31,14 @@ module.exports = {
       opacity: {
         45: '0.45',
       },
+      fontSize: {
+        '12px': '.857rem',
+        '14px': '1rem',
+        '16px': '1.142rem',
+        '18px': '1.285rem',
+        '20px': '1.428rem',
+        '22px': '1.571rem',
+      },
     },
   },
   variants: {},
