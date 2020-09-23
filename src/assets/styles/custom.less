@@ -14,3 +14,78 @@
 .c-sufix-prefix-gray > .ant-input-suffix {
   color: rgb(184, 184, 184);
 }
+
+.c-arrow-color > .ant-select-arrow {
+  color: #808080;
+}
+
+/*
+###############################
+######## steps styles #########
+###############################
+*/
+
+//current step
+.c-step
+  > .ant-steps-item-process
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-title {
+  color: #8d98ba;
+}
+.c-step > .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon {
+  font-size: 12px;
+  color: white;
+  background-color: #c4c4c4;
+  border-radius: 999px;
+  padding: 9px 13px;
+}
+//waiting step
+.c-step
+  > .ant-steps-item-wait
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-title {
+  color: #8d98ba;
+}
+.c-step > .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon {
+  font-size: 12px;
+  color: #c4c4c4;
+  background-color: white;
+  border: 1px solid #c4c4c4;
+  border-radius: 999px;
+  padding: 9px 13px;
+}
+// finished step
+.c-step
+  > .ant-steps-item-finish
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-title {
+  color: #48d2a1;
+}
+.c-step > .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+  font-size: 12px;
+  color: white;
+  background-color: #48d2a1;
+  border-radius: 999px;
+  padding: 9px 13px;
+}
+/*
+###############################
+###### steps styles end #######
+###############################
+*/
+
+// the color of line in front of steps
+.ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title::after {
+  background-color: #f0f0f0 !important;
+}
+
+// thunmb in tab active
+.ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar,
+.ant-tabs-bottom > .ant-tabs-nav .ant-tabs-ink-bar,
+.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-ink-bar,
+.ant-tabs-bottom > div > .ant-tabs-nav .ant-tabs-ink-bar {
+  height: 1px;
+}

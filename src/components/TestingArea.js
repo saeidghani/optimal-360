@@ -8,14 +8,17 @@ import Sidebar from './Common/Sidebar';
 import BreadCrumb from './Common/BreadCrumb';
 import RadioBtn from './Common/RadioBtn';
 import Pagination from './Common/Pagination';
+import Dropdown from './Common/Dropdown';
+import Steps from './Common/Steps';
+import Tabs from './Common/Tabs';
 
 const Login = () => (
   <div className="flex">
     <Sidebar />
-    <div className="grid grid-rows-3 grid-flow-col gap-4 p-5">
-      <Button onClick={() => console.log('button')} type="default">
+    <div className="grid grid-rows-3 grid-flow-col gap-1 p-5">
+      {/* <Button onClick={() => console.log('button')} type="default">
         Button
-      </Button>
+      </Button> */}
       {/* <Button onClick={() => console.log('button')} type="gray">
         Button
       </Button>
@@ -65,10 +68,14 @@ const Login = () => (
         extrainfoLink="#"
         extrainfoText="generate password"
       /> */}
-
+      {/*
       <BreadCrumb />
       <RadioBtn>heloo world</RadioBtn>
       <Pagination pageNumber="1" totalNumberPages="22" />
+      <Dropdown /> */}
+      <Steps currentPosition={2} />
+
+      <Tabs />
     </div>
   </div>
 );

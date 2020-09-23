@@ -14,6 +14,7 @@ module.exports = {
       colors: {
         heading: '#131627',
         body: '#303854',
+        antgreen: '#48D2A1', // used for steps
         primary: {
           200: '#F5F8FC',
           400: '#DDF4F9',
@@ -25,6 +26,7 @@ module.exports = {
           200: '#B8B8B8',
           300: '#D9D9D9',
           400: '#F5F5F5',
+          500: '#C4C4C4', // all input borders
         },
       },
       spacing: {
@@ -33,6 +35,14 @@ module.exports = {
       },
       opacity: {
         45: '0.45',
+      },
+      fontSize: {
+        '12px': '.857rem',
+        '14px': '1rem',
+        '16px': '1.142rem',
+        '18px': '1.285rem',
+        '20px': '1.428rem',
+        '22px': '1.571rem',
       },
     },
   },
