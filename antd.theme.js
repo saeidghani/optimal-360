@@ -54,4 +54,7 @@ module.exports = {
   'select-multiple-disabled-background': '@input-disabled-bg',
   'select-multiple-item-disabled-color': '#bfbfbf',
   'select-multiple-item-disabled-border-color': '@select-border-color',
+
+  // Steps
+  'process-tail-color': '#f0f0f0',
 };
