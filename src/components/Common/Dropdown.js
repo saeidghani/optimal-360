@@ -7,7 +7,7 @@ const _Dropdown = ({ handleChange, className, placeholder, showSearch, size }) =
   <div>
     <Select
       showSearch={showSearch}
-      className={`c-arrow-color w-full  ${className}`}
+      className={`c-arrow-color w-full text-12px ${className}`}
       onChange={handleChange}
       placeholder={placeholder}
       size={size}
