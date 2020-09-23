@@ -11,9 +11,12 @@ const _Input = ({
   extrainfoLink,
   extrainfoText,
   inputClass,
+  value,
   onChange,
   wrapperClassName,
   size,
+  disabled,
+  errorMessage,
 }) => (
   <div name={name} className={`flex flex-col  ${wrapperClassName}`}>
     <div className="flex justify-between items-center mb-10p ">
@@ -29,7 +32,9 @@ const _Input = ({
     </div>
 
     <Input
+      disabled={disabled}
       onChange={onChange}
+      value={value}
       name={name}
       size={size}
       className={`c-sufix-prefix-gray ${inputClass}`}
@@ -38,6 +43,8 @@ const _Input = ({
       suffix={suffix}
       prefix={prefix}
     />
+
+    {errorMessage && <p className="text-red-500">{errorMessage}</p>}
   </div>
 );
 
@@ -52,7 +59,10 @@ _Input.propTypes = {
   inputClass: PropTypes.string,
   wrapperClassName: PropTypes.string,
   size: PropTypes.string,
+  value: PropTypes.string,
   onChange: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
+  errorMessage: PropTypes.string,
 };
 
 _Input.defaultProps = {
@@ -65,6 +75,9 @@ _Input.defaultProps = {
   inputClass: '',
   wrapperClassName: '',
   size: 'large',
+  value: '',
+  errorMessage: '',
+  disabled: false,
 };
 
 export default _Input;

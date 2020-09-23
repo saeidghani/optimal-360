@@ -2,6 +2,10 @@ const plugin = require('tailwindcss/plugin');
 
 module.exports = {
   purge: { enabled: false, content: ['./src/**/*.js'] },
+  future: {
+    removeDeprecatedGapUtilities: true,
+    purgeLayersByDefault: true,
+  },
   theme: {
     container: {
       center: true,

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Breadcrumb } from 'antd';
 import { Link } from 'react-router-dom';
 
@@ -16,9 +15,5 @@ const _BreadCrumb = () => (
     </Breadcrumb.Item>
   </Breadcrumb>
 );
-
-_BreadCrumb.propTypes = {};
-
-_BreadCrumb.defaultProps = {};
 
 export default _BreadCrumb;

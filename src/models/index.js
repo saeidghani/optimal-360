@@ -1,1 +1,1 @@
-export { default as articles } from './articles'; // eslint-disable-line
+export { default as util } from './util'; // eslint-disable-line

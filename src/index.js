@@ -3,8 +3,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
-// @ts-ignore
 import { PersistGate } from 'redux-persist/es/integration/react';
+
+import NotificationProvider from './NotificationProvider';
 
 import configureStore from './store/index';
 import * as serviceWorker from './lib/service-worker';
@@ -20,10 +21,11 @@ const { persistor, store, dispatch } = configureStore();
 const Root = () => (
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-      {/* @ts-ignore */}
-      <Router dispatch={dispatch} store={store}>
-        <Routes />
-      </Router>
+      <NotificationProvider>
+        <Router dispatch={dispatch} store={store}>
+          <Routes />
+        </Router>
+      </NotificationProvider>
     </PersistGate>
   </Provider>
 );

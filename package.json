@@ -32,7 +32,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "redux-persist": "^6.0.0",
-    "tailwindcss": "^1.4.6"
+    "tailwindcss": "^1.4.6",
+    "yup": "^0.29.3"
   },
   "eslintConfig": {
     "extends": "react-app"

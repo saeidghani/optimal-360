@@ -1,11 +1,10 @@
 // a place to test your components
 import React from 'react';
-import { DeleteOutlined, IssuesCloseOutlined } from '@ant-design/icons';
 
 import Button from './Common/Button';
 import Sidebar from './Common/Sidebar';
 // FIX : put related import statements together
-import Input from './Common/Input';
+// import Input from './Common/Input';
 import BreadCrumb from './Common/BreadCrumb';
 import RadioBtn from './Common/RadioBtn';
 import Pagination from './Common/Pagination';
