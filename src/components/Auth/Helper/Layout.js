@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Logo from '../Common/Logo';
+import Logo from '../../Common/Logo';
 
 const Layout = ({ children, className, wrapperClassName }) => (
   <div
@@ -13,8 +13,8 @@ const Layout = ({ children, className, wrapperClassName }) => (
     </div>
 
     <div
-      className={`bg-white justify-center flex flex-col rounded-lg 
-        lg:px-24 px-12 lg:py-32 py-16 lg:w-6/12 xl:w-5/12 md:w-8/12 w-10/12 ${className}`}
+      className={`bg-white shadow justify-center flex flex-col rounded-lg lg:mt-0 mt-8 sm:mt-5 
+        lg:px-24 px-12 lg:py-24 py-16 lg:w-6/12 xl:w-5/12 md:w-8/12 w-10/12 ${className}`}
     >
       {children}
     </div>

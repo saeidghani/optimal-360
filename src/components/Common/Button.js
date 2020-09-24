@@ -16,6 +16,7 @@ const _Button = ({
   shape,
   className,
   text,
+  href,
 }) => {
   const RICON = ICONS[icon];
   if (icon && typeof RICON === 'undefined' && !RICON) {
@@ -46,6 +47,7 @@ const _Button = ({
     <Button
       className={`flex justify-center items-center ${className}`}
       onClick={onClick}
+      href={href}
       size={size}
       type={type}
       ghost={ghost}
@@ -63,7 +65,13 @@ const _Button = ({
 _Button.propTypes = {
   type: PropTypes.string,
   size: PropTypes.oneOf(['large', 'middle', 'small']),
-  onClick: PropTypes.func.isRequired,
+  // onClick: PropTypes.func.isRequired,
+  href: PropTypes.string,
+  onClick: (props, propName) => {
+    if (props.href && (!props[propName] || typeof props[propName] !== 'function')) {
+      return new Error('Please provide a onClick function!');
+    }
+  },
   children: PropTypes.node,
   iconPosition: PropTypes.string,
   shape: PropTypes.string,
@@ -87,6 +95,8 @@ _Button.defaultProps = {
   className: '',
   text: '',
   children: '',
+  href: undefined,
+  onClick: () => {},
 };
 
 export default _Button;
