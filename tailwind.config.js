@@ -15,6 +15,7 @@ module.exports = {
         heading: '#131627',
         body: '#303854',
         antgreen: '#48D2A1', // used for steps
+        antteal: '#00d6a2', // used for primary Progress
         primary: {
           200: '#F5F8FC',
           400: '#DDF4F9',
