@@ -7,6 +7,23 @@ module.exports = {
     purgeLayersByDefault: true,
   },
   theme: {
+    fontFamily: {
+      sans: [
+        '"Noto Sans"',
+        'Roboto',
+        '"Segoe UI"',
+        'system-ui',
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+        '"Noto Color Emoji"',
+      ],
+    },
     container: {
       center: true,
     },
