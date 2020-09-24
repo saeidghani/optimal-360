@@ -48,6 +48,8 @@ module.exports = {
         },
       },
       spacing: {
+        28: '7rem',
+        36: '9rem',
         '6p': '6px',
         '10p': '10px',
       },

@@ -21,7 +21,7 @@ const Login = ({ login }) => {
 
   return (
     <div className="min-h-screen bg-white relative flex flex-row items-center justify-center">
-      <div className="absolute top-0 left-0 flex flex-row pl-8 md:pl-20 lg:pl-28 xl:pl-40 pt-6 lg:pt-8">
+      <div className="absolute top-0 left-0 flex flex-row pl-8 pt-6 md:pl-20 lg:pl-32 lg:pt-12">
         <Logo />
       </div>
 
@@ -34,8 +34,8 @@ const Login = ({ login }) => {
         </div>
 
         <div
-          className="col-start-2 col-span-10 md:col-span-4 md:col-start-8 xl:col-start-7 xl:col-span-4
-       flex flex-col justify-center items-center px-6"
+          className="col-start-2 col-span-10 md:col-span-4 md:col-start-8
+       flex flex-col items-center xl:pr-24 pt-6"
         >
           <h1 className="font-medium text-2xl w-full block text-left mb-10">Login</h1>
           <Formik
@@ -75,7 +75,7 @@ const Login = ({ login }) => {
                   disabled={isSubmitting}
                   onChange={handleChange}
                   name="password"
-                  wrapperClassName="mb-6"
+                  wrapperClassName="mb-4"
                   labelText="Password"
                   placeholder="Password"
                   extrainfoText="Forgot Password ?"
@@ -95,7 +95,7 @@ const Login = ({ login }) => {
                   loading={isSubmitting}
                   onClick={handleSubmit}
                   text="Log in"
-                  className="ml-auto mt-16 py-4"
+                  className="ml-auto mt-16 py-4 px-6"
                 />
               </Form>
             )}

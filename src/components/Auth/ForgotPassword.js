@@ -41,12 +41,12 @@ const ForgotPassword = () => {
                 <Input
                   onChange={handleChange}
                   name="password"
-                  wrapperClassName="my-12"
+                  wrapperClassName="mt-10 mb-12"
                   labelText="Password"
                   placeholder="Password"
                 />
 
-                <Button onClick={handleSubmit} text="Submit" className="ml-auto" />
+                <Button onClick={handleSubmit} text="Submit" className="ml-auto px-6" />
               </Form>
             )}
           </Formik>
