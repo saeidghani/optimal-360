@@ -19,7 +19,7 @@ const _Input = ({
   errorMessage,
 }) => (
   <div name={name} className={`flex flex-col  ${wrapperClassName}`}>
-    <div className="flex justify-between items-center mb-10p ">
+    <div className="flex justify-between items-center mb-10p pl-1">
       {labelText ? <label htmlFor={name}>{labelText}</label> : null}
 
       {extrainfoText && extrainfoLink ? (

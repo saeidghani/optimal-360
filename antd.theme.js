@@ -59,6 +59,11 @@ module.exports = {
   'process-tail-color': '#f0f0f0',
 
   // Tabs
-
   'tabs-card-tab-active-border-top': '2px solid transparent',
+
+  // Progress
+  'processing-color': '#00d6a2',
+  'progress-default-color': '@processing-color',
+  'progress-remaining-color': '@background-color-base',
+  'progress-text-color': '#262626',
 };

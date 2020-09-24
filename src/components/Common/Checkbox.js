@@ -8,7 +8,7 @@ const _Checkbox = ({ checked, onChange, className, children }) => (
     onChange={(e) => onChange(e.target.checked)}
     className={` ${className}`}
   >
-    {children}
+    <span className="text-antgray-100 text-12px">{children}</span>
   </Checkbox>
 );
 
