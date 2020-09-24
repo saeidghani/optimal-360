@@ -7,10 +7,10 @@ import Layout from '../../components/Auth/Login';
 class _Login extends Component {
   state = {};
 
-  login = async ({ email }) => {
-    const { alert } = this.props;
+  login = async ({ email, password }) => {
+    const { login } = this.props;
 
-    return alert(email);
+    return login({ username: email, password });
   };
 
   render() {
@@ -19,13 +19,13 @@ class _Login extends Component {
 }
 
 _Login.propTypes = {
-  alert: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({ auth: state.auth || {} });
 
 const mapDispatchToProps = (dispatch) => ({
-  alert: dispatch.util.alert,
+  login: dispatch.auth.login,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(_Login);

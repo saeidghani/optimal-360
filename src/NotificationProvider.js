@@ -11,15 +11,14 @@ const NotificationProvider = ({ children }) => {
   const dispatch = useDispatch();
   const { notification: _notification, lastChange } = useSelector((state) => state?.util);
 
-  console.log({ _notification, lastChange });
-
   const openNotification = React.useCallback(
-    (placement, val) => {
-      api.info({
-        message: `Notification ${placement}`,
-        description: val,
+    ({ message, type = 'info', placement = 'topRight' }) => {
+      api[type]({
+        message,
+        description: message,
         placement,
-        onClose: () => dispatch.util.alert(''),
+        duration: 3,
+        onClose: () => dispatch.util.clearNotifications(),
       });
     },
     [dispatch.util, api],
@@ -27,7 +26,7 @@ const NotificationProvider = ({ children }) => {
 
   React.useEffect(() => {
     if (_notification) {
-      openNotification('topRight', _notification);
+      openNotification(_notification);
     }
   }, [lastChange, _notification, openNotification]);
 

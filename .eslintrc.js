@@ -31,5 +31,7 @@ module.exports = {
     'linebreak-style': 'off',
     'react/state-in-constructor': 'off',
     'object-curly-newline': 'off',
+    'implicit-arrow-linebreak': 'off',
+    'function-paren-newline': 'off',
   },
 };

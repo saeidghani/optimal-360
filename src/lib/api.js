@@ -20,24 +20,11 @@ axios.interceptors.request.use(
     const config = inputConfig;
 
     try {
-      // Check if the token has or is about to expire, and refresh it
-      // if (hasActiveAuthToken()) {
-      // Add the token to the Authorization header
-
       const token = Cookies.get('token');
 
       if (token && token !== 'undefined') {
         config.headers.common.Authorization = `Bearer ${Cookies.get('token')}`;
       }
-
-      // Otherwise, attempt to refresh the token
-      // } else if (hasAuthToken()) {
-      // const token = await refreshAuthToken();
-
-      //   if (token) {
-      //     config.headers.common.Authorization = `Bearer ${token}`;
-      //   }
-      // }
     } catch (error) {
       /* Nothing */
     }
@@ -67,10 +54,6 @@ axios.interceptors.response.use(
     return res;
   },
   (error) => {
-    // Pass the response from the API, rather than a status code
-    // if (error && error.response && error.response.data) {
-    //   throw error.response.data;
-    // }
     throw error;
   },
 );

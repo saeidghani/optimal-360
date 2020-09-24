@@ -1,5 +1,3 @@
-// import Api from '../lib/api';
-
 export default {
   namespace: 'util',
 
@@ -8,14 +6,17 @@ export default {
     lastChange: '',
   },
 
-  effects: (dispatch) => ({
-    async alert(a) {
-      await new Promise((r) =>
-        setTimeout(() => {
-          this.alert_reducer(a);
-          r();
-        }, 2000),
-      );
+  effects: () => ({
+    async alert(payload) {
+      this.alert_reducer(payload);
+    },
+
+    async errorHandler(error) {
+      this.alert_reducer(error);
+    },
+
+    async clearNotifications() {
+      this.alert_reducer('');
     },
   }),
 
