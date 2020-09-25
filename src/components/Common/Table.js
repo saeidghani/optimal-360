@@ -13,10 +13,10 @@ const rowSelection = {
   }),
 };
 
-const _Table = ({ columns, renderHeader, className }) => {
+const _Table = ({ columns, renderHeader, className, dataSource }) => {
   const [selectionType] = React.useState('checkbox');
 
-  const _columns = columns.map((el) => {
+  const _columns = (columns || []).map((el) => {
     if (typeof el === 'undefined' && !el) return null;
 
     if (typeof el === 'string') {
@@ -40,22 +40,23 @@ const _Table = ({ columns, renderHeader, className }) => {
     return newItem;
   });
 
-  const data = Array(10)
-    .fill(1)
-    .map((_, i) => ({
-      key: i,
-      name: `John ${i}`,
-      age: i * 10,
-      text: `John ${i * 10}`,
-      number: Math.floor(Math.random() * 100),
-      // tags: ['nice', 'developer']
-    }));
+  // const dataSource = Array(10)
+  //   .fill(1)
+  //   .map((_, i) => ({
+  //     key: i,
+  //     name: `John ${i}`,
+  //     age: i * 10,
+  //     text: `John ${i * 10}`,
+  //     number: Math.floor(Math.random() * 100),
+  //     // tags: ['nice', 'developer']
+  //   }));
 
   return (
-    <div className={`p-5 ${className}`}>
+    <div className={`p-6 bg-white rounded-lg shadow ${className}`}>
       <Table
+        ellipsis
         columns={_columns}
-        dataSource={data}
+        dataSource={dataSource}
         // onChange={(pagination, filters, sorter, extra) => {}}
         title={renderHeader}
         rowSelection={{
@@ -69,9 +70,24 @@ const _Table = ({ columns, renderHeader, className }) => {
 };
 
 _Table.propTypes = {
-  columns: PropTypes.shape([]).isRequired,
+  columns: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.shape({
+        key: PropTypes.string,
+        title: PropTypes.string,
+        sorter: PropTypes.func,
+        // sorter: PropTypes.bool,
+      }),
+    ]),
+  ).isRequired,
   renderHeader: PropTypes.func,
   className: PropTypes.string,
+  dataSource: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string,
+    }),
+  ).isRequired,
 };
 
 _Table.defaultProps = {

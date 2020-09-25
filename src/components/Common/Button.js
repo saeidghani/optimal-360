@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as ICONS from '@ant-design/icons';
@@ -17,6 +18,8 @@ const _Button = ({
   className,
   text,
   href,
+  textClassName,
+  textSize,
 }) => {
   const RICON = ICONS[icon];
   if (icon && typeof RICON === 'undefined' && !RICON) {
@@ -56,7 +59,11 @@ const _Button = ({
       shape={shape}
     >
       {iconPosition === 'left' && RICON ? <RICON className="inline-flex" /> : null}
-      {text ? <p className="font-normal text-lg leading-6">{text}</p> : children}
+      {text ? (
+        <p className={`font-normal text-${textSize} leading-5 ${textClassName}`}>{text}</p>
+      ) : (
+        children
+      )}
       {iconPosition !== 'left' && RICON ? <RICON className="inline-flex" /> : null}
     </Button>
   );
@@ -65,7 +72,6 @@ const _Button = ({
 _Button.propTypes = {
   type: PropTypes.string,
   size: PropTypes.oneOf(['large', 'middle', 'small']),
-  // onClick: PropTypes.func.isRequired,
   href: PropTypes.string,
   onClick: (props, propName) => {
     if (props.href && (!props[propName] || typeof props[propName] !== 'function')) {
@@ -81,6 +87,8 @@ _Button.propTypes = {
   light: PropTypes.bool,
   className: PropTypes.string,
   text: PropTypes.string,
+  textClassName: PropTypes.string,
+  textSize: PropTypes.string,
 };
 
 _Button.defaultProps = {
@@ -93,10 +101,13 @@ _Button.defaultProps = {
   loading: false,
   light: false,
   className: '',
+  textClassName: '',
+  textSize: 'lg',
   text: '',
   children: '',
   href: undefined,
-  onClick: () => {},
+  // eslint-disable-next-line no-alert
+  onClick: () => alert('comig soon'),
 };
 
 export default _Button;

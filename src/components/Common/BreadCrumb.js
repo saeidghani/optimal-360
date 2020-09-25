@@ -1,19 +1,26 @@
 import React from 'react';
 import { Breadcrumb } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
-const _BreadCrumb = () => (
-  <Breadcrumb separator="\" className="capitalize">
-    <Breadcrumb.Item>
-      <Link to="/">super user </Link>
-    </Breadcrumb.Item>
-    <Breadcrumb.Item>
-      <Link to="/">projects </Link>
-    </Breadcrumb.Item>
-    <Breadcrumb.Item>
-      <Link to="/">survay groups </Link>
-    </Breadcrumb.Item>
-  </Breadcrumb>
-);
+const _BreadCrumb = () => {
+  const { pathname } = useLocation();
+
+  const paths = pathname.split('/').slice(1) || [];
+
+  return (
+    <Breadcrumb separator="\" className="capitalize">
+      {paths.map((el, i, arr) => {
+        const to = `/${arr.slice(0, i + 1).join('/')}`;
+        const name = el.replace(/-/g, ' ');
+
+        return (
+          <Breadcrumb.Item key={i}>
+            <Link to={to}>{name}</Link>
+          </Breadcrumb.Item>
+        );
+      })}
+    </Breadcrumb>
+  );
+};
 
 export default _BreadCrumb;

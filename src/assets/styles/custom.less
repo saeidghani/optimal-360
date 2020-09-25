@@ -103,3 +103,47 @@
 }
 
 // progress bar SUB colo
+
+.ant-table-title {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+}
+
+.ant-input-search {
+  &::before {
+    display: none !important;
+  }
+
+  .anticon-search {
+    &::before {
+      display: none !important;
+    }
+  }
+
+  .ant-input-search-icon {
+    &::before {
+      display: none !important;
+    }
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    margin-right: 12px;
+
+    border-radius: 999px;
+    background-color: @primary-color;
+
+    svg {
+      width: 12px;
+      height: 12px;
+
+      fill: #fff;
+
+      margin-left: 1px;
+    }
+  }
+}
