@@ -1,5 +1,5 @@
 // a place to test your components
-import React from 'react';
+import React, { useState } from 'react';
 
 import Button from './Common/Button';
 import Sidebar from './Common/Sidebar';
@@ -13,15 +13,19 @@ import Steps from './Common/Steps';
 import Tabs from './Common/Tabs';
 import Progress from './Common/Progress';
 import Menu from './Common/Menu';
+import Modal from './Common/Modal';
 
-const Login = () => (
-  <div className="flex">
-    <Sidebar />
-    <div className="grid grid-rows-3 grid-flow-col gap-1 p-5">
-      {/* <Button onClick={() => console.log('button')} type="default">
+const Login = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  return (
+    <div className="flex">
+      <Sidebar />
+      <div className="grid grid-rows-3 grid-flow-col gap-1 p-5">
+        {/* <Button onClick={() => console.log('button')} type="default">
         Button
       </Button> */}
-      {/* <Button onClick={() => console.log('button')} type="gray">
+        {/* <Button onClick={() => console.log('button')} type="gray">
         Button
       </Button>
       <Button onClick={() => console.log('button')} ghost>
@@ -70,22 +74,27 @@ const Login = () => (
         extrainfoLink="#"
         extrainfoText="generate password"
       /> */}
-      {/*
+        {/*
       <BreadCrumb />
       <RadioBtn>heloo world</RadioBtn>
       <Pagination pageNumber="1" totalNumberPages="22" />
       <Dropdown /> */}
-      <Steps currentPosition={2} />
-      <Tabs />
-      <Progress type="line" percentage={49} />
-      {/* <Progress type="line" percentage={0} />
+        <Steps currentPosition={2} />
+        <Tabs />
+        <Progress type="line" percentage={49} />
+        {/* <Progress type="line" percentage={0} />
       <Progress percentage={51} />
       <Progress percentage={50} />
       <Progress percentage={100} />
       <Progress status="sub" percentage={100} /> */}
-      <Menu />
+        <Menu />
+        <Button type="primary" onClick={() => setIsVisible(!isVisible)}>
+          Open Modal
+        </Button>
+        <Modal visible={isVisible} handleCancel={() => setIsVisible(!isVisible)} />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Login;

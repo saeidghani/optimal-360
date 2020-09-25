@@ -69,4 +69,8 @@ module.exports = {
 
   // Menu
   'menu-item-active-bg': '#fff',
+
+  // modal
+  'modal-mask-bg': 'fade(#131621, 80%)',
+  'modal-footer-border-width': '0px',
 };
