@@ -10,6 +10,10 @@ module.exports = {
   env: {
     'jest/globals': true,
   },
+  globals: {
+    window: true,
+    document: true,
+  },
   rules: {
     'max-len': [2, { code: 110, tabWidth: 2, ignoreUrls: true }],
     'react/jsx-filename-extension': ['error', { extensions: ['.js', '.jsx'] }],

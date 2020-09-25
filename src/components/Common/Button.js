@@ -49,7 +49,7 @@ const _Button = ({
   return (
     <Button
       className={`flex justify-center items-center ${className}`}
-      onClick={onClick}
+      onClick={href ? () => {} : onClick}
       href={href}
       size={size}
       type={type}
@@ -75,7 +75,7 @@ _Button.propTypes = {
   href: PropTypes.string,
   onClick: (props, propName) => {
     if (props.href && (!props[propName] || typeof props[propName] !== 'function')) {
-      return new Error('Please provide a onClick function!');
+      return new Error('Please provide an onClick function!');
     }
   },
   children: PropTypes.node,

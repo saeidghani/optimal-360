@@ -10,7 +10,10 @@ class _Login extends Component {
   login = async ({ email, password }) => {
     const { login } = this.props;
 
-    return login({ username: email, password });
+    await login({ username: email, password });
+
+    // TODO : replace 4000 with a constatnt from config file
+    setTimeout(() => window.location.replace('/super-user/projects/active-projects'), 4000);
   };
 
   render() {

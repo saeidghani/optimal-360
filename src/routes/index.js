@@ -1,7 +1,5 @@
 import React from 'react';
-// import { Switch, Route } from 'react-router-dom';
-// use react-router-dom 'route' for 404 pages and such
-import { Switch } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import CustomRoute from './Route';
 import PrivateRoute from './PrivateRoute';
 
@@ -9,6 +7,8 @@ import Login from '../containers/Auth/Login';
 import ForgotPassword from '../containers/Auth/ForgotPassword';
 
 import ActiveProjects from '../components/Projects/Active';
+
+import NotFound from '../components/404';
 
 import TestingArea from '../components/TestingArea';
 
@@ -23,6 +23,8 @@ const Index = () => (
     <CustomRoute path="/forgot-password" exact component={ForgotPassword} />
 
     <PrivateRoute path="/super-user/projects/active-projects" exact component={ActiveProjects} />
+
+    <Route component={NotFound} />
   </Switch>
 );
 

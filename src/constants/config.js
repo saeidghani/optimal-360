@@ -1,4 +1,3 @@
-/* global window */
 const { host } = window.location;
 
 /**
@@ -13,7 +12,7 @@ if (host.includes('stage.')) env = 'stage';
  */
 export default {
   // App Details
-  appName: 'ReactStarterKit',
+  appName: 'optimal360',
 
   // Build Configuration - eg. Debug or Release?
   isDevEnv: env === 'development',

@@ -72,7 +72,7 @@ const ActiveProjects = () => {
       width: 50,
       render: (data) => (
         <div className="flex flex-row-reverse">
-          <Button text="Set Client Admin" />
+          <Button textSize="sm" text="Set Client Admin" />
           <Button icon="CopyOutlined" type="link" className="text-xl mr-7" />
         </div>
       ),
