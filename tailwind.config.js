@@ -45,6 +45,7 @@ module.exports = {
           300: '#D9D9D9',
           400: '#F5F5F5',
           500: '#C4C4C4', // all input borders
+          600: '#FAFAFA', // menu background color
         },
       },
       spacing: {

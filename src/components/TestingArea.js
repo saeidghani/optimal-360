@@ -12,6 +12,7 @@ import Dropdown from './Common/Dropdown';
 import Steps from './Common/Steps';
 import Tabs from './Common/Tabs';
 import Progress from './Common/Progress';
+import Menu from './Common/Menu';
 
 const Login = () => (
   <div className="flex">
@@ -76,12 +77,13 @@ const Login = () => (
       <Dropdown /> */}
       <Steps currentPosition={2} />
       <Tabs />
-      <Progress type="line" percentage={0} />
       <Progress type="line" percentage={49} />
+      {/* <Progress type="line" percentage={0} />
       <Progress percentage={51} />
       <Progress percentage={50} />
       <Progress percentage={100} />
-      <Progress status="sub" percentage={100} />
+      <Progress status="sub" percentage={100} /> */}
+      <Menu />
     </div>
   </div>
 );

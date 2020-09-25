@@ -102,4 +102,74 @@
   color: #8c8c8c;
 }
 
-// progress bar SUB colo
+//  #########################
+//  ########## Menu #########
+//  #########################
+.inner-sub-menu {
+  background: #f0f0f0;
+  color: #303854;
+  &.ant-menu-submenu-selected {
+    background: rgba(196, 196, 196, 0.8);
+  }
+
+  & > .ant-menu-sub.ant-menu-inline > .ant-menu-item,
+  .ant-menu-sub.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
+    border-bottom: 1px solid #f0f0f0;
+  }
+}
+.ant-menu::before {
+  display: block;
+  content: '';
+}
+.ant-menu-item {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  color: #b8b8b8;
+}
+.ant-menu-submenu-title {
+  // margin-top: 0 !important;
+  // margin-bottom: 0 !important;
+  span {
+    padding-left: 24px;
+  }
+}
+.ant-menu-submenu-arrow {
+  left: 32px;
+}
+
+.inner-sub-menu {
+  .ant-menu-submenu-title {
+    margin-top: 1px !important;
+    margin-bottom: 1px !important;
+    span {
+      padding-left: 26px;
+    }
+  }
+  .ant-menu-submenu-arrow {
+    left: 57px;
+  }
+}
+.inner-sub-menu > .ant-menu-sub.ant-menu-inline > .ant-menu-item {
+  padding-left: 35px !important;
+}
+
+.ant-menu-vertical > .ant-menu-item,
+.ant-menu-vertical-left > .ant-menu-item,
+.ant-menu-vertical-right > .ant-menu-item,
+.ant-menu-inline > .ant-menu-item,
+.ant-menu-vertical > .ant-menu-submenu > .ant-menu-submenu-title,
+.ant-menu-vertical-left > .ant-menu-submenu > .ant-menu-submenu-title,
+.ant-menu-vertical-right > .ant-menu-submenu > .ant-menu-submenu-title,
+.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
+  height: 32px;
+  line-height: 40px;
+}
+//fix position of competency
+.ant-menu-sub.ant-menu-inline > .ant-menu-item,
+.ant-menu-sub.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
+  height: 39px;
+  line-height: 43px;
+}
+//  #########################
+//  ########## Menu end #########
+//  #########################

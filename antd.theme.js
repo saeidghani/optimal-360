@@ -66,4 +66,7 @@ module.exports = {
   'progress-default-color': '@processing-color',
   'progress-remaining-color': '@background-color-base',
   'progress-text-color': '#262626',
+
+  // Menu
+  'menu-item-active-bg': '#fff',
 };
