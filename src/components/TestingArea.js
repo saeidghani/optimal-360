@@ -14,6 +14,7 @@ import Tabs from './Common/Tabs';
 import Progress from './Common/Progress';
 import Menu from './Common/Menu';
 import Modal from './Common/Modal';
+import AutoComplete from './Common/AutoComplete';
 
 const Login = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -92,6 +93,7 @@ const Login = () => {
           Open Modal
         </Button>
         <Modal visible={isVisible} handleCancel={() => setIsVisible(!isVisible)} />
+        <AutoComplete />
       </div>
     </div>
   );
