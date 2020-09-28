@@ -15,6 +15,7 @@ import Progress from './Common/Progress';
 import Menu from './Common/Menu';
 import Modal from './Common/Modal';
 import AutoComplete from './Common/AutoComplete';
+import TreeSelect from './Common/TreeSelect';
 
 const Login = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -24,76 +25,79 @@ const Login = () => {
       <Sidebar />
       <div className="grid grid-rows-3 grid-flow-col gap-1 p-5">
         {/* <Button onClick={() => console.log('button')} type="default">
-        Button
-      </Button> */}
-        {/* <Button onClick={() => console.log('button')} type="gray">
-        Button
-      </Button>
-      <Button onClick={() => console.log('button')} ghost>
-        Button
-      </Button>
-      <Button onClick={() => console.log('button')} light>
-        Button
-      </Button>
-      <Button onClick={() => console.log('button')} type="link">
-        Button
-      </Button>
-      <Button onClick={() => console.log('button')} icon="CloseCircleOutlined">
-        Button
-      </Button>
-      <Button onClick={() => console.log('button')} icon="FileExcelOutlined" iconPosition="right">
-        Button
-      </Button>
-      <Input
-        labelText="userName"
-        inputName="username"
-        placeholder="placeholder"
-        suffix={<DeleteOutlined />}
-        prefix={<IssuesCloseOutlined />}
-        extrainfoLink="#"
-        extrainfoText="generate password"
-      />
-      <Input
-        placeholder=""
-        labelText="userName"
-        inputName="name"
-        suffix={
-          <Button
-            onClick={() => console.log('button')}
-            icon="SearchOutlined"
-            shape="circle"
-            type="gray"
-          />
-        }
-      />
-      <Input
-        labelText="userName"
-        inputName="username"
-        placeholder="placeholder"
-        suffix={<DeleteOutlined />}
-        prefix={<IssuesCloseOutlined />}
-        extrainfoLink="#"
-        extrainfoText="generate password"
-      /> */}
-        {/*
-      <BreadCrumb />
-      <RadioBtn>heloo world</RadioBtn>
-      <Pagination pageNumber="1" totalNumberPages="22" />
-      <Dropdown /> */}
+          Button
+        </Button>
+        <Button onClick={() => console.log('button')} type="gray">
+          Button
+        </Button>
+        <Button onClick={() => console.log('button')} ghost>
+          Button
+        </Button>
+        <Button onClick={() => console.log('button')} light>
+          Button
+        </Button>
+        <Button onClick={() => console.log('button')} type="link">
+          Button
+        </Button>
+        <Button onClick={() => console.log('button')} icon="CloseCircleOutlined">
+          Button
+        </Button>
+        <Button onClick={() => console.log('button')} icon="FileExcelOutlined" iconPosition="right">
+          Button
+        </Button>
+        <Input
+          labelText="userName"
+          inputName="username"
+          placeholder="placeholder"
+          suffix={<DeleteOutlined />}
+          prefix={<IssuesCloseOutlined />}
+          extrainfoLink="#"
+          extrainfoText="generate password"
+        />
+        <Input
+          placeholder=""
+          labelText="userName"
+          inputName="name"
+          suffix={
+            <Button
+              onClick={() => console.log('button')}
+              icon="SearchOutlined"
+              shape="circle"
+              type="gray"
+            />
+          }
+        />
+        <Input
+          labelText="userName"
+          inputName="username"
+          placeholder="placeholder"
+          suffix={<DeleteOutlined />}
+          prefix={<IssuesCloseOutlined />}
+          extrainfoLink="#"
+          extrainfoText="generate password"
+        />
+
+        <BreadCrumb />
+        <RadioBtn>heloo world</RadioBtn>
+        <Pagination pageNumber="1" totalNumberPages="22" />
+        <Dropdown />
         <Steps currentPosition={2} />
         <Tabs />
         <Progress type="line" percentage={49} />
-        {/* <Progress type="line" percentage={0} />
-      <Progress percentage={51} />
-      <Progress percentage={50} />
-      <Progress percentage={100} />
-      <Progress status="sub" percentage={100} /> */}
+        <Progress type="line" percentage={0} />
+        <Progress percentage={51} />
+        <Progress percentage={50} />
+        <Progress percentage={100} />
+        <Progress status="sub" percentage={100} />
         <Menu />
         <Button type="primary" onClick={() => setIsVisible(!isVisible)}>
           Open Modal
         </Button>
         <Modal visible={isVisible} handleCancel={() => setIsVisible(!isVisible)} />
-        <AutoComplete />
+        <AutoComplete /> */}
+      </div>
+      <div style={{ width: '500px' }}>
+        <TreeSelect />
       </div>
     </div>
   );
