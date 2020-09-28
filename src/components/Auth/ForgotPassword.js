@@ -26,7 +26,7 @@ const ForgotPassword = () => {
           <h1 className="font-medium text-2xl w-full block text-left">Reset Password</h1>
           <Formik
             initialValues={{
-              password: '',
+              email: '',
             }}
             // validationSchema={schema}
             onSubmit={async (values) => {
@@ -40,10 +40,12 @@ const ForgotPassword = () => {
               <Form className="w-full">
                 <Input
                   onChange={handleChange}
-                  name="password"
+                  value={values.email}
+                  name="email"
                   wrapperClassName="mt-10 mb-12"
-                  labelText="Password"
-                  placeholder="Password"
+                  labelText="Email"
+                  placeholder="email"
+                  type="email"
                 />
 
                 <Button onClick={handleSubmit} text="Submit" className="ml-auto px-6" />

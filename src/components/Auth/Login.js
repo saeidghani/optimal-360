@@ -64,6 +64,7 @@ const Login = ({ login }) => {
                   onChange={handleChange}
                   value={values.email}
                   name="email"
+                  type="email"
                   wrapperClassName="mb-12"
                   labelText="Email"
                   placeholder="Email"
@@ -75,6 +76,7 @@ const Login = ({ login }) => {
                   disabled={isSubmitting}
                   onChange={handleChange}
                   name="password"
+                  type="password"
                   wrapperClassName="mb-4"
                   labelText="Password"
                   placeholder="Password"

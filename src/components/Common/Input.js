@@ -4,6 +4,7 @@ import { Input } from 'antd';
 
 const _Input = ({
   name,
+  type,
   labelText,
   placeholder,
   suffix,
@@ -38,6 +39,7 @@ const _Input = ({
     ) : null}
 
     <Input
+      type={type}
       disabled={disabled}
       onChange={onChange}
       value={value}
@@ -56,6 +58,7 @@ const _Input = ({
 
 _Input.propTypes = {
   name: PropTypes.string.isRequired,
+  type: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   labelText: PropTypes.string,
   placeholder: PropTypes.string,
@@ -73,6 +76,7 @@ _Input.propTypes = {
 
 _Input.defaultProps = {
   labelText: '',
+  type: 'text',
   placeholder: '',
   suffix: null,
   prefix: null,
