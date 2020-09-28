@@ -13,7 +13,7 @@ class _Login extends Component {
     await login({ username: email, password });
 
     // TODO : replace 4000 with a constatnt from config file
-    setTimeout(() => window.location.replace('/super-user/projects/active-projects'), 4000);
+    setTimeout(() => window.location.replace('/super-user/projects?status=active'), 4000);
   };
 
   render() {

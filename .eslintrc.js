@@ -38,5 +38,6 @@ module.exports = {
     'implicit-arrow-linebreak': 'off',
     'function-paren-newline': 'off',
     'consistent-return': 'off',
+    'react/jsx-curly-newline': 'off',
   },
 };

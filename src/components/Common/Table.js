@@ -1,20 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, Pagination } from 'antd';
 
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-  },
-  getCheckboxProps: (record) => ({
-    disabled: record.name === 'Disabled User',
-    // Column configuration not to be checked
-    name: record.name,
-  }),
-};
+import Input from './Input';
 
-const _Table = ({ columns, renderHeader, className, dataSource }) => {
-  const [selectionType] = React.useState('checkbox');
+const _Table = ({
+  columns,
+  renderHeader,
+  className,
+  dataSource,
+  rowClassName,
+  loading,
+  onPaginationChange,
+  pageSize,
+  onPageSizeChange,
+  totalRecordSize,
+  onRowSelectionChange,
+}) => {
+  // const rowSelection = {
+  //   onChange: (selectedRowKeys, selectedRows) => {
+  //     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+  //   },
+  //   // getCheckboxProps: (record) => ({
+  //   //   disabled: record.name === 'Disabled User',
+  //   //   // Column configuration not to be checked
+  //   //   name: record.name,
+  //   // }),
+  // };
 
   const _columns = (columns || []).map((el) => {
     if (typeof el === 'undefined' && !el) return null;
@@ -40,31 +52,44 @@ const _Table = ({ columns, renderHeader, className, dataSource }) => {
     return newItem;
   });
 
-  // const dataSource = Array(10)
-  //   .fill(1)
-  //   .map((_, i) => ({
-  //     key: i,
-  //     name: `John ${i}`,
-  //     age: i * 10,
-  //     text: `John ${i * 10}`,
-  //     number: Math.floor(Math.random() * 100),
-  //     // tags: ['nice', 'developer']
-  //   }));
-
   return (
     <div className={`p-6 bg-white rounded-lg shadow ${className}`}>
       <Table
-        ellipsis
+        loading={loading}
+        rowClassName={rowClassName}
+        ellipsis={false}
         columns={_columns}
         dataSource={dataSource}
-        // onChange={(pagination, filters, sorter, extra) => {}}
         title={renderHeader}
         rowSelection={{
-          type: selectionType,
-          ...rowSelection,
+          type: 'checkbox',
+          onChange: onRowSelectionChange,
         }}
-        pagination={{ position: 'bottomRight' }}
+        pagination={false}
       />
+
+      {pageSize < totalRecordSize ? (
+        <div className="flex flex-row justify-between items-center mt-10">
+          <div className="flex flex-row items-center justify-between">
+            <p className="text-sm text-antgray-100 mt-1">Number of results per page</p>
+
+            <Input
+              value={pageSize}
+              wrapperClassName="w-16 h-8 ml-3"
+              name="pager"
+              onChange={(e) => onPageSizeChange(e.target.value * 1)}
+            />
+          </div>
+
+          <Pagination
+            onChange={onPaginationChange}
+            pageSize={pageSize}
+            showSizeChanger={false}
+            defaultCurrent={1}
+            total={totalRecordSize}
+          />
+        </div>
+      ) : null}
     </div>
   );
 };
@@ -77,22 +102,31 @@ _Table.propTypes = {
         key: PropTypes.string,
         title: PropTypes.string,
         sorter: PropTypes.func,
-        // sorter: PropTypes.bool,
       }),
     ]),
   ).isRequired,
   renderHeader: PropTypes.func,
   className: PropTypes.string,
+  rowClassName: PropTypes.func,
+  loading: PropTypes.bool,
   dataSource: PropTypes.arrayOf(
     PropTypes.shape({
       key: PropTypes.string,
     }),
   ).isRequired,
+  pageSize: PropTypes.number,
+  onPageSizeChange: PropTypes.func.isRequired,
+  onPaginationChange: PropTypes.func.isRequired,
+  onRowSelectionChange: PropTypes.func.isRequired,
+  totalRecordSize: PropTypes.number.isRequired,
 };
 
 _Table.defaultProps = {
   renderHeader: () => 'Hi',
   className: '',
+  rowClassName: () => {},
+  loading: false,
+  pageSize: 10,
 };
 
 export default _Table;

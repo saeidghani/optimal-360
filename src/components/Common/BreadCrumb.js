@@ -9,13 +9,20 @@ const _BreadCrumb = () => {
 
   return (
     <Breadcrumb separator="\" className="capitalize">
+      {/* eslint-disable-next-line no-unused-vars */}
       {paths.map((el, i, arr) => {
-        const to = `/${arr.slice(0, i + 1).join('/')}`;
+        // const to = `/${arr.slice(0, i + 1).join('/')}`;
         const name = el.replace(/-/g, ' ');
 
         return (
           <Breadcrumb.Item key={i}>
-            <Link to={to}>{name}</Link>
+            <Link
+              // TODO
+              // to={to}
+              to="#"
+            >
+              {name}
+            </Link>
           </Breadcrumb.Item>
         );
       })}

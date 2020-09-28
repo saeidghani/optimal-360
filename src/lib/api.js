@@ -23,7 +23,7 @@ axios.interceptors.request.use(
       const token = Cookies.get('token');
 
       if (token && token !== 'undefined') {
-        config.headers.common.Authorization = `Bearer ${Cookies.get('token')}`;
+        config.headers.common.Authorization = `Bearer ${token}`;
       }
     } catch (error) {
       /* Nothing */

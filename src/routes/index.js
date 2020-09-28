@@ -12,9 +12,6 @@ import NotFound from '../components/404';
 
 import TestingArea from '../components/TestingArea';
 
-/**
- * All of the routes
- */
 const Index = () => (
   <Switch>
     <CustomRoute path="/" exact component={TestingArea} />
@@ -22,7 +19,7 @@ const Index = () => (
     <CustomRoute path="/login" exact component={Login} />
     <CustomRoute path="/forgot-password" exact component={ForgotPassword} />
 
-    <PrivateRoute path="/super-user/projects/active-projects" exact component={ActiveProjects} />
+    <PrivateRoute path="/super-user/projects" exact component={ActiveProjects} />
 
     <Route component={NotFound} />
   </Switch>

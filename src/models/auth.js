@@ -9,15 +9,13 @@ export default {
 
   effects: (dispatch) => ({
     async login(payload) {
-      actionWapper(
+      return actionWapper(
         async () => {
           const res = await axios({
             method: 'post',
             url: '/super-user/auth/login',
             data: payload,
           });
-
-          console.log('res', res, res.response);
 
           await this.setToken(res.data);
           // await dispatch.user.fetchCurrentUser();
@@ -30,15 +28,8 @@ export default {
   }),
 
   reducers: {
-    alert_reducer(state, payload) {
-      return {
-        ...state,
-        notification: payload,
-      };
-    },
-
     setToken(state, payload) {
-      Cookies.set('token', payload.token);
+      Cookies.set('token', payload?.data?.token);
 
       return null;
     },

@@ -19,17 +19,19 @@ const _Input = ({
   errorMessage,
 }) => (
   <div name={name} className={`flex flex-col  ${wrapperClassName}`}>
-    <div className="flex justify-between items-center mb-10p pl-1">
-      {labelText ? <label htmlFor={name}>{labelText}</label> : null}
+    {labelText || (extrainfoText && extrainfoLink) ? (
+      <div className="flex justify-between items-center mb-10p pl-1">
+        {labelText ? <label htmlFor={name}>{labelText}</label> : null}
 
-      {extrainfoText && extrainfoLink ? (
-        <div>
-          <a className="text-black opacity-45 underline" href={extrainfoLink}>
-            {extrainfoText}
-          </a>
-        </div>
-      ) : null}
-    </div>
+        {extrainfoText && extrainfoLink ? (
+          <div>
+            <a className="text-black opacity-45 underline" href={extrainfoLink}>
+              {extrainfoText}
+            </a>
+          </div>
+        ) : null}
+      </div>
+    ) : null}
 
     <Input
       disabled={disabled}
@@ -50,6 +52,7 @@ const _Input = ({
 
 _Input.propTypes = {
   name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
   labelText: PropTypes.string,
   placeholder: PropTypes.string,
   suffix: PropTypes.node,
@@ -60,7 +63,6 @@ _Input.propTypes = {
   wrapperClassName: PropTypes.string,
   size: PropTypes.string,
   value: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
   errorMessage: PropTypes.string,
 };

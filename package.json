@@ -26,6 +26,7 @@
     "js-cookie": "^2.2.1",
     "node-sass": "^4.14.1",
     "prop-types": "^15.7.2",
+    "qs": "^6.9.4",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-hook-form": "^5.0.3",

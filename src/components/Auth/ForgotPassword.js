@@ -1,5 +1,5 @@
 import React from 'react';
-import * as yup from 'yup';
+// import * as yup from 'yup';
 import { Formik, Form } from 'formik';
 
 import Input from '../Common/Input';
@@ -10,12 +10,12 @@ import Success from './Success';
 
 const ForgotPassword = () => {
   const [done, setDone] = React.useState(false);
-  const schema = yup.object({
-    password: yup
-      .string()
-      .min(8, 'password must  be at least 8 characters long')
-      .required('password field is required'),
-  });
+  // const schema = yup.object({
+  //   password: yup
+  //     .string()
+  //     .min(8, 'password must  be at least 8 characters long')
+  //     .required('password field is required'),
+  // });
 
   return (
     <Layout>
