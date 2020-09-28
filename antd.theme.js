@@ -11,9 +11,10 @@ module.exports = {
   'font-size-base': '14px',
   'link-color': '#1BB7D9',
   'text-color': '#303854',
-  'heading-color': '#131627',
+  'heading-color': '#131621',
   'heading-color-secondary': 'fade(@heading-color, 50%)',
   'border-color-base': '#c4c4c4',
+  'border-color-split': '#c4c4c4',
 
   // Disabled States
   'disabled-color': '#B8B8B8',
@@ -73,4 +74,8 @@ module.exports = {
   // modal
   'modal-mask-bg': 'fade(#131621, 80%)',
   'modal-footer-border-width': '0px',
+
+  //input field
+  'input-placeholder-color': '#8d98ba',
+  'input-color': '#303854',
 };

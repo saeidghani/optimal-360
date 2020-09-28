@@ -29,7 +29,7 @@ module.exports = {
     },
     extend: {
       colors: {
-        heading: '#131627',
+        heading: '#131621',
         body: '#303854',
         antgreen: '#48D2A1', // used for steps
         antteal: '#00d6a2', // used for primary Progress
@@ -49,6 +49,7 @@ module.exports = {
         },
       },
       spacing: {
+        7: '1.75rem',
         28: '7rem',
         36: '9rem',
         '6p': '6px',
@@ -58,12 +59,13 @@ module.exports = {
         45: '0.45',
       },
       fontSize: {
-        '12px': '.857rem',
-        '14px': '1rem',
-        '16px': '1.142rem',
-        '18px': '1.285rem',
-        '20px': '1.428rem',
-        '22px': '1.571rem',
+        // base on 16 px
+        '12px': '.75rem',
+        '14px': '0.875rem',
+        '16px': '1rem',
+        '18px': '1.125rem',
+        '20px': '1.25rem',
+        '22px': '1.375rem',
       },
     },
   },
