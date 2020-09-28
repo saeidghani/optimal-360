@@ -96,7 +96,7 @@ const Login = ({ login }) => {
                   onClick={handleSubmit}
                   textSize="16px"
                   text="Log in"
-                  className="ml-auto mt-16 c-force-padding-px"
+                  className="ml-auto mt-16 c-force-padding-y-px c-force-padding-x-px"
                 />
               </Form>
             )}

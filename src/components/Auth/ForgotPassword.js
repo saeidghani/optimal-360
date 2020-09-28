@@ -46,7 +46,12 @@ const ForgotPassword = () => {
                   placeholder="Password"
                 />
 
-                <Button onClick={handleSubmit} text="Submit" className="ml-auto px-6" />
+                <Button
+                  onClick={handleSubmit}
+                  text="Submit"
+                  textSize="16px"
+                  className="ml-auto c-force-padding-y-px px-7"
+                />
               </Form>
             )}
           </Formik>
