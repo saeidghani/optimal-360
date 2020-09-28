@@ -20,11 +20,15 @@ const _Input = ({
 }) => (
   <div name={name} className={`flex flex-col  ${wrapperClassName}`}>
     <div className="flex justify-between items-center mb-10p pl-1">
-      {labelText ? <label htmlFor={name}>{labelText}</label> : null}
+      {labelText ? (
+        <label className="text-heading" htmlFor={name}>
+          {labelText}
+        </label>
+      ) : null}
 
       {extrainfoText && extrainfoLink ? (
         <div>
-          <a className="text-black opacity-45 underline" href={extrainfoLink}>
+          <a className="text-black underline text-antgray-100 text-12px" href={extrainfoLink}>
             {extrainfoText}
           </a>
         </div>
@@ -37,7 +41,7 @@ const _Input = ({
       value={value}
       name={name}
       size={size}
-      className={`c-sufix-prefix-gray ${inputClass}`}
+      className={`c-sufix-prefix-gray text-12px ${inputClass}`}
       id={name}
       placeholder={placeholder}
       suffix={suffix}

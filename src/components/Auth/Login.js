@@ -78,7 +78,7 @@ const Login = ({ login }) => {
                   wrapperClassName="mb-4"
                   labelText="Password"
                   placeholder="Password"
-                  extrainfoText="Forgot Password ?"
+                  extrainfoText="Forgot Password?"
                   extrainfoLink="/forgot-password"
                   errorMessage={touched.password && errors.password}
                 />
@@ -94,8 +94,9 @@ const Login = ({ login }) => {
                 <Button
                   loading={isSubmitting}
                   onClick={handleSubmit}
+                  textSize="16px"
                   text="Log in"
-                  className="ml-auto mt-16 py-4 px-6"
+                  className="ml-auto mt-16 c-force-padding-px"
                 />
               </Form>
             )}
