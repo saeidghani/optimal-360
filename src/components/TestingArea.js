@@ -16,6 +16,7 @@ import Menu from './Common/Menu';
 import Modal from './Common/Modal';
 import AutoComplete from './Common/AutoComplete';
 import TreeSelect from './Common/TreeSelect';
+import DatePicker from './Common/DatePicker';
 
 const Login = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -95,10 +96,11 @@ const Login = () => {
         </Button>
         <Modal visible={isVisible} handleCancel={() => setIsVisible(!isVisible)} />
         <AutoComplete /> */}
+        <DatePicker />
       </div>
-      <div style={{ width: '500px' }}>
+      {/* <div style={{ width: '500px' }}>
         <TreeSelect />
-      </div>
+      </div> */}
     </div>
   );
 };

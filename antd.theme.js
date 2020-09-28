@@ -14,6 +14,7 @@ module.exports = {
   'heading-color': '#131627',
   'heading-color-secondary': 'fade(@heading-color, 50%)',
   'border-color-base': '#c4c4c4',
+  'border-color-split': '#c4c4c4',
 
   // Disabled States
   'disabled-color': '#B8B8B8',
