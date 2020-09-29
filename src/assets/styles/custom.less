@@ -286,3 +286,14 @@
     }
   }
 }
+// when making font size of large input field on 12px input field gets smaller
+// with adding padding we fix this issue
+.ant-input-lg {
+  padding: 10px 11px;
+}
+
+.c-min-w-form-input {
+  @media screen and(min-width:640px) {
+    min-width: 385px;
+  }
+}
