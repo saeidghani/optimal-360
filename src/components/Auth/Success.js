@@ -14,7 +14,7 @@ const Success = () => (
       Please check your email inbox, we have sent you a new password in your email.
     </p>
 
-    <Button href="/login" className="mt-12 px-6" text="Log in" />
+    <Button href="/login" className="mt-12 c-force-padding-y-px px-7" text="Log in" />
   </div>
 );
 

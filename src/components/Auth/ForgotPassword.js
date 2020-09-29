@@ -44,7 +44,7 @@ const ForgotPassword = () => {
                   name="email"
                   wrapperClassName="mt-10 mb-12"
                   labelText="Email"
-                  placeholder="email"
+                  placeholder="Email"
                   type="email"
                 />
 
