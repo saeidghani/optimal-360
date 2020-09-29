@@ -9,7 +9,7 @@ const useQuery = (initialState = '') => {
   const [query, _setQuery] = React.useState(initialState);
 
   const history = useHistory();
-  const { search } = history.location;
+  const { search, pathname } = history.location;
 
   React.useEffect(() => {
     const newQuery = parse(search);
@@ -21,9 +21,24 @@ const useQuery = (initialState = '') => {
   const setQuery = (obj) => {
     const parsedQuery = parse(search);
     const newObject = { ...parsedQuery, ...obj };
+    // we destruct a new obj not to overwrite pervious params
+
+    Object.keys(newObject).map((key) => {
+      if (!newObject[key]) delete newObject[key];
+    });
+    // if a query parameter has an empty('') value
+    // we remove it from the parsed object
+
+    if (newObject.page_size && !newObject.page_number) {
+      newObject.page_number = 1;
+    }
 
     const newQuery = stringify(newObject);
-    history.push(newQuery);
+
+    // if there is no params we empty the query part
+    // but we dont't want to transtion back to '/'
+    // so we go to 'pathname'
+    history.push(newQuery || pathname);
   };
 
   const parsedQuery = parse(query);

@@ -16,6 +16,8 @@ const _Table = ({
   onPageSizeChange,
   totalRecordSize,
   onRowSelectionChange,
+  selectedRowKeys,
+  onRowClick,
 }) => {
   // const rowSelection = {
   //   onChange: (selectedRowKeys, selectedRows) => {
@@ -56,6 +58,9 @@ const _Table = ({
     <div className={`p-6 bg-white rounded-lg shadow ${className}`}>
       <Table
         loading={loading}
+        onRow={(record, rowIndex) => ({
+          onClick: () => onRowClick(record, rowIndex),
+        })}
         rowClassName={rowClassName}
         ellipsis={false}
         columns={_columns}
@@ -64,32 +69,35 @@ const _Table = ({
         rowSelection={{
           type: 'checkbox',
           onChange: onRowSelectionChange,
+          selectedRowKeys,
         }}
         pagination={false}
       />
 
-      {pageSize < totalRecordSize ? (
-        <div className="flex flex-row justify-between items-center mt-10">
-          <div className="flex flex-row items-center justify-between">
-            <p className="text-sm text-antgray-100 mt-1">Number of results per page</p>
+      {/* {pageSize < totalRecordSize ? ( */}
+      <div className="flex flex-row justify-between items-center mt-10">
+        <div className="flex flex-row items-center justify-between">
+          <p className="text-sm text-antgray-100 mt-1">Number of results per page</p>
 
-            <Input
-              value={pageSize}
-              wrapperClassName="w-16 h-8 ml-3"
-              name="pager"
-              onChange={(e) => onPageSizeChange(e.target.value * 1)}
-            />
-          </div>
-
-          <Pagination
-            onChange={onPaginationChange}
-            pageSize={pageSize}
-            showSizeChanger={false}
-            defaultCurrent={1}
-            total={totalRecordSize}
+          <Input
+            inputStyles={{ fontSize: '1rem' }}
+            inputClass="text-center text-base"
+            value={pageSize.toString()}
+            wrapperClassName="w-12 h-8 ml-3"
+            name="pager"
+            onChange={(e) => onPageSizeChange(e.target.value)}
           />
         </div>
-      ) : null}
+
+        <Pagination
+          onChange={onPaginationChange}
+          pageSize={pageSize}
+          showSizeChanger={false}
+          defaultCurrent={1}
+          total={totalRecordSize && !Number.isNaN(totalRecordSize) ? totalRecordSize : 10}
+        />
+      </div>
+      {/* ) : null} */}
     </div>
   );
 };
@@ -119,12 +127,15 @@ _Table.propTypes = {
   onPaginationChange: PropTypes.func.isRequired,
   onRowSelectionChange: PropTypes.func.isRequired,
   totalRecordSize: PropTypes.number.isRequired,
+  selectedRowKeys: PropTypes.shape([]).isRequired,
+  onRowClick: PropTypes.func,
 };
 
 _Table.defaultProps = {
   renderHeader: () => 'Hi',
   className: '',
   rowClassName: () => {},
+  onRowClick: null,
   loading: false,
   pageSize: 10,
 };

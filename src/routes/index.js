@@ -6,7 +6,7 @@ import PrivateRoute from './PrivateRoute';
 import Login from '../containers/Auth/Login';
 import ForgotPassword from '../containers/Auth/ForgotPassword';
 
-import ActiveProjects from '../components/Projects/Active';
+import ActiveProjects from '../containers/Projects/Active';
 
 import NotFound from '../components/404';
 

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 
 import { TeamOutlined } from '@ant-design/icons';
@@ -14,29 +14,17 @@ import Tag from '../Common/Tag';
 
 import { useQuery } from '../../hooks/useQuery';
 
-const ActiveProjects = () => {
-  const [loading, setLoading] = React.useState(false);
-  const [pageSize, setPageSize] = React.useState();
-
-  // TODO
-  // eslint-disable-next-line no-unused-vars
-  const [selectedRows, setSelectedRows] = React.useState('');
+const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjects, loading }) => {
+  const [pageSize, setPageSize] = React.useState(10);
+  const [selectedRows, setSelectedRows] = React.useState([]);
 
   const [parsedQuery, query, setQuery] = useQuery();
 
   const dispatch = useDispatch();
   const { activeProjects } = useSelector((state) => state.projects);
 
-  const isStatusActive = parsedQuery?.status === 'active';
-
   const fetch = React.useCallback(async () => {
-    setLoading(true);
-
-    try {
-      await dispatch.projects.fetchActiveProjects(query);
-    } finally {
-      setLoading(false);
-    }
+    await dispatch.projects.fetchActiveProjects(query);
   }, [dispatch, query]);
 
   React.useEffect(() => {
@@ -44,37 +32,88 @@ const ActiveProjects = () => {
   }, [query, fetch]);
 
   const renderHeader = React.useCallback(
-    () => (
-      <div className="flex flex-row justify-between items-center">
-        <div className="flex flex-row">
-          <Button
-            onClick={() => setQuery({ status: 'active' })}
-            textSize="sm"
-            text="Active Projects"
-            className="mr-3"
-            light={isStatusActive}
-          />
-          <Button
-            onClick={() => setQuery({ status: 'inactive' })}
-            textSize="sm"
-            text="Inactive Projects"
-            light={!isStatusActive}
-          />
-        </div>
+    () => {
+      const selectedRowsIds = selectedRows?.length > 0 ? selectedRows.map((el) => el.id) : [];
 
-        <div className="flex flex-row">
-          <SearchBox
-            loading={loading}
-            onSearch={(val) => setQuery({ q: val })}
-            onPressEnter={(e) => setQuery({ q: e.target.value })}
+      return selectedRows && selectedRows?.length > 0 ? (
+        <div className="flex flex-row items-center">
+          <Button
+            onClick={async () => {
+              await removeProjects(selectedRowsIds);
+              fetch();
+            }}
+            size="middle"
+            className="px-2 text-base flex flex-row justify-center items-center
+            text-primary-500 bg-primary-500 bg-opacity-8"
+            icon="DeleteOutlined"
           />
-          <Button textSize="sm" text="New Organization" type="gray" className="mx-3" />
-          <Button textSize="sm" text="Add Project" type="gray" />
+
+          <Button
+            onClick={async () => {
+              await changeStatusOfProjects(
+                selectedRowsIds,
+                parsedQuery?.status === 'active' ? 'inactive' : 'active',
+              );
+
+              fetch();
+
+              setSelectedRows([]);
+            }}
+            size="middle"
+            className="ml-3"
+            textSize="xs"
+            text={parsedQuery?.status === 'active' ? 'Deactivate' : 'Activate'}
+          />
+          {/* <Button size="middle" className="ml-3" textSize="xs" text="Deactivate" /> */}
+
+          <h3 className="font-normal ml-3">
+            Selected
+            {selectedRows.length}
+            items
+          </h3>
         </div>
-      </div>
-    ),
+      ) : (
+        <div className="flex flex-row justify-between items-center">
+          <div className="flex flex-row">
+            <Button
+              size="middle"
+              // onClick={() => setQuery({ status: parsedQuery?.status === 'active' ? '' : 'active' })}
+              onClick={() => setQuery({ status: 'active' })}
+              textSize="xs"
+              text="Active Projects"
+              className="mr-3"
+              light={parsedQuery?.status === 'active'}
+            />
+            <Button
+              size="middle"
+              onClick={() => setQuery({ status: 'inactive' })}
+              textSize="xs"
+              text="Inactive Projects"
+              light={parsedQuery?.status === 'inactive'}
+            />
+          </div>
+
+          <div className="flex flex-row">
+            <SearchBox
+              className="text-xs"
+              loading={loading}
+              onSearch={(val) => setQuery({ q: val })}
+              onPressEnter={(e) => setQuery({ q: e.target.value })}
+            />
+            <Button
+              size="middle"
+              textSize="xs"
+              text="New Organization"
+              type="gray"
+              className="mx-3"
+            />
+            <Button size="middle" textSize="xs" text="Add Project" type="gray" />
+          </div>
+        </div>
+      );
+    },
     // eslint-disable-next-line
-    [activeProjects.timeStamp, loading, setQuery],
+    [activeProjects.timeStamp, loading, setQuery, selectedRows.length],
   );
 
   const columns = React.useMemo(
@@ -113,19 +152,28 @@ const ActiveProjects = () => {
       {
         key: 'status',
         title: 'Status',
-        render: (status) => <Tag color={status === 'active' ? 'cyan' : 'orange'} text={status} />,
+        render: (status) => <Tag color={status !== 'active' ? 'orange' : ''} text={status} />,
       },
       {
         key: 'id',
         width: 50,
         render: (id) => (
           <div className="flex flex-row-reverse">
-            <Button onClick={() => console.log(id)} textSize="sm" text="Set Client Admin" />
             <Button
-              onClick={() => console.log(id)}
+              size="middle"
+              textSize="xs"
+              // onClick={() => console.log(id)}
+              text="Set Client Admin"
+            />
+            <Button
+              onClick={async () => {
+                await duplicateProject(id);
+                fetch();
+              }}
               icon="CopyOutlined"
               type="link"
-              className="text-xl mr-7"
+              className="text-lg mr-7"
+              size="middle"
             />
           </div>
         ),
@@ -144,12 +192,17 @@ const ActiveProjects = () => {
   return (
     <MainLayout>
       <Table
+        selectedRowKeys={selectedRows?.map((el) => el.key)}
         loading={loading}
         columns={columns}
         dataSource={dataSource}
         renderHeader={renderHeader}
-        onPageSizeChange={setPageSize}
-        pageSize={pageSize}
+        onRowClick={(record, rowIndex) => console.log({ record, rowIndex })}
+        onPageSizeChange={(size) => {
+          setPageSize(size);
+          setQuery({ page_size: size, page_number: 1 });
+        }}
+        pageSize={pageSize * 1}
         // eslint-disable-next-line camelcase
         onPaginationChange={(page_number, page_size) =>
           setQuery({
@@ -157,9 +210,8 @@ const ActiveProjects = () => {
             page_number,
           })
         }
-        onRowSelectionChange={(rowKeys, rows) => {
+        onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
-          // console.log(`selectedRowKeys: ${rowKeys}`, 'selectedRows: ', rows);
         }}
         totalRecordSize={activeProjects?.metaData?.pagination?.totalRecords * 1}
       />
@@ -167,8 +219,13 @@ const ActiveProjects = () => {
   );
 };
 
-// ActiveProjects.propTypes = {};
+ActiveProjects.propTypes = {
+  duplicateProject: PropTypes.func.isRequired,
+  changeStatusOfProjects: PropTypes.func.isRequired,
+  removeProjects: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+};
 
-// ActiveProjects.defaultProps = {};
+ActiveProjects.defaultProps = {};
 
 export default ActiveProjects;

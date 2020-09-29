@@ -56,6 +56,8 @@ module.exports = {
         '10p': '10px',
       },
       opacity: {
+        8: '0.08',
+        10: '0.1',
         45: '0.45',
       },
       fontSize: {

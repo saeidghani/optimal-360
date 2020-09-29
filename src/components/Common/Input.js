@@ -18,6 +18,7 @@ const _Input = ({
   size,
   disabled,
   errorMessage,
+  inputStyles,
 }) => (
   <div name={name} className={`flex flex-col  ${wrapperClassName}`}>
     {labelText || (extrainfoText && extrainfoLink) ? (
@@ -46,6 +47,7 @@ const _Input = ({
       name={name}
       size={size}
       className={`c-sufix-prefix-gray text-12px ${inputClass}`}
+      style={inputStyles}
       id={name}
       placeholder={placeholder}
       suffix={suffix}
@@ -72,6 +74,7 @@ _Input.propTypes = {
   value: PropTypes.string,
   disabled: PropTypes.bool,
   errorMessage: PropTypes.string,
+  inputStyles: PropTypes.shape({}),
 };
 
 _Input.defaultProps = {
@@ -88,6 +91,7 @@ _Input.defaultProps = {
   value: '',
   errorMessage: '',
   disabled: false,
+  inputStyles: {},
 };
 
 export default _Input;

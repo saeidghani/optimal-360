@@ -62,7 +62,7 @@ const _Button = ({
       {text ? (
         <p className={`font-normal text-${textSize} leading-5 ${textClassName}`}>{text}</p>
       ) : (
-        children
+        children || null
       )}
       {iconPosition !== 'left' && RICON ? <RICON className="inline-flex" /> : null}
     </Button>

@@ -35,7 +35,7 @@ const Login = ({ login }) => {
 
         <div
           className="col-start-2 col-span-10 md:col-span-4 md:col-start-8
-       flex flex-col items-center xl:pr-24 pt-6"
+       flex flex-col justify-center items-center xl:pr-24 pt-6"
         >
           <h1 className="font-medium text-2xl w-full block text-left mb-10">Login</h1>
           <Formik

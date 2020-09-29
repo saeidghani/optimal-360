@@ -111,6 +111,10 @@
 }
 
 .ant-input-search {
+  input {
+    font-size: 12px !important;
+  }
+
   &::before {
     display: none !important;
   }
@@ -130,16 +134,16 @@
     justify-content: center;
     align-items: center;
     padding: 0;
-    width: 30px;
-    height: 30px;
+    width: 24px;
+    height: 24px;
     margin-right: 12px;
 
     border-radius: 999px;
     background-color: @primary-color;
 
     svg {
-      width: 12px;
-      height: 12px;
+      width: 9px;
+      height: 9px;
 
       fill: #fff;
 
@@ -265,4 +269,20 @@
 .c-force-padding-x-px {
   padding-left: 30px !important;
   padding-right: 30px !important;
+}
+
+.ant-pagination-item-link {
+  border: none !important;
+  background-color: #1bb7d915 !important;
+
+  span {
+    color: @primary-color;
+    width: 14px !important;
+    height: 14px !important;
+
+    svg {
+      width: 14px !important;
+      height: 14px !important;
+    }
+  }
 }
