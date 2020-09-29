@@ -1,7 +1,7 @@
 // a place to test your components
-import React, { useState } from 'react';
+import React from 'react';
 
-import Button from './Common/Button';
+// import Button from './Common/Button';
 import Sidebar from './Common/Sidebar';
 // FIX : put related import statements together
 // import Input from './Common/Input';
@@ -9,17 +9,17 @@ import Sidebar from './Common/Sidebar';
 // import RadioBtn from './Common/RadioBtn';
 // import Pagination from './Common/Pagination';
 // import Dropdown from './Common/Dropdown';
-import Steps from './Common/Steps';
-import Tabs from './Common/Tabs';
-import Progress from './Common/Progress';
-import Menu from './Common/Menu';
-import Modal from './Common/Modal';
-import AutoComplete from './Common/AutoComplete';
-import TreeSelect from './Common/TreeSelect';
+// import Steps from './Common/Steps';
+// import Tabs from './Common/Tabs';
+// import Progress from './Common/Progress';
+// import Menu from './Common/Menu';
+// import Modal from './Common/Modal';
+// import TreeSelect from './Common/TreeSelect';
 import DatePicker from './Common/DatePicker';
+import AutoComplete from './Common/AutoComplete';
 
 const Login = () => {
-  const [isVisible, setIsVisible] = useState(false);
+  // const [isVisible, setIsVisible] = useState(false);
 
   return (
     <div className="flex">
@@ -94,8 +94,8 @@ const Login = () => {
         <Button type="primary" onClick={() => setIsVisible(!isVisible)}>
           Open Modal
         </Button>
-        <Modal visible={isVisible} handleCancel={() => setIsVisible(!isVisible)} />
-        <AutoComplete /> */}
+        <Modal visible={isVisible} handleCancel={() => setIsVisible(!isVisible)} /> */}
+        <AutoComplete />
         <DatePicker />
       </div>
       {/* <div style={{ width: '500px' }}>

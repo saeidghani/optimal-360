@@ -30,7 +30,10 @@ const _Input = ({
 
         {extrainfoText && extrainfoLink ? (
           <div>
-            <a className="text-black underline text-antgray-100 text-12px" href={extrainfoLink}>
+            <a
+              className="text-black underline text-antgray-100 text-12px pl-2 sm:pl-0"
+              href={extrainfoLink}
+            >
               {extrainfoText}
             </a>
           </div>

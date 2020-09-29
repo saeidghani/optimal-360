@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Input, AutoComplete } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
 import Button from './Button';
 
 const _AutoComplete = ({ className, onSearch, onSelect, options, inputName, placeholder }) => {
@@ -24,11 +23,7 @@ const _AutoComplete = ({ className, onSearch, onSelect, options, inputName, plac
         inputName={inputName}
         placeholder={placeholder}
         suffix={
-          <Button
-            onClick={() => console.log('button')}
-            text={<SearchOutlined style={{ verticalAlign: '0.107rem' }} />}
-            shape="circle"
-          />
+          <Button onClick={() => console.log('button')} shape="circle" icon="SearchOutlined" />
         }
       />
     </AutoComplete>

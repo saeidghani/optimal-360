@@ -2,15 +2,20 @@ import React from 'react';
 import { Radio } from 'antd';
 import PropTypes from 'prop-types';
 
-const RadioBtn = ({ children, className }) => <Radio className={` ${className}`}>{children}</Radio>;
+const RadioBtn = ({ className, defaultValue }) => (
+  <Radio.Group className={` ${className}`} name="radiogroup" defaultValue={defaultValue}>
+    <Radio value={1}>Active</Radio>
+    <Radio value={1}>In-Active</Radio>
+  </Radio.Group>
+);
 
 RadioBtn.propTypes = {
-  children: PropTypes.string,
+  defaultValue: PropTypes.string,
   className: PropTypes.string,
 };
 
 RadioBtn.defaultProps = {
-  children: '',
+  defaultValue: '',
   className: '',
 };
 
