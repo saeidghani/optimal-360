@@ -46,8 +46,8 @@ module.exports = {
   'select-dropdown-height': '32px',
   'select-background': '@component-background',
   'select-clear-background': '@select-background',
-  'select-selection-item-bg': '@background-color-base',
-  'select-selection-item-border-color': '@border-color-split',
+  // 'select-selection-item-bg': '@background-color-base',
+  // 'select-selection-item-border-color': '@border-color-split',
   'select-single-item-height-lg': '40px',
   'select-multiple-item-height': '@input-height-base - @input-padding-vertical-base * 2', // Normal 24p
   'select-multiple-item-height-lg': '32px',
@@ -75,7 +75,11 @@ module.exports = {
   'modal-mask-bg': 'fade(#131621, 80%)',
   'modal-footer-border-width': '0px',
 
-  //input field
+  // input field
   'input-placeholder-color': '#8d98ba',
   'input-color': '#303854',
+
+  // select
+  'select-selection-item-bg': 'rgba(141, 159, 186, 0.1)',
+  'select-selection-item-border-color': '#8d98ba',
 };
