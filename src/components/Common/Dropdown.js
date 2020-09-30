@@ -3,14 +3,23 @@ import PropTypes from 'prop-types';
 import { Select } from 'antd';
 
 const { Option } = Select;
-const _Dropdown = ({ handleChange, className, placeholder, showSearch, size }) => (
+const _Dropdown = ({
+  handleChange,
+  className,
+  placeholder,
+  showSearch,
+  size,
+  type,
+  defaultValue,
+}) => (
   <div>
     <Select
       showSearch={showSearch}
-      className={`c-arrow-color w-full text-12px ${className}`}
+      className={`c-arrow-color w-full text-12px ${className} ${type}-dropdown`}
       onChange={handleChange}
       placeholder={placeholder}
       size={size}
+      defaultValue={defaultValue}
     >
       <Option value="jack">Jack</Option>
       <Option value="lucy">Lucy</Option>
@@ -25,6 +34,8 @@ _Dropdown.propTypes = {
   placeholder: PropTypes.string,
   showSearch: PropTypes.bool,
   size: PropTypes.string,
+  type: PropTypes.string,
+  defaultValue: PropTypes.string,
 };
 
 _Dropdown.defaultProps = {
@@ -32,6 +43,8 @@ _Dropdown.defaultProps = {
   placeholder: '',
   showSearch: true,
   size: 'large',
+  type: '',
+  defaultValue: '',
 };
 
 export default _Dropdown;

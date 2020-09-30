@@ -14,15 +14,10 @@ const _Tabs = ({ className, defaultActiveKey }) => {
       defaultActiveKey={defaultActiveKey}
       onChange={callback}
     >
-      <TabPane tab="Tab 1" key="1">
-        Content of Tab Pane 1
-      </TabPane>
-      <TabPane tab="Tab 2" key="2">
-        Content of Tab Pane 2
-      </TabPane>
-      <TabPane tab="Tab 3" key="3">
-        Content of Tab Pane 3
-      </TabPane>
+      <TabPane tab="Status Overview" key="1" />
+      <TabPane tab="Status Details" key="2" />
+      <TabPane tab="Rater Email" key="3" />
+      <TabPane tab="Results" key="4" />
     </Tabs>
   );
 };

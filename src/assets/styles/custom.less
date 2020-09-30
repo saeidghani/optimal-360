@@ -89,6 +89,25 @@
 .ant-tabs-bottom > div > .ant-tabs-nav .ant-tabs-ink-bar {
   height: 1px;
 }
+//
+//tabs header distance
+
+.c-tabs-class {
+  @media screen and(max-width:360px) {
+    .ant-tabs-tab {
+      margin-right: 33px;
+    }
+  }
+  @media screen and(max-width:640px) {
+    .ant-tabs-tab {
+      margin-right: 66px;
+    }
+  }
+
+  .ant-tabs-tab {
+    margin-right: 132px;
+  }
+}
 
 .ant-btn {
   padding-top: 0 !important;
@@ -301,4 +320,16 @@
 .ant-table-thead > tr > th,
 .ant-table-tbody > tr > td {
   border-bottom: 1px solid #f0f0f0;
+}
+
+//drop down
+.gray-dropdown {
+  .ant-select-selector {
+    background-color: rgba(141, 159, 186, 0.1) !important;
+    border: 1px solid rgba(141, 159, 186, 0.1) !important;
+    color: rgba(141, 159, 186) !important;
+  }
+  .ant-select-arrow {
+    color: rgba(141, 159, 186) !important;
+  }
 }
