@@ -1,25 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { DatePicker, Space } from 'antd';
+import { DatePicker } from 'antd';
+import moment from 'moment';
 
-const _DatePicker = ({ className, placeholder, size, labelname }) => {
-  function onChange(date, dateString) {
-    console.log(date, dateString);
-  }
+const _DatePicker = ({ className, placeholder, size, onChange }) => {
   const dateFormat = 'DD/MM/YYYY';
 
   return (
-    <Space direction="vertical">
-      <label htmlFor={labelname}>{labelname}</label>
-      <DatePicker
-        id={labelname}
-        className={` ${className}`}
-        onChange={onChange}
-        format={dateFormat}
-        placeholder={placeholder}
-        size={size}
-      />
-    </Space>
+    <DatePicker
+      className={` ${className}`}
+      onChange={(val) => onChange(moment(val).toISOString())}
+      format={dateFormat}
+      placeholder={placeholder}
+      size={size}
+    />
   );
 };
 
@@ -27,14 +21,13 @@ _DatePicker.propTypes = {
   className: PropTypes.string,
   placeholder: PropTypes.string,
   size: PropTypes.string,
-  labelname: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
 };
 
 _DatePicker.defaultProps = {
   className: '',
   placeholder: 'select date',
-  size: 'large',
-  labelname: 'Date',
+  size: 'middle',
 };
 
 export default _DatePicker;

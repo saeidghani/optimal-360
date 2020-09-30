@@ -25,13 +25,13 @@ const Layout = ({ title, children, hasBreadCrumb, contentClass }) => {
 Layout.propTypes = {
   title: PropTypes.string,
   children: PropTypes.node.isRequired,
-  hasBreadCrumb: PropTypes.string,
+  hasBreadCrumb: PropTypes.bool,
   contentClass: PropTypes.string,
 };
 
 Layout.defaultProps = {
   title: '',
-  hasBreadCrumb: 'true',
+  hasBreadCrumb: false,
   contentClass: '',
 };
 

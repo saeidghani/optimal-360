@@ -6,11 +6,11 @@ import PrivateRoute from './PrivateRoute';
 import Login from '../containers/Auth/Login';
 import ForgotPassword from '../containers/Auth/ForgotPassword';
 
-import SurveyGroupList from '../containers/SurveyGroups/List';
-import SurveyGroupSetting from '../containers/SurveyGroups/Setting';
-import RatersStatusOverview from '../containers/SurveyGroups/RatersStatusOverview';
-
 import ProjectsList from '../containers/Projects/List';
+import SetAdmin from '../containers/Projects/SetAdmin';
+
+import SurveyGroupList from '../containers/SurveyGroups/List';
+import RatersStatusOverview from '../containers/SurveyGroups/RatersStatusOverview';
 
 import NotFound from '../components/404';
 import TestingArea from '../components/TestingArea';
@@ -23,13 +23,14 @@ const Index = () => (
     <CustomRoute path="/forgot-password" exact component={ForgotPassword} />
 
     <PrivateRoute path="/super-user/projects" exact component={ProjectsList} />
+    <PrivateRoute path="/super-user/projects/:projectId/set-admin" exact component={SetAdmin} />
+
     <PrivateRoute
       path="/super-user/projects/:projectId/survey-groups"
       exact
       component={SurveyGroupList}
     />
 
-    <PrivateRoute path="/super-user/surveygroup-setting" exact component={SurveyGroupSetting} />
     <PrivateRoute
       path="/super-user/Participants/StatusOverview"
       exact
