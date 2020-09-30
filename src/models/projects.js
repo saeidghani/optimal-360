@@ -5,20 +5,19 @@ export default {
   namespace: 'projects',
 
   state: {
-    activeProjects: '',
+    projects: '',
+    surveyGroups: '',
   },
 
   effects: (dispatch) => ({
-    async fetchActiveProjects(query) {
-      const newQuery = query || '?page_size=10&page_number=1&status=active';
-
+    async fetchProjects(query) {
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
-          url: `/super-user/projects${newQuery}`,
+          url: `/super-user/projects${query}`,
         });
 
-        this.fetchActiveProjects_reducer(res?.data);
+        await this.fetchProjects_reducer(res?.data);
 
         return res;
       }, dispatch.util.errorHandler);
@@ -65,7 +64,7 @@ export default {
             data: { projectIds },
           });
 
-          // await dispatch.projects.fetchActiveProjects();
+          // await dispatch.projects.fetchProjects();
 
           return res;
         },
@@ -83,7 +82,7 @@ export default {
             data: { projectIds, status },
           });
 
-          // await dispatch.projects.fetchActiveProjects();
+          // await dispatch.projects.fetchProjects();
 
           return res;
         },
@@ -91,12 +90,30 @@ export default {
         dispatch.util.alert,
       );
     },
+
+    async fetchSurveyGroups({ projectId, query }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/projects/${projectId}/survey-groups${query}`,
+        });
+
+        this.fetchSurveyGroups_reducer(res?.data);
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
   }),
 
   reducers: {
-    fetchActiveProjects_reducer: (state, payload) => ({
+    fetchProjects_reducer: (state, payload) => ({
       ...state,
-      activeProjects: payload,
+      projects: payload,
+    }),
+
+    fetchSurveyGroups_reducer: (state, payload) => ({
+      ...state,
+      surveyGroups: payload,
     }),
   },
 };

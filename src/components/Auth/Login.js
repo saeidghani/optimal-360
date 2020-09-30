@@ -12,7 +12,7 @@ import Shape from './Helper/AnimatedShape';
 
 const Login = ({ login }) => {
   const schema = yup.object({
-    email: yup.string().required('email feild is required'),
+    email: yup.string().email('email is not valid').required('email feild is required'),
     password: yup
       .string()
       .min(8, 'password must  be at least 8 characters long')

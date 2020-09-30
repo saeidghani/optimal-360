@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
-import Layout from '../../components/Projects/Active';
+import Layout from '../../components/Projects/List';
 
 class ActiveProjects extends Component {
   state = {};
@@ -47,7 +47,6 @@ ActiveProjects.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  projects: state.projects || {},
   loading: state.loading.global || false,
 });
 

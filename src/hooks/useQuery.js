@@ -5,25 +5,26 @@ import qs from 'qs';
 const parse = (str) => qs.parse(str, { ignoreQueryPrefix: true });
 const stringify = (obj) => qs.stringify(obj, { addQueryPrefix: true });
 
-const useQuery = (initialState = '') => {
-  const [query, _setQuery] = React.useState(initialState);
-
+const useQuery = () => {
   const history = useHistory();
   const { search, pathname } = history.location;
+
+  // query state initial value must be a valid stringified value from the url
+  const [query, _setQuery] = React.useState(stringify(parse(search)));
 
   React.useEffect(() => {
     const newQuery = parse(search);
     const queryStr = stringify(newQuery);
 
     _setQuery(queryStr);
-  }, [search]);
+  }, [search, pathname]);
 
   const setQuery = (obj) => {
     const parsedQuery = parse(search);
     const newObject = { ...parsedQuery, ...obj };
     // we destruct a new obj not to overwrite pervious params
 
-    Object.keys(newObject).map((key) => {
+    Object.keys(newObject).forEach((key) => {
       if (!newObject[key]) delete newObject[key];
     });
     // if a query parameter has an empty('') value

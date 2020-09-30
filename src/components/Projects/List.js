@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
@@ -17,14 +18,16 @@ import { useQuery } from '../../hooks/useQuery';
 const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjects, loading }) => {
   const [pageSize, setPageSize] = React.useState(10);
   const [selectedRows, setSelectedRows] = React.useState([]);
-
+  const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
 
   const dispatch = useDispatch();
-  const { activeProjects } = useSelector((state) => state.projects);
+  const { projects = {} } = useSelector((state) => state.projects);
 
   const fetch = React.useCallback(async () => {
-    await dispatch.projects.fetchActiveProjects(query);
+    const newQuery = query || '?page_size=10&page_number=1&status=active';
+
+    await dispatch.projects.fetchProjects(newQuery);
   }, [dispatch, query]);
 
   React.useEffect(() => {
@@ -113,7 +116,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
       );
     },
     // eslint-disable-next-line
-    [activeProjects.timeStamp, loading, setQuery, selectedRows.length],
+    [projects.timeStamp, loading, setQuery, selectedRows.length],
   );
 
   const columns = React.useMemo(
@@ -180,24 +183,24 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
       },
     ],
     // eslint-disable-next-line
-    [activeProjects.timeStamp],
+    [projects.timeStamp],
   );
 
   const dataSource = React.useMemo(
-    () => activeProjects.data.map((item) => ({ ...item, key: `${item.id}` })),
+    () => projects?.data?.map((item) => ({ ...item, key: `${item.id}` })),
     // eslint-disable-next-line
-    [activeProjects.timeStamp],
+    [projects.timeStamp],
   );
 
   return (
-    <MainLayout>
+    <MainLayout title="Super User" contentClass="p-6">
       <Table
         selectedRowKeys={selectedRows?.map((el) => el.key)}
         loading={loading}
         columns={columns}
         dataSource={dataSource}
         renderHeader={renderHeader}
-        onRowClick={(record, rowIndex) => console.log({ record, rowIndex })}
+        onRowClick={(record) => history.push(`/super-user/projects/${record.id}/survey-groups`)}
         onPageSizeChange={(size) => {
           setPageSize(size);
           setQuery({ page_size: size, page_number: 1 });
@@ -213,7 +216,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
         }}
-        totalRecordSize={activeProjects?.metaData?.pagination?.totalRecords * 1}
+        totalRecordSize={projects?.metaData?.pagination?.totalRecords * 1}
       />
     </MainLayout>
   );

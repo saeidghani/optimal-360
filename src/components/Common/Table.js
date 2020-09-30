@@ -62,7 +62,7 @@ const _Table = ({
           onClick: () => onRowClick(record, rowIndex),
         })}
         rowClassName={rowClassName}
-        ellipsis={false}
+        ellipsis
         columns={_columns}
         dataSource={dataSource}
         title={renderHeader}
@@ -77,13 +77,13 @@ const _Table = ({
       {/* {pageSize < totalRecordSize ? ( */}
       <div className="flex flex-row justify-between items-center mt-10">
         <div className="flex flex-row items-center justify-between">
-          <p className="text-sm text-antgray-100 mt-1">Number of results per page</p>
+          <p className="text-sm text-antgray-100">Number of results per page</p>
 
           <Input
             inputStyles={{ fontSize: '1rem' }}
             inputClass="text-center text-base"
             value={pageSize.toString()}
-            wrapperClassName="w-12 h-8 ml-3"
+            wrapperClassName="w-12 ml-3"
             name="pager"
             onChange={(e) => onPageSizeChange(e.target.value)}
           />
@@ -127,7 +127,7 @@ _Table.propTypes = {
   onPaginationChange: PropTypes.func.isRequired,
   onRowSelectionChange: PropTypes.func.isRequired,
   totalRecordSize: PropTypes.number.isRequired,
-  selectedRowKeys: PropTypes.shape([]).isRequired,
+  selectedRowKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   onRowClick: PropTypes.func,
 };
 
