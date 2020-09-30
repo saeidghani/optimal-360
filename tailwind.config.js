@@ -34,6 +34,7 @@ module.exports = {
         antgreen: '#48D2A1', // used for steps
         antteal: '#00d6a2', // used for primary Progress
         primary: {
+          100: 'rgba(27, 183, 217, 0.1)',
           200: '#F5F8FC',
           400: '#DDF4F9',
           500: '#1BB7D9',
@@ -71,8 +72,10 @@ module.exports = {
         '18px': '1.125rem',
         '20px': '1.25rem',
         '22px': '1.375rem',
+        '24px': '1.5rem',
       },
       borderRadius: {
+        '2px': '2px',
         '7px': '7px',
         '9px': '9px',
         '12px': '12px',

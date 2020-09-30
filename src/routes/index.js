@@ -6,6 +6,7 @@ import PrivateRoute from './PrivateRoute';
 import Login from '../containers/Auth/Login';
 import ForgotPassword from '../containers/Auth/ForgotPassword';
 import SurveyGroupSetting from '../containers/SurveyGroups/Setting';
+import RatersStatusOverview from '../containers/SurveyGroups/RatersStatusOverview';
 
 import ActiveProjects from '../components/Projects/Active';
 
@@ -22,6 +23,11 @@ const Index = () => (
 
     <PrivateRoute path="/super-user/projects" exact component={ActiveProjects} />
     <PrivateRoute path="/super-user/surveygroup-setting" exact component={SurveyGroupSetting} />
+    <PrivateRoute
+      path="/super-user/Participants/StatusOverview"
+      exact
+      component={RatersStatusOverview}
+    />
 
     <Route component={NotFound} />
   </Switch>
