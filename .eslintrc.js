@@ -10,6 +10,10 @@ module.exports = {
   env: {
     'jest/globals': true,
   },
+  globals: {
+    window: true,
+    document: true,
+  },
   rules: {
     'max-len': [2, { code: 110, tabWidth: 2, ignoreUrls: true }],
     'react/jsx-filename-extension': ['error', { extensions: ['.js', '.jsx'] }],
@@ -30,5 +34,11 @@ module.exports = {
     'react/jsx-fragments': 'off',
     'linebreak-style': 'off',
     'react/state-in-constructor': 'off',
+    'object-curly-newline': 'off',
+    'implicit-arrow-linebreak': 'off',
+    'function-paren-newline': 'off',
+    'consistent-return': 'off',
+    'react/jsx-curly-newline': 'off',
+    'react/jsx-one-expression-per-line': 'off',
   },
 };

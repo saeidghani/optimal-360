@@ -1,0 +1,11 @@
+@import './compiled-tailwind.css';
+@import './extras/animations.css';
+
+html,
+:root {
+  font-size: 16px !important;
+}
+
+#logo {
+  mix-blend-mode: darken !important;
+}
