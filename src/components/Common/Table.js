@@ -59,7 +59,7 @@ const _Table = ({
       <Table
         loading={loading}
         onRow={(record, rowIndex) => ({
-          onClick: () => onRowClick(record, rowIndex),
+          onClick: () => (onRowClick ? onRowClick(record, rowIndex) : {}),
         })}
         rowClassName={rowClassName}
         ellipsis
@@ -85,7 +85,7 @@ const _Table = ({
             value={pageSize.toString()}
             wrapperClassName="w-12 ml-3"
             name="pager"
-            onChange={(e) => onPageSizeChange(e.target.value)}
+            onChange={(e) => onPageSizeChange(e.target.value * 1 !== 0 ? e.target.value : 10)}
           />
         </div>
 
