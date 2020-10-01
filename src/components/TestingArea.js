@@ -103,11 +103,8 @@ const Login = () => {
         <Dropdown />
 
         <DatePicker />
-<<<<<<< HEAD
         <Select elements={['Top Leadership', 'Managers', 'High Potentials']} />
-=======
         <InputNumber />
->>>>>>> 83e781e025f5c3e2c86a5ca9223febc6b87fbbed
       </div>
       {/* <div style={{ width: '500px' }}>
         <TreeSelect />
