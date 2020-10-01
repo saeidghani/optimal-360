@@ -18,6 +18,7 @@ const _Table = ({
   onRowSelectionChange,
   selectedRowKeys,
   onRowClick,
+  size,
 }) => {
   // const rowSelection = {
   //   onChange: (selectedRowKeys, selectedRows) => {
@@ -57,6 +58,7 @@ const _Table = ({
   return (
     <div className={`p-6 bg-white rounded-lg shadow ${className}`}>
       <Table
+        size={size}
         loading={loading}
         onRow={(record, rowIndex) => ({
           onClick: () => (onRowClick ? onRowClick(record, rowIndex) : {}),
@@ -80,8 +82,8 @@ const _Table = ({
           <p className="text-sm text-antgray-100">Number of results per page</p>
 
           <Input
-            inputStyles={{ fontSize: '1rem' }}
-            inputClass="text-center text-base"
+            size="small"
+            inputClass="text-center text-base  under-table-pagination"
             value={pageSize.toString()}
             wrapperClassName="w-12 ml-3"
             name="pager"
@@ -129,6 +131,7 @@ _Table.propTypes = {
   totalRecordSize: PropTypes.number.isRequired,
   selectedRowKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   onRowClick: PropTypes.func,
+  size: PropTypes.string,
 };
 
 _Table.defaultProps = {
@@ -138,6 +141,7 @@ _Table.defaultProps = {
   onRowClick: null,
   loading: false,
   pageSize: 10,
+  size: 'default',
 };
 
 export default _Table;

@@ -10,7 +10,7 @@ const Layout = ({ title, children, hasBreadCrumb, contentClass }) => {
       <Sidebar />
 
       <div className={`flex flex-col w-full  ${contentClass}`}>
-        {hasBreadCrumb ? <BreadCrumb /> : null}
+        {hasBreadCrumb ? <BreadCrumb className="mb-2" /> : null}
 
         {title === '' ? null : (
           <h3 className="font-medium text-primary-500 text-xl mb-6">{title}</h3>

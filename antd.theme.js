@@ -75,7 +75,15 @@ module.exports = {
   'modal-mask-bg': 'fade(#131621, 80%)',
   'modal-footer-border-width': '0px',
 
-  //input field
+  // input field
   'input-placeholder-color': '#8d98ba',
   'input-color': '#303854',
+
+  // table
+  'table-padding-vertical': '16px',
+  'table-padding-horizontal': '16px',
+  'table-padding-vertical-md': '@table-padding-vertical * 3 / 4',
+  'table-padding-horizontal-md': '@table-padding-horizontal / 2',
+  'table-padding-vertical-sm': '@table-padding-vertical / 2',
+  'table-padding-horizontal-sm': '@table-padding-horizontal / 2',
 };
