@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox } from 'antd';
 
-const _Checkbox = ({ checked, onChange, className, children }) => (
+const _Checkbox = ({ checked, onChange, className, children, labelClass }) => (
   <Checkbox
     checked={checked}
     onChange={(e) => onChange(e.target.checked)}
     className={` ${className}`}
   >
-    <span className="text-antgray-100 text-12px">{children}</span>
+    <span className={` ${labelClass}`}>{children}</span>
   </Checkbox>
 );
 
@@ -17,11 +17,13 @@ _Checkbox.propTypes = {
   checked: PropTypes.bool.isRequired,
   children: PropTypes.string,
   className: PropTypes.string,
+  labelClass: PropTypes.string,
 };
 
 _Checkbox.defaultProps = {
   children: '',
   className: '',
+  labelClass: 'text-antgray-100 text-12px',
 };
 
 export default _Checkbox;
