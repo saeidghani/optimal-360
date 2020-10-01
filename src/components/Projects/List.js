@@ -3,7 +3,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import dayjs from 'dayjs';
+import moment from 'moment';
 
 import { TeamOutlined } from '@ant-design/icons';
 
@@ -46,7 +46,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
               fetch();
             }}
             size="middle"
-            className="px-2 text-base flex flex-row justify-center items-center
+            className="text-base flex flex-row justify-center items-center
             text-primary-500 bg-primary-500 bg-opacity-8"
             icon="DeleteOutlined"
           />
@@ -63,17 +63,12 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
               setSelectedRows([]);
             }}
             size="middle"
-            className="ml-3"
+            className="ml-3 "
             textSize="xs"
             text={parsedQuery?.status === 'active' ? 'Deactivate' : 'Activate'}
           />
-          {/* <Button size="middle" className="ml-3" textSize="xs" text="Deactivate" /> */}
 
-          <h3 className="font-normal ml-3">
-            Selected
-            {selectedRows.length}
-            items
-          </h3>
+          <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
         </div>
       ) : (
         <div className="flex flex-row justify-between items-center">
@@ -84,7 +79,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
               onClick={() => setQuery({ status: 'active' })}
               textSize="xs"
               text="Active Projects"
-              className="mr-3"
+              className="mr-3 px-3"
               light={parsedQuery?.status === 'active'}
             />
             <Button
@@ -93,6 +88,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
               textSize="xs"
               text="Inactive Projects"
               light={parsedQuery?.status === 'inactive'}
+              className=" px-3"
             />
           </div>
 
@@ -108,9 +104,9 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
               textSize="xs"
               text="New Organization"
               type="gray"
-              className="mx-3"
+              className="mx-3 px-3"
             />
-            <Button size="middle" textSize="xs" text="Add Project" type="gray" />
+            <Button className="px-3" size="middle" textSize="xs" text="Add Project" type="gray" />
           </div>
         </div>
       );
@@ -136,10 +132,10 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
       {
         key: 'project',
         title: 'Project Name',
-        render: (project) => (
+        render: (project, { id }) => (
           <Button
             className="pl-0"
-            // onClick={() => console.log(id)}
+            onClick={() => history.push(`/super-user/projects/${id}/survey-groups`)}
             type="link"
             textSize="sm"
             text={project}
@@ -150,7 +146,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
       {
         key: 'date',
         title: 'Date Created',
-        render: (date) => dayjs(date).format('DD/MM/YYYY'),
+        render: (date) => moment(date).format('DD/MM/YYYY'),
       },
       {
         key: 'status',
@@ -160,17 +156,17 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
       {
         key: 'id',
         width: 50,
-        render: (id) => (
+        render: (projectId) => (
           <div className="flex flex-row-reverse">
             <Button
               size="middle"
               textSize="xs"
-              // onClick={() => console.log(id)}
+              onClick={() => history.push(`/super-user/projects/${projectId}/set-admin`)}
               text="Set Client Admin"
             />
             <Button
               onClick={async () => {
-                await duplicateProject(id);
+                await duplicateProject(projectId);
                 fetch();
               }}
               icon="CopyOutlined"
@@ -193,14 +189,15 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
   );
 
   return (
-    <MainLayout title="Super User" contentClass="p-6">
+    <MainLayout hasBreadCrumb title="Super User" contentClass="p-6 pr-3">
       <Table
+        size="small"
+        className="c-small-padding"
         selectedRowKeys={selectedRows?.map((el) => el.key)}
         loading={loading}
         columns={columns}
         dataSource={dataSource}
         renderHeader={renderHeader}
-        onRowClick={(record) => history.push(`/super-user/projects/${record.id}/survey-groups`)}
         onPageSizeChange={(size) => {
           setPageSize(size);
           setQuery({ page_size: size, page_number: 1 });

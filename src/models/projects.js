@@ -23,12 +23,12 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
-    async setClientAdmin(payload) {
+    async setClientAdmin({ projectId, ...payload }) {
       return actionWapper(
         async () => {
           const res = await axios({
             method: 'post',
-            url: `/super-user/projects/${payload.projectId}/client-admin`,
+            url: `/super-user/projects/${projectId}/client-admin`,
             data: payload,
           });
 

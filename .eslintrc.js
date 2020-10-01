@@ -40,5 +40,7 @@ module.exports = {
     'consistent-return': 'off',
     'react/jsx-curly-newline': 'off',
     'react/jsx-one-expression-per-line': 'off',
+    'template-curly-spacing': 'off',
+    indent: 'off',
   },
 };

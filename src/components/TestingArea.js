@@ -17,7 +17,11 @@ import Dropdown from './Common/Dropdown';
 // import TreeSelect from './Common/TreeSelect';
 import DatePicker from './Common/DatePicker';
 import AutoComplete from './Common/AutoComplete';
+<<<<<<< HEAD
 import Select from './Common/Select';
+=======
+import InputNumber from './Common/InputNumber';
+>>>>>>> 83e781e025f5c3e2c86a5ca9223febc6b87fbbed
 
 const Login = () => {
   // const [isVisible, setIsVisible] = useState(false);
@@ -99,7 +103,11 @@ const Login = () => {
         <Dropdown />
 
         <DatePicker />
+<<<<<<< HEAD
         <Select elements={['Top Leadership', 'Managers', 'High Potentials']} />
+=======
+        <InputNumber />
+>>>>>>> 83e781e025f5c3e2c86a5ca9223febc6b87fbbed
       </div>
       {/* <div style={{ width: '500px' }}>
         <TreeSelect />

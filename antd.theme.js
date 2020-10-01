@@ -79,7 +79,17 @@ module.exports = {
   'input-placeholder-color': '#8d98ba',
   'input-color': '#303854',
 
+<<<<<<< HEAD
   // select
   'select-selection-item-bg': 'rgba(141, 159, 186, 0.1)',
   'select-selection-item-border-color': '#8d98ba',
+=======
+  // table
+  'table-padding-vertical': '16px',
+  'table-padding-horizontal': '16px',
+  'table-padding-vertical-md': '@table-padding-vertical * 3 / 4',
+  'table-padding-horizontal-md': '@table-padding-horizontal / 2',
+  'table-padding-vertical-sm': '@table-padding-vertical / 2',
+  'table-padding-horizontal-sm': '@table-padding-horizontal / 2',
+>>>>>>> 83e781e025f5c3e2c86a5ca9223febc6b87fbbed
 };
