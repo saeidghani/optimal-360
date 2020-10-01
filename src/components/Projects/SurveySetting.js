@@ -70,6 +70,7 @@ const SurveySetting = () => {
           <div>
             <h1 className="text-20px text-heading">Rater Settings</h1>
             <Table
+              className="mb-16"
               columns={columns}
               dataSource={dataSource}
               renderHeader={() => (
@@ -79,6 +80,23 @@ const SurveySetting = () => {
                 </div>
               )}
             />
+            <p className="mb-10">Select rating group for user dashboard :</p>
+            <div>
+              <Checkbox className="mb-6">Individual Rater</Checkbox>
+            </div>
+            <div>
+              <Checkbox className="mb-6">
+                Pre-defined Rating Group (default Self, Mgr, Peer, etc.)
+              </Checkbox>
+            </div>
+            <div>
+              <Checkbox className="mb-6">All Ratees</Checkbox>
+            </div>
+
+            <div className="pt-10 flex justify-end">
+              <Button type="link" text="Back" />
+              <Button text="Next" />
+            </div>
           </div>
         </div>
       </div>
