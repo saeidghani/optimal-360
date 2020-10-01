@@ -191,7 +191,7 @@ const SurveyGroups = ({ loading }) => {
   );
 
   const dataSource = React.useMemo(
-    () => surveyGroups.data.map((item) => ({ ...item, key: `${item.id}` })),
+    () => surveyGroups?.data?.map((item) => ({ ...item, key: `${item.id}` })),
     // eslint-disable-next-line
     [surveyGroups.timeStamp],
   );
