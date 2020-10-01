@@ -197,8 +197,10 @@ const SurveyGroups = ({ loading }) => {
   );
 
   return (
-    <MainLayout title="Super User" contentClass="p-6">
+    <MainLayout hasBreadCrumb title="Super User" contentClass="p-6">
       <Table
+        className="c-small-padding"
+        size="small"
         selectedRowKeys={selectedRows?.map((el) => el.key)}
         loading={loading}
         columns={columns}

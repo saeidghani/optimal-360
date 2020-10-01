@@ -46,7 +46,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
               fetch();
             }}
             size="middle"
-            className="px-2 text-base flex flex-row justify-center items-center
+            className="text-base flex flex-row justify-center items-center
             text-primary-500 bg-primary-500 bg-opacity-8"
             icon="DeleteOutlined"
           />
@@ -63,7 +63,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
               setSelectedRows([]);
             }}
             size="middle"
-            className="ml-3"
+            className="ml-3 "
             textSize="xs"
             text={parsedQuery?.status === 'active' ? 'Deactivate' : 'Activate'}
           />
@@ -79,7 +79,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
               onClick={() => setQuery({ status: 'active' })}
               textSize="xs"
               text="Active Projects"
-              className="mr-3"
+              className="mr-3 px-3"
               light={parsedQuery?.status === 'active'}
             />
             <Button
@@ -88,6 +88,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
               textSize="xs"
               text="Inactive Projects"
               light={parsedQuery?.status === 'inactive'}
+              className=" px-3"
             />
           </div>
 
@@ -103,9 +104,9 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
               textSize="xs"
               text="New Organization"
               type="gray"
-              className="mx-3"
+              className="mx-3 px-3"
             />
-            <Button size="middle" textSize="xs" text="Add Project" type="gray" />
+            <Button className="px-3" size="middle" textSize="xs" text="Add Project" type="gray" />
           </div>
         </div>
       );
@@ -188,8 +189,10 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
   );
 
   return (
-    <MainLayout title="Super User" contentClass="p-6">
+    <MainLayout hasBreadCrumb title="Super User" contentClass="p-6 pr-3">
       <Table
+        size="small"
+        className="c-small-padding"
         selectedRowKeys={selectedRows?.map((el) => el.key)}
         loading={loading}
         columns={columns}
