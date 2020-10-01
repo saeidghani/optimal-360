@@ -11,6 +11,7 @@ import SurveyGroupSetting from '../containers/SurveyGroups/Setting';
 import RatersStatusOverview from '../containers/SurveyGroups/RatersStatusOverview';
 
 import ProjectsList from '../containers/Projects/List';
+import SurveySetting from '../containers/Projects/SurveySetting';
 
 import NotFound from '../components/404';
 import TestingArea from '../components/TestingArea';
@@ -35,6 +36,7 @@ const Index = () => (
       exact
       component={RatersStatusOverview}
     />
+    <PrivateRoute path="/super-user/Projects/survey-setting" exact component={SurveySetting} />
 
     <Route component={NotFound} />
   </Switch>
