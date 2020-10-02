@@ -209,12 +209,13 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
         }}
         pageSize={pageSize * 1}
         // eslint-disable-next-line camelcase
-        onPaginationChange={(page_number, page_size) =>
+        onPaginationChange={(page_number, page_size) => {
+          setSelectedRows([]);
           setQuery({
             page_size,
             page_number,
-          })
-        }
+          });
+        }}
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
         }}
