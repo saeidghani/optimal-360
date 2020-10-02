@@ -197,7 +197,7 @@ const SurveyGroups = ({ loading }) => {
   );
 
   return (
-    <MainLayout hasBreadCrumb title="Super User" contentClass="p-6">
+    <MainLayout hasBreadCrumb title="Super User" contentClass="py-6 pr-6">
       <Table
         className="c-small-padding"
         size="small"
