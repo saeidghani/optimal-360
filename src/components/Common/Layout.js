@@ -4,16 +4,15 @@ import PropTypes from 'prop-types';
 import Sidebar from './Sidebar';
 import BreadCrumb from './BreadCrumb';
 
-const Layout = ({ title, children, hasBreadCrumb, contentClass }) => {
+const Layout = ({ title, children, hasBreadCrumb, contentClass, titleClass }) => {
   return (
     <div className="flex flex-row bg-primary-200">
       <Sidebar />
-
       <div className={`flex flex-col w-full  ${contentClass}`}>
         {hasBreadCrumb ? <BreadCrumb className="mb-2" /> : null}
 
         {title === '' ? null : (
-          <h3 className="font-medium text-primary-500 text-xl mb-6">{title}</h3>
+          <h3 className={`font-medium text-primary-500 text-xl mb-6 ${titleClass}`}>{title}</h3>
         )}
 
         {children}

@@ -33,6 +33,8 @@ module.exports = {
         body: '#303854',
         antgreen: '#48D2A1', // used for steps
         antteal: '#00d6a2', // used for primary Progress
+        secondary: '#3D3D3D',
+        'gray-8': ' #595959',
         primary: {
           100: 'rgba(27, 183, 217, 0.1)',
           200: '#F5F8FC',
@@ -50,13 +52,20 @@ module.exports = {
         },
       },
       spacing: {
+        5.5: '1.375rem',
+        6.5: '1.625rem',
         7: '1.75rem',
+        9.5: '2.875rem',
         14: '3.5rem',
         15: '3.75rem',
         18: '4.5rem',
+        19: '4.875rem',
         22: '5.5rem',
-
+        23.5: '6.375rem',
+        24.5: '6.75rem',
         28: '7rem',
+        30: '7.5rem',
+        33: '8.5rem',
         36: '9rem',
         '6p': '6px',
         '10p': '10px',

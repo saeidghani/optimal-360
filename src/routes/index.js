@@ -13,6 +13,7 @@ import SurveyGroupList from '../containers/SurveyGroups/List';
 import RatersStatusOverview from '../containers/SurveyGroups/RatersStatusOverview';
 
 import SurveySetting from '../containers/Projects/SurveySetting';
+import EmailSetting from '../containers/Projects/EmailSetting';
 
 import NotFound from '../components/404';
 import TestingArea from '../components/TestingArea';
@@ -39,7 +40,7 @@ const Index = () => (
       component={RatersStatusOverview}
     />
     <PrivateRoute path="/super-user/Projects/survey-setting" exact component={SurveySetting} />
-
+    <PrivateRoute path="/super-user/Projects/email-setting" exact component={EmailSetting} />
     <Route component={NotFound} />
   </Switch>
 );

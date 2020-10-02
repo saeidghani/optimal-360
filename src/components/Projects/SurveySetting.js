@@ -53,9 +53,9 @@ const SurveySetting = () => {
     <MainLayout title="Survey Group" contentClass=" p-0">
       <div className="bg-white w-full flex">
         <Menu />
-        <div className="w-full px-6">
-          <Steps className="w-full mb-20" />
-          <div className="w-full flex mb-18 ">
+        <div className="w-full px-6 pt-6 ">
+          <Steps className="w-full" />
+          <div className="w-full flex mb-18 mt-16 ">
             <div className="w-1/2">
               <h1 className="text-20px text-heading mb-6">Date</h1>
               <DatePicker labelname="Start Date" className="mr-12" />
@@ -93,7 +93,7 @@ const SurveySetting = () => {
               <Checkbox className="mb-6">All Ratees</Checkbox>
             </div>
 
-            <div className="pt-10 flex justify-end">
+            <div className="pt-10 pb-22  flex justify-end">
               <Button type="link" text="Back" />
               <Button text="Next" />
             </div>
