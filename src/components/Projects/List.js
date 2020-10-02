@@ -16,10 +16,11 @@ import Tag from '../Common/Tag';
 import { useQuery } from '../../hooks/useQuery';
 
 const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjects, loading }) => {
-  const [pageSize, setPageSize] = React.useState(10);
+  const [parsedQuery, query, setQuery] = useQuery();
+
+  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const history = useHistory();
-  const [parsedQuery, query, setQuery] = useQuery();
 
   const dispatch = useDispatch();
   const { projects = {} } = useSelector((state) => state.projects);
@@ -135,7 +136,9 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
         render: (project, { id }) => (
           <Button
             className="pl-0"
-            onClick={() => history.push(`/super-user/projects/${id}/survey-groups`)}
+            onClick={() =>
+              history.push(`/super-user/projects/${id}/survey-groups?page_size=10&page_number=1`)
+            }
             type="link"
             textSize="sm"
             text={project}
@@ -151,7 +154,9 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
       {
         key: 'status',
         title: 'Status',
-        render: (status) => <Tag color={status !== 'active' ? 'orange' : ''} text={status} />,
+        render: (status) => (
+          <Tag color={status !== 'active' ? 'orange' : ''} text={status.toUpperCase()} />
+        ),
       },
       {
         key: 'id',

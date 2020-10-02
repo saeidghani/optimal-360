@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, Pagination } from 'antd';
 
-import Input from './Input';
+import Dropdown from './Dropdown';
 
 const _Table = ({
   columns,
@@ -76,18 +76,21 @@ const _Table = ({
         pagination={false}
       />
 
-      {/* {pageSize < totalRecordSize ? ( */}
       <div className="flex flex-row justify-between items-center mt-10">
         <div className="flex flex-row items-center justify-between">
-          <p className="text-sm text-antgray-100">Number of results per page</p>
+          <p className="text-sm text-antgray-100 whitespace-no-wrap">Number of results per page</p>
 
-          <Input
-            size="small"
-            inputClass="text-center text-base  under-table-pagination"
+          <Dropdown
+            handleChange={onPageSizeChange}
             value={pageSize.toString()}
-            wrapperClassName="w-12 ml-3"
-            name="pager"
-            onChange={(e) => onPageSizeChange(e.target.value * 1 !== 0 ? e.target.value : 10)}
+            className="ml-3"
+            showSearch={false}
+            options={[
+              { title: '10', value: 10 },
+              { title: '20', value: 20 },
+              { title: '50', value: 50 },
+              { title: '100', value: 100 },
+            ]}
           />
         </div>
 
@@ -135,7 +138,7 @@ _Table.propTypes = {
 };
 
 _Table.defaultProps = {
-  renderHeader: () => 'Hi',
+  renderHeader: () => {},
   className: '',
   rowClassName: () => {},
   onRowClick: null,

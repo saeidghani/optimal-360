@@ -30,8 +30,9 @@ const useQuery = () => {
     // if a query parameter has an empty('') value
     // we remove it from the parsed object
 
-    if (newObject.page_size && !newObject.page_number) {
+    if (!newObject.page_size && !newObject.page_number) {
       newObject.page_number = 1;
+      newObject.page_size = 10;
     }
 
     const newQuery = stringify(newObject);
