@@ -7,10 +7,10 @@ import Layout from '../../components/Auth/Login';
 class _Login extends Component {
   state = {};
 
-  login = async ({ email, password }) => {
+  login = async ({ email, password, rememberMe }) => {
     const { login } = this.props;
 
-    await login({ username: email, password });
+    await login({ username: email, password, rememberMe });
 
     // TODO : replace 4000 with a constatnt from config file
     setTimeout(
@@ -21,15 +21,20 @@ class _Login extends Component {
   };
 
   render() {
-    return <Layout login={this.login} />;
+    const { loading } = this.props;
+
+    return <Layout loading={loading} login={this.login} />;
   }
 }
 
 _Login.propTypes = {
   login: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = (state) => ({ auth: state.auth || {} });
+const mapStateToProps = (state) => ({
+  loading: state.loading.global || false,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   login: dispatch.auth.login,

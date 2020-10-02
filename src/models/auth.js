@@ -8,28 +8,42 @@ export default {
   state: {},
 
   effects: (dispatch) => ({
-    async login(payload) {
+    async login({ username, password, rememberMe }) {
       return actionWapper(
         async () => {
           const res = await axios({
             method: 'post',
             url: '/super-user/auth/login',
-            data: payload,
+            data: { username, password },
           });
 
-          await this.setToken(res.data);
-          // await dispatch.user.fetchCurrentUser();
+          await this.setToken({ token: res?.data?.data?.token, rememberMe });
           return res;
         },
         dispatch.util.errorHandler,
         dispatch.util.alert,
       );
     },
+
+    async forgotPassword(payload) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: '/super-user/auth/forget-password',
+          data: payload,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
   }),
 
   reducers: {
-    setToken(state, payload) {
-      Cookies.set('token', payload?.data?.token);
+    setToken(state, { token, rememberMe }) {
+      const options = {
+        expires: rememberMe ? 7 : null,
+      };
+      Cookies.set('token', token, options);
 
       return null;
     },
