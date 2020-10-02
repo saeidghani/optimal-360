@@ -25,6 +25,18 @@ export default {
         dispatch.util.alert,
       );
     },
+
+    async forgotPassword(payload) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: '/super-user/auth/forget-password',
+          data: payload,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
   }),
 
   reducers: {
