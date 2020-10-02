@@ -189,7 +189,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
   );
 
   return (
-    <MainLayout hasBreadCrumb title="Super User" contentClass="p-6 pr-3">
+    <MainLayout hasBreadCrumb title="Super User" contentClass="py-6 pr-6">
       <Table
         size="small"
         className="c-small-padding"

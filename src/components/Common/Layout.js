@@ -6,9 +6,15 @@ import BreadCrumb from './BreadCrumb';
 
 const Layout = ({ title, children, hasBreadCrumb, contentClass, titleClass }) => {
   return (
-    <div className="flex flex-row bg-primary-200">
+    <div className="bg-primary-200 overflow-y-hidden">
       <Sidebar />
-      <div className={`flex flex-col w-full  ${contentClass}`}>
+
+      <div
+        style={{
+          paddingLeft: '60px',
+        }}
+        className={`w-full ${contentClass}`}
+      >
         {hasBreadCrumb ? <BreadCrumb className="mb-2" /> : null}
 
         {title === '' ? null : (

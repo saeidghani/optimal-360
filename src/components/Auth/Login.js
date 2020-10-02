@@ -10,7 +10,7 @@ import Button from '../Common/Button';
 
 import Shape from './Helper/AnimatedShape';
 
-const Login = ({ login }) => {
+const Login = ({ login, loading }) => {
   const schema = yup.object({
     email: yup.string().email('email is not valid').required('email feild is required'),
     password: yup
@@ -45,22 +45,14 @@ const Login = ({ login }) => {
               rememberMe: false,
             }}
             validationSchema={schema}
-            onSubmit={async (values) => {
-              await login(values);
+            onSubmit={(values) => {
+              login(values);
             }}
           >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleSubmit,
-              isSubmitting,
-              setFieldValue,
-            }) => (
+            {({ values, errors, touched, handleChange, handleSubmit, setFieldValue }) => (
               <Form className="w-full">
                 <Input
-                  disabled={isSubmitting}
+                  disabled={loading}
                   onChange={handleChange}
                   value={values.email}
                   name="email"
@@ -73,7 +65,7 @@ const Login = ({ login }) => {
 
                 <Input
                   value={values.password}
-                  disabled={isSubmitting}
+                  disabled={loading}
                   onChange={handleChange}
                   name="password"
                   type="password"
@@ -94,7 +86,7 @@ const Login = ({ login }) => {
                 </Checkbox>
 
                 <Button
-                  loading={isSubmitting}
+                  loading={loading}
                   onClick={handleSubmit}
                   textSize="16px"
                   text="Log in"
@@ -111,6 +103,7 @@ const Login = ({ login }) => {
 
 Login.propTypes = {
   login: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 export default Login;
