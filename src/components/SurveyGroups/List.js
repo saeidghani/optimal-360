@@ -3,24 +3,31 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import dayjs from 'dayjs';
+import moment from 'moment';
 
 import MainLayout from '../Common/Layout';
 import Table from '../Common/Table';
 import Button from '../Common/Button';
+import SearchBox from '../Common/SearchBox';
 import Tag from '../Common/Tag';
+import DatePicker from '../Common/DatePicker';
 
 import { useQuery } from '../../hooks/useQuery';
 
-const ActiveProjects = ({ loading }) => {
+const SurveyGroups = ({ loading }) => {
   const [pageSize, setPageSize] = React.useState(10);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const { projectId } = useParams();
   const dispatch = useDispatch();
-  const [parsedQuery, query, setQuery] = useQuery();
+  const [, query, setQuery] = useQuery();
 
   const { surveyGroups = {} } = useSelector((state) => state.projects);
-  const surveyGroupProject = surveyGroups?.data?.length > 0 ? surveyGroups.data[0].project : {};
+
+  const surveyGroupProject = React.useMemo(() => {
+    const ref = surveyGroups?.data?.length > 0 ? surveyGroups.data[0].project : {};
+    return ref.name && ref.organization?.name ? ref : {};
+    // eslint-disable-next-line
+  }, [surveyGroups.timeStamp]);
 
   const fetch = React.useCallback(async () => {
     const newQuery = query || '?page_size=10&page_number=1&status=active';
@@ -32,13 +39,103 @@ const ActiveProjects = ({ loading }) => {
   }, [query, fetch]);
 
   const renderHeader = React.useCallback(
-    () => (
-      <div className="flex flex-row justify-between">
-        <p className="font-normal text-xs leading-4">
-          {surveyGroupProject.name} | {surveyGroupProject.organization?.name}
-        </p>
-      </div>
-    ),
+    () => {
+      // const selectedRowsIds = selectedRows?.length > 0 ? selectedRows.map((el) => el.id) : [];
+
+      return selectedRows && selectedRows?.length > 0 ? (
+        <div className="flex flex-row items-center">
+          <Button
+            // onClick={async () => {
+            //   await removeProjects(selectedRowsIds);
+            //   fetch();
+            // }}
+            size="middle"
+            className="px-2 text-base flex flex-row justify-center items-center
+            text-primary-500 bg-primary-500 bg-opacity-8"
+            icon="CopyOutlined"
+          />
+
+          <Button
+            // onClick={async () => {
+            //   await removeProjects(selectedRowsIds);
+            //   fetch();
+            // }}
+            size="middle"
+            className="px-2 ml-3 text-base flex flex-row justify-center items-center
+            text-primary-500 bg-primary-500 bg-opacity-8"
+            icon="DeleteOutlined"
+          />
+
+          <Button
+            // onClick={async () => {
+            //   await changeStatusOfProjects(
+            //     selectedRowsIds,
+            //     parsedQuery?.status === 'active' ? 'inactive' : 'active',
+            //   );
+
+            //   fetch();
+
+            //   setSelectedRows([]);
+            // }}
+            text="Export Demographic Data"
+            size="middle"
+            className="ml-3"
+            textSize="xs"
+          />
+
+          <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
+        </div>
+      ) : (
+        <div className="flex flex-row justify-between items-center">
+          <p className="font-normal text-xs leading-4">
+            {surveyGroupProject.name && surveyGroupProject.organization?.name
+              ? `${surveyGroupProject.name} | ${surveyGroupProject.organization.name}`
+              : ''}
+          </p>
+
+          <div className="flex flex-row items-center">
+            <SearchBox
+              className="text-xs"
+              loading={loading}
+              onSearch={(val) => setQuery({ q: val })}
+              onPressEnter={(e) => setQuery({ q: e.target.value })}
+            />
+
+            <div className="flex flex-row items-center">
+              <p className="mx-3 text-xs whitespace-no-wrap">Start Date</p>
+
+              <DatePicker
+                onChange={(val) => setQuery({ start_Date: val })}
+                className="w-32"
+                size="large"
+                placeholder="Select"
+              />
+            </div>
+
+            <div className="flex flex-row items-center">
+              <p className="mx-3 text-xs whitespace-no-wrap">End Date</p>
+
+              <DatePicker
+                onChange={(val) => setQuery({ end_date: val })}
+                className="w-32"
+                size="large"
+                placeholder="Select"
+              />
+            </div>
+
+            <Button
+              size="middle"
+              textSize="xs"
+              text="New Organization"
+              type="gray"
+              className="ml-3"
+            />
+
+            <Button size="middle" textSize="xs" text="Add Project" type="gray" className="ml-3" />
+          </div>
+        </div>
+      );
+    },
     // eslint-disable-next-line
     [surveyGroups.timeStamp, loading, setQuery, selectedRows.length],
   );
@@ -61,14 +158,14 @@ const ActiveProjects = ({ loading }) => {
         ),
       },
       {
-        key: 'date',
+        key: 'startDate',
         title: 'Start Date',
-        render: (date) => dayjs(date).format('DD/MM/YYYY'),
+        render: (date) => moment(date).format('DD/MM/YYYY'),
       },
       {
-        key: 'date',
+        key: 'endDate',
         title: 'End Date',
-        render: (date) => dayjs(date).format('DD/MM/YYYY'),
+        render: (date) => moment(date).format('DD/MM/YYYY'),
       },
       {
         key: 'status',
@@ -94,20 +191,22 @@ const ActiveProjects = ({ loading }) => {
   );
 
   const dataSource = React.useMemo(
-    () => surveyGroups.data.map((item) => ({ ...item, key: `${item.id}` })),
+    () => surveyGroups?.data?.map((item) => ({ ...item, key: `${item.id}` })),
     // eslint-disable-next-line
     [surveyGroups.timeStamp],
   );
 
   return (
-    <MainLayout title="Super User" contentClass="p-6">
+    <MainLayout hasBreadCrumb title="Super User" contentClass="p-6">
       <Table
+        className="c-small-padding"
+        size="small"
         selectedRowKeys={selectedRows?.map((el) => el.key)}
         loading={loading}
         columns={columns}
         dataSource={dataSource}
         renderHeader={renderHeader}
-        onRowClick={(record, rowIndex) => console.log({ record, rowIndex })}
+        // onRowClick={(record, rowIndex) => console.log({ record, rowIndex })}
         onPageSizeChange={(size) => {
           setPageSize(size);
           setQuery({ page_size: size, page_number: 1 });
@@ -129,10 +228,10 @@ const ActiveProjects = ({ loading }) => {
   );
 };
 
-ActiveProjects.propTypes = {
+SurveyGroups.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
-ActiveProjects.defaultProps = {};
+SurveyGroups.defaultProps = {};
 
-export default ActiveProjects;
+export default SurveyGroups;

@@ -8,7 +8,7 @@ import Sidebar from './Common/Sidebar';
 // import BreadCrumb from './Common/BreadCrumb';
 // import RadioBtn from './Common/RadioBtn';
 // import Pagination from './Common/Pagination';
-// import Dropdown from './Common/Dropdown';
+import Dropdown from './Common/Dropdown';
 // import Steps from './Common/Steps';
 // import Tabs from './Common/Tabs';
 // import Progress from './Common/Progress';
@@ -17,6 +17,8 @@ import Sidebar from './Common/Sidebar';
 // import TreeSelect from './Common/TreeSelect';
 import DatePicker from './Common/DatePicker';
 import AutoComplete from './Common/AutoComplete';
+import Select from './Common/Select';
+import InputNumber from './Common/InputNumber';
 
 const Login = () => {
   // const [isVisible, setIsVisible] = useState(false);
@@ -81,7 +83,6 @@ const Login = () => {
         <BreadCrumb />
         <RadioBtn>heloo world</RadioBtn>
         <Pagination pageNumber="1" totalNumberPages="22" />
-        <Dropdown />
         <Steps currentPosition={2} />
         <Tabs />
         <Progress type="line" percentage={49} />
@@ -96,7 +97,11 @@ const Login = () => {
         </Button>
         <Modal visible={isVisible} handleCancel={() => setIsVisible(!isVisible)} /> */}
         <AutoComplete />
+        <Dropdown />
+
         <DatePicker />
+        <Select elements={['Top Leadership', 'Managers', 'High Potentials']} />
+        <InputNumber />
       </div>
       {/* <div style={{ width: '500px' }}>
         <TreeSelect />

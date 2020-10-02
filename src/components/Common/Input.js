@@ -10,6 +10,7 @@ const _Input = ({
   suffix,
   prefix,
   extrainfoLink,
+  onExtraInfoLinkClick,
   extrainfoText,
   inputClass,
   value,
@@ -34,6 +35,12 @@ const _Input = ({
             <a
               className="text-black underline text-antgray-100 text-12px pl-2 sm:pl-0"
               href={extrainfoLink}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                onExtraInfoLinkClick(e);
+              }}
             >
               {extrainfoText}
             </a>
@@ -78,6 +85,7 @@ _Input.propTypes = {
   disabled: PropTypes.bool,
   errorMessage: PropTypes.string,
   inputStyles: PropTypes.shape({}),
+  onExtraInfoLinkClick: PropTypes.func,
 };
 
 _Input.defaultProps = {
@@ -95,6 +103,7 @@ _Input.defaultProps = {
   errorMessage: '',
   disabled: false,
   inputStyles: {},
+  onExtraInfoLinkClick: () => {},
 };
 
 export default _Input;
