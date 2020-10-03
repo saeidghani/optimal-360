@@ -13,17 +13,14 @@ const RaterVerificationEmail = () => {
               <Button
                 text="Project Name"
                 className="text-base px-3 h-8 flex items-center justify-center mr-3 rounded-2px"
-                // onClick={() => history.push('/super-user/Projects/rater-verification-email')}
               />
               <Button
                 text="Rater"
                 className="text-base w-16 h-8 flex items-center justify-center mr-3 rounded-2px"
-                // onClick={() => history.push('/super-user/Projects/rater-verification-email')}
               />
               <Button
                 text="Sender"
                 className="text-base w-19 h-8 flex items-center justify-center rounded-2px"
-                // onClick={() => history.push('/super-user/Projects/rater-verification-email')}
               />
             </div>
             <div className=" flex">
@@ -35,7 +32,6 @@ const RaterVerificationEmail = () => {
               <Button
                 text="Save"
                 className="text-base w-24.5 h-9.5 flex items-center justify-center rounded-2px"
-                // onClick={() => history.push('/super-user/Projects/rater-verification-email')}
               />
             </div>
           </div>
