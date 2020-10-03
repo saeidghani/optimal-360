@@ -11,7 +11,7 @@
     "predeploy": "craco build",
     "deploy": "gh-pages -d build",
     "build:css": "postcss src/assets/styles/tailwind.css -o src/assets/styles/compiled-tailwind.css",
-    "watch:css": "postcss src/assets/styles/tailwind.css -o src/assets/styles/compiled-tailwind.css"
+    "watch:css": "postcss src/assets/styles/tailwind.css -o src/assets/styles/compiled-tailwind.css --watch"
   },
   "dependencies": {
     "@craco/craco": "^5.6.4",
