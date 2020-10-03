@@ -35,6 +35,7 @@ module.exports = {
         antteal: '#00d6a2', // used for primary Progress
         secondary: '#3D3D3D',
         'gray-8': ' #595959',
+        template: 'rgba(196, 196, 196, 0.2)',
         primary: {
           100: 'rgba(27, 183, 217, 0.1)',
           200: '#F5F8FC',
@@ -52,6 +53,7 @@ module.exports = {
         },
       },
       spacing: {
+        2.5: '0.688rem',
         5.5: '1.375rem',
         6.5: '1.625rem',
         7: '1.75rem',
@@ -67,6 +69,7 @@ module.exports = {
         30: '7.5rem',
         33: '8.5rem',
         36: '9rem',
+        94: '33.5rem',
         '6p': '6px',
         '10p': '10px',
       },

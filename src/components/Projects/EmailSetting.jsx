@@ -6,8 +6,10 @@ import Steps from '../Common/Steps';
 import DatePicker from '../Common/DatePicker';
 import Button from '../Common/Button';
 import { Table } from 'antd';
+import { useHistory } from 'react-router-dom';
 
 const EmailSetting = () => {
+  const history = useHistory();
   const array = [1, 2, 3, 4];
   const columns = [
     {
@@ -69,6 +71,7 @@ const EmailSetting = () => {
             <Button
               text="Next"
               className="text-base w-24.5 h-9.5 flex items-center justify-center"
+              onClick={() => history.push('/super-user/Projects/rater-verification-email')}
             />
           </div>
         </div>
