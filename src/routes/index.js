@@ -15,6 +15,7 @@ import RatersStatusOverview from '../containers/SurveyGroups/RatersStatusOvervie
 import SurveySetting from '../containers/Projects/SurveySetting';
 import EmailSetting from '../containers/Projects/EmailSetting';
 import RaterVerificationEmail from '../containers/Projects/RaterVerificationEmail';
+import SurveyIntro from '../containers/Projects/SurveyIntro';
 
 import NotFound from '../components/404';
 import TestingArea from '../components/TestingArea';
@@ -47,6 +48,7 @@ const Index = () => (
       exact
       component={RaterVerificationEmail}
     />
+    <PrivateRoute path="/super-user/Projects/survey-intro" exact component={SurveyIntro} />
     <Route component={NotFound} />
   </Switch>
 );
