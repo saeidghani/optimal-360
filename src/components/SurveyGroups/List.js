@@ -15,11 +15,12 @@ import DatePicker from '../Common/DatePicker';
 import { useQuery } from '../../hooks/useQuery';
 
 const SurveyGroups = ({ loading }) => {
-  const [pageSize, setPageSize] = React.useState(10);
+  const [parsedQuery, query, setQuery] = useQuery();
+
+  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const { projectId } = useParams();
   const dispatch = useDispatch();
-  const [, query, setQuery] = useQuery();
 
   const { surveyGroups = {} } = useSelector((state) => state.projects);
 
@@ -213,12 +214,13 @@ const SurveyGroups = ({ loading }) => {
         }}
         pageSize={pageSize * 1}
         // eslint-disable-next-line camelcase
-        onPaginationChange={(page_number, page_size) =>
+        onPaginationChange={(page_number, page_size) => {
+          setSelectedRows([]);
           setQuery({
             page_size,
             page_number,
-          })
-        }
+          });
+        }}
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
         }}

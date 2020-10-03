@@ -21,7 +21,10 @@ const SetAdmin = ({ loading, setAdmin }) => {
   const { projectId } = useParams();
 
   return (
-    <MainLayout hasBreadCrumb={false} contentClass="items-center justify-around p-0">
+    <MainLayout
+      hasBreadCrumb={false}
+      contentClass="flex flex-row min-h-screen items-center justify-around p-0"
+    >
       <div className="bg-white rounded-7px  sm:px-16 sm:pb-18 sm:pt-22 px-4 py-6">
         <Formik
           initialValues={{
