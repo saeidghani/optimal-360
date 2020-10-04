@@ -2,20 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'antd';
 
-const _Modal = ({ visible, handleOk, handleCancel }) => (
+const _Modal = ({ visible, handleOk, handleCancel, children }) => (
   <Modal
     centered
     title=""
     visible={visible}
     onOk={handleOk}
     onCancel={handleCancel}
-    okButtonProps={{ type: 'primary', className: 'px-6' }}
-    cancelButtonProps={{ type: 'link', className: 'px-6' }}
+    okButtonProps={{ type: 'primary', className: 'px-6 ' }}
+    cancelButtonProps={{ type: 'link', className: 'px-6 ' }}
     closable={false}
   >
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-    <p>Some contents...</p>
+    {children}
   </Modal>
 );
 
