@@ -9,9 +9,11 @@ import SecondaryMenu from '../Common/Menu';
 import SecondaryButton from '../Common/Button';
 import Checkbox from '../Common/Checkbox';
 import AddQuestionModal from './AddQuestionModal';
+import AddFeedbackModal from './AddFeedbackModal';
 
 const SurveyQuestionsList = () => {
   const [questionModal, setquestionModal] = useState(false);
+  const [feedbackModal, setfeedbackModal] = useState(false);
   const array = [0, 1, 2, 3, 4];
   const clusters = [1, 2, 3, 4, 5];
   return (
@@ -48,7 +50,10 @@ const SurveyQuestionsList = () => {
                   <div className="flex flex-row justify-between bg-antgray-600 h-14 w-full pl-8 py-3 pr-6 items-center border-b border-list-border">
                     <span>All</span>
                     <div className="flex items-center">
-                      <Button disabled className="flex items-center mr-3.5">
+                      <Button
+                        className="flex items-center mr-3.5"
+                        onClick={() => setquestionModal(true)}
+                      >
                         <span className="text-12 pr-2">Add Cluster</span>
                         <PlusCircleOutlined />
                       </Button>
@@ -82,7 +87,7 @@ const SurveyQuestionsList = () => {
               <div className=" bg-antgray-600 rounded-7px w-full pl-8.2 pt-6 pb-5.5 pr-3.5">
                 <div className="flex flex-row items-center justify-between mb-6">
                   <h4 className=" text-secondary text-20px   ">Feedbacks</h4>
-                  <Button className="flex items-center " onClick={() => setquestionModal(true)}>
+                  <Button className="flex items-center " onClick={() => setfeedbackModal(true)}>
                     <span className="text-12 pr-2">Add Question</span>
                     <PlusCircleOutlined />
                   </Button>
@@ -127,7 +132,8 @@ const SurveyQuestionsList = () => {
           </div>
         </div>
       </MainLayout>
-      <AddQuestionModal visible={questionModal} setquestionModal={setquestionModal} />
+      <AddQuestionModal visible={questionModal} action={setquestionModal} />
+      <AddFeedbackModal visible={feedbackModal} action={setfeedbackModal} />
     </>
   );
 };
