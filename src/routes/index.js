@@ -24,8 +24,6 @@ import TestingArea from '../components/TestingArea';
 
 const Index = () => (
   <Switch>
-    <CustomRoute path="/" exact component={TestingArea} />
-
     <CustomRoute path="/login" exact component={Login} />
     <CustomRoute path="/forgot-password" exact component={ForgotPassword} />
 
@@ -57,6 +55,8 @@ const Index = () => (
       exact
       component={SurveyQuestionsList}
     />
+
+    <CustomRoute path="/" exact component={TestingArea} />
     <Route component={NotFound} />
   </Switch>
 );

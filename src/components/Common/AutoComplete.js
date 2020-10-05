@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { AutoComplete } from 'antd';
+
+// import { debounce } from '../../lib/util';
 
 const _AutoComplete = ({
   wrapperClassName,
@@ -14,26 +16,11 @@ const _AutoComplete = ({
   name,
   size,
   placeholder,
+  onChange,
+  value,
+  errorMessage,
+  loading,
 }) => {
-  const [value, setValue] = useState('');
-  const [_options, setOptions] = useState(options);
-
-  React.useEffect(() => {
-    const newOptions = [];
-
-    options.forEach((el) => {
-      if (!value || el.value.toLowerCase().includes(value.toLowerCase())) {
-        newOptions.push(el);
-      }
-    });
-
-    setOptions(newOptions);
-  }, [options, value]);
-
-  const onChange = (data) => {
-    setValue(data);
-  };
-
   return (
     <div name={name} className={`flex flex-col w-full ${wrapperClassName}`}>
       {labelText || (extrainfoText && extrainfoLink) ? (
@@ -64,15 +51,25 @@ const _AutoComplete = ({
       ) : null}
 
       <AutoComplete
+        loading={loading}
         placeholder={placeholder}
         id={name}
         value={value}
-        options={_options}
+        options={options}
         className={`c-autocomplete c-sufix-prefix-gray text-12px w-full ${className}`}
-        onSelect={(_, val) => onSelect(val)}
-        onChange={onChange}
+        onSelect={(_, val) => {
+          // setValue('');
+          onSelect(val);
+        }}
+        onChange={(val) => {
+          // TODO
+          // debounce(() => onChange(val));
+          onChange(val);
+        }}
         size={size}
       />
+
+      {errorMessage && <p className="text-red-500">{errorMessage}</p>}
     </div>
   );
 };
@@ -80,28 +77,39 @@ const _AutoComplete = ({
 _AutoComplete.propTypes = {
   wrapperClassName: PropTypes.string,
   className: PropTypes.string,
-  onSelect: PropTypes.func.isRequired,
-  options: PropTypes.string,
   labelText: PropTypes.string,
   extrainfoText: PropTypes.string,
   extrainfoLink: PropTypes.string,
-  onExtraInfoLinkClick: PropTypes.func,
+  onExtraInfoLinkClick: PropTypes.string,
   name: PropTypes.string,
   size: PropTypes.string,
+  onSelect: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string,
+      label: PropTypes.string,
+    }),
+  ).isRequired,
   placeholder: PropTypes.string,
+  value: PropTypes.string,
+  errorMessage: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
 };
 
 _AutoComplete.defaultProps = {
   wrapperClassName: '',
   className: '',
+  value: '',
   placeholder: '',
-  options: '',
   labelText: '',
   extrainfoText: '',
   extrainfoLink: '',
   onExtraInfoLinkClick: '',
   name: '',
   size: 'large',
+  errorMessage: '',
+  loading: false,
 };
 
 export default _AutoComplete;

@@ -107,7 +107,14 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
               type="gray"
               className="mx-3 px-3"
             />
-            <Button className="px-3" size="middle" textSize="xs" text="Add Project" type="gray" />
+            <Button
+              onClick={() => history.push('/super-user/new-project/project-info')}
+              className="px-3"
+              size="middle"
+              textSize="xs"
+              text="Add Project"
+              type="gray"
+            />
           </div>
         </div>
       );
@@ -155,7 +162,11 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
         key: 'status',
         title: 'Status',
         render: (status) => (
-          <Tag color={status !== 'active' ? 'orange' : ''} text={status.toUpperCase()} />
+          <Tag
+            className="w-2/4"
+            color={status !== 'active' ? 'orange' : ''}
+            text={status.toUpperCase()}
+          />
         ),
       },
       {

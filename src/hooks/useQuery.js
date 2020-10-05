@@ -20,6 +20,11 @@ const useQuery = () => {
   }, [search, pathname]);
 
   const setQuery = (obj) => {
+    if (!obj || typeof obj !== 'object') {
+      history.push(pathname);
+      return;
+    }
+
     const parsedQuery = parse(search);
     const newObject = { ...parsedQuery, ...obj };
     // we destruct a new obj not to overwrite pervious params
@@ -48,5 +53,4 @@ const useQuery = () => {
   return [parsedQuery, query, setQuery];
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export { useQuery };
+export { useQuery, parse, stringify };
