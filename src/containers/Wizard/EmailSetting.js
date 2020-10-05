@@ -1,5 +1,6 @@
 import React from 'react';
-import Layout from '../../components/Projects/EmailSetting';
+import Layout from '../../components/Wizard/EmailSetting';
+
 const EmailSetting = () => {
   return <Layout />;
 };

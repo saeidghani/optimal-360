@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { Button } from 'antd';
 import { PlusCircleOutlined, LineOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import MainLayout from '../Common/Layout';
-import Menu from './Menu';
+import Menu from './Helper/Menu';
 import Steps from '../Common/Steps';
 import Input from '../Common/Input';
 import SecondaryMenu from '../Common/Menu';
 import SecondaryButton from '../Common/Button';
 import Checkbox from '../Common/Checkbox';
-import AddQuestionModal from './AddQuestionModal';
-import AddFeedbackModal from './AddFeedbackModal';
+import AddQuestionModal from './Helper/AddQuestionModal';
+import AddFeedbackModal from './Helper/AddFeedbackModal';
 
 const SurveyQuestionsList = () => {
   const [questionModal, setquestionModal] = useState(false);

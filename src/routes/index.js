@@ -12,11 +12,11 @@ import SetAdmin from '../containers/Projects/SetAdmin';
 import SurveyGroupList from '../containers/SurveyGroups/List';
 import RatersStatusOverview from '../containers/SurveyGroups/RatersStatusOverview';
 
-import SurveySetting from '../containers/Projects/SurveySetting';
-import EmailSetting from '../containers/Projects/EmailSetting';
-import RaterVerificationEmail from '../containers/Projects/RaterVerificationEmail';
-import SurveyIntro from '../containers/Projects/SurveyIntro';
-import SurveyQuestionsList from '../containers/Projects/SurveyQuestionsList';
+import SurveySetting from '../containers/Wizard/SurveySetting';
+import EmailSetting from '../containers/Wizard/EmailSetting';
+import RaterVerificationEmail from '../containers/Wizard/RaterVerificationEmail';
+import SurveyIntro from '../containers/Wizard/SurveyIntro';
+import SurveyQuestionsList from '../containers/Wizard/SurveyQuestionsList';
 
 import NotFound from '../components/404';
 import TestingArea from '../components/TestingArea';
