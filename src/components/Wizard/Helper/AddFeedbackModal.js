@@ -1,8 +1,8 @@
 import React from 'react';
 import { Modal } from 'antd';
-import Input from '../Common/Input';
-import Checkbox from '../Common/Checkbox';
-import Button from '../Common/Button';
+import Input from '../../Common/Input';
+import Checkbox from '../../Common/Checkbox';
+import Button from '../../Common/Button';
 
 const AddFeedbackModal = ({ visible, action }) => {
   return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import MainLayout from '../Common/Layout';
-import Menu from './Menu';
+import Menu from './Helper/Menu';
 import Steps from '../Common/Steps';
 import Button from '../Common/Button';
 

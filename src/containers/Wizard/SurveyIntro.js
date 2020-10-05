@@ -1,5 +1,5 @@
 import React from 'react';
-import Layout from '../../components/Projects/SurveyIntro';
+import Layout from '../../components/Wizard/SurveyIntro';
 const SurveyIntro = () => {
   return <Layout />;
 };

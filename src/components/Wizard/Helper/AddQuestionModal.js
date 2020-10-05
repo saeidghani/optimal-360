@@ -1,9 +1,9 @@
 import React from 'react';
 import { Modal } from 'antd';
-import Input from '../Common/Input';
-import Select from '../Common/Select';
-import Checkbox from '../Common/Checkbox';
-import Button from '../Common/Button';
+import Input from '../../Common/Input';
+import Select from '../../Common/Select';
+import Checkbox from '../../Common/Checkbox';
+import Button from '../../Common/Button';
 
 const AddQuestionModal = ({ visible, action }) => {
   return (
