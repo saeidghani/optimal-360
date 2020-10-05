@@ -7,13 +7,17 @@ import MainLayout from '../Common/Layout';
 
 import Input from '../Common/Input';
 import Button from '../Common/Button';
+import Tag from '../Common/Tag';
 import AutoComplete from '../Common/AutoComplete';
 
-const SetAdmin = ({ loading }) => {
+const ProjectInfo = ({ loading }) => {
   const schema = yup.object({
     organization: yup.string().required('organization feild is required'),
     project: yup.string().required('project feild is required'),
   });
+  const [surveyGroups, setSurveyGroups] = React.useState('');
+
+  console.log({ surveyGroups });
 
   return (
     <MainLayout
@@ -67,12 +71,40 @@ const SetAdmin = ({ loading }) => {
               />
 
               <AutoComplete
+                labelText="Survay Group"
+                extrainfoText="Create New"
+                onSelect={setSurveyGroups}
+                extrainfoLink="#"
+                placeholder="Search"
                 options={[
                   { label: 'aTest', value: 'atest' },
                   { label: 'bTest', value: 'btest' },
                   { label: 'cTest', value: 'ctest' },
                 ]}
               />
+
+              {surveyGroups?.length > 0 ? (
+                <div className="flex flex-row align-center mt-6">
+                  {surveyGroups.map((el, i) => (
+                    <Tag
+                      key={i}
+                      closable
+                      onClose={(label) => {
+                        const newSurveyGroups = [];
+                        surveyGroups.forEach((item) => {
+                          if (item.label.toLowerCase() === label.toLowerCase()) {
+                            newSurveyGroups.push(item);
+                          }
+                        });
+
+                        setSurveyGroups(newSurveyGroups);
+                      }}
+                      color="gray"
+                      text={el.label}
+                    />
+                  ))}
+                </div>
+              ) : null}
 
               <Button
                 loading={loading}
@@ -88,8 +120,8 @@ const SetAdmin = ({ loading }) => {
   );
 };
 
-SetAdmin.propTypes = {
+ProjectInfo.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
-export default SetAdmin;
+export default ProjectInfo;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import { PropTypes } from 'prop-types';
+import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
 import Layout from '../../components/Wizard/ProjectInfo';
@@ -8,13 +8,19 @@ class ProjectInfo extends Component {
   state = {};
 
   render() {
-    return <Layout />;
+    const { loading } = this.props;
+
+    return <Layout loading={loading} />;
   }
 }
 
-ProjectInfo.propTypes = {};
+ProjectInfo.propTypes = {
+  loading: PropTypes.bool.isRequired,
+};
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  loading: state.loading.global || false,
+});
 
 const mapDispatchToProps = (dispatch) => ({});
 

@@ -34,7 +34,12 @@ _AutoComplete.propTypes = {
   className: PropTypes.string,
   onSearch: PropTypes.func,
   onSelect: PropTypes.func,
-  options: PropTypes.string,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string,
+      label: PropTypes.string,
+    }),
+  ).isRequired,
   inputName: PropTypes.string,
   placeholder: PropTypes.string,
 };
@@ -43,7 +48,6 @@ _AutoComplete.defaultProps = {
   className: '',
   onSearch: console.log('onSearch'),
   onSelect: console.log('onSelect'),
-  options: '',
   inputName: '',
   placeholder: '',
 };
