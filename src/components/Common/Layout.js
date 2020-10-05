@@ -11,7 +11,7 @@ const Layout = ({ title, children, hasBreadCrumb, contentClass, titleClass }) =>
 
       <div
         style={{
-          paddingLeft: '60px',
+          paddingLeft: '84px',
         }}
         className={`w-full ${contentClass}`}
       >
