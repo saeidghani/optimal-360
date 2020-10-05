@@ -1,55 +1,111 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Input, AutoComplete } from 'antd';
-import Button from './Button';
+import { AutoComplete } from 'antd';
 
-const _AutoComplete = ({ className, onSearch, onSelect, options, inputName, placeholder }) => {
+const _AutoComplete = ({
+  wrapperClassName,
+  className,
+  onSelect,
+  options,
+  labelText,
+  extrainfoText,
+  extrainfoLink,
+  onExtraInfoLinkClick,
+  name,
+  size,
+  placeholder,
+}) => {
   const [value, setValue] = useState('');
+  const [_options, setOptions] = useState(options);
+
+  React.useEffect(() => {
+    const newOptions = [];
+
+    options.forEach((el) => {
+      if (!value || el.value.toLowerCase().includes(value.toLowerCase())) {
+        newOptions.push(el);
+      }
+    });
+
+    setOptions(newOptions);
+  }, [options, value]);
 
   const onChange = (data) => {
     setValue(data);
   };
 
   return (
-    <AutoComplete
-      value={value}
-      options={options}
-      className={` ${className}`}
-      onSelect={onSelect}
-      onSearch={onSearch}
-      onChange={onChange}
-    >
-      <Input
-        inputName={inputName}
+    <div name={name} className={`flex flex-col w-full ${wrapperClassName}`}>
+      {labelText || (extrainfoText && extrainfoLink) ? (
+        <div className="flex justify-between items-center mb-10p pl-1">
+          {labelText ? (
+            <label className="text-heading" htmlFor={name}>
+              {labelText}
+            </label>
+          ) : null}
+
+          {extrainfoText && extrainfoLink ? (
+            <div>
+              <a
+                className="text-black underline text-antgray-100 text-12px pl-2 sm:pl-0"
+                href={extrainfoLink}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+
+                  onExtraInfoLinkClick(e);
+                }}
+              >
+                {extrainfoText}
+              </a>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      <AutoComplete
         placeholder={placeholder}
-        suffix={
-          <Button onClick={() => console.log('button')} shape="circle" icon="SearchOutlined" />
-        }
+        id={name}
+        value={value}
+        options={_options}
+        className={`c-autocomplete c-sufix-prefix-gray text-12px w-full ${className}`}
+        onSelect={(_, val) => onSelect(val)}
+        onChange={onChange}
+        size={size}
       />
-    </AutoComplete>
+    </div>
   );
 };
 
 _AutoComplete.propTypes = {
+  wrapperClassName: PropTypes.string,
   className: PropTypes.string,
-  onSearch: PropTypes.func,
-  onSelect: PropTypes.func,
+  labelText: PropTypes.string,
+  extrainfoText: PropTypes.string,
+  extrainfoLink: PropTypes.string,
+  onExtraInfoLinkClick: PropTypes.string,
+  name: PropTypes.string,
+  size: PropTypes.string,
+  onSelect: PropTypes.func.isRequired,
   options: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.string,
       label: PropTypes.string,
     }),
   ).isRequired,
-  inputName: PropTypes.string,
   placeholder: PropTypes.string,
 };
 
 _AutoComplete.defaultProps = {
+  wrapperClassName: '',
   className: '',
-  onSearch: console.log('onSearch'),
-  onSelect: console.log('onSelect'),
-  inputName: '',
   placeholder: '',
+  labelText: '',
+  extrainfoText: '',
+  extrainfoLink: '',
+  onExtraInfoLinkClick: '',
+  name: '',
+  size: 'large',
 };
 
 export default _AutoComplete;
