@@ -12,6 +12,7 @@ import SetAdmin from '../containers/Projects/SetAdmin';
 import SurveyGroupList from '../containers/SurveyGroups/List';
 import RatersStatusOverview from '../containers/SurveyGroups/RatersStatusOverview';
 
+import ProjectInfo from '../containers/Wizard/ProjectInfo';
 import SurveySetting from '../containers/Wizard/SurveySetting';
 import EmailSetting from '../containers/Wizard/EmailSetting';
 import RaterVerificationEmail from '../containers/Wizard/RaterVerificationEmail';
@@ -42,6 +43,7 @@ const Index = () => (
       exact
       component={RatersStatusOverview}
     />
+    <PrivateRoute path="/super-user/new-project/project-info" exact component={ProjectInfo} />
     <PrivateRoute path="/super-user/Projects/survey-setting" exact component={SurveySetting} />
     <PrivateRoute path="/super-user/Projects/email-setting" exact component={EmailSetting} />
     <PrivateRoute
