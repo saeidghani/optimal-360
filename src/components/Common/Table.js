@@ -20,6 +20,8 @@ const _Table = ({
   onRowClick,
   onTableChange,
   size,
+  pagination,
+  rowSelection,
 }) => {
   const _columns = (columns || []).map((el) => {
     if (typeof el === 'undefined' && !el) return null;
@@ -61,40 +63,46 @@ const _Table = ({
         onChange={(pagination, filters, sorter, extra) =>
           onTableChange({ pagination, filters, sorter, extra })
         }
-        rowSelection={{
-          type: 'checkbox',
-          onChange: onRowSelectionChange,
-          selectedRowKeys,
-        }}
+        rowSelection={
+          rowSelection && {
+            type: 'checkbox',
+            onChange: onRowSelectionChange,
+            selectedRowKeys,
+          }
+        }
         pagination={false}
       />
 
-      <div className="flex flex-row justify-between items-center mt-10">
-        <div className="flex flex-row items-center justify-between">
-          <p className="text-sm text-antgray-100 whitespace-no-wrap">Number of results per page</p>
+      {pagination ? (
+        <div className="flex flex-row justify-between items-center mt-10">
+          <div className="flex flex-row items-center justify-between">
+            <p className="text-sm text-antgray-100 whitespace-no-wrap">
+              Number of results per page
+            </p>
 
-          <Dropdown
-            handleChange={onPageSizeChange}
-            value={pageSize.toString()}
-            className="ml-3"
-            showSearch={false}
-            options={[
-              { title: '10', value: 10 },
-              { title: '20', value: 20 },
-              { title: '50', value: 50 },
-              { title: '100', value: 100 },
-            ]}
+            <Dropdown
+              handleChange={onPageSizeChange}
+              value={pageSize.toString()}
+              className="ml-3"
+              showSearch={false}
+              options={[
+                { title: '10', value: 10 },
+                { title: '20', value: 20 },
+                { title: '50', value: 50 },
+                { title: '100', value: 100 },
+              ]}
+            />
+          </div>
+
+          <Pagination
+            onChange={onPaginationChange}
+            pageSize={pageSize}
+            showSizeChanger={false}
+            defaultCurrent={1}
+            total={totalRecordSize && !Number.isNaN(totalRecordSize) ? totalRecordSize : 10}
           />
         </div>
-
-        <Pagination
-          onChange={onPaginationChange}
-          pageSize={pageSize}
-          showSizeChanger={false}
-          defaultCurrent={1}
-          total={totalRecordSize && !Number.isNaN(totalRecordSize) ? totalRecordSize : 10}
-        />
-      </div>
+      ) : null}
     </div>
   );
 };
@@ -120,25 +128,34 @@ _Table.propTypes = {
     }),
   ).isRequired,
   pageSize: PropTypes.number,
-  onPageSizeChange: PropTypes.func.isRequired,
-  onPaginationChange: PropTypes.func.isRequired,
-  onRowSelectionChange: PropTypes.func.isRequired,
-  totalRecordSize: PropTypes.number.isRequired,
-  selectedRowKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
+  onPageSizeChange: PropTypes.func,
+  onPaginationChange: PropTypes.func,
+  onRowSelectionChange: PropTypes.func,
+  totalRecordSize: PropTypes.number,
+  selectedRowKeys: PropTypes.arrayOf(PropTypes.string),
   onRowClick: PropTypes.func,
   onTableChange: PropTypes.func,
   size: PropTypes.string,
+  pagination: PropTypes.bool,
+  rowSelection: PropTypes.bool,
 };
 
 _Table.defaultProps = {
   renderHeader: () => {},
+  onPageSizeChange: () => {},
+  onPaginationChange: () => {},
+  onRowSelectionChange: () => {},
   className: '',
   rowClassName: () => {},
   onTableChange: () => {},
   onRowClick: null,
   loading: false,
   pageSize: 10,
+  selectedRowKeys: [],
+  totalRecordSize: 10,
   size: 'default',
+  pagination: true,
+  rowSelection: true,
 };
 
 export default _Table;
