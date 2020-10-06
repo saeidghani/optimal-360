@@ -18,19 +18,9 @@ const _Table = ({
   onRowSelectionChange,
   selectedRowKeys,
   onRowClick,
+  onTableChange,
   size,
 }) => {
-  // const rowSelection = {
-  //   onChange: (selectedRowKeys, selectedRows) => {
-  //     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-  //   },
-  //   // getCheckboxProps: (record) => ({
-  //   //   disabled: record.name === 'Disabled User',
-  //   //   // Column configuration not to be checked
-  //   //   name: record.name,
-  //   // }),
-  // };
-
   const _columns = (columns || []).map((el) => {
     if (typeof el === 'undefined' && !el) return null;
 
@@ -48,8 +38,8 @@ const _Table = ({
     };
 
     if (el.sorter) {
-      newItem.sortDirections = ['ascend', 'descend', 'ascend'];
-      newItem.defaultSortOrder = 'descend';
+      newItem.sortDirections = ['descend', 'ascend', 'descend'];
+      newItem.defaultSortOrder = 'ascend';
     }
 
     return newItem;
@@ -68,6 +58,9 @@ const _Table = ({
         columns={_columns}
         dataSource={dataSource}
         title={renderHeader}
+        onChange={(pagination, filters, sorter, extra) =>
+          onTableChange({ pagination, filters, sorter, extra })
+        }
         rowSelection={{
           type: 'checkbox',
           onChange: onRowSelectionChange,
@@ -102,7 +95,6 @@ const _Table = ({
           total={totalRecordSize && !Number.isNaN(totalRecordSize) ? totalRecordSize : 10}
         />
       </div>
-      {/* ) : null} */}
     </div>
   );
 };
@@ -114,7 +106,7 @@ _Table.propTypes = {
       PropTypes.shape({
         key: PropTypes.string,
         title: PropTypes.string,
-        sorter: PropTypes.func,
+        sorter: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
       }),
     ]),
   ).isRequired,
@@ -134,6 +126,7 @@ _Table.propTypes = {
   totalRecordSize: PropTypes.number.isRequired,
   selectedRowKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   onRowClick: PropTypes.func,
+  onTableChange: PropTypes.func,
   size: PropTypes.string,
 };
 
@@ -141,6 +134,7 @@ _Table.defaultProps = {
   renderHeader: () => {},
   className: '',
   rowClassName: () => {},
+  onTableChange: () => {},
   onRowClick: null,
   loading: false,
   pageSize: 10,

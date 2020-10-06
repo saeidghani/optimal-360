@@ -143,7 +143,7 @@ const SurveyGroups = ({ loading }) => {
 
   const columns = React.useMemo(
     () => [
-      { key: 'id', title: 'ID', sorter: (a, b) => a.id - b.id },
+      { key: 'id', title: 'ID', sorter: true },
       {
         key: 'name',
         title: 'Survay Group',
@@ -157,6 +157,7 @@ const SurveyGroups = ({ loading }) => {
             textClassName="underline text-primary-500"
           />
         ),
+        sorter: true,
       },
       {
         key: 'startDate',
@@ -197,9 +198,28 @@ const SurveyGroups = ({ loading }) => {
     [surveyGroups.timeStamp],
   );
 
+  const sort = (sorter) => {
+    const order = sorter?.order === 'ascend' ? '+' : '-';
+    const newItem = `${order}${sorter.columnKey}`;
+
+    const oldSort = parsedQuery?.sort || [];
+    const newSort = [...oldSort, newItem];
+
+    const duplicateIndex = newSort
+      .slice(0, newSort.length - 1)
+      .findIndex((el) => el.includes(sorter.columnKey));
+
+    if (duplicateIndex !== -1) {
+      newSort.splice(duplicateIndex, 1);
+    }
+
+    setQuery({ sort: newSort });
+  };
+
   return (
     <MainLayout hasBreadCrumb title="Super User" contentClass="py-6 pr-6">
       <Table
+        onTableChange={({ sorter }) => sort(sorter)}
         className="c-small-padding"
         size="small"
         selectedRowKeys={selectedRows?.map((el) => el.key)}
