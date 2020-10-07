@@ -95,7 +95,7 @@ export default {
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
-          url: `/super-user/projects/${projectId}/survey-groups${query}`,
+          url: `/super-user/projects/${projectId}/survey-groups${query || ''}`,
         });
 
         this.fetchSurveyGroups_reducer(res?.data);

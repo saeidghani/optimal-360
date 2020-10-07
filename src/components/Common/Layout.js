@@ -6,7 +6,7 @@ import BreadCrumb from './BreadCrumb';
 
 const Layout = ({ title, children, hasBreadCrumb, contentClass, titleClass }) => {
   return (
-    <div className="bg-primary-200 overflow-y-hidden">
+    <div className="bg-primary-200 overflow-y-hidden min-h-screen">
       <Sidebar />
 
       <div

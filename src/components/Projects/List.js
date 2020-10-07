@@ -143,9 +143,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
         render: (project, { id }) => (
           <Button
             className="pl-0"
-            onClick={() =>
-              history.push(`/super-user/projects/${id}/survey-groups?page_size=10&page_number=1`)
-            }
+            onClick={() => history.push(`/super-user/projects/${id}/survey-groups`)}
             type="link"
             textSize="sm"
             text={project}

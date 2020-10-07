@@ -66,7 +66,7 @@ const ProjectInfo = ({
             const surveyGroupIds = surveyGroup?.map((el) => el.id);
 
             try {
-              await createProjectForOrganization({
+              const { projectId } = await createProjectForOrganization({
                 organizationId: organization.id,
                 name: project,
                 surveyGroupIds,
@@ -74,6 +74,7 @@ const ProjectInfo = ({
 
               const params = stringify({
                 organizationId: organization.id,
+                projectId,
               });
 
               history.push(`/super-user/Projects/survey-setting${params}`);
