@@ -125,7 +125,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
 
   const columns = React.useMemo(
     () => [
-      { key: 'id', title: 'ID', sorter: (a, b) => a.id - b.id },
+      { key: 'id', title: 'ID', sorter: true },
       {
         key: 'organization',
         title: 'Organization',
@@ -135,7 +135,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
             <TeamOutlined className="text-lg text-primary-500" />
           </div>
         ),
-        sorter: (a, b) => a.organization.length - b.organization.length,
+        sorter: true,
       },
       {
         key: 'project',
@@ -204,9 +204,28 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
     [projects.timeStamp],
   );
 
+  const sort = (sorter) => {
+    const order = sorter?.order === 'ascend' ? '+' : '-';
+    const newItem = `${order}${sorter.columnKey}`;
+
+    const oldSort = parsedQuery?.sort || [];
+    const newSort = [...oldSort, newItem];
+
+    const duplicateIndex = newSort
+      .slice(0, newSort.length - 1)
+      .findIndex((el) => el.includes(sorter.columnKey));
+
+    if (duplicateIndex !== -1) {
+      newSort.splice(duplicateIndex, 1);
+    }
+
+    setQuery({ sort: newSort });
+  };
+
   return (
     <MainLayout hasBreadCrumb title="Super User" contentClass="py-6 pr-6">
       <Table
+        onTableChange={({ sorter }) => sort(sorter)}
         size="small"
         className="c-small-padding"
         selectedRowKeys={selectedRows?.map((el) => el.key)}

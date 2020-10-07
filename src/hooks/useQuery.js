@@ -2,8 +2,10 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import qs from 'qs';
 
-const parse = (str) => qs.parse(str, { ignoreQueryPrefix: true });
-const stringify = (obj) => qs.stringify(obj, { addQueryPrefix: true });
+const parse = (str, options) =>
+  qs.parse(str, { ignoreQueryPrefix: true, comma: 'true', ...options });
+const stringify = (obj, options) =>
+  qs.stringify(obj, { addQueryPrefix: true, arrayFormat: 'comma', ...options });
 
 const useQuery = () => {
   const history = useHistory();
@@ -30,7 +32,9 @@ const useQuery = () => {
     // we destruct a new obj not to overwrite pervious params
 
     Object.keys(newObject).forEach((key) => {
-      if (!newObject[key]) delete newObject[key];
+      if (!newObject[key]) return delete newObject[key];
+
+      if (newObject[key] && newObject[key].length < 1) return delete newObject[key];
     });
     // if a query parameter has an empty('') value
     // we remove it from the parsed object
@@ -49,6 +53,10 @@ const useQuery = () => {
   };
 
   const parsedQuery = parse(query);
+
+  if (parsedQuery.sort) {
+    parsedQuery.sort = parsedQuery.sort.split(',');
+  }
 
   return [parsedQuery, query, setQuery];
 };
