@@ -1,10 +1,13 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
+import { useParams } from 'react-router-dom';
+import moment from 'moment';
+
+import Menu from './Helper/Menu';
 
 import MainLayout from '../Common/Layout';
-// import Menu from '../Common/Menu';
 // import Steps from '../Common/Steps';
 import DatePicker from '../Common/DatePicker';
 import Table from '../Common/Table';
@@ -13,7 +16,14 @@ import Input from '../Common/Input';
 import Checkbox from '../Common/Checkbox';
 import InputNumber from '../Common/InputNumber';
 
-const SurveySetting = () => {
+const SurveySetting = ({
+  surveySettings,
+  fetchSurveySettings,
+  fetchSurveyGroups,
+  setSurveySettings,
+  loading,
+  surveyGroups,
+}) => {
   const schema = yup.object({
     surveySetting: yup.object({
       startDate: yup.string().required('Start Date Cannot Be Empty'),
@@ -34,12 +44,22 @@ const SurveySetting = () => {
     }),
   });
 
+  const { projectId, surveyGroupId } = useParams();
+
+  React.useEffect(() => {
+    fetchSurveyGroups(projectId);
+
+    if (surveyGroupId) {
+      fetchSurveySettings(surveyGroupId);
+    }
+  }, [projectId, surveyGroupId, fetchSurveyGroups, fetchSurveySettings]);
+
   const [dataSource, setDataSource] = React.useState(() => [
     {
       key: '1',
       abbr: 'SF',
       name: 'Self',
-      minRater: '1',
+      minRater: 1,
       includeAverage: false,
       remove: '',
     },
@@ -108,8 +128,8 @@ const SurveySetting = () => {
       render: (value, { key }) => (
         <Input
           name="minRater"
-          onChange={(e) => updateTable('minRater', e.target.value, key)}
-          value={value}
+          onChange={(e) => updateTable('minRater', e.target.value * 1, key)}
+          value={value.toString()}
           placeholder="Min Raters"
         />
       ),
@@ -119,7 +139,7 @@ const SurveySetting = () => {
       key: 'includeAverage',
       render: (value, { key }) => (
         <div style={{ minWidth: '80px' }} className="justify-center items-center">
-          {value !== false && (
+          {key !== '1' && (
             <Checkbox checked={!!value} onChange={(val) => updateTable('includeAverage', val, key)}>
               Include
             </Checkbox>
@@ -148,7 +168,7 @@ const SurveySetting = () => {
   return (
     <MainLayout title="Survey Group" contentClass=" p-0">
       <div className="bg-white w-full flex">
-        {/* <Menu /> */}
+        <Menu items={surveyGroups?.data} />
 
         <div className="w-full px-6 pt-6 ">
           {/* <Steps className="w-full" /> */}
@@ -169,7 +189,7 @@ const SurveySetting = () => {
             }}
             validationSchema={schema}
             onSubmit={(values) => {
-              console.log({ ...values, raterGroups: dataSource });
+              setSurveySettings({ ...values, raterGroups: dataSource, surveyGroupId });
             }}
           >
             {({ values, errors, touched, handleSubmit, setFieldValue }) => (
@@ -179,10 +199,11 @@ const SurveySetting = () => {
                     <h1 className="text-20px text-heading mb-6">Date</h1>
 
                     <DatePicker
+                      loading={loading}
                       onChange={(startDate) =>
                         setFieldValue('surveySetting', {
                           ...values.surveySetting,
-                          startDate,
+                          startDate: moment(startDate).format('YYYY-MM-DD'),
                         })
                       }
                       label="Start Date"
@@ -192,11 +213,12 @@ const SurveySetting = () => {
                       }
                     />
                     <DatePicker
+                      loading={loading}
                       label="End Date"
                       onChange={(endDate) =>
                         setFieldValue('surveySetting', {
                           ...values.surveySetting,
-                          endDate,
+                          endDate: moment(endDate).format('YYYY-MM-DD'),
                         })
                       }
                       errorMessage={touched.surveySetting?.endDate && errors.surveySetting?.endDate}
@@ -207,6 +229,7 @@ const SurveySetting = () => {
                     <h1 className="text-20px text-heading mb-6">Refrence Guide</h1>
 
                     <InputNumber
+                      loading={loading}
                       className="mr-12"
                       label="Rater Invalidation"
                       value={values.surveySetting.raterInvalidation}
@@ -222,6 +245,7 @@ const SurveySetting = () => {
                       }
                     />
                     <InputNumber
+                      loading={loading}
                       label="Item Invalidation"
                       value={values.surveySetting.itemInvalidation}
                       onChange={(itemInvalidation) =>
@@ -242,6 +266,7 @@ const SurveySetting = () => {
                   <h1 className="text-20px text-heading">Rater Settings</h1>
 
                   <Table
+                    loading={loading}
                     rowSelection={false}
                     pagination={false}
                     className="mb-16"
@@ -322,8 +347,30 @@ const SurveySetting = () => {
   );
 };
 
-// SurveySetting.propTypes = {};
+SurveySetting.propTypes = {
+  fetchSurveyGroups: PropTypes.func.isRequired,
+  fetchSurveySettings: PropTypes.func.isRequired,
+  setSurveySettings: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+  surveyGroups: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.object),
+  }),
+  surveySettings: PropTypes.shape({
+    raterGroups: PropTypes.arrayOf(PropTypes.object),
+    surveyModeInUserDashboard: PropTypes.shape({}),
+    surveySetting: PropTypes.shape({}),
+  }),
+};
 
-// SurveySetting.defaultProps = {};
+SurveySetting.defaultProps = {
+  surveyGroups: {
+    data: [],
+  },
+  surveySettings: {
+    raterGroups: [],
+    surveyModeInUserDashboard: {},
+    surveySetting: {},
+  },
+};
 
 export default SurveySetting;

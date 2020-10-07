@@ -43,32 +43,32 @@ const Index = () => (
     />
 
     <PrivateRoute
-      path="/super-user/new-project/project-info/:surveyGroupId?"
+      path="/super-user/new-project/project-info/:projectId?"
       exact
       component={ProjectInfo}
     />
     <PrivateRoute
-      path="/super-user/new-project/survey-setting/:surveyGroupId?"
+      path="/super-user/new-project/survey-setting/:projectId/:surveyGroupId?"
       exact
       component={SurveySetting}
     />
     <PrivateRoute
-      path="/super-user/new-project/email-setting/:surveyGroupId?"
+      path="/super-user/new-project/email-setting/:projectId?"
       exact
       component={EmailSetting}
     />
     <PrivateRoute
-      path="/super-user/new-project/rater-verification-email/:surveyGroupId?"
+      path="/super-user/new-project/rater-verification-email/:projectId?"
       exact
       component={RaterVerificationEmail}
     />
     <PrivateRoute
-      path="/super-user/new-project/survey-intro/:surveyGroupId?"
+      path="/super-user/new-project/survey-intro/:projectId?"
       exact
       component={SurveyIntro}
     />
     <PrivateRoute
-      path="/super-user/new-project/survey-questions/:surveyGroupId?"
+      path="/super-user/new-project/survey-questions/:projectId?"
       exact
       component={SurveyQuestionsList}
     />

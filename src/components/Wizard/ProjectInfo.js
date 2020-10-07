@@ -2,6 +2,7 @@ import React from 'react';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 
 import { useQuery, parse, stringify } from '../../hooks/useQuery';
 
@@ -27,6 +28,8 @@ const ProjectInfo = ({
   });
   const [selectedSurveyGroups, setSelectedSurveyGroups] = React.useState([]);
   const [parsedQuery, query, setQuery] = useQuery();
+
+  const history = useHistory();
 
   const onTagClose = (label) => {
     const newSurveyGroups = [];
@@ -60,14 +63,16 @@ const ProjectInfo = ({
             surveyGroup: [],
           }}
           validationSchema={schema}
-          onSubmit={({ organization, project, surveyGroup }) => {
+          onSubmit={async ({ organization, project, surveyGroup }) => {
             const surveyGroupIds = surveyGroup?.map((el) => el.id);
 
-            createProjectForOrganization({
+            const { projectId } = await createProjectForOrganization({
               organizationId: organization.id,
               name: project,
               surveyGroupIds,
             });
+
+            history.push(`/super-user/new-project/survey-setting/${projectId}`);
           }}
         >
           {({

@@ -36,8 +36,10 @@ const _Input = ({
               className="text-black underline text-antgray-100 text-12px pl-2 sm:pl-0"
               href={extrainfoLink}
               onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
+                if (!extrainfoLink) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
 
                 onExtraInfoLinkClick(e);
               }}

@@ -17,7 +17,7 @@ import { useQuery } from '../../hooks/useQuery';
 const SurveyGroups = ({ loading }) => {
   const [parsedQuery, query, setQuery] = useQuery();
 
-  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
+  // const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const { projectId } = useParams();
   const dispatch = useDispatch();
@@ -31,7 +31,8 @@ const SurveyGroups = ({ loading }) => {
   }, [surveyGroups.timeStamp]);
 
   const fetch = React.useCallback(async () => {
-    const newQuery = query || '?page_size=10&page_number=1&status=active';
+    const newQuery = query || '';
+    // const newQuery = query || '?page_size=10&page_number=1&status=active';
     await dispatch.projects.fetchSurveyGroups({ projectId, query: newQuery });
   }, [dispatch, query, projectId]);
 
@@ -106,7 +107,7 @@ const SurveyGroups = ({ loading }) => {
               <p className="mx-3 text-xs whitespace-no-wrap">Start Date</p>
 
               <DatePicker
-                onChange={(val) => setQuery({ start_Date: val })}
+                onChange={(val) => setQuery({ start_Date: moment(val).toISOString() })}
                 className="w-32"
                 size="large"
                 placeholder="Select"
@@ -117,7 +118,7 @@ const SurveyGroups = ({ loading }) => {
               <p className="mx-3 text-xs whitespace-no-wrap">End Date</p>
 
               <DatePicker
-                onChange={(val) => setQuery({ end_date: val })}
+                onChange={(val) => setQuery({ end_date: moment(val).toISOString() })}
                 className="w-32"
                 size="large"
                 placeholder="Select"
@@ -227,24 +228,24 @@ const SurveyGroups = ({ loading }) => {
         columns={columns}
         dataSource={dataSource}
         renderHeader={renderHeader}
-        // onRowClick={(record, rowIndex) => console.log({ record, rowIndex })}
-        onPageSizeChange={(size) => {
-          setPageSize(size);
-          setQuery({ page_size: size, page_number: 1 });
-        }}
-        pageSize={pageSize * 1}
-        // eslint-disable-next-line camelcase
-        onPaginationChange={(page_number, page_size) => {
-          setSelectedRows([]);
-          setQuery({
-            page_size,
-            page_number,
-          });
-        }}
+        // onPageSizeChange={(size) => {
+        //   setPageSize(size);
+        //   setQuery({ page_size: size, page_number: 1 });
+        // }}
+        // pageSize={pageSize * 1}
+        // // eslint-disable-next-line camelcase
+        // onPaginationChange={(page_number, page_size) => {
+        //   setSelectedRows([]);
+        //   setQuery({
+        //     page_size,
+        //     page_number,
+        //   });
+        // }}
+        pagination={false}
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
         }}
-        totalRecordSize={surveyGroups?.metaData?.pagination?.totalRecords * 1}
+        // totalRecordSize={surveyGroups?.metaData?.pagination?.totalRecords * 1}
       />
     </MainLayout>
   );

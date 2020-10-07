@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { DatePicker } from 'antd';
-import moment from 'moment';
 
 const _DatePicker = ({ className, placeholder, size, onChange, label, errorMessage }) => (
   <div className="w-full">
@@ -9,7 +8,7 @@ const _DatePicker = ({ className, placeholder, size, onChange, label, errorMessa
 
     <DatePicker
       className={` ${className}`}
-      onChange={(val) => onChange(moment(val).toISOString())}
+      onChange={onChange}
       format="DD/MM/YYYY"
       placeholder={placeholder}
       size={size}
