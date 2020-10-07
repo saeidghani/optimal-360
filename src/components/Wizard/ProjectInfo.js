@@ -21,6 +21,7 @@ const ProjectInfo = ({
   fetchSurveyGroups,
   createProjectForOrganization,
 }) => {
+  const history = useHistory();
   const schema = yup.object({
     organization: yup.object({ value: yup.string().required('Organization Name Cannot Be Empty') }),
     project: yup.string().required('Project Name Cannot Be Empty'),
@@ -28,8 +29,6 @@ const ProjectInfo = ({
   });
   const [selectedSurveyGroups, setSelectedSurveyGroups] = React.useState([]);
   const [parsedQuery, query, setQuery] = useQuery();
-
-  const history = useHistory();
 
   const onTagClose = (label) => {
     const newSurveyGroups = [];
@@ -66,13 +65,20 @@ const ProjectInfo = ({
           onSubmit={async ({ organization, project, surveyGroup }) => {
             const surveyGroupIds = surveyGroup?.map((el) => el.id);
 
-            const { projectId } = await createProjectForOrganization({
-              organizationId: organization.id,
-              name: project,
-              surveyGroupIds,
-            });
+            try {
+              const { projectId } = await createProjectForOrganization({
+                organizationId: organization.id,
+                name: project,
+                surveyGroupIds,
+              });
 
-            history.push(`/super-user/new-project/survey-setting/${projectId}`);
+              const params = stringify({
+                organizationId: organization.id,
+                projectId,
+              });
+
+              history.push(`/super-user/Projects/survey-setting${params}`);
+            } catch (_) {}
           }}
         >
           {({
