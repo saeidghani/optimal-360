@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
-import { useParams } from 'react-router-dom';
 import moment from 'moment';
+
+import { useQuery } from '../../hooks/useQuery';
 
 import Menu from './Helper/Menu';
 
@@ -24,6 +25,10 @@ const SurveySetting = ({
   loading,
   surveyGroups,
 }) => {
+  const [parsedQuery] = useQuery();
+  const { projectId, surveyGroupId } = parsedQuery;
+  const { surveySetting, raterGroups, surveyModeInUserDashboard } = surveySettings;
+
   const schema = yup.object({
     surveySetting: yup.object({
       startDate: yup.string().required('Start Date Cannot Be Empty'),
@@ -44,8 +49,6 @@ const SurveySetting = ({
     }),
   });
 
-  const { projectId, surveyGroupId } = useParams();
-
   React.useEffect(() => {
     fetchSurveyGroups(projectId);
 
@@ -54,23 +57,30 @@ const SurveySetting = ({
     }
   }, [projectId, surveyGroupId, fetchSurveyGroups, fetchSurveySettings]);
 
-  const [dataSource, setDataSource] = React.useState(() => [
-    {
-      key: '1',
-      abbr: 'SF',
-      name: 'Self',
-      minRater: 1,
-      includeAverage: false,
-      remove: '',
-    },
-  ]);
+  // const [dataSource, setDataSource] = React.useState(() => [
+  //   {
+  //     key: '1',
+  //     abbr: 'SF',
+  //     name: 'Self',
+  //     minRater: 1,
+  //     includeAverage: false,
+  //     remove: '',
+  //   },
+  // ]);
 
-  const updateTable = (key, value, index) => {
-    const newDate = [...dataSource];
+  const [dataSource, setDataSource] = React.useState(() => {
+    return raterGroups?.length > 0
+      ? raterGroups.map((el) => ({ ...el, key: el.id.toString(), remove: '' }))
+      : [];
+  });
 
-    newDate[index - 1][key] = value;
+  const updateTable = (key, value, id) => {
+    const newData = [...dataSource];
 
-    setDataSource(newDate);
+    const oldItem = newData.find((item) => item.id === id);
+    oldItem[key] = value;
+
+    setDataSource(newData);
   };
 
   const removeTableRow = (key) => {
@@ -90,7 +100,7 @@ const SurveySetting = ({
         abbr: '',
         name: '',
         minRater: '',
-        includeAverage: '',
+        includeAverage: false,
         remove: '',
       },
     ]);
@@ -101,10 +111,11 @@ const SurveySetting = ({
       title: 'abbr.',
       key: 'abbr',
       // render: ({ value }, { key }) => console.log({ value, key }),
-      render: (value, { key }) => (
+      render: (value, { id }) => (
         <Input
+          inputClass="uppercase"
           name="abbr"
-          onChange={(e) => updateTable('abbr', e.target.value, key)}
+          onChange={(e) => updateTable('abbr', e.target.value, id)}
           value={value}
           placeholder="ABBR."
         />
@@ -113,10 +124,11 @@ const SurveySetting = ({
     {
       title: 'Group Name',
       key: 'name',
-      render: (value, { key }) => (
+      render: (value, { id }) => (
         <Input
+          inputClass="capitalize"
           name="name"
-          onChange={(e) => updateTable('name', e.target.value, key)}
+          onChange={(e) => updateTable('name', e.target.value, id)}
           value={value}
           placeholder="Group Name"
         />
@@ -125,10 +137,10 @@ const SurveySetting = ({
     {
       title: 'Min.Raters',
       key: 'minRater',
-      render: (value, { key }) => (
+      render: (value, { id }) => (
         <Input
           name="minRater"
-          onChange={(e) => updateTable('minRater', e.target.value * 1, key)}
+          onChange={(e) => updateTable('minRater', e.target.value * 1, id)}
           value={value.toString()}
           placeholder="Min Raters"
         />
@@ -137,10 +149,10 @@ const SurveySetting = ({
     {
       title: 'Include Average',
       key: 'includeAverage',
-      render: (value, { key }) => (
+      render: (value, { id }) => (
         <div style={{ minWidth: '80px' }} className="justify-center items-center">
-          {key !== '1' && (
-            <Checkbox checked={!!value} onChange={(val) => updateTable('includeAverage', val, key)}>
+          {id !== 1 && (
+            <Checkbox checked={!!value} onChange={(val) => updateTable('includeAverage', val, id)}>
               Include
             </Checkbox>
           )}
@@ -175,17 +187,19 @@ const SurveySetting = ({
 
           <Formik
             initialValues={{
-              surveySetting: {
-                startDate: '',
-                endDate: '',
-                raterInvalidation: 0,
-                itemInvalidation: 0,
-              },
-              surveyModeInUserDashboard: {
-                individual: false,
-                group: false,
-                all: false,
-              },
+              // surveySetting: {
+              //   startDate: '',
+              //   endDate: '',
+              //   raterInvalidation: 0,
+              //   itemInvalidation: 0,
+              // },
+              surveySetting,
+              surveyModeInUserDashboard,
+              // surveyModeInUserDashboard: {
+              //   individual: false,
+              //   ratingGroup: false,
+              //   allRatees: false,
+              // },
             }}
             validationSchema={schema}
             onSubmit={(values) => {
@@ -302,11 +316,11 @@ const SurveySetting = ({
                   </Checkbox>
 
                   <Checkbox
-                    checked={values.surveyModeInUserDashboard.group}
-                    onChange={(group) =>
+                    checked={values.surveyModeInUserDashboard.ratingGroup}
+                    onChange={(ratingGroup) =>
                       setFieldValue('surveyModeInUserDashboard', {
                         ...values.surveyModeInUserDashboard,
-                        group,
+                        ratingGroup,
                       })
                     }
                     className="mb-6"
@@ -315,11 +329,11 @@ const SurveySetting = ({
                   </Checkbox>
 
                   <Checkbox
-                    checked={values.surveyModeInUserDashboard.all}
-                    onChange={(all) =>
+                    checked={values.surveyModeInUserDashboard.allRatees}
+                    onChange={(allRatees) =>
                       setFieldValue('surveyModeInUserDashboard', {
                         ...values.surveyModeInUserDashboard,
-                        all,
+                        allRatees,
                       })
                     }
                     className="mb-6"

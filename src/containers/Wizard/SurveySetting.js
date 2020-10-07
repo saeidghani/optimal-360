@@ -30,7 +30,7 @@ class SurveySetting extends Component {
   render() {
     const { loading, surveySettings, surveyGroups } = this.props;
 
-    console.log({ surveySettings, surveyGroups });
+    // console.log({ surveySettings, surveyGroups });
 
     return (
       <Layout
