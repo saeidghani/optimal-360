@@ -37,8 +37,10 @@ const _AutoComplete = ({
                 className="text-black underline text-antgray-100 text-12px pl-2 sm:pl-0"
                 href={extrainfoLink}
                 onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
+                  if (!extrainfoLink) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
 
                   onExtraInfoLinkClick(e);
                 }}
@@ -80,7 +82,7 @@ _AutoComplete.propTypes = {
   labelText: PropTypes.string,
   extrainfoText: PropTypes.string,
   extrainfoLink: PropTypes.string,
-  onExtraInfoLinkClick: PropTypes.string,
+  onExtraInfoLinkClick: PropTypes.func,
   name: PropTypes.string,
   size: PropTypes.string,
   onSelect: PropTypes.func.isRequired,
@@ -105,7 +107,7 @@ _AutoComplete.defaultProps = {
   labelText: '',
   extrainfoText: '',
   extrainfoLink: '',
-  onExtraInfoLinkClick: '',
+  onExtraInfoLinkClick: () => {},
   name: '',
   size: 'large',
   errorMessage: '',
