@@ -41,17 +41,34 @@ const Index = () => (
       exact
       component={RatersStatusOverview}
     />
-    <PrivateRoute path="/super-user/new-project/project-info" exact component={ProjectInfo} />
-    <PrivateRoute path="/super-user/Projects/survey-setting" exact component={SurveySetting} />
-    <PrivateRoute path="/super-user/Projects/email-setting" exact component={EmailSetting} />
+
     <PrivateRoute
-      path="/super-user/Projects/rater-verification-email"
+      path="/super-user/new-project/project-info/:surveyGroupId?"
+      exact
+      component={ProjectInfo}
+    />
+    <PrivateRoute
+      path="/super-user/new-project/survey-setting/:surveyGroupId?"
+      exact
+      component={SurveySetting}
+    />
+    <PrivateRoute
+      path="/super-user/new-project/email-setting/:surveyGroupId?"
+      exact
+      component={EmailSetting}
+    />
+    <PrivateRoute
+      path="/super-user/new-project/rater-verification-email/:surveyGroupId?"
       exact
       component={RaterVerificationEmail}
     />
-    <PrivateRoute path="/super-user/Projects/survey-intro" exact component={SurveyIntro} />
     <PrivateRoute
-      path="/super-user/Projects/survey-questions"
+      path="/super-user/new-project/survey-intro/:surveyGroupId?"
+      exact
+      component={SurveyIntro}
+    />
+    <PrivateRoute
+      path="/super-user/new-project/survey-questions/:surveyGroupId?"
       exact
       component={SurveyQuestionsList}
     />
