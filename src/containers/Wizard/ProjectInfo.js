@@ -16,7 +16,6 @@ class ProjectInfo extends Component {
   createProjectForOrganization = async (data) => {
     const { createProjectForOrganization } = this.props;
 
-    console.log({ data });
     await createProjectForOrganization(data);
   };
 

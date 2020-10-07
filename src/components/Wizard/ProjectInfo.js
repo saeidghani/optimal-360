@@ -2,6 +2,7 @@ import React from 'react';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 
 import { useQuery, parse, stringify } from '../../hooks/useQuery';
 
@@ -20,6 +21,7 @@ const ProjectInfo = ({
   fetchSurveyGroups,
   createProjectForOrganization,
 }) => {
+  const history = useHistory();
   const schema = yup.object({
     organization: yup.object({ value: yup.string().required('Organization Name Cannot Be Empty') }),
     project: yup.string().required('Project Name Cannot Be Empty'),
@@ -60,14 +62,22 @@ const ProjectInfo = ({
             surveyGroup: [],
           }}
           validationSchema={schema}
-          onSubmit={({ organization, project, surveyGroup }) => {
+          onSubmit={async ({ organization, project, surveyGroup }) => {
             const surveyGroupIds = surveyGroup?.map((el) => el.id);
 
-            createProjectForOrganization({
-              organizationId: organization.id,
-              name: project,
-              surveyGroupIds,
-            });
+            try {
+              await createProjectForOrganization({
+                organizationId: organization.id,
+                name: project,
+                surveyGroupIds,
+              });
+
+              const params = stringify({
+                organizationId: organization.id,
+              });
+
+              history.push(`/super-user/Projects/survey-setting${params}`);
+            } catch (_) {}
           }}
         >
           {({
