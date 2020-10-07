@@ -1,32 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu } from 'antd';
-import { useHistory, useParams } from 'react-router-dom';
+import { useQuery } from '../../../hooks/useQuery';
 
 const _Menu = ({ items, title }) => {
-  const history = useHistory();
-  const { pathname } = history?.location;
+  const [parsedQuery, , setQuery] = useQuery();
 
-  const { projectId, surveyGroupId } = useParams();
+  React.useEffect(() => {
+    const surveyGroupId = items?.length > 0 ? items[0].id : '';
 
-  if (!surveyGroupId) {
-    const firstSurveyGroupId = items?.length > 0 ? items[0].id : '';
-    history.push(`${pathname}/${firstSurveyGroupId}`);
-  }
-
-  const oldParams = `${projectId}/${surveyGroupId}`;
-  const newPathname = pathname.split(oldParams)[0] + projectId;
+    if (surveyGroupId || surveyGroupId !== parsedQuery?.surveyGroupId) {
+      setQuery({ surveyGroupId }, { pagination: false });
+    }
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <Menu
-      selectedKeys={[surveyGroupId]}
+      selectedKeys={[parsedQuery?.surveyGroupId]}
       mode="inline"
       style={{ width: 226, paddingLeft: 11, paddingTop: 30 }}
     >
       <h4 className="pb-6 pl-4 text-body font-medium font-sans">{title}</h4>
 
       {items.map(({ id, name }) => (
-        <Menu.Item onClick={({ key }) => history.push(`${newPathname}/${key}`)} key={id}>
+        <Menu.Item
+          onClick={({ key }) => setQuery({ surveyGroupId: key }, { pagination: false })}
+          key={id}
+        >
           {name}
         </Menu.Item>
       ))}

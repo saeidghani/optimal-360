@@ -77,7 +77,7 @@ const ProjectInfo = ({
                 projectId,
               });
 
-              history.push(`/super-user/Projects/survey-setting${params}`);
+              history.push(`/super-user/new-project/survey-setting${params}`);
             } catch (_) {}
           }}
         >
