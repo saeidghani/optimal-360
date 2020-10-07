@@ -20,6 +20,7 @@ const _Button = ({
   href,
   textClassName,
   textSize,
+  disabled,
 }) => {
   const RICON = ICONS[icon];
   if (icon && typeof RICON === 'undefined' && !RICON) {
@@ -48,6 +49,7 @@ const _Button = ({
 
   return (
     <Button
+      disabled={disabled}
       className={`flex justify-center items-center ${className}`}
       onClick={href ? () => {} : onClick}
       href={href}
@@ -89,6 +91,7 @@ _Button.propTypes = {
   text: PropTypes.string,
   textClassName: PropTypes.string,
   textSize: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 _Button.defaultProps = {
@@ -106,6 +109,7 @@ _Button.defaultProps = {
   text: '',
   children: '',
   href: undefined,
+  disabled: false,
   // eslint-disable-next-line no-alert
   onClick: () => alert('comig soon'),
 };
