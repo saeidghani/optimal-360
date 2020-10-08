@@ -13,10 +13,10 @@ class ProjectInfo extends Component {
     await fetchOrganizations(query);
   };
 
-  createProjectForOrganization = async (data) => {
-    const { createProjectForOrganization } = this.props;
+  createProject = async (data) => {
+    const { createProject } = this.props;
 
-    const res = await createProjectForOrganization(data);
+    const res = await createProject(data);
     return res?.data?.data;
   };
 
@@ -33,7 +33,7 @@ class ProjectInfo extends Component {
       <Layout
         fetchOrganizations={this.fetchOrganizations}
         fetchSurveyGroups={this.fetchSurveyGroups}
-        createProjectForOrganization={this.createProjectForOrganization}
+        createProject={this.createProject}
         organizations={organizations}
         surveyGroups={surveyGroups}
         loading={loading}
@@ -45,7 +45,7 @@ class ProjectInfo extends Component {
 ProjectInfo.propTypes = {
   fetchOrganizations: PropTypes.func.isRequired,
   fetchSurveyGroups: PropTypes.func.isRequired,
-  createProjectForOrganization: PropTypes.func.isRequired,
+  createProject: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   organizations: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   surveyGroups: PropTypes.arrayOf(PropTypes.shape()).isRequired,
@@ -60,7 +60,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchOrganizations: dispatch.organizations.fetchOrganizations,
   fetchSurveyGroups: dispatch.bank.fetchSurveyGroups,
-  createProjectForOrganization: dispatch.organizations.createProjectForOrganization,
+  createProject: dispatch.wizard.createProject,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProjectInfo);
