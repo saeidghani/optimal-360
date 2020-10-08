@@ -225,7 +225,6 @@ const SurveySetting = ({
                     <h1 className="text-20px text-heading mb-6">Date</h1>
 
                     <DatePicker
-                      loading={loading}
                       onChange={(startDate) =>
                         setFieldValue('surveySetting', {
                           ...values.surveySetting,
@@ -238,8 +237,8 @@ const SurveySetting = ({
                         touched.surveySetting?.startDate && errors.surveySetting?.startDate
                       }
                     />
+
                     <DatePicker
-                      loading={loading}
                       label="End Date"
                       onChange={(endDate) =>
                         setFieldValue('surveySetting', {
@@ -255,7 +254,6 @@ const SurveySetting = ({
                     <h1 className="text-20px text-heading mb-6">Refrence Guide</h1>
 
                     <InputNumber
-                      loading={loading}
                       className="mr-12"
                       label="Rater Invalidation"
                       value={values.surveySetting.raterInvalidation}
@@ -271,7 +269,6 @@ const SurveySetting = ({
                       }
                     />
                     <InputNumber
-                      loading={loading}
                       label="Item Invalidation"
                       value={values.surveySetting.itemInvalidation}
                       onChange={(itemInvalidation) =>
