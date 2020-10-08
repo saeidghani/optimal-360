@@ -16,7 +16,9 @@ const wrapper = (fn, errorHandler, notify) => {
       console.log('error.config', error.config);
       console.log('error.response', error.response);
 
-      errorHandler({ message: `Error ${error?.response?.status}`, type: 'error' });
+      if (errorHandler) {
+        errorHandler({ message: `Error ${error?.response?.status}`, type: 'error' });
+      }
 
       throw error;
     });

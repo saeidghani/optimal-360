@@ -13,7 +13,7 @@ const RadioGroup = ({ className, defaultValue, items, value, onChange }) => (
     {items?.length > 0
       ? items.map(({ value, title }) => (
           // eslint-disable-next-line react/jsx-indent
-          <Radio key={title} value={value}>
+          <Radio color="red" key={title} value={value}>
             {title}
           </Radio>
         ))

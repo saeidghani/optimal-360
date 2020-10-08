@@ -7,6 +7,7 @@ export default {
   state: {
     projects: '',
     surveyGroups: '',
+    clientAdmin: '',
   },
 
   effects: (dispatch) => ({
@@ -17,7 +18,7 @@ export default {
           url: `/super-user/projects${query}`,
         });
 
-        await this.fetchProjects_reducer(res?.data);
+        this.fetchProjects_reducer(res?.data);
 
         return res;
       }, dispatch.util.errorHandler);
@@ -37,6 +38,21 @@ export default {
         dispatch.util.errorHandler,
         dispatch.util.alert,
       );
+    },
+
+    async fetchClientAdmin(projectId) {
+      this.fetchClientAdmin_reducer('');
+
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/projects/${projectId}/client-admin`,
+        });
+
+        this.fetchClientAdmin_reducer(res?.data);
+
+        return res;
+      });
     },
 
     async duplicateProject(id) {
@@ -109,6 +125,11 @@ export default {
     fetchProjects_reducer: (state, payload) => ({
       ...state,
       projects: payload,
+    }),
+
+    fetchClientAdmin_reducer: (state, payload) => ({
+      ...state,
+      clientAdmin: payload,
     }),
 
     fetchSurveyGroups_reducer: (state, payload) => ({

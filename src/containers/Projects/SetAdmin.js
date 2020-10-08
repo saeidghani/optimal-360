@@ -7,30 +7,47 @@ import Layout from '../../components/Projects/SetAdmin';
 class SetAdmin extends Component {
   state = {};
 
-  setAdmin = async (id) => {
+  setAdmin = async (data) => {
     const { setClientAdmin } = this.props;
 
-    await setClientAdmin(id);
+    await setClientAdmin(data);
+  };
+
+  fetchAdmin = async (id) => {
+    const { fetchClientAdmin } = this.props;
+
+    await fetchClientAdmin(id);
   };
 
   render() {
-    const { loading } = this.props;
+    const { loading, clientAdmin } = this.props;
 
-    return <Layout setAdmin={this.setAdmin} loading={loading} />;
+    return (
+      <Layout
+        clientAdmin={clientAdmin}
+        fetchAdmin={this.fetchAdmin}
+        setAdmin={this.setAdmin}
+        loading={loading}
+      />
+    );
   }
 }
 
 SetAdmin.propTypes = {
   setClientAdmin: PropTypes.func.isRequired,
+  fetchClientAdmin: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
+  clientAdmin: PropTypes.shape({}).isRequired,
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
+  clientAdmin: state.projects.clientAdmin || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
   setClientAdmin: dispatch.projects.setClientAdmin,
+  fetchClientAdmin: dispatch.projects.fetchClientAdmin,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SetAdmin);
