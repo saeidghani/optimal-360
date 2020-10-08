@@ -216,19 +216,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
   const sort = (sorter) => {
     // eslint-disable-next-line operator-linebreak
     const order = parsedQuery?.sort?.[0] === '+' ? '-' : '+';
-    // const order = sorter?.order === 'ascend' ? '+' : '-';
     const newItem = `${order}${sorter.columnKey}`;
-
-    // const oldSort = parsedQuery?.sort || [];
-    // const newSort = [...oldSort, newItem];
-
-    // const duplicateIndex = newSort
-    //   .slice(0, newSort.length - 1)
-    //   .findIndex((el) => el.includes(sorter.columnKey));
-
-    // if (duplicateIndex !== -1) {
-    //   newSort.splice(duplicateIndex, 1);
-    // }
 
     setQuery({ sort: newItem });
   };
