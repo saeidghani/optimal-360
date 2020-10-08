@@ -9,7 +9,7 @@ import RadioGroup from '../Common/RadioGroup';
 import Input from '../Common/Input';
 import Button from '../Common/Button';
 
-const SetAdmin = ({ loading, setAdmin }) => {
+const SetAdmin = ({ loading, setAdmin, fetchAdmin, clientAdmin }) => {
   const schema = yup.object({
     email: yup.string().email('email is not valid').required('email feild is required'),
     password: yup
@@ -20,6 +20,10 @@ const SetAdmin = ({ loading, setAdmin }) => {
   });
   const { projectId } = useParams();
 
+  React.useEffect(() => {
+    if (projectId) fetchAdmin(projectId);
+  }, [projectId, fetchAdmin]);
+
   return (
     <MainLayout
       hasBreadCrumb={false}
@@ -28,14 +32,15 @@ const SetAdmin = ({ loading, setAdmin }) => {
       <div className="bg-white rounded-7px  sm:px-16 sm:pb-18 sm:pt-22 px-4 py-6">
         <Formik
           initialValues={{
-            email: '',
-            password: '',
-            status: '',
+            email: clientAdmin?.data?.email,
+            password: clientAdmin?.data?.password,
+            status: clientAdmin?.data?.active ? 'active' : 'inactive',
           }}
           validationSchema={schema}
           onSubmit={async ({ email, password, status }) => {
             await setAdmin({ email, password, active: status === 'active', projectId });
           }}
+          enableReinitialize
         >
           {({
             values,
@@ -93,6 +98,7 @@ const SetAdmin = ({ loading, setAdmin }) => {
                 loading={loading}
                 onClick={handleSubmit}
                 text="Save"
+                textSize="base"
                 className="ml-auto c-force-padding-y-px px-8 mt-14"
               />
             </Form>
@@ -106,6 +112,18 @@ const SetAdmin = ({ loading, setAdmin }) => {
 SetAdmin.propTypes = {
   loading: PropTypes.bool.isRequired,
   setAdmin: PropTypes.func.isRequired,
+  fetchAdmin: PropTypes.func.isRequired,
+  clientAdmin: PropTypes.shape({
+    data: PropTypes.shape({
+      active: PropTypes.bool,
+      email: PropTypes.string,
+      password: PropTypes.string,
+    }),
+  }),
+};
+
+SetAdmin.defaultProps = {
+  clientAdmin: {},
 };
 
 export default SetAdmin;
