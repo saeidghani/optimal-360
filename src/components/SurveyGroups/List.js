@@ -48,28 +48,6 @@ const SurveyGroups = ({ loading }) => {
         <div className="flex flex-row items-center">
           <Button
             // onClick={async () => {
-            //   await removeProjects(selectedRowsIds);
-            //   fetch();
-            // }}
-            size="middle"
-            className="px-2 text-base flex flex-row justify-center items-center
-            text-primary-500 bg-primary-500 bg-opacity-8"
-            icon="CopyOutlined"
-          />
-
-          <Button
-            // onClick={async () => {
-            //   await removeProjects(selectedRowsIds);
-            //   fetch();
-            // }}
-            size="middle"
-            className="px-2 ml-3 text-base flex flex-row justify-center items-center
-            text-primary-500 bg-primary-500 bg-opacity-8"
-            icon="DeleteOutlined"
-          />
-
-          <Button
-            // onClick={async () => {
             //   await changeStatusOfProjects(
             //     selectedRowsIds,
             //     parsedQuery?.status === 'active' ? 'inactive' : 'active',
@@ -142,9 +120,17 @@ const SurveyGroups = ({ loading }) => {
     [surveyGroups.timeStamp, loading, setQuery, selectedRows.length],
   );
 
+  const getSortOrder = (key) => {
+    return parsedQuery?.sort?.includes(key)
+      ? parsedQuery?.sort?.[0] === '+'
+        ? 'ascend'
+        : 'descend'
+      : '';
+  };
+
   const columns = React.useMemo(
     () => [
-      { key: 'id', title: 'ID', sorter: true },
+      { key: 'id', title: 'ID', sorter: true, sortOrder: getSortOrder('id') },
       {
         key: 'name',
         title: 'Survay Group',
@@ -159,6 +145,7 @@ const SurveyGroups = ({ loading }) => {
           />
         ),
         sorter: true,
+        sortOrder: getSortOrder('name'),
       },
       {
         key: 'startDate',
@@ -173,7 +160,9 @@ const SurveyGroups = ({ loading }) => {
       {
         key: 'status',
         title: 'Status',
-        render: (status) => <Tag color={status !== 'active' ? 'orange' : ''} text={status} />,
+        render: (status) => (
+          <Tag color={status !== 'active' ? 'orange' : ''} text={status.toUpperCase()} />
+        ),
       },
       {
         key: 'id',
@@ -200,21 +189,11 @@ const SurveyGroups = ({ loading }) => {
   );
 
   const sort = (sorter) => {
-    const order = sorter?.order === 'ascend' ? '+' : '-';
+    // eslint-disable-next-line operator-linebreak
+    const order = parsedQuery?.sort?.[0] === '+' ? '-' : '+';
     const newItem = `${order}${sorter.columnKey}`;
 
-    const oldSort = parsedQuery?.sort || [];
-    const newSort = [...oldSort, newItem];
-
-    const duplicateIndex = newSort
-      .slice(0, newSort.length - 1)
-      .findIndex((el) => el.includes(sorter.columnKey));
-
-    if (duplicateIndex !== -1) {
-      newSort.splice(duplicateIndex, 1);
-    }
-
-    setQuery({ sort: newSort });
+    setQuery({ sort: newItem });
   };
 
   return (

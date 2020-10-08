@@ -21,13 +21,11 @@ const useQuery = () => {
     _setQuery(queryStr);
   }, [search, pathname]);
 
-  const setQuery = (obj, options) => {
+  const setQuery = (obj) => {
     if (!obj || typeof obj !== 'object') {
       history.push(pathname);
       return;
     }
-
-    const { pagination = true } = options || {};
 
     const parsedQuery = parse(search);
     const newObject = { ...parsedQuery, ...obj };
@@ -41,11 +39,6 @@ const useQuery = () => {
     // if a query parameter has an empty('') value
     // we remove it from the parsed object
 
-    if (pagination && !newObject.page_size && !newObject.page_number) {
-      newObject.page_number = 1;
-      newObject.page_size = 10;
-    }
-
     const newQuery = stringify(newObject);
 
     // if there is no params we empty the query part
@@ -55,10 +48,6 @@ const useQuery = () => {
   };
 
   const parsedQuery = parse(query);
-
-  // if (parsedQuery.sort) {
-  //   parsedQuery.sort = parsedQuery.sort.split(',');
-  // }
 
   return [parsedQuery, query, setQuery];
 };
