@@ -160,11 +160,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
         key: 'status',
         title: 'Status',
         render: (status) => (
-          <Tag
-            className="w-2/4"
-            color={status !== 'active' ? 'orange' : ''}
-            text={status.toUpperCase()}
-          />
+          <Tag color={status !== 'active' ? 'orange' : ''} text={status.toUpperCase()} />
         ),
       },
       {
