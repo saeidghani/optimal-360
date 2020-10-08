@@ -44,6 +44,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
           <Button
             onClick={async () => {
               await removeProjects(selectedRowsIds);
+              setSelectedRows([]);
               fetch();
             }}
             size="middle"
@@ -123,9 +124,22 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
     [projects.timeStamp, loading, setQuery, selectedRows.length],
   );
 
+  const getSortOrder = (key) => {
+    return parsedQuery?.sort?.includes(key)
+      ? parsedQuery?.sort?.[0] === '+'
+        ? 'ascend'
+        : 'descend'
+      : '';
+  };
+
   const columns = React.useMemo(
     () => [
-      { key: 'id', title: 'ID', sorter: true },
+      {
+        key: 'id',
+        title: 'ID',
+        sorter: true,
+        sortOrder: getSortOrder('id'),
+      },
       {
         key: 'organization',
         title: 'Organization',
@@ -136,6 +150,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
           </div>
         ),
         sorter: true,
+        sortOrder: getSortOrder('organization'),
       },
       {
         key: 'project',
@@ -189,7 +204,7 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
       },
     ],
     // eslint-disable-next-line
-    [projects.timeStamp],
+    [projects.timeStamp, query],
   );
 
   const dataSource = React.useMemo(
@@ -199,21 +214,23 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
   );
 
   const sort = (sorter) => {
-    const order = sorter?.order === 'ascend' ? '+' : '-';
+    // eslint-disable-next-line operator-linebreak
+    const order = parsedQuery?.sort?.[0] === '+' ? '-' : '+';
+    // const order = sorter?.order === 'ascend' ? '+' : '-';
     const newItem = `${order}${sorter.columnKey}`;
 
-    const oldSort = parsedQuery?.sort || [];
-    const newSort = [...oldSort, newItem];
+    // const oldSort = parsedQuery?.sort || [];
+    // const newSort = [...oldSort, newItem];
 
-    const duplicateIndex = newSort
-      .slice(0, newSort.length - 1)
-      .findIndex((el) => el.includes(sorter.columnKey));
+    // const duplicateIndex = newSort
+    //   .slice(0, newSort.length - 1)
+    //   .findIndex((el) => el.includes(sorter.columnKey));
 
-    if (duplicateIndex !== -1) {
-      newSort.splice(duplicateIndex, 1);
-    }
+    // if (duplicateIndex !== -1) {
+    //   newSort.splice(duplicateIndex, 1);
+    // }
 
-    setQuery({ sort: newSort });
+    setQuery({ sort: newItem });
   };
 
   return (
