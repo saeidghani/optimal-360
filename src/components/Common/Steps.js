@@ -3,18 +3,18 @@ import PropTypes from 'prop-types';
 import { Steps } from 'antd';
 
 const { Step } = Steps;
-const _Steps = ({ handleChange, className, currentPosition, size }) => (
+
+const _Steps = ({ className, currentPosition, size }) => (
   <Steps current={currentPosition} className={`c-step w-full ${className}`} size={size}>
-    <Step icon={<span>1</span>} title="Survey Setting" subTitle="" description="" />
-    <Step icon={<span>2</span>} title="Email Sttings " subTitle="" description="" />
-    <Step icon={<span>3</span>} title="Survay Intro" subTitle="" description="" />
-    <Step icon={<span>4</span>} title="Survey Questions" subTitle="" description="" />
-    <Step icon={<span>5</span>} title="Reports" subTitle="" description="" />
+    {['Survey Setting', 'Email Sttings', 'Survay Intro', 'Survey Questions', 'Reports'].map(
+      (el, i) => (
+        <Step key={i} icon={<span>{i + 1}</span>} title={el} />
+      ),
+    )}
   </Steps>
 );
 
 _Steps.propTypes = {
-  handleChange: PropTypes.func.isRequired,
   className: PropTypes.string,
   currentPosition: PropTypes.number,
   size: PropTypes.string,
