@@ -9,7 +9,7 @@ import { useQuery } from '../../hooks/useQuery';
 import Menu from './Helper/Menu';
 
 import MainLayout from '../Common/Layout';
-// import Steps from '../Common/Steps';
+import Steps from '../Common/Steps';
 import DatePicker from '../Common/DatePicker';
 import Table from '../Common/Table';
 import Button from '../Common/Button';
@@ -28,6 +28,18 @@ const SurveySetting = ({
   const [parsedQuery] = useQuery();
   const { projectId, surveyGroupId } = parsedQuery;
   const { surveySetting, raterGroups, surveyModeInUserDashboard } = surveySettings;
+
+  const getInitialData = () => {
+    return raterGroups?.length > 0
+      ? raterGroups.map((el, i) => ({ ...el, key: el.id.toString(), remove: '', index: i }))
+      : [];
+  };
+
+  const [dataSource, setDataSource] = React.useState(() => getInitialData());
+
+  React.useEffect(() => {
+    setDataSource(() => getInitialData());
+  }, [projectId, surveyGroupId]);
 
   const schema = yup.object({
     surveySetting: yup.object({
@@ -68,16 +80,10 @@ const SurveySetting = ({
   //   },
   // ]);
 
-  const [dataSource, setDataSource] = React.useState(() => {
-    return raterGroups?.length > 0
-      ? raterGroups.map((el) => ({ ...el, key: el.id.toString(), remove: '' }))
-      : [];
-  });
-
   const updateTable = (key, value, id) => {
     const newData = [...dataSource];
 
-    const oldItem = newData.find((item) => item.id === id);
+    const oldItem = newData.find((item) => item.key * 1 === id * 1);
     oldItem[key] = value;
 
     setDataSource(newData);
@@ -85,7 +91,9 @@ const SurveySetting = ({
 
   const removeTableRow = (key) => {
     const newDate = [...dataSource];
-    newDate.splice(key * 1 - 1, 1);
+    const foundIndex = newDate.findIndex((item) => item.key === key);
+
+    newDate.splice(foundIndex, 1);
 
     setDataSource(newDate);
   };
@@ -110,12 +118,11 @@ const SurveySetting = ({
     {
       title: 'abbr.',
       key: 'abbr',
-      // render: ({ value }, { key }) => console.log({ value, key }),
-      render: (value, { id }) => (
+      render: (value, { key }) => (
         <Input
           inputClass="uppercase"
           name="abbr"
-          onChange={(e) => updateTable('abbr', e.target.value, id)}
+          onChange={(e) => updateTable('abbr', e.target.value, key)}
           value={value}
           placeholder="ABBR."
         />
@@ -124,11 +131,11 @@ const SurveySetting = ({
     {
       title: 'Group Name',
       key: 'name',
-      render: (value, { id }) => (
+      render: (value, { key }) => (
         <Input
           inputClass="capitalize"
           name="name"
-          onChange={(e) => updateTable('name', e.target.value, id)}
+          onChange={(e) => updateTable('name', e.target.value, key)}
           value={value}
           placeholder="Group Name"
         />
@@ -137,10 +144,14 @@ const SurveySetting = ({
     {
       title: 'Min.Raters',
       key: 'minRater',
-      render: (value, { id }) => (
+      render: (value, { key }) => (
         <Input
           name="minRater"
-          onChange={(e) => updateTable('minRater', e.target.value * 1, id)}
+          onChange={(e) => {
+            const val = e.target.value;
+
+            updateTable('minRater', Number.isInteger(val * 1) ? val * 1 : val, key);
+          }}
           value={value.toString()}
           placeholder="Min Raters"
         />
@@ -149,10 +160,10 @@ const SurveySetting = ({
     {
       title: 'Include Average',
       key: 'includeAverage',
-      render: (value, { id }) => (
+      render: (value, { key, index }) => (
         <div style={{ minWidth: '80px' }} className="justify-center items-center">
-          {id !== 1 && (
-            <Checkbox checked={!!value} onChange={(val) => updateTable('includeAverage', val, id)}>
+          {index !== 0 && (
+            <Checkbox checked={!!value} onChange={(val) => updateTable('includeAverage', val, key)}>
               Include
             </Checkbox>
           )}
@@ -162,9 +173,9 @@ const SurveySetting = ({
     {
       title: '',
       key: 'remove',
-      render: (_, { key }) => (
+      render: (_, { key, index }) => (
         <div style={{ minWidth: '80px' }} className="justify-center items-center">
-          {key * 1 > 1 ? (
+          {index !== 0 ? (
             <Button
               onClick={() => removeTableRow(key)}
               type="link"
@@ -183,9 +194,10 @@ const SurveySetting = ({
         <Menu items={surveyGroups?.data} />
 
         <div className="w-full px-6 pt-6 ">
-          {/* <Steps className="w-full" /> */}
+          <Steps currentPosition={0} className="w-full" />
 
           <Formik
+            enableReinitialize
             initialValues={{
               // surveySetting: {
               //   startDate: '',
@@ -283,7 +295,6 @@ const SurveySetting = ({
                     loading={loading}
                     rowSelection={false}
                     pagination={false}
-                    className="mb-16"
                     columns={columns}
                     dataSource={dataSource}
                     renderHeader={() => (
@@ -299,8 +310,11 @@ const SurveySetting = ({
                       </div>
                     )}
                   />
+                  {dataSource.find(
+                    (item) => item.minRater !== '' && typeof item.minRater !== 'number',
+                  ) && <p className="text-red-500 mt-2">Min. Raters values must be numbers</p>}
 
-                  <p className="mb-10">Select rating group for user dashboard :</p>
+                  <p className="mt-16 mb-10">Select rating group for user dashboard :</p>
 
                   <Checkbox
                     checked={values.surveyModeInUserDashboard.individual}
