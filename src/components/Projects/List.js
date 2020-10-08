@@ -15,7 +15,7 @@ import Tag from '../Common/Tag';
 
 import { useQuery } from '../../hooks/useQuery';
 
-const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjects, loading }) => {
+const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => {
   const [parsedQuery, query, setQuery] = useQuery();
 
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
@@ -190,10 +190,10 @@ const ActiveProjects = ({ duplicateProject, changeStatusOfProjects, removeProjec
               text="Set Client Admin"
             />
             <Button
-              onClick={async () => {
-                await duplicateProject(projectId);
-                fetch();
-              }}
+              // onClick={async () => {
+              //   await duplicateProject(projectId);
+              //   fetch();
+              // }}
               icon="CopyOutlined"
               type="link"
               className="text-lg mr-7"
