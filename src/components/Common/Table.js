@@ -40,8 +40,8 @@ const _Table = ({
     };
 
     if (el.sorter) {
-      newItem.sortDirections = ['descend', 'ascend', 'descend'];
-      newItem.defaultSortOrder = 'ascend';
+      // newItem.sortDirections = ['descend', 'ascend', 'descend'];
+      // newItem.defaultSortOrder = 'ascend';
     }
 
     return newItem;

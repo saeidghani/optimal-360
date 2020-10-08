@@ -56,9 +56,9 @@ const useQuery = () => {
 
   const parsedQuery = parse(query);
 
-  if (parsedQuery.sort) {
-    parsedQuery.sort = parsedQuery.sort.split(',');
-  }
+  // if (parsedQuery.sort) {
+  //   parsedQuery.sort = parsedQuery.sort.split(',');
+  // }
 
   return [parsedQuery, query, setQuery];
 };
