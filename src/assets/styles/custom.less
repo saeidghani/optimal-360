@@ -109,10 +109,10 @@
   }
 }
 
-.ant-btn {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-}
+// .ant-btn {
+//   padding-top: 0 !important;
+//   padding-bottom: 0 !important;
+// }
 
 //progress bar percentage
 .ant-progress-text {
@@ -194,13 +194,13 @@
   margin-bottom: 0 !important;
   color: #b8b8b8;
 }
-.ant-menu-submenu-title {
-  // margin-top: 0 !important;
-  // margin-bottom: 0 !important;
-  span {
-    padding-left: 24px;
-  }
-}
+// .ant-menu-submenu-title {
+//   // margin-top: 0 !important;
+//   // margin-bottom: 0 !important;
+//   span {
+//     padding-left: 24px;
+//   }
+// }
 .ant-menu-submenu-arrow {
   left: 32px;
 }
@@ -221,17 +221,17 @@
   padding-left: 35px !important;
 }
 
-.ant-menu-vertical > .ant-menu-item,
-.ant-menu-vertical-left > .ant-menu-item,
-.ant-menu-vertical-right > .ant-menu-item,
-.ant-menu-inline > .ant-menu-item,
-.ant-menu-vertical > .ant-menu-submenu > .ant-menu-submenu-title,
-.ant-menu-vertical-left > .ant-menu-submenu > .ant-menu-submenu-title,
-.ant-menu-vertical-right > .ant-menu-submenu > .ant-menu-submenu-title,
-.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
-  height: 32px;
-  line-height: 40px;
-}
+// .ant-menu-vertical > .ant-menu-item,
+// .ant-menu-vertical-left > .ant-menu-item,
+// .ant-menu-vertical-right > .ant-menu-item,
+// .ant-menu-inline > .ant-menu-item,
+// .ant-menu-vertical > .ant-menu-submenu > .ant-menu-submenu-title,
+// .ant-menu-vertical-left > .ant-menu-submenu > .ant-menu-submenu-title,
+// .ant-menu-vertical-right > .ant-menu-submenu > .ant-menu-submenu-title,
+// .ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
+//   height: 32px;
+//   line-height: 40px;
+// }
 //fix position of competency
 .ant-menu-sub.ant-menu-inline > .ant-menu-item,
 .ant-menu-sub.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
@@ -265,8 +265,8 @@
 }
 
 //date picker
-.ant-picker-large .ant-picker-input > input {
-  font-size: 12px;
+.ant-picker-large {
+  height: 40px !important;
 }
 
 .ant-picker-suffix {
@@ -275,6 +275,8 @@
 
 .ant-picker-input {
   input {
+    font-size: 12px !important;
+
     &::placeholder {
       color: #8d98ba;
     }
@@ -399,6 +401,11 @@
   border-color: #1890ff;
 }
 
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #1890ff;
+  border-color: #1890ff;
+}
+
 .c-loading {
   .ant-modal-content {
     background-color: transparent;
@@ -409,4 +416,52 @@
     flex-direction: row;
     justify-content: center;
   }
+}
+
+.c-wizard-menu {
+  border-right: 1px solid #eeeeee !important;
+
+  .ant-menu-item:first-child {
+    color: #303854 !important;
+    padding-left: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .ant-menu-item {
+    color: rgba(141, 152, 186, 0.5) !important;
+    padding-left: 1rem !important;
+    margin-top: 0.25rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  .ant-menu-item-selected {
+    color: rgb(141, 152, 186) !important;
+    background-color: rgba(141, 152, 186, 0.1) !important;
+
+    &::after {
+      display: none !important;
+    }
+  }
+}
+
+.c-step {
+  .ant-steps-item-container {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .ant-steps-item {
+    padding-top: 0 !important;
+  }
+}
+
+.ant-input-number-lg {
+  height: 40px !important;
+
+  .ant-input-number-input-wrap {
+    height: 40px !important;
+  }
+}
+.ant-checkbox-wrapper + .ant-checkbox-wrapper {
+  margin-left: 0;
 }

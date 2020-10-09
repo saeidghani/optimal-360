@@ -16,6 +16,7 @@ import Button from '../Common/Button';
 import Input from '../Common/Input';
 import Checkbox from '../Common/Checkbox';
 import InputNumber from '../Common/InputNumber';
+import Loading from '../Common/Loading';
 
 const SurveySetting = ({
   surveySettings,
@@ -27,11 +28,34 @@ const SurveySetting = ({
 }) => {
   const [parsedQuery] = useQuery();
   const { projectId, surveyGroupId } = parsedQuery;
-  const { surveySetting = {}, raterGroups = {}, surveyModeInUserDashboard = {} } = surveySettings;
+  const {
+    surveySetting = {
+      startDate: '',
+      endDate: '',
+      raterInvalidation: 0,
+      itemInvalidation: 0,
+    },
+    raterGroups = [
+      {
+        key: '1',
+        abbr: 'SF',
+        name: 'Self',
+        minRater: 1,
+        includeAverage: false,
+        remove: '',
+        index: 1,
+      },
+    ],
+    surveyModeInUserDashboard = {
+      individual: false,
+      ratingGroup: false,
+      allRatees: false,
+    },
+  } = surveySettings || {};
 
   const getInitialData = () => {
     return raterGroups?.length > 0
-      ? raterGroups.map((el, i) => ({ ...el, key: el.id.toString(), remove: '', index: i }))
+      ? raterGroups.map((el, i) => ({ ...el, key: el?.id?.toString(), remove: '', index: i }))
       : [];
   };
 
@@ -39,7 +63,8 @@ const SurveySetting = ({
 
   React.useEffect(() => {
     setDataSource(() => getInitialData());
-  }, [projectId, surveyGroupId]);
+    // eslint-disable-next-line
+  }, [projectId, surveyGroupId, surveySetting?.timeStamp]);
 
   const schema = yup.object({
     surveySetting: yup.object({
@@ -63,22 +88,14 @@ const SurveySetting = ({
 
   React.useEffect(() => {
     fetchSurveyGroups(projectId);
+  }, [projectId, surveyGroupId, fetchSurveyGroups]);
 
+  React.useEffect(() => {
     if (surveyGroupId) {
       fetchSurveySettings(surveyGroupId);
     }
-  }, [projectId, surveyGroupId, fetchSurveyGroups, fetchSurveySettings]);
-
-  // const [dataSource, setDataSource] = React.useState(() => [
-  //   {
-  //     key: '1',
-  //     abbr: 'SF',
-  //     name: 'Self',
-  //     minRater: 1,
-  //     includeAverage: false,
-  //     remove: '',
-  //   },
-  // ]);
+    // eslint-disable-next-line
+  }, [fetchSurveySettings, surveyGroups?.timeStamp]);
 
   const updateTable = (key, value, id) => {
     const newData = [...dataSource];
@@ -120,7 +137,7 @@ const SurveySetting = ({
       key: 'abbr',
       render: (value, { key }) => (
         <Input
-          inputClass="uppercase"
+          inputClass="uppercase border border-antgray-300"
           name="abbr"
           onChange={(e) => updateTable('abbr', e.target.value, key)}
           value={value}
@@ -133,7 +150,7 @@ const SurveySetting = ({
       key: 'name',
       render: (value, { key }) => (
         <Input
-          inputClass="capitalize"
+          inputClass="capitalize border border-antgray-300"
           name="name"
           onChange={(e) => updateTable('name', e.target.value, key)}
           value={value}
@@ -147,6 +164,7 @@ const SurveySetting = ({
       render: (value, { key }) => (
         <Input
           name="minRater"
+          inputClass="border border-antgray-300"
           onChange={(e) => {
             const val = e.target.value;
 
@@ -189,104 +207,128 @@ const SurveySetting = ({
   ];
 
   return (
-    <MainLayout title="Survey Group" contentClass=" p-0">
-      <div className="bg-white w-full flex">
-        <Menu items={surveyGroups?.data} />
+    <MainLayout
+      hasBreadCrumb
+      title="Survey Group"
+      titleClass="mb-2"
+      contentClass="py-4"
+      headerClassName="pl-21"
+      childrenPadding={false}
+    >
+      <div className="bg-white grid grid-cols-12 pl-15">
+        <Loading visible={loading} />
 
-        <div className="w-full px-6 pt-6 ">
-          <Steps currentPosition={0} className="w-full" />
+        <Menu items={surveyGroups?.data} className="col-span-2" />
+
+        <div className="px-6 py-5 col-start-3 col-span-10">
+          <Steps currentPosition={0} />
 
           <Formik
             enableReinitialize
             initialValues={{
-              // surveySetting: {
-              //   startDate: '',
-              //   endDate: '',
-              //   raterInvalidation: 0,
-              //   itemInvalidation: 0,
-              // },
               surveySetting,
               surveyModeInUserDashboard,
-              // surveyModeInUserDashboard: {
-              //   individual: false,
-              //   ratingGroup: false,
-              //   allRatees: false,
-              // },
             }}
             validationSchema={schema}
-            onSubmit={(values) => {
-              setSurveySettings({ ...values, raterGroups: dataSource, surveyGroupId });
+            onSubmit={async (values) => {
+              const res = await setSurveySettings({
+                ...values,
+                surveySetting: {
+                  ...values.surveySetting,
+                  startDate: moment(values.surveySetting?.startDate).format('YYYY-MM-DD'),
+                  endDate: moment(values.surveySetting?.endDate).format('YYYY-MM-DD'),
+                },
+                raterGroups: dataSource,
+                surveyGroupId,
+              });
+              console.log({ res });
             }}
           >
             {({ values, errors, touched, handleSubmit, setFieldValue }) => (
               <Form>
-                <div className="w-full flex mb-18 mt-16 ">
-                  <div className="w-1/2">
+                <div className="grid grid-cols-10 my-18">
+                  <div className="col-span-3">
                     <h1 className="text-20px text-heading mb-6">Date</h1>
 
-                    <DatePicker
-                      onChange={(startDate) =>
-                        setFieldValue('surveySetting', {
-                          ...values.surveySetting,
-                          startDate: moment(startDate).format('YYYY-MM-DD'),
-                        })
-                      }
-                      label="Start Date"
-                      className="mr-12"
-                      errorMessage={
-                        touched.surveySetting?.startDate && errors.surveySetting?.startDate
-                      }
-                    />
+                    <div className="flex flex-row justify-between items-center">
+                      <DatePicker
+                        size="large"
+                        onChange={(startDate) =>
+                          setFieldValue('surveySetting', {
+                            ...values.surveySetting,
+                            startDate,
+                          })
+                        }
+                        value={values.surveySetting?.startDate}
+                        label="Start Date"
+                        className="w-33"
+                        wrapperClassName="mr-12"
+                        errorMessage={
+                          touched.surveySetting?.startDate && errors.surveySetting?.startDate
+                        }
+                      />
 
-                    <DatePicker
-                      label="End Date"
-                      onChange={(endDate) =>
-                        setFieldValue('surveySetting', {
-                          ...values.surveySetting,
-                          endDate: moment(endDate).format('YYYY-MM-DD'),
-                        })
-                      }
-                      errorMessage={touched.surveySetting?.endDate && errors.surveySetting?.endDate}
-                    />
+                      <DatePicker
+                        size="large"
+                        className="w-33"
+                        label="End Date"
+                        value={values.surveySetting?.endDate}
+                        onChange={(endDate) =>
+                          setFieldValue('surveySetting', {
+                            ...values.surveySetting,
+                            endDate,
+                          })
+                        }
+                        errorMessage={
+                          touched.surveySetting?.endDate && errors.surveySetting?.endDate
+                        }
+                      />
+                    </div>
                   </div>
 
-                  <div className="w-1/2">
+                  <div className="col-start-6 col-span-3">
                     <h1 className="text-20px text-heading mb-6">Refrence Guide</h1>
 
-                    <InputNumber
-                      className="mr-12"
-                      label="Rater Invalidation"
-                      value={values.surveySetting?.raterInvalidation}
-                      onChange={(raterInvalidation) =>
-                        setFieldValue('surveySetting', {
-                          ...values.surveySetting,
-                          raterInvalidation,
-                        })
-                      }
-                      errorMessage={
-                        touched.surveySetting?.raterInvalidation &&
-                        errors.surveySetting?.raterInvalidation
-                      }
-                    />
-                    <InputNumber
-                      label="Item Invalidation"
-                      value={values.surveySetting?.itemInvalidation}
-                      onChange={(itemInvalidation) =>
-                        setFieldValue('surveySetting', {
-                          ...values.surveySetting,
-                          itemInvalidation,
-                        })
-                      }
-                      errorMessage={
-                        touched.surveySetting?.itemInvalidation &&
-                        errors.surveySetting?.itemInvalidation
-                      }
-                    />
+                    <div className="flex flex-row justify-between items-center">
+                      <InputNumber
+                        size="large"
+                        wrapperClassName="mr-12"
+                        className="w-full"
+                        label="Rater Invalidation"
+                        value={values.surveySetting.raterInvalidation}
+                        onChange={(raterInvalidation) =>
+                          setFieldValue('surveySetting', {
+                            ...values.surveySetting,
+                            raterInvalidation,
+                          })
+                        }
+                        errorMessage={
+                          touched.surveySetting?.raterInvalidation &&
+                          errors.surveySetting?.raterInvalidation
+                        }
+                      />
+                      <InputNumber
+                        size="large"
+                        className="w-full"
+                        label="Item Invalidation"
+                        value={values.surveySetting.itemInvalidation}
+                        onChange={(itemInvalidation) =>
+                          setFieldValue('surveySetting', {
+                            ...values.surveySetting,
+                            itemInvalidation,
+                          })
+                        }
+                        errorMessage={
+                          touched.surveySetting?.itemInvalidation &&
+                          errors.surveySetting?.itemInvalidation
+                        }
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div>
-                  <h1 className="text-20px text-heading">Rater Settings</h1>
+                <div className="flex flex-col pr-24">
+                  <h1 className="text-20px text-heading mb-8">Rater Settings</h1>
 
                   <Table
                     loading={loading}
@@ -311,56 +353,60 @@ const SurveySetting = ({
                     (item) => item.minRater !== '' && typeof item.minRater !== 'number',
                   ) && <p className="text-red-500 mt-2">Min. Raters values must be numbers</p>}
 
-                  <p className="mt-16 mb-10">Select rating group for user dashboard :</p>
+                  <div className="flex flex-col mt-16 ">
+                    <p className="mb-10 text-body text-sm">
+                      Select rating group for user dashboard :
+                    </p>
 
-                  <Checkbox
-                    checked={values.surveyModeInUserDashboard.individual}
-                    onChange={(individual) =>
-                      setFieldValue('surveyModeInUserDashboard', {
-                        ...values.surveyModeInUserDashboard,
-                        individual,
-                      })
-                    }
-                    className="mb-6"
-                  >
-                    Individual Rater
-                  </Checkbox>
+                    <Checkbox
+                      checked={values.surveyModeInUserDashboard.individual}
+                      onChange={(individual) =>
+                        setFieldValue('surveyModeInUserDashboard', {
+                          ...values.surveyModeInUserDashboard,
+                          individual,
+                        })
+                      }
+                      className="ml-0 mb-6"
+                    >
+                      Individual Rater
+                    </Checkbox>
 
-                  <Checkbox
-                    checked={values.surveyModeInUserDashboard.ratingGroup}
-                    onChange={(ratingGroup) =>
-                      setFieldValue('surveyModeInUserDashboard', {
-                        ...values.surveyModeInUserDashboard,
-                        ratingGroup,
-                      })
-                    }
-                    className="mb-6"
-                  >
-                    Pre-defined Rating Group (default Self, Mgr, Peer, etc.)
-                  </Checkbox>
+                    <Checkbox
+                      checked={values.surveyModeInUserDashboard.ratingGroup}
+                      onChange={(ratingGroup) =>
+                        setFieldValue('surveyModeInUserDashboard', {
+                          ...values.surveyModeInUserDashboard,
+                          ratingGroup,
+                        })
+                      }
+                      className="ml-0 mb-6"
+                    >
+                      Pre-defined Rating Group (default Self, Mgr, Peer, etc.)
+                    </Checkbox>
 
-                  <Checkbox
-                    checked={values.surveyModeInUserDashboard.allRatees}
-                    onChange={(allRatees) =>
-                      setFieldValue('surveyModeInUserDashboard', {
-                        ...values.surveyModeInUserDashboard,
-                        allRatees,
-                      })
-                    }
-                    className="mb-6"
-                  >
-                    All Ratees
-                  </Checkbox>
+                    <Checkbox
+                      checked={values.surveyModeInUserDashboard.allRatees}
+                      onChange={(allRatees) =>
+                        setFieldValue('surveyModeInUserDashboard', {
+                          ...values.surveyModeInUserDashboard,
+                          allRatees,
+                        })
+                      }
+                      className="ml-0"
+                    >
+                      All Ratees
+                    </Checkbox>
 
-                  {touched.surveyModeInUserDashboard &&
-                    Object.values(touched.surveyModeInUserDashboard).find((el) => !!el) &&
-                    !Object.values(values.surveyModeInUserDashboard).find((el) => !!el) && (
-                      <p className="text-red-500">You Must Specify At least One Rating Group </p>
-                    )}
+                    {touched.surveyModeInUserDashboard &&
+                      Object.values(touched.surveyModeInUserDashboard).find((el) => !!el) &&
+                      !Object.values(values.surveyModeInUserDashboard).find((el) => !!el) && (
+                        <p className="text-red-500">You Must Specify At least One Rating Group </p>
+                      )}
 
-                  <div className="pt-10 pb-22  flex justify-end">
-                    <Button type="link" text="Back" />
-                    <Button onClick={handleSubmit} text="Next" />
+                    <div className="mt-17 pb-22  flex justify-end">
+                      <Button type="link" text="Back" className="px-8 py-3" />
+                      <Button onClick={handleSubmit} text="Next" className="px-8 py-3" />
+                    </div>
                   </div>
                 </div>
               </Form>
@@ -379,6 +425,7 @@ SurveySetting.propTypes = {
   loading: PropTypes.bool.isRequired,
   surveyGroups: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
+    timeStamp: PropTypes.number,
   }),
   surveySettings: PropTypes.shape({
     raterGroups: PropTypes.arrayOf(PropTypes.object),

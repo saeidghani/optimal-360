@@ -50,7 +50,7 @@ const _Button = ({
   return (
     <Button
       disabled={disabled}
-      className={`flex justify-center items-center ${className}`}
+      className={`flex justify-center items-center py-3 ${className}`}
       onClick={href ? () => {} : onClick}
       href={href}
       size={size}
@@ -62,7 +62,7 @@ const _Button = ({
     >
       {iconPosition === 'left' && RICON ? <RICON className="inline-flex" /> : null}
       {text ? (
-        <p className={`font-normal text-${textSize} leading-5 ${textClassName}`}>{text}</p>
+        <p className={`font-normal text-${textSize} leading-6 ${textClassName}`}>{text}</p>
       ) : (
         children || null
       )}
