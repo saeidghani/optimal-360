@@ -19,27 +19,15 @@ const ProjectInfo = ({
   surveyGroups,
   fetchOrganizations,
   fetchSurveyGroups,
-  createProjectForOrganization,
+  createProject,
 }) => {
   const history = useHistory();
   const schema = yup.object({
     organization: yup.object({ value: yup.string().required('Organization Name Cannot Be Empty') }),
-    project: yup.string().required('Project Name Cannot Be Empty'),
-    surveyGroup: yup.string().required('You Must Specify At least 1 Survey Category'),
+    projectName: yup.string().required('Project Name Cannot Be Empty'),
+    surveyGroup: yup.array().required('You Must Specify At least 1 Survey Category'),
   });
-  const [selectedSurveyGroups, setSelectedSurveyGroups] = React.useState([]);
   const [parsedQuery, query, setQuery] = useQuery();
-
-  const onTagClose = (label) => {
-    const newSurveyGroups = [];
-    selectedSurveyGroups.forEach((item) => {
-      if (item.label.toLowerCase() !== label.toLowerCase()) {
-        newSurveyGroups.push(item);
-      }
-    });
-
-    setSelectedSurveyGroups(newSurveyGroups);
-  };
 
   React.useEffect(() => {
     const organizationQuery = stringify(parse({ q: parsedQuery.oq }));
@@ -52,28 +40,33 @@ const ProjectInfo = ({
   return (
     <MainLayout
       hasBreadCrumb={false}
-      contentClass="flex flex-row min-h-screen items-center justify-around p-0"
+      contentClass="grid grid-cols-12 items-center justify-center min-h-screen"
     >
-      <div className="bg-white rounded-7px  sm:px-16 sm:pb-18 sm:pt-22 px-4 py-6">
+      <div
+        className="col-span-10 col-start-1 md:col-span-8 md:col-start-3
+        lg:col-start-4 lg:col-span-6 xl:col-start-5 xl:col-span-4
+        rounded-7px sm:px-16 px-4 sm:pb-10 sm:pt-12 py-6 bg-white"
+      >
         <Formik
           initialValues={{
             organization: {},
-            project: '',
+            projectName: '',
             surveyGroup: [],
           }}
           validationSchema={schema}
-          onSubmit={async ({ organization, project, surveyGroup }) => {
-            const surveyGroupIds = surveyGroup?.map((el) => el.id);
+          onSubmit={async ({ organization, projectName, surveyGroup }) => {
+            const projectSurveyGroupIds = surveyGroup?.map((el) => el.id);
 
             try {
-              const { projectId } = await createProjectForOrganization({
+              const { projectId } = await createProject({
                 organizationId: organization.id,
-                name: project,
-                surveyGroupIds,
+                projectName,
+                projectSurveyGroupIds: [],
+                bankSurveyGroupIds: projectSurveyGroupIds,
               });
 
               const params = stringify({
-                organizationId: organization.id,
+                // organizationId: organization.id, // incase we want to come back to this page
                 projectId,
               });
 
@@ -92,7 +85,7 @@ const ProjectInfo = ({
           }) => (
             <Form>
               <AutoComplete
-                wrapperClassName="c-min-w-form-input mb-6"
+                wrapperClassName="mb-6"
                 labelText="Organization"
                 extrainfoText="Create New"
                 onSelect={(el) => {
@@ -116,22 +109,28 @@ const ProjectInfo = ({
               />
 
               <Input
-                value={values.project}
+                value={values.projectName}
                 disabled={isSubmitting}
                 onChange={handleChange}
-                name="project"
+                name="projectName"
                 labelText="Project Name"
                 placeholder="Name"
-                errorMessage={touched.project && errors.project}
-                wrapperClassName="c-min-w-form-input mb-6"
+                errorMessage={touched.projectName && errors.projectName}
+                wrapperClassName="mb-6"
               />
 
               <AutoComplete
-                wrapperClassName="c-min-w-form-input mb-6"
-                labelText="Survay Group"
+                wrapperClassName="mb-6"
+                labelText="Survey Group"
                 extrainfoText="Create New"
                 onSelect={(val) => {
-                  setFieldValue('surveyGroup', [...values.surveyGroup, val]);
+                  const surveyGroup = [...values.surveyGroup];
+
+                  if (!surveyGroup.find((el) => el.label === val.label)) {
+                    surveyGroup.push(val);
+                  }
+
+                  setFieldValue('surveyGroup', surveyGroup);
                   setQuery(null);
                 }}
                 extrainfoLink="#"
@@ -148,9 +147,26 @@ const ProjectInfo = ({
               />
 
               {values.surveyGroup?.length > 0 ? (
-                <div className="flex flex-row align-center">
+                <div className="">
                   {values.surveyGroup.map((el, i) => (
-                    <Tag key={i} closable onClose={onTagClose} color="gray" text={el.label} />
+                    <Tag
+                      className="mb-3"
+                      key={i}
+                      closable
+                      onClose={(label) => {
+                        const newSurveyGroups = [];
+
+                        values.surveyGroup.forEach((item) => {
+                          if (item.label.toLowerCase() !== label.toLowerCase()) {
+                            newSurveyGroups.push(item);
+                          }
+                        });
+
+                        setFieldValue('surveyGroup', newSurveyGroups);
+                      }}
+                      color="gray"
+                      text={el.label}
+                    />
                   ))}
                 </div>
               ) : null}
@@ -159,7 +175,8 @@ const ProjectInfo = ({
                 loading={loading}
                 onClick={handleSubmit}
                 text="Next"
-                className="ml-auto c-force-padding-y-px px-8 mt-14"
+                textSize="base"
+                className="ml-auto c-force-padding-y-px px-8 mt-10"
               />
             </Form>
           )}
@@ -173,7 +190,7 @@ ProjectInfo.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchOrganizations: PropTypes.func.isRequired,
   fetchSurveyGroups: PropTypes.func.isRequired,
-  createProjectForOrganization: PropTypes.func.isRequired,
+  createProject: PropTypes.func.isRequired,
   organizations: PropTypes.arrayOf(PropTypes.object).isRequired,
   surveyGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
 };

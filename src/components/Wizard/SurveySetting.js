@@ -27,7 +27,7 @@ const SurveySetting = ({
 }) => {
   const [parsedQuery] = useQuery();
   const { projectId, surveyGroupId } = parsedQuery;
-  const { surveySetting, raterGroups, surveyModeInUserDashboard } = surveySettings;
+  const { surveySetting = {}, raterGroups = {}, surveyModeInUserDashboard = {} } = surveySettings;
 
   const getInitialData = () => {
     return raterGroups?.length > 0
@@ -256,7 +256,7 @@ const SurveySetting = ({
                     <InputNumber
                       className="mr-12"
                       label="Rater Invalidation"
-                      value={values.surveySetting.raterInvalidation}
+                      value={values.surveySetting?.raterInvalidation}
                       onChange={(raterInvalidation) =>
                         setFieldValue('surveySetting', {
                           ...values.surveySetting,
@@ -270,7 +270,7 @@ const SurveySetting = ({
                     />
                     <InputNumber
                       label="Item Invalidation"
-                      value={values.surveySetting.itemInvalidation}
+                      value={values.surveySetting?.itemInvalidation}
                       onChange={(itemInvalidation) =>
                         setFieldValue('surveySetting', {
                           ...values.surveySetting,

@@ -19,19 +19,10 @@ const _Tag = ({ children, text, className, textClassName, color, closable, onClo
       onClose={() => onClose(text)}
       color={color !== 'gray' && color}
       className={`border ${
-        closable && 'flex flex-row px-4 py-2 justify-around items-center'
+        closable && 'inline-flex px-4 py-2 justify-around items-center'
       } ${className} ${customClassName}`}
     >
-      {text ? (
-        <p
-          className={`text-xs leading-5 ${textClassName}`}
-          // className={`text-antteal text-xs leading-5 ${textClassName}`}
-        >
-          {text}
-        </p>
-      ) : (
-        children
-      )}
+      {text ? <p className={`text-xs leading-5 ${textClassName}`}>{text}</p> : children}
     </Tag>
   );
 };

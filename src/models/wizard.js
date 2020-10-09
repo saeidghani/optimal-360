@@ -32,6 +32,23 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+
+    async createProject(payload) {
+      console.log({ payload });
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: '/super-user/projects',
+            data: payload,
+          });
+
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
+    },
   }),
 
   reducers: {
