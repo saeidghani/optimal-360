@@ -10,6 +10,8 @@ export default {
 
   effects: (dispatch) => ({
     async fetchSurveySettings(surveyGroupId) {
+      await this.fetchSurveySettings_reducer('');
+
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
@@ -34,20 +36,15 @@ export default {
     },
 
     async createProject(payload) {
-      console.log({ payload });
-      return actionWapper(
-        async () => {
-          const res = await axios({
-            method: 'post',
-            url: '/super-user/projects',
-            data: payload,
-          });
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: '/super-user/projects',
+          data: payload,
+        });
 
-          return res;
-        },
-        dispatch.util.errorHandler,
-        dispatch.util.alert,
-      );
+        return res;
+      }, dispatch.util.errorHandler);
     },
   }),
 

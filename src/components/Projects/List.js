@@ -222,11 +222,16 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
   };
 
   return (
-    <MainLayout hasBreadCrumb title="Super User" contentClass="py-6 pr-6">
+    <MainLayout
+      titleClass="mb-6 mt-3"
+      hasBreadCrumb
+      title="Super User"
+      contentClass="py-6 pl-21 pr-6"
+    >
       <Table
         onTableChange={({ sorter }) => sort(sorter)}
         size="small"
-        className="c-small-padding"
+        className="p-6 bg-white rounded-lg shadow"
         selectedRowKeys={selectedRows?.map((el) => el.key)}
         loading={loading}
         columns={columns}

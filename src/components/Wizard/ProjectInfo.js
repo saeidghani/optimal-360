@@ -68,6 +68,7 @@ const ProjectInfo = ({
               const params = stringify({
                 // organizationId: organization.id, // incase we want to come back to this page
                 projectId,
+                surveyGroupId: projectSurveyGroupIds?.[0]?.id,
               });
 
               history.push(`/super-user/new-project/survey-setting${params}`);
