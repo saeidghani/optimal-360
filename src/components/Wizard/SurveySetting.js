@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as yup from 'yup';
+import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 
@@ -26,6 +27,7 @@ const SurveySetting = ({
   loading,
   surveyGroups,
 }) => {
+  const history = useHistory();
   const [parsedQuery] = useQuery();
   const { projectId, surveyGroupId } = parsedQuery;
   const {
@@ -53,18 +55,26 @@ const SurveySetting = ({
     },
   } = surveySettings || {};
 
-  const getInitialData = () => {
+  const raterGroupsStringified = JSON.stringify(raterGroups);
+
+  const getInitialData = React.useCallback(() => {
     return raterGroups?.length > 0
-      ? raterGroups.map((el, i) => ({ ...el, key: el?.id?.toString(), remove: '', index: i }))
+      ? raterGroups.map((el, i) => ({
+          ...el,
+          key: el.id?.toString() || '9999',
+          remove: '',
+          index: i,
+        }))
       : [];
-  };
+
+    // eslint-disable-next-line
+  }, [raterGroupsStringified]);
 
   const [dataSource, setDataSource] = React.useState(() => getInitialData());
 
   React.useEffect(() => {
     setDataSource(() => getInitialData());
-    // eslint-disable-next-line
-  }, [projectId, surveyGroupId, surveySetting?.timeStamp]);
+  }, [projectId, surveyGroupId, getInitialData]);
 
   const schema = yup.object({
     surveySetting: yup.object({
@@ -95,7 +105,7 @@ const SurveySetting = ({
       fetchSurveySettings(surveyGroupId);
     }
     // eslint-disable-next-line
-  }, [fetchSurveySettings, surveyGroups?.timeStamp]);
+  }, [fetchSurveySettings, surveyGroupId]);
 
   const updateTable = (key, value, id) => {
     const newData = [...dataSource];
@@ -206,6 +216,8 @@ const SurveySetting = ({
     },
   ];
 
+  console.log({ history });
+
   return (
     <MainLayout
       hasBreadCrumb
@@ -231,7 +243,7 @@ const SurveySetting = ({
             }}
             validationSchema={schema}
             onSubmit={async (values) => {
-              const res = await setSurveySettings({
+              await setSurveySettings({
                 ...values,
                 surveySetting: {
                   ...values.surveySetting,
@@ -241,13 +253,19 @@ const SurveySetting = ({
                 raterGroups: dataSource,
                 surveyGroupId,
               });
-              console.log({ res });
+
+              const params = history?.location?.search;
+
+              history.push(`/super-user/new-project/email-setting${params}`);
             }}
           >
             {({ values, errors, touched, handleSubmit, setFieldValue }) => (
               <Form>
-                <div className="grid grid-cols-10 my-18">
-                  <div className="col-span-3">
+                <div className="grid grid-cols-12 my-18 xl:pr-24 md:pr-12 xl-pr-0">
+                  <div
+                    className="xl:col-span-4 lg:col-span-5
+                    md:col-span-8 col-span-11 mb-8 lg:mb-0"
+                  >
                     <h1 className="text-20px text-heading mb-6">Date</h1>
 
                     <div className="flex flex-row justify-between items-center">
@@ -261,7 +279,7 @@ const SurveySetting = ({
                         }
                         value={values.surveySetting?.startDate}
                         label="Start Date"
-                        className="w-33"
+                        className="w-full"
                         wrapperClassName="mr-12"
                         errorMessage={
                           touched.surveySetting?.startDate && errors.surveySetting?.startDate
@@ -270,7 +288,7 @@ const SurveySetting = ({
 
                       <DatePicker
                         size="large"
-                        className="w-33"
+                        className="w-full"
                         label="End Date"
                         value={values.surveySetting?.endDate}
                         onChange={(endDate) =>
@@ -286,7 +304,10 @@ const SurveySetting = ({
                     </div>
                   </div>
 
-                  <div className="col-start-6 col-span-3">
+                  <div
+                    className="xl:col-start-7 xl:col-span-4 lg:col-start-7 lg:col-span-5
+                    md:col-span-8 col-span-11"
+                  >
                     <h1 className="text-20px text-heading mb-6">Refrence Guide</h1>
 
                     <div className="flex flex-row justify-between items-center">
@@ -327,7 +348,7 @@ const SurveySetting = ({
                   </div>
                 </div>
 
-                <div className="flex flex-col pr-24">
+                <div className="flex flex-col xl:pr-24 md:pr-12">
                   <h1 className="text-20px text-heading mb-8">Rater Settings</h1>
 
                   <Table
