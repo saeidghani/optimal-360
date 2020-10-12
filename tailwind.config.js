@@ -30,6 +30,7 @@ module.exports = {
     extend: {
       colors: {
         heading: '#131621',
+        heading2: '#262626',
         body: '#303854',
         antgreen: '#48D2A1', // used for steps
         antteal: '#00d6a2', // used for primary Progress
