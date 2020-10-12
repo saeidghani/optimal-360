@@ -10,7 +10,7 @@ import MainLayout from '../Common/Layout';
 import Checkbox from '../Common/Checkbox';
 import Menu from './Helper/Menu';
 import Steps from '../Common/Steps';
-import Calender from '../Common/Calender';
+import Calendar from '../Common/Calendar';
 import Button from '../Common/Button';
 import Loading from '../Common/Loading';
 
@@ -44,7 +44,6 @@ const EmailSetting = ({
     fetchSurveyGroups(projectId);
   }, [projectId, surveyGroupId, fetchSurveyGroups]);
 
-  const array = [1, 2, 3, 4];
   const columns = [
     {
       title: 'Email',
@@ -55,10 +54,11 @@ const EmailSetting = ({
       title: '',
       dataIndex: 'button',
       key: 'button ',
-      render: (text) => (
-        <button className="border border-primary-500 text-primary-500 text-12px w-19 h-10 flex items-center justify-center rounded-2px float-right mr-6">
-          {text}
-        </button>
+      render: () => (
+        <Button ghost className="ml-auto" text="View/Edit" />
+        // <button className="border border-primary-500 text-primary-500 text-12px w-19 h-10 flex items-center justify-center rounded-2px float-right mr-6">
+        //   {text}
+        // </button>
       ),
     },
   ];
@@ -68,8 +68,6 @@ const EmailSetting = ({
     { key: '1', email: 's@mail.com', button: 'View/Edit' },
     { key: '1', email: 's@mail.com', button: 'View/Edit' },
   ];
-
-  console.log({ emailSettings });
 
   const initialValues = [
     { id: '1', name: 'Rater verification email', date: '', copyToAdmin: false, template: '' },
@@ -124,7 +122,7 @@ const EmailSetting = ({
                       </div>
 
                       <div className="col-span-2">
-                        <Calender />
+                        <Calendar />
                       </div>
 
                       <div className="col-span-2 flex flex-row items-center">
@@ -137,13 +135,19 @@ const EmailSetting = ({
                     </div>
                   ))}
 
-                  <button className="mt-3 self-start text-12 text-gray-8 border w-19 border-dashed border-antgray-300 rounded-2px">
-                    <span className="text-12px px-1 pb-2"> + Add Email</span>
-                  </button>
+                  <Button
+                    type="link"
+                    textSize="sm"
+                    textClassName="ml-1.5"
+                    className="mt-6 text-antgray-800 border border-dashed border-antgray-300 w-24"
+                    text="Add Email"
+                    icon="PlusOutlined"
+                  />
                 </div>
 
-                <div className="mt-6 flex flex-col  pr-33">
-                  <span className="text-secondary text-20px mb-10 ">Email Templates</span>
+                <div className="mt-7 flex flex-col pr-33">
+                  <h1 className="text-xl text-secondary mb-8.5">Email Templates</h1>
+
                   <Table columns={columns} dataSource={data} pagination={false} />
                 </div>
 
