@@ -19,7 +19,7 @@ const _DatePicker = ({
     <DatePicker
       // value={value}
       value={value ? moment(value) : ''}
-      className={`text-body c-datepicker ${className}`}
+      className={`w-full text-body c-datepicker ${className}`}
       onChange={onChange}
       format="DD/MM/YYYY"
       placeholder={placeholder}

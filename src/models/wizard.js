@@ -6,6 +6,7 @@ export default {
 
   state: {
     surveySettings: '',
+    emailSettings: '',
   },
 
   effects: (dispatch) => ({
@@ -33,6 +34,30 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
+    async fetchEmailSettings(surveyGroupId) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `super-user/wizard/survey-groups/${surveyGroupId}/email-settings`,
+        });
+
+        await this.fetchEmailSettings_reducer(res?.data?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async setEmailSettings({ surveyGroupId, ...payload }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: `super-user/wizard/survey-groups/${surveyGroupId}/email-settings`,
+          data: payload,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
     async createProject(payload) {
       return actionWapper(async () => {
         const res = await axios({
@@ -50,6 +75,11 @@ export default {
     fetchSurveySettings_reducer: (state, payload) => ({
       ...state,
       surveySettings: payload,
+    }),
+
+    fetchEmailSettings_reducer: (state, payload) => ({
+      ...state,
+      emailSettings: payload,
     }),
   },
 };
