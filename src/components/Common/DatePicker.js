@@ -13,7 +13,7 @@ const _DatePicker = ({
   label,
   errorMessage,
 }) => (
-  <div className={`w-full ${wrapperClassName}`}>
+  <div className={`${wrapperClassName}`}>
     {label ? <p className="text-heading2 text-sm font-normal mb-4">{label}</p> : null}
 
     <DatePicker
