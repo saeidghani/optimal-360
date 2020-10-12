@@ -191,7 +191,11 @@ const SurveySetting = ({
       render: (value, { key, index }) => (
         <div style={{ minWidth: '80px' }} className="justify-center items-center">
           {index !== 0 && (
-            <Checkbox checked={!!value} onChange={(val) => updateTable('includeAverage', val, key)}>
+            <Checkbox
+              labelClass="text-body text-sm"
+              checked={!!value}
+              onChange={(val) => updateTable('includeAverage', val, key)}
+            >
               Include
             </Checkbox>
           )}
@@ -233,7 +237,7 @@ const SurveySetting = ({
         <Menu items={surveyGroups?.data} className="col-span-2" />
 
         <div className="px-6 py-5 col-start-3 col-span-10">
-          <Steps currentPosition={0} />
+          <Steps currentPosition={1} />
 
           <Formik
             enableReinitialize
@@ -266,7 +270,7 @@ const SurveySetting = ({
                     className="xl:col-span-4 lg:col-span-5
                     md:col-span-8 col-span-11 mb-8 lg:mb-0"
                   >
-                    <h1 className="text-20px text-heading mb-6">Date</h1>
+                    <h1 className="text-xl text-secondary mb-6">Date</h1>
 
                     <div className="flex flex-row justify-between items-center">
                       <DatePicker
@@ -308,7 +312,7 @@ const SurveySetting = ({
                     className="xl:col-start-7 xl:col-span-4 lg:col-start-7 lg:col-span-5
                     md:col-span-8 col-span-11"
                   >
-                    <h1 className="text-20px text-heading mb-6">Refrence Guide</h1>
+                    <h1 className="text-xl text-secondary mb-6">Refrence Guide</h1>
 
                     <div className="flex flex-row justify-between items-center">
                       <InputNumber
@@ -349,7 +353,7 @@ const SurveySetting = ({
                 </div>
 
                 <div className="flex flex-col xl:pr-24 md:pr-12">
-                  <h1 className="text-20px text-heading mb-8">Rater Settings</h1>
+                  <h1 className="text-xl text-secondary mb-8">Rater Settings</h1>
 
                   <Table
                     loading={loading}
@@ -375,7 +379,7 @@ const SurveySetting = ({
                   ) && <p className="text-red-500 mt-2">Min. Raters values must be numbers</p>}
 
                   <div className="flex flex-col mt-16 ">
-                    <p className="mb-10 text-body text-sm">
+                    <p className="mb-10 text-secondary text-sm">
                       Select rating group for user dashboard :
                     </p>
 

@@ -17,11 +17,11 @@ const _InputNumber = ({
   errorMessage,
 }) => (
   <div className={`w-full ${wrapperClassName}`}>
-    {label ? <p className="text-sm font-normal mb-2">{label}</p> : null}
+    {label ? <p className="text-heading2 text-sm font-normal mb-4">{label}</p> : null}
 
     <InputNumber
       name={name}
-      className={`text-12px ${className}`}
+      className={`text-xs text-body ${className}`}
       value={(value || 0).toString()}
       min={min}
       max={max}

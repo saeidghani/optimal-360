@@ -33,9 +33,9 @@ const _Button = ({
   if (type === 'gray') {
     styles = {
       ...styles,
-      backgroundColor: 'whitesmoke',
-      color: '#b8b8b8',
-      borderColor: '#b8b8b8',
+      backgroundColor: '#F5F5F5',
+      color: '#B8B8B8',
+      borderColor: '#D9D9D9',
     };
   }
   if (type === 'pagination') {

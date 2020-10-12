@@ -14,12 +14,12 @@ const _DatePicker = ({
   errorMessage,
 }) => (
   <div className={`w-full ${wrapperClassName}`}>
-    {label ? <p className="text-sm font-normal mb-2">{label}</p> : null}
+    {label ? <p className="text-heading2 text-sm font-normal mb-4">{label}</p> : null}
 
     <DatePicker
       // value={value}
       value={value ? moment(value) : ''}
-      className={` ${className}`}
+      className={`text-body c-datepicker ${className}`}
       onChange={onChange}
       format="DD/MM/YYYY"
       placeholder={placeholder}
