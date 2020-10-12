@@ -10,7 +10,7 @@ import MainLayout from '../Common/Layout';
 import Checkbox from '../Common/Checkbox';
 import Menu from './Helper/Menu';
 import Steps from '../Common/Steps';
-import DatePicker from '../Common/DatePicker';
+import Calender from '../Common/Calender';
 import Button from '../Common/Button';
 import Loading from '../Common/Loading';
 
@@ -116,18 +116,18 @@ const EmailSetting = ({
                   <h1 className="text-xl text-secondary mb-12">Email Setting</h1>
 
                   {values.emailSettings.map(({ name, id }) => (
-                    <div className="flex items-center" key={id}>
-                      <div className=" flex-1 flex flex-row items-center">
+                    <div className="grid grid-cols-12 my-3" key={id}>
+                      <div className="col-span-3 flex flex-row items-center">
                         <Checkbox />
 
                         <p className=" whitespace-no-wrap ml-3 text-sm text-secondary">{name}</p>
                       </div>
 
-                      <div className=" flex-1 flex items-center">
-                        <DatePicker />
+                      <div className="col-span-2">
+                        <Calender />
                       </div>
 
-                      <div className=" flex-1 flex flex-row items-center">
+                      <div className="col-span-2 flex flex-row items-center">
                         <Checkbox />
 
                         <p className=" whitespace-no-wrap ml-3 text-sm text-secondary">

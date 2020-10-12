@@ -86,7 +86,7 @@ const SurveyGroups = ({ loading }) => {
 
               <DatePicker
                 onChange={(val) => setQuery({ start_Date: moment(val).toISOString() })}
-                className="w-32"
+                wrapperClassName="w-32"
                 size="large"
                 placeholder="Select"
               />
@@ -97,7 +97,7 @@ const SurveyGroups = ({ loading }) => {
 
               <DatePicker
                 onChange={(val) => setQuery({ end_date: moment(val).toISOString() })}
-                className="w-32"
+                wrapperClassName="w-32"
                 size="large"
                 placeholder="Select"
               />
