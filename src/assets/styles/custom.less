@@ -469,3 +469,42 @@
 .c-datepicker {
   border: 1px solid #d9d9d9 !important;
 }
+
+.c-calendar {
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+
+  border: 1px solid #1bb7d9 !important;
+  color: #1bb7d9;
+
+  .ant-picker-input {
+    display: flex !important;
+    flex-direction: row-reverse !important;
+    justify-content: center !important;
+    align-items: center !important;
+
+    input {
+      text-align: center !important;
+
+      &::placeholder {
+        color: #1bb7d9 !important;
+      }
+    }
+
+    .ant-picker-suffix {
+      margin-right: 6.25px !important;
+      margin-left: 0 !important;
+
+      color: #1bb7d9 !important;
+    }
+
+    .anticon-calendar {
+      font-size: 18px !important;
+    }
+  }
+
+  &.ant-picker-disabled {
+    opacity: 0.3 !important;
+    background-color: #fff !important;
+  }
+}
