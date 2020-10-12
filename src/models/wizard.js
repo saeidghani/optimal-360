@@ -10,8 +10,6 @@ export default {
 
   effects: (dispatch) => ({
     async fetchSurveySettings(surveyGroupId) {
-      await this.fetchSurveySettings_reducer('');
-
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',

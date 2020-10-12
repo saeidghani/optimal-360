@@ -38,7 +38,7 @@ _DatePicker.propTypes = {
   label: PropTypes.string,
   errorMessage: PropTypes.string,
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
 };
 
 _DatePicker.defaultProps = {

@@ -9,6 +9,23 @@ const _Menu = ({ items, title, className }) => {
   const sortedArr = items?.sort((el1, el2) => el1.id - el2.id);
   // in order to keep menu items order consistent across renders
 
+  React.useEffect(() => {
+    const firstSurveyGroupId = sortedArr?.length > 0 ? sortedArr[0].id : '';
+
+    const isURLSurveyGroupValid = !!sortedArr.find(
+      (el) => el.id?.toString() === parsedQuery?.surveyGroupId?.toString(),
+    );
+
+    if (
+      !isURLSurveyGroupValid &&
+      firstSurveyGroupId &&
+      firstSurveyGroupId !== parsedQuery?.surveyGroupId
+    ) {
+      setQuery({ surveyGroupId: firstSurveyGroupId });
+    }
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <Menu
       selectedKeys={[parsedQuery?.surveyGroupId]}
