@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as yup from 'yup';
 import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
+import * as yup from 'yup';
 import moment from 'moment';
 
 import { useQuery } from '../../hooks/useQuery';
@@ -219,8 +219,6 @@ const SurveySetting = ({
       ),
     },
   ];
-
-  console.log({ history });
 
   return (
     <MainLayout
