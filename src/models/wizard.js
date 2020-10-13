@@ -6,6 +6,7 @@ export default {
 
   state: {
     surveySettings: '',
+    emailSettings: '',
   },
 
   effects: (dispatch) => ({
@@ -33,21 +34,40 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
-    async createProject(payload) {
-      console.log({ payload });
-      return actionWapper(
-        async () => {
-          const res = await axios({
-            method: 'post',
-            url: '/super-user/projects',
-            data: payload,
-          });
+    async fetchEmailSettings(surveyGroupId) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `super-user/wizard/survey-groups/${surveyGroupId}/email-settings`,
+        });
 
-          return res;
-        },
-        dispatch.util.errorHandler,
-        dispatch.util.alert,
-      );
+        await this.fetchEmailSettings_reducer(res?.data?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async setEmailSettings({ surveyGroupId, ...payload }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: `super-user/wizard/survey-groups/${surveyGroupId}/email-settings`,
+          data: payload,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async createProject(payload) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: '/super-user/projects',
+          data: payload,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
     },
   }),
 
@@ -55,6 +75,11 @@ export default {
     fetchSurveySettings_reducer: (state, payload) => ({
       ...state,
       surveySettings: payload,
+    }),
+
+    fetchEmailSettings_reducer: (state, payload) => ({
+      ...state,
+      emailSettings: payload,
     }),
   },
 };

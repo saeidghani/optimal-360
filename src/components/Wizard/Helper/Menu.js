@@ -3,29 +3,24 @@ import PropTypes from 'prop-types';
 import { Menu } from 'antd';
 import { useQuery } from '../../../hooks/useQuery';
 
-const _Menu = ({ items, title }) => {
-  const [parsedQuery, , setQuery] = useQuery();
+const _Menu = ({ items, title, className, onClick }) => {
+  const [parsedQuery] = useQuery();
 
-  React.useEffect(() => {
-    const surveyGroupId = items?.length > 0 ? items[0].id : '';
-
-    if (surveyGroupId || surveyGroupId !== parsedQuery?.surveyGroupId) {
-      setQuery({ surveyGroupId }, { pagination: false });
-    }
-    // eslint-disable-next-line
-  }, []);
+  const sortedArr = items?.sort((el1, el2) => el1.id - el2.id);
+  // in order to keep menu items order consistent across renders
 
   return (
     <Menu
       selectedKeys={[parsedQuery?.surveyGroupId]}
       mode="inline"
-      style={{ width: 226, paddingLeft: 11, paddingTop: 30 }}
+      className={`c-wizard-menu px-3 py-5 ${className}`}
     >
-      <h4 className="pb-6 pl-4 text-body font-medium font-sans">{title}</h4>
+      <Menu.Item className="text-base text-body font-medium font-sans block">{title}</Menu.Item>
 
-      {items.map(({ id, name }) => (
+      {sortedArr.map(({ id, name }) => (
         <Menu.Item
-          onClick={({ key }) => setQuery({ surveyGroupId: key }, { pagination: false })}
+          className="inline-flex items-center text-sm leading-5 capitalize text-antgray-100 my-2"
+          onClick={({ key }) => onClick(key)}
           key={id}
         >
           {name}
@@ -38,11 +33,14 @@ const _Menu = ({ items, title }) => {
 _Menu.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object),
   title: PropTypes.string,
+  className: PropTypes.string,
+  onClick: PropTypes.func.isRequired,
 };
 
 _Menu.defaultProps = {
   items: [],
   title: 'Survey Group',
+  className: '',
 };
 
 export default _Menu;

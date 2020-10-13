@@ -48,7 +48,7 @@ const _Table = ({
   });
 
   return (
-    <div className={`p-6 bg-white rounded-lg shadow ${className}`}>
+    <div className={`${className}`}>
       <Table
         size={size}
         loading={loading}
