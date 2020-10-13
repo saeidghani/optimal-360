@@ -46,18 +46,18 @@ EmailSetting.propTypes = {
   fetchSurveyGroups: PropTypes.func.isRequired,
   setEmailSettings: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
-  emailSettings: PropTypes.shape({}),
+  emailSettings: PropTypes.arrayOf(PropTypes.object),
   surveyGroups: PropTypes.shape({}),
 };
 
 EmailSetting.defaultProps = {
-  emailSettings: {},
+  emailSettings: [],
   surveyGroups: {},
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
-  emailSettings: state.wizard?.emailSettings || {},
+  emailSettings: state.wizard?.emailSettings?.emailSettings || {},
   surveyGroups: state.projects?.surveyGroups || {},
 });
 

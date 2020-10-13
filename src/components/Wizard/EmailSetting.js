@@ -36,39 +36,10 @@ const EmailSetting = ({
     ),
   });
   // const history = useHistory();
+  console.log({ emailSettings });
 
   const [parsedQuery] = useQuery();
   const { projectId, surveyGroupId } = parsedQuery;
-
-  React.useEffect(() => {
-    fetchSurveyGroups(projectId);
-  }, [projectId, surveyGroupId, fetchSurveyGroups]);
-
-  const columns = [
-    {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
-    },
-    {
-      title: '',
-      dataIndex: 'button',
-      key: 'button ',
-      render: () => (
-        <Button ghost className="ml-auto" text="View/Edit" />
-        // <button className="border border-primary-500 text-primary-500 text-12px w-19 h-10 flex items-center justify-center rounded-2px float-right mr-6">
-        //   {text}
-        // </button>
-      ),
-    },
-  ];
-  const data = [
-    { key: '1', email: 's@mail.com', button: 'View/Edit' },
-    { key: '1', email: 's@mail.com', button: 'View/Edit' },
-    { key: '1', email: 's@mail.com', button: 'View/Edit' },
-    { key: '1', email: 's@mail.com', button: 'View/Edit' },
-  ];
-
   const initialValues = [
     { id: '1', name: 'Rater verification email', date: '', copyToAdmin: false, template: '' },
     { id: '2', name: 'Login email (self)', date: '', copyToAdmin: false, template: '' },
@@ -76,6 +47,52 @@ const EmailSetting = ({
     { id: '4', name: 'Reminder email (1)', date: '', copyToAdmin: false, template: '' },
     { id: '5', name: 'Reminder email (2)', date: '', copyToAdmin: false, template: '' },
   ];
+
+  React.useEffect(() => {
+    fetchSurveyGroups(projectId);
+  }, [projectId, surveyGroupId, fetchSurveyGroups]);
+
+  React.useEffect(() => {
+    fetchEmailSettings(surveyGroupId);
+  }, [projectId, surveyGroupId, fetchEmailSettings]);
+
+  const columns = [
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+      render: (_, { name }) => <h3 className="text-body text-sm">{name}</h3>,
+    },
+    {
+      title: '',
+      dataIndex: 'button',
+      key: 'button ',
+      render: () => <Button textSize="xs" ghost className="ml-auto" text="View/Edit" />,
+    },
+  ];
+  const data = initialValues.map((el) => ({ key: el.id, ...el }));
+
+  const _emailSettings = React.useMemo(() => {
+    return emailSettings && Object.values(emailSettings).length > 0
+      ? emailSettings.map((el) => ({ ...el, selected: false }))
+      : initialValues.map((el) => ({ ...el, selected: false }));
+  }, []);
+  console.log({ _emailSettings });
+
+  const updateArr = (refArray, id, key, newVal) => {
+    return refArray.map((el) => {
+      if (el.id === id) {
+        return key === 'selected' && newVal === false
+          ? { id, name: el.name, date: '', copyToAdmin: false, template: '' }
+          : {
+              ...el,
+              [key]: newVal,
+            };
+      }
+
+      return el;
+    });
+  };
 
   return (
     <MainLayout
@@ -97,10 +114,7 @@ const EmailSetting = ({
           <Formik
             enableReinitialize
             initialValues={{
-              emailSettings:
-                emailSettings && Object.values(emailSettings).length > 0
-                  ? emailSettings
-                  : initialValues,
+              emailSettings: _emailSettings,
             }}
             validationSchema={schema}
             onSubmit={(values) => {
@@ -113,22 +127,52 @@ const EmailSetting = ({
                 <div className="mt-16 flex flex-col">
                   <h1 className="text-xl text-secondary mb-12">Email Setting</h1>
 
-                  {values.emailSettings.map(({ name, id }) => (
+                  {values.emailSettings.map(({ name, id, selected, date, copyToAdmin }) => (
                     <div className="grid grid-cols-12 my-3" key={id}>
                       <div className="col-span-3 flex flex-row items-center">
-                        <Checkbox />
+                        <Checkbox
+                          checked={selected}
+                          onChange={(val) =>
+                            setFieldValue(
+                              'emailSettings',
+                              updateArr(values.emailSettings, id, 'selected', val),
+                            )
+                          }
+                        />
 
                         <p className=" whitespace-no-wrap ml-3 text-sm text-secondary">{name}</p>
                       </div>
 
                       <div className="col-span-2">
-                        <Calendar />
+                        <Calendar
+                          onChange={(val) =>
+                            setFieldValue(
+                              'emailSettings',
+                              updateArr(values.emailSettings, id, 'date', val),
+                            )
+                          }
+                          value={date}
+                          disabled={!selected}
+                          icon={!date}
+                        />
                       </div>
 
                       <div className="col-span-2 flex flex-row items-center">
-                        <Checkbox />
+                        <Checkbox
+                          checked={copyToAdmin}
+                          onChange={(val) =>
+                            setFieldValue(
+                              'emailSettings',
+                              updateArr(values.emailSettings, id, 'copyToAdmin', val),
+                            )
+                          }
+                          disabled={!selected}
+                        />
 
-                        <p className=" whitespace-no-wrap ml-3 text-sm text-secondary">
+                        <p
+                          style={{ opacity: selected ? '1' : '0.3' }}
+                          className=" whitespace-no-wrap ml-3 text-sm text-secondary"
+                        >
                           Send copy to Admin
                         </p>
                       </div>
@@ -148,7 +192,12 @@ const EmailSetting = ({
                 <div className="mt-7 flex flex-col pr-33">
                   <h1 className="text-xl text-secondary mb-8.5">Email Templates</h1>
 
-                  <Table columns={columns} dataSource={data} pagination={false} />
+                  <Table
+                    columns={columns}
+                    dataSource={data}
+                    rowSelection={false}
+                    pagination={false}
+                  />
                 </div>
 
                 <div className="pt-23.5 pb-22 flex justify-end  pr-33">
@@ -182,22 +231,14 @@ EmailSetting.propTypes = {
     data: PropTypes.arrayOf(PropTypes.object),
     timeStamp: PropTypes.number,
   }),
-  emailSettings: PropTypes.shape({
-    raterGroups: PropTypes.arrayOf(PropTypes.object),
-    surveyModeInUserDashboard: PropTypes.shape({}),
-    surveySetting: PropTypes.shape({}),
-  }),
+  emailSettings: PropTypes.arrayOf(PropTypes.object),
 };
 
 EmailSetting.defaultProps = {
   surveyGroups: {
     data: [],
   },
-  emailSettings: {
-    raterGroups: [],
-    surveyModeInUserDashboard: {},
-    surveySetting: {},
-  },
+  emailSettings: [],
 };
 
 export default EmailSetting;
