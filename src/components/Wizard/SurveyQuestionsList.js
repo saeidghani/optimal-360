@@ -18,11 +18,20 @@ const SurveyQuestionsList = () => {
   const clusters = [1, 2, 3, 4, 5];
   return (
     <>
-      <MainLayout title="Super User" contentClass="pt-4" titleClass="pl-6">
-        <div className="bg-white w-full flex font-sans">
-          <Menu />
-          <div className="w-full px-6 pt-6  ">
-            <Steps className="w-full" />
+      <MainLayout
+      title="Super User"
+      hasBreadCrumb
+      titleClass="mb-2"
+      contentClass="py-4"
+      headerClassName="pl-21"
+      childrenPadding={false}
+
+
+      >
+        <div className="bg-white grid grid-cols-12 pl-15">
+        <Menu className="col-span-2" />
+        <div className="px-6 py-5 col-start-3 col-span-10  ">
+            <Steps currentPosition={3} />
             <div className="pr-28">
               <div className="mt-17">
                 <h4 className=" text-secondary text-20px mb-8">Rating Scale</h4>
