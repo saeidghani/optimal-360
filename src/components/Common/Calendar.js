@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { DatePicker } from 'antd';
+import { CalendarOutlined } from '@ant-design/icons';
 
-const Calender = ({ className, placeholder, value, onChange, disabled }) => (
+const Calender = ({ className, placeholder, value, onChange, disabled, icon }) => (
   <DatePicker
     disabled={disabled}
     placeholder={placeholder}
     value={value}
     onChange={onChange}
     className={`c-calendar w-30 h-10 ${className}`}
+    suffixIcon={icon && <CalendarOutlined />}
   />
 );
 
