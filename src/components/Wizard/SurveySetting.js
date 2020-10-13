@@ -8,6 +8,7 @@ import moment from 'moment';
 import { useQuery } from '../../hooks/useQuery';
 
 import Menu from './Helper/Menu';
+import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
 
 import MainLayout from '../Common/Layout';
 import Steps from '../Common/Steps';
@@ -27,9 +28,41 @@ const SurveySetting = ({
   loading,
   surveyGroups,
 }) => {
+  const schema = yup.object({
+    surveySetting: yup.object({
+      startDate: yup.string().required('Start Date Cannot Be Empty'),
+      endDate: yup.string().required('End Date Cannot Be Empty'),
+      raterInvalidation: yup
+        .number()
+        .moreThan(0, 'Rater Invalidation Must Be Greater Than 0')
+        .required('Rater Invalidation Cannot Be Empty'),
+      itemInvalidation: yup
+        .number()
+        .moreThan(0, 'Rater Invalidation Must Be Greater Than 0')
+        .required('Item Invalidation Cannot Be Empty'),
+    }),
+    surveyModeInUserDashboard: yup
+      .object({
+        individual: yup.bool(),
+        group: yup.bool(),
+        all: yup.bool(),
+      })
+      .test('surveyModeInUserDashboard', 'You Must Specify At least One Rating Group', (vals) => {
+        const containsAtLeastOneTrueValue = Object.values(vals).find(
+          (el) => typeof el === 'boolean' && el !== false,
+        );
+        return containsAtLeastOneTrueValue;
+      }),
+  });
+
+  const formRef = React.useRef();
   const history = useHistory();
-  const [parsedQuery] = useQuery();
+  const [surveyGroupModal, setSurveyGroupModal] = React.useState(false);
+  const [isFormDone, setIsFormDone] = React.useState(false);
+  const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
+  const [parsedQuery, , setQuery] = useQuery();
   const { projectId, surveyGroupId } = parsedQuery;
+
   const {
     surveySetting = {
       startDate: '',
@@ -55,8 +88,45 @@ const SurveySetting = ({
     },
   } = surveySettings || {};
 
-  const raterGroupsStringified = JSON.stringify(raterGroups);
+  React.useEffect(() => {
+    const sortedArr = surveyGroups?.data?.sort((el1, el2) => el1.id - el2.id) || [];
 
+    const firstSurveyGroupId = sortedArr?.length > 0 ? sortedArr[0].id : '';
+
+    const isURLSurveyGroupValid = !!sortedArr.find(
+      (el) => el.id?.toString() === parsedQuery?.surveyGroupId?.toString(),
+    );
+
+    if (
+      !isURLSurveyGroupValid &&
+      firstSurveyGroupId &&
+      firstSurveyGroupId !== parsedQuery?.surveyGroupId
+    ) {
+      setQuery({ surveyGroupId: firstSurveyGroupId });
+    }
+    // eslint-disable-next-line
+  }, []);
+
+  React.useEffect(() => {
+    fetchSurveyGroups(projectId);
+  }, [projectId, surveyGroupId, fetchSurveyGroups]);
+
+  React.useEffect(() => {
+    if (surveyGroupId) {
+      fetchSurveySettings(surveyGroupId);
+    }
+
+    if (formRef?.current) {
+      // reset form state when surveyGroup changes
+      // happens when user decides to discard current settings and changes currentSurveyGroup
+      formRef.current.setTouched({});
+      formRef.current.setErrors({});
+      formRef.current.setValues({ surveySetting, surveyModeInUserDashboard });
+    }
+    // eslint-disable-next-line
+  }, [fetchSurveySettings, surveyGroupId]);
+
+  const raterGroupsStringified = JSON.stringify(raterGroups);
   const getInitialData = React.useCallback(() => {
     return raterGroups?.length > 0
       ? raterGroups.map((el, i) => ({
@@ -76,36 +146,38 @@ const SurveySetting = ({
     setDataSource(() => getInitialData());
   }, [projectId, surveyGroupId, getInitialData]);
 
-  const schema = yup.object({
-    surveySetting: yup.object({
-      startDate: yup.string().required('Start Date Cannot Be Empty'),
-      endDate: yup.string().required('End Date Cannot Be Empty'),
-      raterInvalidation: yup
-        .number()
-        .moreThan(0, 'Rater Invalidation Must Be Greater Than 0')
-        .required('Rater Invalidation Cannot Be Empty'),
-      itemInvalidation: yup
-        .number()
-        .moreThan(0, 'Rater Invalidation Must Be Greater Than 0')
-        .required('Item Invalidation Cannot Be Empty'),
-    }),
-    surveyModeInUserDashboard: yup.object({
-      individual: yup.bool(),
-      group: yup.bool(),
-      all: yup.bool(),
-    }),
-  });
-
   React.useEffect(() => {
-    fetchSurveyGroups(projectId);
-  }, [projectId, surveyGroupId, fetchSurveyGroups]);
+    const validateForm = async () => {
+      try {
+        const errorObj = await formRef.current.validateForm(formRef?.current?.values);
 
-  React.useEffect(() => {
-    if (surveyGroupId) {
-      fetchSurveySettings(surveyGroupId);
+        if (errorObj && Object.values(errorObj).length > 0) {
+          throw errorObj;
+        } else {
+          setIsFormDone(true);
+        }
+      } catch (errorObj) {
+        formRef.current.setErrors(errorObj);
+        formRef.current.setTouched(errorObj);
+
+        if (selectedSurveyGroupKey !== parsedQuery?.surveyGroupId) setSurveyGroupModal(true);
+      }
+    };
+
+    if (selectedSurveyGroupKey && formRef?.current) {
+      validateForm(formRef?.current?.values);
     }
+
     // eslint-disable-next-line
-  }, [fetchSurveySettings, surveyGroupId]);
+  }, [selectedSurveyGroupKey]);
+
+  React.useEffect(() => {
+    if (isFormDone && selectedSurveyGroupKey) {
+      setQuery({ surveyGroupId: selectedSurveyGroupKey });
+      setIsFormDone(false);
+      setSurveyGroupModal(false);
+    }
+  }, [isFormDone, selectedSurveyGroupKey, setQuery]);
 
   const updateTable = (key, value, id) => {
     const newData = [...dataSource];
@@ -220,6 +292,10 @@ const SurveySetting = ({
     },
   ];
 
+  const currentSurveyGroupName =
+    surveyGroups?.data?.find((el) => el.id.toString() === parsedQuery?.surveyGroupId?.toString())
+      ?.name || '';
+
   return (
     <MainLayout
       hasBreadCrumb
@@ -232,12 +308,30 @@ const SurveySetting = ({
       <div className="bg-white grid grid-cols-12 pl-15">
         <Loading visible={loading} />
 
-        <Menu items={surveyGroups?.data} className="col-span-2" />
+        <ChangeSurveyGroupModal
+          handleOk={() => {
+            setIsFormDone(true);
+          }}
+          handleCancel={() => {
+            setSelectedSurveyGroupKey('');
+            setSurveyGroupModal(false);
+          }}
+          currentSurveyGroup={currentSurveyGroupName}
+          visible={surveyGroupModal}
+        />
+
+        <Menu
+          onClick={(key) => setSelectedSurveyGroupKey(key)}
+          isFormDone={isFormDone}
+          items={surveyGroups?.data}
+          className="col-span-2"
+        />
 
         <div className="px-6 py-5 col-start-3 col-span-10">
           <Steps currentPosition={1} />
 
           <Formik
+            innerRef={formRef}
             enableReinitialize
             initialValues={{
               surveySetting,
@@ -249,8 +343,8 @@ const SurveySetting = ({
                 ...values,
                 surveySetting: {
                   ...values.surveySetting,
-                  startDate: moment(values.surveySetting?.startDate).format('YYYY-MM-DD'),
-                  endDate: moment(values.surveySetting?.endDate).format('YYYY-MM-DD'),
+                  startDate: moment(values.surveySetting?.startDate).toISOString(),
+                  endDate: moment(values.surveySetting?.endDate).toISOString(),
                 },
                 raterGroups: dataSource,
                 surveyGroupId,
@@ -420,11 +514,9 @@ const SurveySetting = ({
                       All Ratees
                     </Checkbox>
 
-                    {touched.surveyModeInUserDashboard &&
-                      Object.values(touched.surveyModeInUserDashboard).find((el) => !!el) &&
-                      !Object.values(values.surveyModeInUserDashboard).find((el) => !!el) && (
-                        <p className="text-red-500">You Must Specify At least One Rating Group </p>
-                      )}
+                    {touched.surveyModeInUserDashboard && errors.surveyModeInUserDashboard && (
+                      <p className="text-red-500">{errors.surveyModeInUserDashboard}</p>
+                    )}
 
                     <div className="mt-17 pb-22  flex justify-end">
                       <Button type="link" text="Back" className="px-8 py-3" />
