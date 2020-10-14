@@ -10,12 +10,39 @@ import SecondaryButton from '../Common/Button';
 import Checkbox from '../Common/Checkbox';
 import AddQuestionModal from './Helper/AddQuestionModal';
 import AddFeedbackModal from './Helper/AddFeedbackModal';
+import DataTable from './Helper/DataTable';
 
 const SurveyQuestionsList = () => {
   const [questionModal, setquestionModal] = useState(false);
   const [feedbackModal, setfeedbackModal] = useState(false);
   const array = [0, 1, 2, 3, 4];
-  const clusters = [1, 2, 3, 4, 5];
+  const clusters = [
+    {
+      key: '1',
+      name: '1',
+      index: 0,
+    },
+    {
+      key: '2',
+      name: '2',
+      index: 1,
+    },
+    {
+      key: '3',
+      name: '3',
+      index: 2,
+    },
+    {
+      key: '4',
+      name: '4',
+      index: 3,
+    },
+    {
+      key: '5',
+      name: '5',
+      index: 4,
+    },
+  ];
   return (
     <>
       <MainLayout
@@ -72,24 +99,9 @@ const SurveyQuestionsList = () => {
                       </Button>
                     </div>
                   </div>
-                  {clusters.map((item) => (
-                    <div
-                      className="flex flex-row justify-between bg-list-bg h-14 w-full pl-8 py-3 pr-6 items-center border-b border-list-border "
-                      key={item}
-                    >
-                      <div className="flex items-center">
-                        <button className="flex flex-col">
-                          <LineOutlined className="text-primary-500  text-lg" />
-                          <LineOutlined className="text-primary-500 text-lg -mt-2" />
-                        </button>
-                        <span className="ml-8 text-primary-500 text-14px">Cluster 1</span>
-                      </div>
-                      <div className="flex items-center">
-                        <DeleteOutlined className="text-xl text-primary-600 mr-4.5 cursor-pointer" />
-                        <EditOutlined className="text-xl text-primary-500 cursor-pointer" />
-                      </div>
-                    </div>
-                  ))}
+
+                  <DataTable items={clusters}/>
+
                 </div>
               </div>
 
