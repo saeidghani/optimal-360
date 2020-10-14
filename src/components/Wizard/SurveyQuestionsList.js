@@ -43,21 +43,127 @@ const SurveyQuestionsList = () => {
       index: 4,
     },
   ];
+
+
+  // Sample array for data model meni
+  const menuItems = [
+    {
+      key: '1',
+      name: 'Cluster 1',
+      type: 'cluster',
+      index: 0,
+      competencies: [
+        {
+          key: '1',
+          name: 'Competency 1',
+          type: 'competency',
+          index: 0,
+          questions: [
+            {
+              key: '1',
+              name: 'questions 1',
+              type: 'questions',
+              index: 0,
+            },
+            {
+              key: '2',
+              name: 'questions 2',
+              type: 'questions',
+              index: 1,
+            },
+          ]
+        },
+        {
+          key: '2',
+          name: 'Competency 2',
+          type: 'competency',
+          index: 0,
+          questions: [
+            {
+              key: '1',
+              name: 'questions 1',
+              type: 'questions',
+              index: 0,
+            },
+            {
+              key: '2',
+              name: 'questions 2',
+              type: 'questions',
+              index: 1,
+            },
+          ]
+
+        }
+      ]
+    },
+    {
+      key: '2',
+      name: 'Cluster 2',
+      type: 'cluster',
+      index: 0,
+      competencies: [
+        {
+          key: '1',
+          name: 'Competency 1',
+          type: 'competency',
+          index: 0,
+          questions: [
+            {
+              key: '1',
+              name: 'questions 1',
+              type: 'questions',
+              index: 0,
+            },
+            {
+              key: '2',
+              name: 'questions 2',
+              type: 'questions',
+              index: 1,
+            },
+          ]
+
+        },
+        {
+          key: '2',
+          name: 'Competency 2',
+          type: 'competency',
+          index: 0,
+          questions: [
+            {
+              key: '1',
+              name: 'questions 1',
+              type: 'questions',
+              index: 0,
+            },
+            {
+              key: '2',
+              name: 'questions 2',
+              type: 'questions',
+              index: 1,
+            },
+          ]
+
+        }
+      ]
+    }
+  ];
+
+
   return (
     <>
       <MainLayout
-      title="Super User"
-      hasBreadCrumb
-      titleClass="mb-2"
-      contentClass="py-4"
-      headerClassName="pl-21"
-      childrenPadding={false}
+        title="Super User"
+        hasBreadCrumb
+        titleClass="mb-2"
+        contentClass="py-4"
+        headerClassName="pl-21"
+        childrenPadding={false}
 
 
       >
         <div className="bg-white grid grid-cols-12 pl-15">
-        <Menu className="col-span-2" />
-        <div className="px-6 py-5 col-start-3 col-span-10  ">
+          <Menu className="col-span-2" />
+          <div className="px-6 py-5 col-start-3 col-span-10  ">
             <Steps currentPosition={3} />
             <div className="pr-28">
               <div className="mt-17">
@@ -81,6 +187,7 @@ const SurveyQuestionsList = () => {
                   title="ALL"
                   titleClassName="pt-2.3 pb-5.5 pl-7.5 text-body font-medium font-sans"
                   className="mr-6"
+                  menuItems={menuItems}
                 />
                 <div className="p-6 rounded-7px border border-antgray-500 w-full">
                   <div className="flex flex-row justify-between bg-antgray-600 h-14 w-full pl-8 py-3 pr-6 items-center border-b border-list-border">
@@ -100,7 +207,7 @@ const SurveyQuestionsList = () => {
                     </div>
                   </div>
 
-                  <DataTable items={clusters}/>
+                  <DataTable items={clusters} />
 
                 </div>
               </div>
