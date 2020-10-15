@@ -15,6 +15,27 @@ import DataTable from './Helper/DataTable';
 const SurveyQuestionsList = () => {
   const [questionModal, setquestionModal] = useState(false);
   const [feedbackModal, setfeedbackModal] = useState(false);
+
+  const ratingScalesData = [{
+    label1: '',
+    input1: '',
+    label2: '',
+    input2: '',
+    label3: '',
+    input3: '',
+    label4: '',
+    input4: '',
+    label0: '',
+    input0: '',
+  }]
+
+  const [ratingScales, setRatingScales] = useState(ratingScalesData);
+
+
+
+
+
+
   const array = [0, 1, 2, 3, 4];
   const clusters = [
     {
@@ -45,7 +66,7 @@ const SurveyQuestionsList = () => {
   ];
 
 
-  // Sample array for data model meni
+  // Sample array for data model menu
   const menuItems = [
     {
       key: '1',
@@ -149,6 +170,17 @@ const SurveyQuestionsList = () => {
   ];
 
 
+
+  const handleOnChange = event => {
+    const { name, value } = event.target;
+    setRatingScales({ ...ratingScales, [name]: value });
+  };
+
+
+
+
+
+
   return (
     <>
       <MainLayout
@@ -168,18 +200,104 @@ const SurveyQuestionsList = () => {
             <div className="pr-28">
               <div className="mt-17">
                 <h4 className=" text-secondary text-20px mb-8">Rating Scale</h4>
-                {array.map((item) => (
-                  <div className="mb-6" key={item}>
-                    <span className="text-heading">{item}</span>
-                    <div className="flex flex-row mt-3">
-                      <Input placeholder="Label" inputClass="w-41" wrapperClassName="mr-6" />
-                      <Input
-                        value="Does not describe the person at all"
-                        wrapperClassName="w-full"
-                      />
-                    </div>
+
+
+                <div className="mb-6" >
+                  <span className="text-heading">1</span>
+                  <div className="flex flex-row mt-3">
+                    <Input placeholder="Label"
+                     value={ratingScales.label1}
+                     name="label1"
+                     inputClass="w-41"
+                     wrapperClassName="mr-6"
+                     onChange={handleOnChange}
+                     />
+                    <Input
+                      value={ratingScales.input1}
+                      name="input1"
+                      onChange={handleOnChange}
+                      placeholder="Does not describe the person at all"
+                      wrapperClassName="w-full"
+                    />
                   </div>
-                ))}
+                </div>
+                <div className="mb-6" >
+                  <span className="text-heading">2</span>
+                  <div className="flex flex-row mt-3">
+                    <Input placeholder="Label"
+                     value={ratingScales.label2}
+                     name="label2"
+                     inputClass="w-41"
+                     wrapperClassName="mr-6"
+                     onChange={handleOnChange}
+                     />
+                    <Input
+                      value={ratingScales.input2}
+                      name="input2"
+                      onChange={handleOnChange}
+                      placeholder="Does not describe the person much"
+                      wrapperClassName="w-full"
+                    />
+                  </div>
+                </div>
+                <div className="mb-6" >
+                  <span className="text-heading">3</span>
+                  <div className="flex flex-row mt-3">
+                    <Input placeholder="Label"
+                     value={ratingScales.label3}
+                     name="label3"
+                     inputClass="w-41"
+                     wrapperClassName="mr-6"
+                     onChange={handleOnChange}
+                     />
+                    <Input
+                      value={ratingScales.input1}
+                      name="input1"
+                      onChange={handleOnChange}
+                      placeholder="Describe the person somewhat"
+                      wrapperClassName="w-full"
+                    />
+                  </div>
+                </div>
+                <div className="mb-6" >
+                  <span className="text-heading">4</span>
+                  <div className="flex flex-row mt-3">
+                    <Input placeholder="Label"
+                     value={ratingScales.label4}
+                     name="label4"
+                     inputClass="w-41"
+                     wrapperClassName="mr-6"
+                     onChange={handleOnChange}
+                     />
+                    <Input
+                      value={ratingScales.input4}
+                      name="input4"
+                      onChange={handleOnChange}
+                      placeholder="Describe the persone the most"
+                      wrapperClassName="w-full"
+                    />
+                  </div>
+                </div>
+                <div className="mb-6" >
+                  <span className="text-heading">0</span>
+                  <div className="flex flex-row mt-3">
+                    <Input placeholder="Label"
+                     value={ratingScales.label0}
+                     name="label0"
+                     inputClass="w-41"
+                     wrapperClassName="mr-6"
+                     onChange={handleOnChange}
+                     />
+                    <Input
+                      value={ratingScales.input0}
+                      name="input0"
+                      onChange={handleOnChange}
+                      placeholder="No oppotunity to observe"
+                      wrapperClassName="w-full"
+                    />
+                  </div>
+                </div>
+
                 <h4 className=" text-secondary text-20px mt-8.5">Data Model</h4>
               </div>
               <div className="flex flex-row mt-8 mb-7.5 w-full">
