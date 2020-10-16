@@ -39,12 +39,121 @@ const TextEditor = ({ placeholder }) => {
   //   });
   // }, []);
 
+  // const content = `
+  //    <p> $PROJECT_NAME : Please verify your rater </p>
+  //    <br />
+  //    <p> To : $RATER &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; From : $SENDER ​</p>
+  //    <br /> <hr class="__se__solid" />  <br />
+  //    <p> Dear $RATER , </p>
+  //    <br />
+  //    <p> You have been nominated to provide leadership competency feedback on the following individual(s): </p>
+
+  //    <br />
+  //    <br />
+
+  //    <table>
+  //      <tbody>
+  //        <tr>
+  //          <td><div>Name</div></td><td>
+  //          <div>Relationship</div></td>
+  //          <td><div>Start Date</div></td>
+  //          <td><div>End Date</div></td>
+  //        </tr>
+  //        <tr>
+  //          <td><div>X</div></td><td>
+  //          <div>Y</div></td>
+  //          <td><div>1</div></td>
+  //          <td><div>2</div></td>
+  //        </tr>
+  //        <tr>
+  //          <td><div>X</div></td>
+  //          <td><div>Y</div></td>
+  //          <td><div>3</div></td>
+  //          <td><div>4</div></td>
+  //        </tr>
+  //      </tbody>
+  //    </table>
+  //    <br />
+  //    <br />
+  //
+  //    <p> Please verify the name of the individual(s) who has/have nominated you as a rater and the respective work relationship(s).
+  //    Should there be any problems with the information, please notify your in-house HR team immediately. </p>
+  //     <br />
+  //    <p> You will receive another email with the Login information shortly before the project starts. </p>
+  //    <br />
+  //    <p> Thank you, </p>
+  //    <br />
+  //    $SENDER
+  //  `;
+  // const content = `
+  //   <p> $PROJECT_NAME : Please verify your rater </p>
+  //   <br />
+  //   <p> To : $RATER &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; From : $SENDER </p>
+  //   <br /> <hr class="__se__solid" />  <br />
+
+  //   <p> Dear $RATER , </p>
+  //   <br />
+  //   <p> Please complete and submit the survey by $END_DATE. </p>
+  //   <br />
+  //   <p> To access the survey, we recommend that you upgrade to the most recent version of your browser. </p>
+  //   <br />
+  //   <p> Please click on the following link to proceed: $SURVEY_LINK </p>
+  //   <br />
+  // <p> Your Login ID is : $RATER_LOGIN_ID </p>
+  // <p> Your Password is : $PASSWORD </p>
+  //   <br />
+  //   <p> Thank you, </p>
+  //   <br />
+  //   $SENDER
+  // `;
   const content = `
-    <p> $PROJECT_NAME : Please verify your rater ​</p>
-    <p> To : $RATER &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; From : $SENDER ​</p> 
+    <p> $PROJECT_NAME : Please verify your rater </p>
+    <br />
+    <p> To : $RATER &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; From : $SENDER ​</p>
     <br /> <hr class="__se__solid" />  <br />
-    <p> Dear $RATER ​, </p>  
-    <p> You have been nominated to provide leadership competency feedback on the following individual(s): ​, </p>  
+    <p> Dear $RATER , </p>
+    <br />
+    <p> You have been nominated to provide leadership competency feedback on the following individual(s): </p>
+
+    <br />
+    <br />
+
+    <table>
+      <tbody>
+        <tr>
+          <td><div>Name</div></td><td>
+          <div>Relationship</div></td>
+          <td><div>Start Date</div></td>
+          <td><div>End Date</div></td>
+        </tr>
+        <tr>
+          <td><div>X</div></td><td>
+          <div>Y</div></td>
+          <td><div>1</div></td>
+          <td><div>2</div></td>
+        </tr>
+        <tr>
+          <td><div>X</div></td>
+          <td><div>Y</div></td>
+          <td><div>3</div></td>
+          <td><div>4</div></td>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+    <br />
+
+    <p>Please complete and submit the survey(s) by $END_DATE.
+    Your feedback will be kept confidential and will be reported under a set of consolidated data.</p>
+    <br />
+    <p> To access the survey, we recommend that you upgrade to the most recent version of your browser. </p>
+    <br />
+    <p> Please click on the following link to proceed: $SURVEY_LINK </p>
+    <br />    
+    <p> Your Login ID is : $RATER_LOGIN_ID </p>
+    <p> Your Password is : $PASSWORD </p>
+    <br />    
+    <p> Thank you, </p>
   `;
 
   return (
