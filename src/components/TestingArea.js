@@ -1,7 +1,7 @@
 // a place to test your components
 import React from 'react';
 
-import { raterVerificationEmail } from './EmailTemplates';
+import { raterVerificationEmail } from './Wizard/Helper/EmailTemplates';
 import TextEditor from './Common/TextEditor';
 
 const Login = () => {

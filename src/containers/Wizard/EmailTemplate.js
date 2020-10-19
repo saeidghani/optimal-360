@@ -7,21 +7,42 @@ import Layout from '../../components/Wizard/EmailTemplate';
 class ProjectInfo extends Component {
   state = {};
 
-  render() {
-    const { loading } = this.props;
+  fetchSingleProject = async (projectId) => {
+    const { fetchSingleProject } = this.props;
 
-    return <Layout loading={loading} />;
+    await fetchSingleProject(projectId);
+  };
+
+  render() {
+    const { loading, singleProject } = this.props;
+
+    return (
+      <Layout
+        loading={loading}
+        fetchSingleProject={this.fetchSingleProject}
+        singleProject={singleProject}
+      />
+    );
   }
 }
 
 ProjectInfo.propTypes = {
   loading: PropTypes.bool.isRequired,
+  fetchSingleProject: PropTypes.func.isRequired,
+  singleProject: PropTypes.shape({}),
+};
+
+ProjectInfo.defaultProps = {
+  singleProject: {},
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
+  singleProject: state.projects?.project || {},
 });
 
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  fetchSingleProject: dispatch.projects.fetchSingleProject,
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProjectInfo);
