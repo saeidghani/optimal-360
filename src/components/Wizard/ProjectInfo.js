@@ -139,6 +139,7 @@ const ProjectInfo = ({
                   label: name,
                   value: name,
                   id,
+                  key: id,
                 }))}
                 onChange={(txt) => setQuery({ sq: txt })}
                 value={parsedQuery.sq}

@@ -1,13 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { DatePicker } from 'antd';
+import moment from 'moment';
 
-const _DatePicker = ({ className, placeholder, size, onChange, label, errorMessage }) => (
-  <div className="w-full">
-    {label ? <p className="text-sm font-normal mb-2">{label}</p> : null}
+const _DatePicker = ({
+  className,
+  wrapperClassName,
+  placeholder,
+  size,
+  value,
+  onChange,
+  label,
+  errorMessage,
+}) => (
+  <div className={`${wrapperClassName}`}>
+    {label ? <p className="text-heading2 text-sm font-normal mb-4">{label}</p> : null}
 
     <DatePicker
-      className={` ${className}`}
+      // value={value}
+      value={value ? moment(value) : ''}
+      className={`w-full text-body c-datepicker ${className}`}
       onChange={onChange}
       format="DD/MM/YYYY"
       placeholder={placeholder}
@@ -20,19 +32,23 @@ const _DatePicker = ({ className, placeholder, size, onChange, label, errorMessa
 
 _DatePicker.propTypes = {
   className: PropTypes.string,
+  wrapperClassName: PropTypes.string,
   placeholder: PropTypes.string,
   size: PropTypes.string,
   label: PropTypes.string,
   errorMessage: PropTypes.string,
   onChange: PropTypes.func.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
 };
 
 _DatePicker.defaultProps = {
   className: '',
+  wrapperClassName: '',
   label: '',
   errorMessage: '',
   placeholder: 'select date',
   size: 'middle',
+  value: '',
 };
 
 export default _DatePicker;

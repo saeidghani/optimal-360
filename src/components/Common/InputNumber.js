@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { InputNumber } from 'antd';
 
 const _InputNumber = ({
+  wrapperClassName,
   className,
   onChange,
   size,
@@ -15,13 +16,13 @@ const _InputNumber = ({
   max,
   errorMessage,
 }) => (
-  <>
-    {label ? <p className="text-sm font-normal mb-2">{label}</p> : null}
+  <div className={`w-full ${wrapperClassName}`}>
+    {label ? <p className="text-heading2 text-sm font-normal mb-4">{label}</p> : null}
 
     <InputNumber
       name={name}
-      className={`text-12px ${className}`}
-      value={value.toString()}
+      className={`text-xs text-body ${className}`}
+      value={(value || 0).toString()}
       min={min}
       max={max}
       formatter={formatter}
@@ -31,10 +32,11 @@ const _InputNumber = ({
     />
 
     {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-  </>
+  </div>
 );
 
 _InputNumber.propTypes = {
+  wrapperClassName: PropTypes.string,
   className: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   size: PropTypes.string,
@@ -49,6 +51,7 @@ _InputNumber.propTypes = {
 };
 
 _InputNumber.defaultProps = {
+  wrapperClassName: '',
   className: '',
   errorMessage: '',
   size: 'large',
