@@ -189,7 +189,7 @@ const SurveySetting = ({
   ];
 
   return (
-    <MainLayout title="Survey Group" contentClass=" p-0">
+    <MainLayout hasBreadCrumb title="Survey Group" contentClass=" p-0">
       <div className="bg-white w-full flex">
         <Menu items={surveyGroups?.data} />
 

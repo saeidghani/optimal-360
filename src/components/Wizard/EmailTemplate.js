@@ -1,13 +1,25 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
+// import { useHistory, useParams } from 'react-router-dom';
+// import {useQuery} from '../../hooks/useQuery'
+
 import MainLayout from '../Common/Layout';
 import Button from '../Common/Button';
 
-const RaterVerificationEmail = () => {
+const EmailTemplate = ({ loading }) => {
+  const { template } = useParams();
+  // const history = useHistory();
+  // const [query,parsedQuery,setQuery] = useQuery();
+
+  const pageTitle = template.charAt(0).toUpperCase() + template.slice(1).replaceAll('-', ' ');
+
   return (
-    <MainLayout title="Super User" contentClass="pt-4" titleClass="pl-6">
+    <MainLayout hasBreadCrumb title="Super User" contentClass=" p-0">
       <div className="bg-white w-full flex font-sans ">
         <div className="w-full pt-12 px-6.5 ">
-          <span className="text-secondary text-20px ">Rater verification email</span>
+          <p className="text-body text-2xl">{pageTitle}</p>
+
           <div className="mt-2.5 flex flex-row justify-between items-center">
             <div className="flex">
               <Button
@@ -42,4 +54,10 @@ const RaterVerificationEmail = () => {
   );
 };
 
-export default RaterVerificationEmail;
+EmailTemplate.propTypes = {
+  loading: PropTypes.bool.isRequired,
+};
+
+EmailTemplate.defaultProps = {};
+
+export default EmailTemplate;
