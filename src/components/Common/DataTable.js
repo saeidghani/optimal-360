@@ -1,5 +1,4 @@
-
-import React, {Component} from 'react';
+import React, { useState } from 'react';
 import { PlusCircleOutlined, LineOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
 import { Table } from 'antd';
@@ -28,10 +27,14 @@ const columns = [
     title: 'Action',
     key: 'action',
     width: 100,
-    render: () => <><DeleteOutlined className="text-xl text-primary-600 mr-4.5 cursor-pointer" /> <EditOutlined className="text-xl text-primary-500 cursor-pointer" /> </>,
+    render: () => (
+      <>
+        <DeleteOutlined className="text-xl text-primary-600 mr-4.5 cursor-pointer" />{' '}
+        <EditOutlined className="text-xl text-primary-500 cursor-pointer" />{' '}
+      </>
+    ),
   },
 ];
-
 
 const data = [
   {
@@ -61,56 +64,43 @@ const data = [
   },
 ];
 
-const SortableItem = sortableElement(props => <tr {...props} />);
-const SortableContainer = sortableContainer(props => <tbody {...props} />);
+const SortableItem = sortableElement((props) => <tr {...props} />);
+const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 
-class SortableTable extends React.Component {
-  state = {
-    dataSource: data,
-  };
+const SortableTable = () => {
+  const [dataSource, setDataSource] = useState(data);
 
-  onSortEnd = ({ oldIndex, newIndex }) => {
-    const { dataSource } = this.state;
+  const onSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex !== newIndex) {
-      const newData = arrayMove([].concat(dataSource), oldIndex, newIndex).filter(el => !!el);
-      console.log('Sorted items: ', newData);
-      this.setState({ dataSource: newData });
+      const newData = arrayMove([].concat(dataSource), oldIndex, newIndex).filter((el) => !!el);
+      setDataSource(newData);
     }
   };
 
-  DraggableBodyRow = ({ className, style, ...restProps }) => {
-    const { dataSource } = this.state;
+  const DraggableBodyRow = ({ className, style, ...restProps }) => {
     // function findIndex base on Table rowKey props and should always be a right array index
-    const index = dataSource.findIndex(x => x.index === restProps['data-row-key']);
+    const index = dataSource.findIndex((x) => x.index === restProps['data-row-key']);
     return <SortableItem index={index} {...restProps} />;
   };
 
-  render() {
-    const { dataSource } = this.state;
-    const DraggableContainer = props => (
-      <SortableContainer
-        useDragHandle
-        helperClass="row-dragging"
-        onSortEnd={this.onSortEnd}
-        {...props}
-      />
-    );
-    return (
-      <Table
-        pagination={false}
-        showHeader={false}
-        dataSource={dataSource}
-        columns={columns}
-        rowKey="index"
-        components={{
-          body: {
-            wrapper: DraggableContainer,
-            row: this.DraggableBodyRow,
-          },
-        }}
-      />
-    );
-  }
-}
+  const DraggableContainer = (props) => (
+    <SortableContainer useDragHandle helperClass="row-dragging" onSortEnd={onSortEnd} {...props} />
+  );
+  return (
+    <Table
+      pagination={false}
+      showHeader={false}
+      dataSource={dataSource}
+      columns={columns}
+      rowKey="index"
+      components={{
+        body: {
+          wrapper: DraggableContainer,
+          row: DraggableBodyRow,
+        },
+      }}
+    />
+  );
+};
 
 export default SortableTable;

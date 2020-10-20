@@ -11,7 +11,6 @@ import Checkbox from '../Common/Checkbox';
 import AddQuestionModal from './Helper/AddQuestionModal';
 import AddFeedbackModal from './Helper/AddFeedbackModal';
 import DataTable from '../Common/DataTable';
-
 const SurveyQuestionsList = () => {
   const [questionModal, setquestionModal] = useState(false);
   const [feedbackModal, setfeedbackModal] = useState(false);
@@ -34,8 +33,10 @@ const SurveyQuestionsList = () => {
     {
       general1: '',
       statement1: '',
+      required1: false,
       general2: '',
       statement2: '',
+      required2: false,
     },
   ];
   const [ratingScales, setRatingScales] = useState(ratingScalesData);
@@ -175,9 +176,12 @@ const SurveyQuestionsList = () => {
     setRatingScales({ ...ratingScales, [name]: value });
   };
   const handleOnChangeRatingScales = (event) => {
-    console.log('event', event);
     const { name, value } = event.target;
     setfeedbacks({ ...feedbacks, [name]: value });
+  };
+  const handleOnChangeRatingScalesCheckbox = (event, name) => {
+    console.log('event', event, name);
+    setfeedbacks({ ...feedbacks, [name]: event });
   };
   return (
     <>
@@ -361,9 +365,14 @@ const SurveyQuestionsList = () => {
                   />
                 </div>
                 <div className="flex justify-end items-center pt-1.5">
-                  <Checkbox labelClass="text-secondary">Required</Checkbox>
+                  <Checkbox
+                    checked={feedbacks.required1}
+                    onChange={(event) => handleOnChangeRatingScalesCheckbox(event, 'required1')}
+                    labelClass="text-secondary"
+                  >
+                    Required
+                  </Checkbox>
                 </div>
-
                 <div className="flex flex-row items-center mt-6.5">
                   <button className="flex flex-col">
                     <LineOutlined className="text-antgray-100 text-lg" />
@@ -387,7 +396,13 @@ const SurveyQuestionsList = () => {
                   />
                 </div>
                 <div className="flex justify-end items-center pt-1.5">
-                  <Checkbox labelClass="text-secondary">Required</Checkbox>
+                  <Checkbox
+                    checked={feedbacks.required2}
+                    onChange={(event) => handleOnChangeRatingScalesCheckbox(event, 'required2')}
+                    labelClass="text-secondary"
+                  >
+                    Required
+                  </Checkbox>
                 </div>
               </div>
               <div className="mt-16 pb-22 flex justify-end">
