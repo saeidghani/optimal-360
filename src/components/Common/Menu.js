@@ -69,6 +69,11 @@ _Menu.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string,
   titleClassName: PropTypes.string,
+  menuItems: PropTypes.array,
+  onClickMenu: PropTypes.func,
+  onClickCluter: PropTypes.func,
+  onClickCompetency: PropTypes.func,
+  onClickQuestion: PropTypes.func,
 };
 
 _Menu.defaultProps = { className: '' };
