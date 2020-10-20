@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { PlusCircleOutlined, LineOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import React from 'react';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
 import { Table } from 'antd';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import { MenuOutlined } from '@ant-design/icons';
-import arrayMove from 'array-move';
+import PropTypes from 'prop-types';
 
 const DragHandle = sortableHandle(() => (
   <MenuOutlined style={{ cursor: 'pointer', color: '#999' }} />
@@ -36,50 +36,15 @@ const columns = [
   },
 ];
 
-const data = [
-  {
-    key: '1',
-    name: '1',
-    index: 0,
-  },
-  {
-    key: '2',
-    name: '2',
-    index: 1,
-  },
-  {
-    key: '3',
-    name: '3',
-    index: 2,
-  },
-  {
-    key: '4',
-    name: '4',
-    index: 3,
-  },
-  {
-    key: '5',
-    name: '5',
-    index: 4,
-  },
-];
-
 const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 
-const SortableTable = () => {
-  const [dataSource, setDataSource] = useState(data);
-
-  const onSortEnd = ({ oldIndex, newIndex }) => {
-    if (oldIndex !== newIndex) {
-      const newData = arrayMove([].concat(dataSource), oldIndex, newIndex).filter((el) => !!el);
-      setDataSource(newData);
-    }
-  };
+const SortableTable = (props) => {
+  const { data, onSortEnd } = props;
 
   const DraggableBodyRow = ({ className, style, ...restProps }) => {
     // function findIndex base on Table rowKey props and should always be a right array index
-    const index = dataSource.findIndex((x) => x.index === restProps['data-row-key']);
+    const index = data.findIndex((x) => x.index === restProps['data-row-key']);
     return <SortableItem index={index} {...restProps} />;
   };
 
@@ -90,7 +55,7 @@ const SortableTable = () => {
     <Table
       pagination={false}
       showHeader={false}
-      dataSource={dataSource}
+      dataSource={data}
       columns={columns}
       rowKey="index"
       components={{
@@ -102,5 +67,8 @@ const SortableTable = () => {
     />
   );
 };
-
+SortableTable.propTypes = {
+  data: PropTypes.array,
+  onSortEnd: PropTypes.func,
+};
 export default SortableTable;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from 'antd';
-import { PlusCircleOutlined, LineOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined, LineOutlined } from '@ant-design/icons';
 import MainLayout from '../Common/Layout';
 import Menu from './Helper/Menu';
 import Steps from '../Common/Steps';
@@ -11,6 +11,8 @@ import Checkbox from '../Common/Checkbox';
 import AddQuestionModal from './Helper/AddQuestionModal';
 import AddFeedbackModal from './Helper/AddFeedbackModal';
 import DataTable from '../Common/DataTable';
+import arrayMove from 'array-move';
+
 const SurveyQuestionsList = () => {
   const [questionModal, setquestionModal] = useState(false);
   const [feedbackModal, setfeedbackModal] = useState(false);
@@ -39,10 +41,37 @@ const SurveyQuestionsList = () => {
       required2: false,
     },
   ];
+  const data = [
+    {
+      key: '1',
+      name: '1',
+      index: 0,
+    },
+    {
+      key: '2',
+      name: '2',
+      index: 1,
+    },
+    {
+      key: '3',
+      name: '3',
+      index: 2,
+    },
+    {
+      key: '4',
+      name: '4',
+      index: 3,
+    },
+    {
+      key: '5',
+      name: '5',
+      index: 4,
+    },
+  ];
   const [ratingScales, setRatingScales] = useState(ratingScalesData);
   const [feedbacks, setfeedbacks] = useState(feedbacksData);
+  const [dataSource, setDataSource] = useState(data);
 
-  const array = [0, 1, 2, 3, 4];
   const clusters = [
     {
       key: '1',
@@ -183,6 +212,30 @@ const SurveyQuestionsList = () => {
     console.log('event', event, name);
     setfeedbacks({ ...feedbacks, [name]: event });
   };
+  //data table
+  const handleSortEnd = ({ oldIndex, newIndex }) => {
+    if (oldIndex !== newIndex) {
+      const newData = arrayMove([].concat(dataSource), oldIndex, newIndex).filter((el) => !!el);
+      setDataSource(newData);
+    }
+  };
+  //sec menu
+  const handleClickMenu = (e) => {};
+
+  const handleCluterClick = (e) => {
+    console.log('cluter id:', e.target.id);
+    alert('cluter click');
+  };
+
+  const handleCompetencyClick = (e) => {
+    console.log('Competency id:', e.target.id);
+    alert('Competency click');
+  };
+
+  const handleQuestionClick = (e, id) => {
+    console.log('Question id:', id);
+    alert('Question click');
+  };
   return (
     <>
       <MainLayout
@@ -310,6 +363,10 @@ const SurveyQuestionsList = () => {
                   titleClassName="pt-2.3 pb-5.5 pl-7.5 text-body font-medium font-sans"
                   className="mr-6"
                   menuItems={menuItems}
+                  onClickMenu={handleClickMenu}
+                  onClickCluter={handleCluterClick}
+                  onClickCompetency={handleCompetencyClick}
+                  onClickQuestion={handleQuestionClick}
                 />
                 <div className="p-6 rounded-7px border border-antgray-500 w-full">
                   <div className="flex flex-row justify-between bg-antgray-600 h-14 w-full pl-8 py-3 pr-6 items-center border-b border-list-border">
@@ -329,7 +386,7 @@ const SurveyQuestionsList = () => {
                     </div>
                   </div>
 
-                  <DataTable items={clusters} />
+                  <DataTable items={clusters} data={dataSource} onSortEnd={handleSortEnd} />
                 </div>
               </div>
 
