@@ -28,61 +28,63 @@ const EmailSetting = ({
   loading,
   surveyGroups,
 }) => {
+  const formRef = React.useRef();
   const schema = yup.object({
     emailSettings: yup.array(
-      yup.object({
-        name: yup.string().required('Name cannot be empty'),
-        date: yup.string().required('Date cannot be empty'),
-        copyToAdmin: yup.bool(),
-        template: yup.string().required('template cannot be empty'),
-        id: yup.number(),
-      }),
+      yup
+        .object({
+          name: yup.string(),
+          date: yup.string(),
+          copyToAdmin: yup.bool(),
+          template: yup.string(),
+        })
+        .test('emailSettings', 'Date cannot be empty', (vals) => !(vals.selected && !vals.date)),
     ),
   });
   const history = useHistory();
+  const [parsedQuery, , setQuery] = useQuery();
   const { search } = history?.location;
 
   const [surveyGroupModal, setSurveyGroupModal] = React.useState(false);
   const [isFormDone, setIsFormDone] = React.useState(false);
   const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
 
-  const [parsedQuery, , setQuery] = useQuery();
   const { projectId, surveyGroupId } = parsedQuery;
   const initialValues = [
     {
       id: '1',
-      name: 'rater verification email',
+      name: 'Rater verification email',
       date: '',
       copyToAdmin: false,
-      template: 'rater-verification-email',
+      template: TEMPLATES.raterVerificationEmail,
     },
     {
       id: '2',
       name: 'Login email (self)',
       date: '',
       copyToAdmin: false,
-      template: 'login-email-self',
+      template: TEMPLATES.loginEmailSelf,
     },
     {
       id: '3',
       name: 'Login email (others)',
       date: '',
       copyToAdmin: false,
-      template: 'login-email-others',
+      template: TEMPLATES.loginEmailOthers,
     },
     {
       id: '4',
       name: 'Reminder email (1)',
       date: '',
       copyToAdmin: false,
-      template: 'reminder-emails',
+      template: TEMPLATES.reminderEmails,
     },
     {
       id: '5',
       name: 'Reminder email (2)',
       date: '',
       copyToAdmin: false,
-      template: 'reset-password-email',
+      template: TEMPLATES.reminderEmails,
     },
   ];
 
@@ -92,7 +94,7 @@ const EmailSetting = ({
       setIsFormDone(false);
       setSurveyGroupModal(false);
     }
-  }, [isFormDone, selectedSurveyGroupKey, setQuery]);
+  }, [isFormDone, selectedSurveyGroupKey, setQuery, parsedQuery.surveyGroupId]);
 
   React.useEffect(() => {
     fetchSurveyGroups(projectId);
@@ -138,7 +140,11 @@ const EmailSetting = ({
         <Button
           onClick={async () => {
             await setSelectedEmailTemplate(template);
-            history.push(`/super-user/new-project/email-setting/${name}${search}`);
+            history.push(
+              `/super-user/new-project/email-setting/${name
+                .toLowerCase()
+                .replaceAll(' ', '-')}${search}`,
+            );
           }}
           textSize="xs"
           ghost
@@ -148,19 +154,13 @@ const EmailSetting = ({
       ),
     },
   ];
-  const data = React.useMemo(() => {
-    return emailSettings && Object.values(emailSettings).length > 0
-      ? emailSettings.map((el) => ({ ...el, key: `${el.id}` }))
-      : initialValues.map((el) => ({ ...el, key: `${el.id}` }));
-  }, [emailSettingsStringified]);
 
   const _emailSettings = React.useMemo(() => {
     return emailSettings && Object.values(emailSettings).length > 0
-      ? emailSettings.map((el) => ({ ...el, selected: false }))
-      : initialValues.map((el) => ({ ...el, selected: false }));
+      ? emailSettings.map((el) => ({ ...el, key: el.id.toString(), selected: false }))
+      : initialValues.map((el) => ({ ...el, key: el.id.toString(), selected: false }));
+    // eslint-disable-next-line
   }, [emailSettingsStringified]);
-
-  console.log({ surveyGroups, emailSettings, _emailSettings });
 
   const updateArr = (refArray, id, key, newVal) => {
     return refArray.map((el) => {
@@ -216,14 +216,15 @@ const EmailSetting = ({
           <Steps currentPosition={1} />
 
           <Formik
+            innerRef={formRef}
             enableReinitialize
             initialValues={{
               emailSettings: _emailSettings,
             }}
             validationSchema={schema}
             onSubmit={(values) => {
-              console.log({ values });
-              // history.push('/super-user/Projects/rater-verification-email');
+              console.log({ ...values, surveyGroupId });
+              // history.push(`/super-user/new-project/survey-intro${search}`);
             }}
           >
             {({ values, errors, touched, handleSubmit, setFieldValue }) => (
@@ -231,17 +232,19 @@ const EmailSetting = ({
                 <div className="mt-16 flex flex-col">
                   <h1 className="text-xl text-secondary mb-12">Email Setting</h1>
 
-                  {values.emailSettings.map(({ name, id, selected, date, copyToAdmin }) => (
+                  {values.emailSettings.map(({ name, id, selected, date, copyToAdmin }, i) => (
                     <div className="grid grid-cols-12 my-3" key={id}>
                       <div className="col-span-3 flex flex-row items-center">
                         <Checkbox
                           checked={!!selected}
-                          onChange={(val) =>
+                          onChange={(val) => {
+                            formRef.current.setTouched({ emailSettings: true });
+
                             setFieldValue(
                               'emailSettings',
                               updateArr(values.emailSettings, id, 'selected', val),
-                            )
-                          }
+                            );
+                          }}
                         />
 
                         <p className=" whitespace-no-wrap ml-3 text-sm text-secondary">{name}</p>
@@ -281,15 +284,24 @@ const EmailSetting = ({
                           Send copy to Admin
                         </p>
                       </div>
+
+                      {(touched || touched.length > 0) &&
+                      errors.emailSettings?.length > 0 &&
+                      errors.emailSettings[i] ? (
+                        <div className="col-span-8 flex flex-row mb-3 mt-2">
+                          <p className="text-red-500 my-3">{errors.emailSettings[i]}</p>
+                        </div>
+                      ) : null}
                     </div>
                   ))}
 
                   <Button
                     onClick={() => {
-                      // const newId =
-                      //   values.emailSettings[values.emailSettings.length - 1].id * 1 + 1;
+                      const newKey = (values.emailSettings.length * 1 + 1).toString();
+
                       const newVal = {
-                        // id: newId,
+                        key: newKey,
+                        id: newKey,
                         name: `Reminder email (${values.emailSettings.length - 2})`,
                         date: '',
                         copyToAdmin: false,
@@ -312,7 +324,8 @@ const EmailSetting = ({
 
                   <Table
                     columns={columns}
-                    dataSource={data}
+                    dataSource={values.emailSettings.map((el) => el)}
+                    // dataSource={data}
                     rowSelection={false}
                     pagination={false}
                   />
