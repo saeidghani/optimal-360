@@ -16,23 +16,30 @@ const SurveyQuestionsList = () => {
   const [questionModal, setquestionModal] = useState(false);
   const [feedbackModal, setfeedbackModal] = useState(false);
 
-  const ratingScalesData = [{
-    label1: '',
-    description1: '',
-    label2: '',
-    description2: '',
-    label3: '',
-    description3: '',
-    label4: '',
-    description4: '',
-    label0: '',
-    description0: '',
-  }]
-
+  const ratingScalesData = [
+    {
+      label1: '',
+      description1: '',
+      label2: '',
+      description2: '',
+      label3: '',
+      description3: '',
+      label4: '',
+      description4: '',
+      label0: '',
+      description0: '',
+    },
+  ];
+  const feedbacksData = [
+    {
+      general1: '',
+      statement1: '',
+      general2: '',
+      statement2: '',
+    },
+  ];
   const [ratingScales, setRatingScales] = useState(ratingScalesData);
-
-
-
+  const [feedbacks, setfeedbacks] = useState(feedbacksData);
 
   const array = [0, 1, 2, 3, 4];
   const clusters = [
@@ -63,7 +70,6 @@ const SurveyQuestionsList = () => {
     },
   ];
 
-
   // Sample array for data model menu
   const menuItems = [
     {
@@ -90,7 +96,7 @@ const SurveyQuestionsList = () => {
               type: 'questions',
               index: 1,
             },
-          ]
+          ],
         },
         {
           key: '2',
@@ -110,10 +116,9 @@ const SurveyQuestionsList = () => {
               type: 'questions',
               index: 1,
             },
-          ]
-
-        }
-      ]
+          ],
+        },
+      ],
     },
     {
       key: '2',
@@ -139,8 +144,7 @@ const SurveyQuestionsList = () => {
               type: 'questions',
               index: 1,
             },
-          ]
-
+          ],
         },
         {
           key: '2',
@@ -160,25 +164,21 @@ const SurveyQuestionsList = () => {
               type: 'questions',
               index: 1,
             },
-          ]
-
-        }
-      ]
-    }
+          ],
+        },
+      ],
+    },
   ];
 
-
-
-  const handleOnChange = event => {
+  const handleOnChange = (event) => {
     const { name, value } = event.target;
     setRatingScales({ ...ratingScales, [name]: value });
   };
-
-
-
-
-
-
+  const handleOnChangeRatingScales = (event) => {
+    console.log('event', event);
+    const { name, value } = event.target;
+    setfeedbacks({ ...feedbacks, [name]: value });
+  };
   return (
     <>
       <MainLayout
@@ -188,8 +188,6 @@ const SurveyQuestionsList = () => {
         contentClass="py-4"
         headerClassName="pl-21"
         childrenPadding={false}
-
-
       >
         <div className="bg-white grid grid-cols-12 pl-15">
           <Menu className="col-span-2" />
@@ -199,17 +197,17 @@ const SurveyQuestionsList = () => {
               <div className="mt-17">
                 <h4 className=" text-secondary text-20px mb-8">Rating Scale</h4>
 
-
-                <div className="mb-6" >
+                <div className="mb-6">
                   <span className="text-heading">1</span>
                   <div className="flex flex-row mt-3">
-                    <Input placeholder="Label"
-                     value={ratingScales.label1}
-                     name="label1"
-                     inputClass="w-41"
-                     wrapperClassName="mr-6"
-                     onChange={handleOnChange}
-                     />
+                    <Input
+                      placeholder="Label"
+                      value={ratingScales.label1}
+                      name="label1"
+                      inputClass="w-41"
+                      wrapperClassName="mr-6"
+                      onChange={handleOnChange}
+                    />
                     <Input
                       value={ratingScales.description1}
                       name="description1"
@@ -219,16 +217,17 @@ const SurveyQuestionsList = () => {
                     />
                   </div>
                 </div>
-                <div className="mb-6" >
+                <div className="mb-6">
                   <span className="text-heading">2</span>
                   <div className="flex flex-row mt-3">
-                    <Input placeholder="Label"
-                     value={ratingScales.label2}
-                     name="label2"
-                     inputClass="w-41"
-                     wrapperClassName="mr-6"
-                     onChange={handleOnChange}
-                     />
+                    <Input
+                      placeholder="Label"
+                      value={ratingScales.label2}
+                      name="label2"
+                      inputClass="w-41"
+                      wrapperClassName="mr-6"
+                      onChange={handleOnChange}
+                    />
                     <Input
                       value={ratingScales.description2}
                       name="description2"
@@ -238,16 +237,17 @@ const SurveyQuestionsList = () => {
                     />
                   </div>
                 </div>
-                <div className="mb-6" >
+                <div className="mb-6">
                   <span className="text-heading">3</span>
                   <div className="flex flex-row mt-3">
-                    <Input placeholder="Label"
-                     value={ratingScales.label3}
-                     name="label3"
-                     inputClass="w-41"
-                     wrapperClassName="mr-6"
-                     onChange={handleOnChange}
-                     />
+                    <Input
+                      placeholder="Label"
+                      value={ratingScales.label3}
+                      name="label3"
+                      inputClass="w-41"
+                      wrapperClassName="mr-6"
+                      onChange={handleOnChange}
+                    />
                     <Input
                       value={ratingScales.description3}
                       name="description3"
@@ -257,16 +257,17 @@ const SurveyQuestionsList = () => {
                     />
                   </div>
                 </div>
-                <div className="mb-6" >
+                <div className="mb-6">
                   <span className="text-heading">4</span>
                   <div className="flex flex-row mt-3">
-                    <Input placeholder="Label"
-                     value={ratingScales.label4}
-                     name="label4"
-                     inputClass="w-41"
-                     wrapperClassName="mr-6"
-                     onChange={handleOnChange}
-                     />
+                    <Input
+                      placeholder="Label"
+                      value={ratingScales.label4}
+                      name="label4"
+                      inputClass="w-41"
+                      wrapperClassName="mr-6"
+                      onChange={handleOnChange}
+                    />
                     <Input
                       value={ratingScales.description4}
                       name="description4"
@@ -276,16 +277,17 @@ const SurveyQuestionsList = () => {
                     />
                   </div>
                 </div>
-                <div className="mb-6" >
+                <div className="mb-6">
                   <span className="text-heading">0</span>
                   <div className="flex flex-row mt-3">
-                    <Input placeholder="Label"
-                     value={ratingScales.label0}
-                     name="label0"
-                     inputClass="w-41"
-                     wrapperClassName="mr-6"
-                     onChange={handleOnChange}
-                     />
+                    <Input
+                      placeholder="Label"
+                      value={ratingScales.label0}
+                      name="label0"
+                      inputClass="w-41"
+                      wrapperClassName="mr-6"
+                      onChange={handleOnChange}
+                    />
                     <Input
                       value={ratingScales.description0}
                       name="description0"
@@ -324,7 +326,6 @@ const SurveyQuestionsList = () => {
                   </div>
 
                   <DataTable items={clusters} />
-
                 </div>
               </div>
 
@@ -342,8 +343,22 @@ const SurveyQuestionsList = () => {
                     <LineOutlined className="text-antgray-100 text-lg" />
                     <LineOutlined className="text-antgray-100 text-lg -mt-2" />
                   </button>
-                  <Input value="General" inputClass="w-41" wrapperClassName="mr-6 ml-8.3" />
-                  <Input placeholder="Statement" inputClass="pl-10" wrapperClassName="w-full" />
+                  <Input
+                    onChange={handleOnChangeRatingScales}
+                    name="general1"
+                    placeholder="General"
+                    value={feedbacks.general1}
+                    inputClass="w-41"
+                    wrapperClassName="mr-6 ml-8.3"
+                  />
+                  <Input
+                    onChange={handleOnChangeRatingScales}
+                    name="statement1"
+                    placeholder="Statement"
+                    value={feedbacks.statement1}
+                    inputClass="pl-10"
+                    wrapperClassName="w-full"
+                  />
                 </div>
                 <div className="flex justify-end items-center pt-1.5">
                   <Checkbox labelClass="text-secondary">Required</Checkbox>
@@ -354,8 +369,22 @@ const SurveyQuestionsList = () => {
                     <LineOutlined className="text-antgray-100 text-lg" />
                     <LineOutlined className="text-antgray-100 text-lg -mt-2" />
                   </button>
-                  <Input value="General" inputClass="w-41" wrapperClassName="mr-6 ml-8.3" />
-                  <Input placeholder="Statement" inputClass="pl-10" wrapperClassName="w-full" />
+                  <Input
+                    onChange={handleOnChangeRatingScales}
+                    name="general2"
+                    placeholder="General"
+                    value={feedbacks.general2}
+                    inputClass="w-41"
+                    wrapperClassName="mr-6 ml-8.3"
+                  />
+                  <Input
+                    onChange={handleOnChangeRatingScales}
+                    name="statement2"
+                    placeholder="Statement"
+                    value={feedbacks.statement2}
+                    inputClass="pl-10"
+                    wrapperClassName="w-full"
+                  />
                 </div>
                 <div className="flex justify-end items-center pt-1.5">
                   <Checkbox labelClass="text-secondary">Required</Checkbox>
