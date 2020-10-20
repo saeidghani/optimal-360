@@ -50,7 +50,7 @@ const _Button = ({
   return (
     <Button
       disabled={disabled}
-      className={`flex justify-center items-center py-3 ${className}`}
+      className={`flex justify-center items-center ${className}`}
       onClick={href ? () => {} : onClick}
       href={href}
       size={size}

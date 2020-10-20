@@ -36,7 +36,6 @@ const EmailSetting = ({
     ),
   });
   // const history = useHistory();
-  console.log({ emailSettings });
 
   const [parsedQuery] = useQuery();
   const { projectId, surveyGroupId } = parsedQuery;
@@ -77,7 +76,7 @@ const EmailSetting = ({
       ? emailSettings.map((el) => ({ ...el, selected: false }))
       : initialValues.map((el) => ({ ...el, selected: false }));
   }, []);
-  console.log({ _emailSettings });
+  console.log({ emailSettings, _emailSettings });
 
   const updateArr = (refArray, id, key, newVal) => {
     return refArray.map((el) => {

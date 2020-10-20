@@ -8,6 +8,7 @@ export default {
     projects: '',
     surveyGroups: '',
     clientAdmin: '',
+    project: '',
   },
 
   effects: (dispatch) => ({
@@ -19,6 +20,19 @@ export default {
         });
 
         this.fetchProjects_reducer(res?.data);
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async fetchSingleProject(projectId) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/projects/${projectId}`,
+        });
+
+        this.fetchSingleProjects_reducer(res?.data);
 
         return res;
       }, dispatch.util.errorHandler);
@@ -125,6 +139,11 @@ export default {
     fetchProjects_reducer: (state, payload) => ({
       ...state,
       projects: payload,
+    }),
+
+    fetchSingleProjects_reducer: (state, payload) => ({
+      ...state,
+      project: payload,
     }),
 
     fetchClientAdmin_reducer: (state, payload) => ({
