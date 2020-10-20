@@ -86,7 +86,7 @@ const TextEditor = ({
   }, [JSON.stringify(data), editorValue, template]);
 
   return (
-    <div className={`c-text-editor p-5 ${wrapperClassName}`}>
+    <div className={`c-text-editor ${wrapperClassName}`}>
       <SunEditor
         className={` ${className}`}
         ref={editorRef}
