@@ -10,7 +10,7 @@ import SecondaryButton from '../Common/Button';
 import Checkbox from '../Common/Checkbox';
 import AddQuestionModal from './Helper/AddQuestionModal';
 import AddFeedbackModal from './Helper/AddFeedbackModal';
-import DataTable from './Helper/DataTable';
+import DataTable from '../Common/DataTable';
 
 const SurveyQuestionsList = () => {
   const [questionModal, setquestionModal] = useState(false);
@@ -18,20 +18,18 @@ const SurveyQuestionsList = () => {
 
   const ratingScalesData = [{
     label1: '',
-    input1: '',
+    description1: '',
     label2: '',
-    input2: '',
+    description2: '',
     label3: '',
-    input3: '',
+    description3: '',
     label4: '',
-    input4: '',
+    description4: '',
     label0: '',
-    input0: '',
+    description0: '',
   }]
 
   const [ratingScales, setRatingScales] = useState(ratingScalesData);
-
-
 
 
 
@@ -213,8 +211,8 @@ const SurveyQuestionsList = () => {
                      onChange={handleOnChange}
                      />
                     <Input
-                      value={ratingScales.input1}
-                      name="input1"
+                      value={ratingScales.description1}
+                      name="description1"
                       onChange={handleOnChange}
                       placeholder="Does not describe the person at all"
                       wrapperClassName="w-full"
@@ -232,8 +230,8 @@ const SurveyQuestionsList = () => {
                      onChange={handleOnChange}
                      />
                     <Input
-                      value={ratingScales.input2}
-                      name="input2"
+                      value={ratingScales.description2}
+                      name="description2"
                       onChange={handleOnChange}
                       placeholder="Does not describe the person much"
                       wrapperClassName="w-full"
@@ -251,8 +249,8 @@ const SurveyQuestionsList = () => {
                      onChange={handleOnChange}
                      />
                     <Input
-                      value={ratingScales.input1}
-                      name="input1"
+                      value={ratingScales.description3}
+                      name="description3"
                       onChange={handleOnChange}
                       placeholder="Describe the person somewhat"
                       wrapperClassName="w-full"
@@ -270,8 +268,8 @@ const SurveyQuestionsList = () => {
                      onChange={handleOnChange}
                      />
                     <Input
-                      value={ratingScales.input4}
-                      name="input4"
+                      value={ratingScales.description4}
+                      name="description4"
                       onChange={handleOnChange}
                       placeholder="Describe the persone the most"
                       wrapperClassName="w-full"
@@ -289,8 +287,8 @@ const SurveyQuestionsList = () => {
                      onChange={handleOnChange}
                      />
                     <Input
-                      value={ratingScales.input0}
-                      name="input0"
+                      value={ratingScales.description0}
+                      name="description0"
                       onChange={handleOnChange}
                       placeholder="No oppotunity to observe"
                       wrapperClassName="w-full"
