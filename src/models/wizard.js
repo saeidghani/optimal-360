@@ -7,6 +7,7 @@ export default {
   state: {
     surveySettings: '',
     emailSettings: '',
+    selectedTemplate: '',
   },
 
   effects: (dispatch) => ({
@@ -69,6 +70,12 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+
+    async setSelectedEmailTemplate(template) {
+      return actionWapper(async () => {
+        this.setSelectedEmailTemplate_reducer(template);
+      }, dispatch.util.errorHandler);
+    },
   }),
 
   reducers: {
@@ -80,6 +87,11 @@ export default {
     fetchEmailSettings_reducer: (state, payload) => ({
       ...state,
       emailSettings: payload,
+    }),
+
+    setSelectedEmailTemplate_reducer: (state, payload) => ({
+      ...state,
+      selectedTemplate: payload,
     }),
   },
 };

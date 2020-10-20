@@ -21,16 +21,17 @@ const pascalize = (txt) => {
   return arr.join('');
 };
 
-const EmailTemplate = ({ loading, fetchSingleProject, singleProject }) => {
+const EmailTemplate = ({ loading, fetchSingleProject, singleProject, selectedTemplate }) => {
+  console.log({ selectedTemplate });
   // const history = useHistory();
   const [parsedQuery] = useQuery();
   const { projectId } = parsedQuery;
   const { data: projectData = {} } = singleProject || {};
 
   const { template } = useParams();
-  const selectedTemplate = pascalize(template);
+  const chosenTemplate = pascalize(template);
 
-  if (!TEMPLATES[selectedTemplate]) {
+  if (!TEMPLATES[chosenTemplate]) {
     console.warn(`Template ${template} does not exist`);
   }
 
@@ -38,7 +39,7 @@ const EmailTemplate = ({ loading, fetchSingleProject, singleProject }) => {
     fetchSingleProject(projectId);
   }, [projectId, fetchSingleProject]);
 
-  const [emailTemplate, setEmailTemplate] = React.useState(TEMPLATES[selectedTemplate]);
+  const [emailTemplate, setEmailTemplate] = React.useState(selectedTemplate);
 
   const pageTitle = (template.charAt(0).toUpperCase() + template.slice(1)).replaceAll('-', ' ');
 

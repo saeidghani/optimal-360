@@ -14,13 +14,14 @@ class ProjectInfo extends Component {
   };
 
   render() {
-    const { loading, singleProject } = this.props;
+    const { loading, singleProject, selectedTemplate } = this.props;
 
     return (
       <Layout
         loading={loading}
         fetchSingleProject={this.fetchSingleProject}
         singleProject={singleProject}
+        selectedTemplate={selectedTemplate}
       />
     );
   }
@@ -28,17 +29,20 @@ class ProjectInfo extends Component {
 
 ProjectInfo.propTypes = {
   loading: PropTypes.bool.isRequired,
+  selectedTemplate: PropTypes.string,
   fetchSingleProject: PropTypes.func.isRequired,
   singleProject: PropTypes.shape({}),
 };
 
 ProjectInfo.defaultProps = {
   singleProject: {},
+  selectedTemplate: '',
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
   singleProject: state.projects?.project || {},
+  selectedTemplate: state.wizard?.selectedTemplate || '',
 });
 
 const mapDispatchToProps = (dispatch) => ({

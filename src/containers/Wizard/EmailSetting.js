@@ -25,6 +25,12 @@ class EmailSetting extends React.Component {
     return setEmailSettings(data);
   };
 
+  setSelectedEmailTemplate = async (template) => {
+    const { setSelectedEmailTemplate } = this.props;
+
+    return setSelectedEmailTemplate(template);
+  };
+
   render() {
     const { loading, emailSettings, surveyGroups } = this.props;
 
@@ -35,6 +41,7 @@ class EmailSetting extends React.Component {
         fetchEmailSettings={this.fetchEmailSettings}
         fetchSurveyGroups={this.fetchSurveyGroups}
         setEmailSettings={this.setEmailSettings}
+        setSelectedEmailTemplate={this.setSelectedEmailTemplate}
         loading={loading}
       />
     );
@@ -43,6 +50,7 @@ class EmailSetting extends React.Component {
 
 EmailSetting.propTypes = {
   fetchEmailSettings: PropTypes.func.isRequired,
+  setSelectedEmailTemplate: PropTypes.func.isRequired,
   fetchSurveyGroups: PropTypes.func.isRequired,
   setEmailSettings: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
@@ -57,12 +65,13 @@ EmailSetting.defaultProps = {
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
-  emailSettings: state.wizard?.emailSettings?.emailSettings || {},
+  emailSettings: state.wizard?.emailSettings?.emailSettings || [],
   surveyGroups: state.projects?.surveyGroups || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchEmailSettings: dispatch.wizard.fetchEmailSettings,
+  setSelectedEmailTemplate: dispatch.wizard.setSelectedEmailTemplate,
   setEmailSettings: dispatch.wizard.setEmailSettings,
   fetchSurveyGroups: dispatch.projects.fetchSurveyGroups,
 });

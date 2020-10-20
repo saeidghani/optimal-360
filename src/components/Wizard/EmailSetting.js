@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
-// import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { useQuery } from '../../hooks/useQuery';
 
@@ -14,38 +14,87 @@ import Calendar from '../Common/Calendar';
 import Button from '../Common/Button';
 import Loading from '../Common/Loading';
 
+import * as TEMPLATES from './Helper/EmailTemplates';
+
 import Table from '../Common/Table';
+import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
 
 const EmailSetting = ({
   emailSettings,
   fetchEmailSettings,
   fetchSurveyGroups,
   setEmailSettings,
+  setSelectedEmailTemplate,
   loading,
   surveyGroups,
 }) => {
+  const formRef = React.useRef();
   const schema = yup.object({
     emailSettings: yup.array(
-      yup.object({
-        name: yup.string().required('Name cannot be empty'),
-        date: yup.string().required('Date cannot be empty'),
-        copyToAdmin: yup.bool(),
-        template: yup.string().required('template cannot be empty'),
-        id: yup.number(),
-      }),
+      yup
+        .object({
+          name: yup.string(),
+          date: yup.string(),
+          copyToAdmin: yup.bool(),
+          template: yup.string(),
+        })
+        .test('emailSettings', 'Date cannot be empty', (vals) => !(vals.selected && !vals.date)),
     ),
   });
-  // const history = useHistory();
+  const history = useHistory();
+  const [parsedQuery, , setQuery] = useQuery();
+  const { search } = history?.location;
 
-  const [parsedQuery] = useQuery();
+  const [surveyGroupModal, setSurveyGroupModal] = React.useState(false);
+  const [isFormDone, setIsFormDone] = React.useState(false);
+  const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
+
   const { projectId, surveyGroupId } = parsedQuery;
   const initialValues = [
-    { id: '1', name: 'Rater verification email', date: '', copyToAdmin: false, template: '' },
-    { id: '2', name: 'Login email (self)', date: '', copyToAdmin: false, template: '' },
-    { id: '3', name: 'Login email (others)', date: '', copyToAdmin: false, template: '' },
-    { id: '4', name: 'Reminder email (1)', date: '', copyToAdmin: false, template: '' },
-    { id: '5', name: 'Reminder email (2)', date: '', copyToAdmin: false, template: '' },
+    {
+      id: '1',
+      name: 'Rater verification email',
+      date: '',
+      copyToAdmin: false,
+      template: TEMPLATES.raterVerificationEmail,
+    },
+    {
+      id: '2',
+      name: 'Login email (self)',
+      date: '',
+      copyToAdmin: false,
+      template: TEMPLATES.loginEmailSelf,
+    },
+    {
+      id: '3',
+      name: 'Login email (others)',
+      date: '',
+      copyToAdmin: false,
+      template: TEMPLATES.loginEmailOthers,
+    },
+    {
+      id: '4',
+      name: 'Reminder email (1)',
+      date: '',
+      copyToAdmin: false,
+      template: TEMPLATES.reminderEmails,
+    },
+    {
+      id: '5',
+      name: 'Reminder email (2)',
+      date: '',
+      copyToAdmin: false,
+      template: TEMPLATES.reminderEmails,
+    },
   ];
+
+  React.useEffect(() => {
+    if (selectedSurveyGroupKey && selectedSurveyGroupKey !== parsedQuery?.surveyGroupId) {
+      setQuery({ surveyGroupId: selectedSurveyGroupKey });
+      setIsFormDone(false);
+      setSurveyGroupModal(false);
+    }
+  }, [isFormDone, selectedSurveyGroupKey, setQuery, parsedQuery.surveyGroupId]);
 
   React.useEffect(() => {
     fetchSurveyGroups(projectId);
@@ -54,6 +103,27 @@ const EmailSetting = ({
   React.useEffect(() => {
     fetchEmailSettings(surveyGroupId);
   }, [projectId, surveyGroupId, fetchEmailSettings]);
+
+  React.useEffect(() => {
+    const sortedArr = surveyGroups?.data?.sort((el1, el2) => el1.id - el2.id) || [];
+
+    const firstSurveyGroupId = sortedArr?.length > 0 ? sortedArr[0].id : '';
+
+    const isURLSurveyGroupValid = !!sortedArr.find(
+      (el) => el.id?.toString() === parsedQuery?.surveyGroupId?.toString(),
+    );
+
+    if (
+      !isURLSurveyGroupValid &&
+      firstSurveyGroupId &&
+      firstSurveyGroupId !== parsedQuery?.surveyGroupId
+    ) {
+      setQuery({ surveyGroupId: firstSurveyGroupId });
+    }
+    // eslint-disable-next-line
+  }, [JSON.stringify(surveyGroups.data)]);
+
+  const emailSettingsStringified = JSON.stringify(emailSettings);
 
   const columns = [
     {
@@ -66,17 +136,31 @@ const EmailSetting = ({
       title: '',
       dataIndex: 'button',
       key: 'button ',
-      render: () => <Button textSize="xs" ghost className="ml-auto" text="View/Edit" />,
+      render: (_, { template, name }) => (
+        <Button
+          onClick={async () => {
+            await setSelectedEmailTemplate(template);
+            history.push(
+              `/super-user/new-project/email-setting/${name
+                .toLowerCase()
+                .replaceAll(' ', '-')}${search}`,
+            );
+          }}
+          textSize="xs"
+          ghost
+          className="ml-auto"
+          text="View/Edit"
+        />
+      ),
     },
   ];
-  const data = initialValues.map((el) => ({ key: el.id, ...el }));
 
   const _emailSettings = React.useMemo(() => {
     return emailSettings && Object.values(emailSettings).length > 0
-      ? emailSettings.map((el) => ({ ...el, selected: false }))
-      : initialValues.map((el) => ({ ...el, selected: false }));
-  }, []);
-  console.log({ emailSettings, _emailSettings });
+      ? emailSettings.map((el) => ({ ...el, key: el.id.toString(), selected: false }))
+      : initialValues.map((el) => ({ ...el, key: el.id.toString(), selected: false }));
+    // eslint-disable-next-line
+  }, [emailSettingsStringified]);
 
   const updateArr = (refArray, id, key, newVal) => {
     return refArray.map((el) => {
@@ -93,6 +177,10 @@ const EmailSetting = ({
     });
   };
 
+  const currentSurveyGroupName =
+    surveyGroups?.data?.find((el) => el.id.toString() === parsedQuery?.surveyGroupId?.toString())
+      ?.name || '';
+
   return (
     <MainLayout
       hasBreadCrumb
@@ -105,20 +193,38 @@ const EmailSetting = ({
       <div className="bg-white grid grid-cols-12 pl-15">
         <Loading visible={loading} />
 
-        <Menu items={surveyGroups?.data} className="col-span-2" />
+        <ChangeSurveyGroupModal
+          handleOk={() => {
+            setIsFormDone(true);
+          }}
+          handleCancel={() => {
+            setSelectedSurveyGroupKey('');
+            setSurveyGroupModal(false);
+          }}
+          currentSurveyGroup={currentSurveyGroupName}
+          visible={surveyGroupModal}
+        />
+
+        <Menu
+          onClick={(key) => setSelectedSurveyGroupKey(key)}
+          isFormDone={isFormDone}
+          items={surveyGroups?.data}
+          className="col-span-2"
+        />
 
         <div className="px-6 py-5 col-start-3 col-span-10">
           <Steps currentPosition={1} />
 
           <Formik
+            innerRef={formRef}
             enableReinitialize
             initialValues={{
               emailSettings: _emailSettings,
             }}
             validationSchema={schema}
             onSubmit={(values) => {
-              console.log({ values });
-              // history.push('/super-user/Projects/rater-verification-email');
+              console.log({ ...values, surveyGroupId });
+              // history.push(`/super-user/new-project/survey-intro${search}`);
             }}
           >
             {({ values, errors, touched, handleSubmit, setFieldValue }) => (
@@ -126,17 +232,19 @@ const EmailSetting = ({
                 <div className="mt-16 flex flex-col">
                   <h1 className="text-xl text-secondary mb-12">Email Setting</h1>
 
-                  {values.emailSettings.map(({ name, id, selected, date, copyToAdmin }) => (
+                  {values.emailSettings.map(({ name, id, selected, date, copyToAdmin }, i) => (
                     <div className="grid grid-cols-12 my-3" key={id}>
                       <div className="col-span-3 flex flex-row items-center">
                         <Checkbox
-                          checked={selected}
-                          onChange={(val) =>
+                          checked={!!selected}
+                          onChange={(val) => {
+                            formRef.current.setTouched({ emailSettings: true });
+
                             setFieldValue(
                               'emailSettings',
                               updateArr(values.emailSettings, id, 'selected', val),
-                            )
-                          }
+                            );
+                          }}
                         />
 
                         <p className=" whitespace-no-wrap ml-3 text-sm text-secondary">{name}</p>
@@ -153,12 +261,13 @@ const EmailSetting = ({
                           value={date}
                           disabled={!selected}
                           icon={!date}
+                          placeholder="Date"
                         />
                       </div>
 
                       <div className="col-span-2 flex flex-row items-center">
                         <Checkbox
-                          checked={copyToAdmin}
+                          checked={!!copyToAdmin}
                           onChange={(val) =>
                             setFieldValue(
                               'emailSettings',
@@ -175,10 +284,32 @@ const EmailSetting = ({
                           Send copy to Admin
                         </p>
                       </div>
+
+                      {(touched || touched.length > 0) &&
+                      errors.emailSettings?.length > 0 &&
+                      errors.emailSettings[i] ? (
+                        <div className="col-span-8 flex flex-row mb-3 mt-2">
+                          <p className="text-red-500 my-3">{errors.emailSettings[i]}</p>
+                        </div>
+                      ) : null}
                     </div>
                   ))}
 
                   <Button
+                    onClick={() => {
+                      const newKey = (values.emailSettings.length * 1 + 1).toString();
+
+                      const newVal = {
+                        key: newKey,
+                        id: newKey,
+                        name: `Reminder email (${values.emailSettings.length - 2})`,
+                        date: '',
+                        copyToAdmin: false,
+                        template: '',
+                      };
+
+                      setFieldValue('emailSettings', [...values.emailSettings, newVal]);
+                    }}
                     type="link"
                     textSize="sm"
                     textClassName="ml-1.5"
@@ -193,7 +324,8 @@ const EmailSetting = ({
 
                   <Table
                     columns={columns}
-                    dataSource={data}
+                    dataSource={values.emailSettings.map((el) => el)}
+                    // dataSource={data}
                     rowSelection={false}
                     pagination={false}
                   />
@@ -224,6 +356,7 @@ const EmailSetting = ({
 EmailSetting.propTypes = {
   fetchSurveyGroups: PropTypes.func.isRequired,
   fetchEmailSettings: PropTypes.func.isRequired,
+  setSelectedEmailTemplate: PropTypes.func.isRequired,
   setEmailSettings: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   surveyGroups: PropTypes.shape({
