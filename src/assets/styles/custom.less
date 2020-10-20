@@ -1,0 +1,412 @@
+/* use this pattern for custom css file */
+
+// .custom-css-style {
+//   background-color: @primary-color !important;
+// }
+
+.custom-reverse-icon > .anticon + span,
+.custom-reverse-icon > span + .anticon {
+  margin-right: 8px;
+  margin-left: 0px;
+}
+
+.c-sufix-prefix-gray > .ant-input-prefix,
+.c-sufix-prefix-gray > .ant-input-suffix {
+  color: rgb(184, 184, 184);
+}
+
+.c-arrow-color > .ant-select-arrow {
+  color: #dddddd;
+}
+
+/*
+###############################
+######## steps styles #########
+###############################
+*/
+
+//current step
+.c-step
+  > .ant-steps-item-process
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-title {
+  color: #8d98ba;
+}
+.c-step > .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon {
+  font-size: 12px;
+  color: white;
+  background-color: #c4c4c4;
+  border-radius: 999px;
+  padding: 9px 13px;
+}
+//waiting step
+.c-step
+  > .ant-steps-item-wait
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-title {
+  color: #8d98ba;
+}
+.c-step > .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon {
+  font-size: 12px;
+  color: #c4c4c4;
+  background-color: white;
+  border: 1px solid #c4c4c4;
+  border-radius: 999px;
+  padding: 9px 13px;
+}
+// finished step
+.c-step
+  > .ant-steps-item-finish
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-title {
+  color: #48d2a1;
+}
+.c-step > .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+  font-size: 12px;
+  color: white;
+  background-color: #48d2a1;
+  border-radius: 999px;
+  padding: 9px 13px;
+}
+/*
+###############################
+###### steps styles end #######
+###############################
+*/
+
+// the color of line in front of steps
+.ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title::after {
+  background-color: #f0f0f0 !important;
+}
+
+// thunmb in tab active
+.ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar,
+.ant-tabs-bottom > .ant-tabs-nav .ant-tabs-ink-bar,
+.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-ink-bar,
+.ant-tabs-bottom > div > .ant-tabs-nav .ant-tabs-ink-bar {
+  height: 1px;
+}
+//
+//tabs header distance
+
+.c-tabs-class {
+  @media screen and(max-width:360px) {
+    .ant-tabs-tab {
+      margin-right: 33px;
+    }
+  }
+  @media screen and(max-width:640px) {
+    .ant-tabs-tab {
+      margin-right: 66px;
+    }
+  }
+
+  .ant-tabs-tab {
+    margin-right: 132px;
+  }
+}
+
+.ant-btn {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+//progress bar percentage
+.ant-progress-text {
+  padding-top: 3px;
+  width: 3rem;
+  color: #8c8c8c;
+}
+
+// progress bar SUB colo
+
+.ant-table-title {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+}
+
+.ant-input-search {
+  input {
+    font-size: 12px !important;
+  }
+
+  &::before {
+    display: none !important;
+  }
+
+  .anticon-search {
+    &::before {
+      display: none !important;
+    }
+  }
+
+  .ant-input-search-icon {
+    &::before {
+      display: none !important;
+    }
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+
+    border-radius: 999px;
+    background-color: @primary-color;
+
+    svg {
+      width: 9px;
+      height: 9px;
+
+      fill: #fff;
+
+      margin-left: 1px;
+    }
+  }
+}
+//  #########################
+//  ########## Menu #########
+//  #########################
+.inner-sub-menu {
+  background: #f0f0f0;
+  color: #303854;
+  &.ant-menu-submenu-selected {
+    background: rgba(196, 196, 196, 0.8);
+  }
+
+  & > .ant-menu-sub.ant-menu-inline > .ant-menu-item,
+  .ant-menu-sub.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
+    border-bottom: 1px solid #f0f0f0;
+  }
+}
+.ant-menu::before {
+  display: block;
+  content: '';
+}
+.ant-menu-item {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  color: #b8b8b8;
+}
+.ant-menu-submenu-title {
+  // margin-top: 0 !important;
+  // margin-bottom: 0 !important;
+  span {
+    padding-left: 24px;
+  }
+}
+.ant-menu-submenu-arrow {
+  left: 32px;
+}
+
+.inner-sub-menu {
+  .ant-menu-submenu-title {
+    margin-top: 1px !important;
+    margin-bottom: 1px !important;
+    span {
+      padding-left: 26px;
+    }
+  }
+  .ant-menu-submenu-arrow {
+    left: 57px;
+  }
+}
+.inner-sub-menu > .ant-menu-sub.ant-menu-inline > .ant-menu-item {
+  padding-left: 35px !important;
+}
+
+.ant-menu-vertical > .ant-menu-item,
+.ant-menu-vertical-left > .ant-menu-item,
+.ant-menu-vertical-right > .ant-menu-item,
+.ant-menu-inline > .ant-menu-item,
+.ant-menu-vertical > .ant-menu-submenu > .ant-menu-submenu-title,
+.ant-menu-vertical-left > .ant-menu-submenu > .ant-menu-submenu-title,
+.ant-menu-vertical-right > .ant-menu-submenu > .ant-menu-submenu-title,
+.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
+  height: 32px;
+  line-height: 40px;
+}
+//fix position of competency
+.ant-menu-sub.ant-menu-inline > .ant-menu-item,
+.ant-menu-sub.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
+  height: 39px;
+  line-height: 43px;
+}
+//  #########################
+//  ####### Menu end ########
+//  #########################
+
+// modal border radius
+.ant-modal-content {
+  border-radius: 7px;
+}
+
+.ant-pagination-item-link {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+//tree select
+.c-tree-select {
+  .ant-select-arrow {
+    top: 46%;
+    right: 20px;
+  }
+  .ant-select-selector {
+    padding-right: 40px !important;
+  }
+}
+
+//date picker
+.ant-picker-large .ant-picker-input > input {
+  font-size: 12px;
+}
+
+.ant-picker-suffix {
+  color: #c4c4c4 !important;
+}
+
+.ant-picker-input {
+  input {
+    &::placeholder {
+      color: #8d98ba;
+    }
+  }
+}
+
+.c-force-padding-y-px {
+  padding-top: 22px !important;
+  padding-bottom: 22px !important;
+}
+.c-force-padding-x-px {
+  padding-left: 30px !important;
+  padding-right: 30px !important;
+}
+
+.ant-pagination-item-link {
+  border: none !important;
+  background-color: #1bb7d915 !important;
+
+  span {
+    color: @primary-color;
+    width: 14px !important;
+    height: 14px !important;
+
+    svg {
+      width: 14px !important;
+      height: 14px !important;
+    }
+  }
+}
+// when making font size of large input field on 12px input field gets smaller
+// with adding padding we fix this issue
+.ant-input-lg {
+  padding: 10px 11px;
+}
+
+.c-min-w-form-input {
+  @media screen and(min-width:640px) {
+    min-width: 385px;
+  }
+}
+
+.c-autocomplete {
+  .ant-select-selector {
+    width: 100% !important;
+  }
+
+  input {
+    padding: 10px 11px;
+  }
+}
+
+.ant-table-thead > tr > th,
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+//drop down
+.gray-dropdown {
+  .ant-select-selector {
+    background-color: rgba(141, 159, 186, 0.1) !important;
+    border: 1px solid rgba(141, 159, 186, 0.1) !important;
+    color: rgba(141, 159, 186) !important;
+  }
+  .ant-select-arrow {
+    color: rgba(141, 159, 186) !important;
+  }
+}
+.c-select {
+  min-width: 100px;
+  .ant-select-selection-item {
+    padding: 0px 16px;
+    color: #8d98ba;
+  }
+
+  .ant-select-selection-item-remove {
+    padding-left: 16px;
+    font-size: 12px;
+    color: #8d98ba;
+  }
+}
+.c-small-padding {
+  .ant-table-column-sort {
+    background-color: white;
+  }
+  .ant-table.ant-table-small {
+    .ant-table-cell {
+      padding: 7px 8px;
+    }
+  }
+  .ant-table.ant-table-small .ant-table-thead > tr > th {
+    padding: 9px 8px;
+  }
+}
+.under-table-pagination {
+  padding: 5px 12px;
+}
+
+.ant-table-column-sorters {
+  padding-left: 0 !important;
+}
+
+.ant-select-selector {
+  width: 81px !important;
+  padding-left: 1rem !important;
+  padding-right: 0.75rem !important;
+}
+
+.ant-btn-loading-icon {
+  display: inline-flex !important;
+}
+
+.ant-radio-checked .ant-radio-inner {
+  border-color: #1890ff !important ;
+}
+
+.ant-radio-checked .ant-radio-inner:after {
+  background-color: #1890ff;
+}
+
+.ant-radio:hover .ant-radio-inner {
+  border-color: #1890ff;
+}
+
+.c-loading {
+  .ant-modal-content {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+}
