@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { renderToString } from 'react-dom/server';
@@ -25,14 +24,16 @@ import {
 
 const TextEditor = ({
   placeholder,
-  value,
-  initialValue,
+  value: editorValue,
   onChange,
   disabled,
   options,
   template,
   data,
+  wrapperClassName,
+  className,
 }) => {
+  const editorRef = React.useRef();
   // React.useLayoutEffect(() => {
   //   // replacing toolbar icons in the most idiotic way possible
   //   const data = [
@@ -51,11 +52,15 @@ const TextEditor = ({
   //   });
   // }, []);
 
-  let content = value || template;
-  Object.entries(data || {}).forEach(([key, value]) => {
-    const replaceWith =
-      key === 'table'
-        ? `
+  const content = editorValue || template;
+
+  React.useMemo(() => {
+    let tempVal = content;
+
+    Object.entries(data || {}).forEach(([key, value]) => {
+      const replaceWith =
+        key === 'table'
+          ? `
           <table>
             <tbody>
               <tr>
@@ -68,14 +73,23 @@ const TextEditor = ({
             </tbody>
           </table>
           `
-        : value;
+          : value;
 
-    content = content.replaceAll(`!${key.toUpperCase()}!`, replaceWith).replaceAll(',', '');
-  });
+      tempVal = tempVal.replaceAll(`!${key.toUpperCase()}!`, replaceWith).replaceAll(',', '');
+    });
+
+    if (editorRef?.current?.editor) {
+      editorRef.current.editor.onload(() => editorRef.current.editor.setContents(tempVal));
+    }
+
+    // eslint-disable-next-line
+  }, [JSON.stringify(data), editorValue, template]);
 
   return (
-    <div className="c-text-editor p-5">
+    <div className={`c-text-editor p-5 ${wrapperClassName}`}>
       <SunEditor
+        className={` ${className}`}
+        ref={editorRef}
         enable={!disabled}
         onChange={onChange}
         setContents={content}
@@ -125,21 +139,23 @@ TextEditor.propTypes = {
   placeholder: PropTypes.string,
   value: PropTypes.string,
   template: PropTypes.string,
-  initialValue: PropTypes.string,
   disabled: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   options: PropTypes.shape({}),
   data: PropTypes.shape({}),
+  wrapperClassName: PropTypes.string,
+  className: PropTypes.string,
 };
 
 TextEditor.defaultProps = {
   placeholder: '',
   value: '',
   template: '',
-  initialValue: '',
   disabled: false,
   options: {},
   data: {},
+  wrapperClassName: '',
+  className: '',
 };
 
 export default TextEditor;
