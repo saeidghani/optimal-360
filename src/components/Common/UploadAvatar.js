@@ -2,27 +2,30 @@ import React, { useEffect, useState } from 'react';
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
-const UploadAvatar = ({ selectedFile, image }) => {
+const UploadAvatar = ({ onFileUpload, file, wrapperClassName }) => {
   const [imageFile, setImageFile] = useState();
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setImageUrl(image);
+    setImageUrl(file);
   });
 
   const handleChange = (info) => {
-    if (info.target.files[0]) {
+    const pickedFile = info?.target?.files[0];
+
+    if (pickedFile) {
       setLoading(true);
       const reader = new FileReader();
-      console.log('UploadAvatar -> info', info);
-      console.log('reader.onload -> reader', reader);
-      reader.onload = (info) => {
+
+      reader.onload = (res) => {
         setLoading(false);
-        setImageFile(info.target.result);
-        selectedFile(info.target.result);
+
+        setImageFile(res.target.result);
+        onFileUpload(res.target.result);
       };
-      reader.readAsDataURL(info.target.files[0]); // convert to base64 string
+
+      reader.readAsDataURL(pickedFile); // convert to base64 string
     }
   };
 
@@ -31,13 +34,15 @@ const UploadAvatar = ({ selectedFile, image }) => {
       {imageFile && (
         <img className="rounded-full w-full border h-20 w-20" src={imageFile} alt="avatar" />
       )}
-      {image && !imageFile && (
+
+      {file && !imageFile && (
         <img
           className="rounded-full w-full border h-20 w-20"
           src={imageUrl}
           alt="uploaded avatar"
         />
       )}
+
       {loading ? (
         <LoadingOutlined className="absolute left-0 top-0 text-white bg-gray-400 rounded-full m-2" />
       ) : (
@@ -58,15 +63,16 @@ const UploadAvatar = ({ selectedFile, image }) => {
       </span>
     </div>
   );
-  return (
-    <div className="flex items-center">
-      {console.log('UploadAvatar -> imageUrl', imageUrl)}
-      {console.log('UploadAvatar -> imageFile', imageFile)}
 
-      {!imageFile && !imageUrl && <span className="mx-4 text-black-500 text-lg">Client picture</span>}
+  return (
+    <div className={`flex items-center ${wrapperClassName}`}>
+      {!imageFile && !imageUrl && (
+        <span className="mx-4 text-black-500 text-lg">Client picture</span>
+      )}
 
       <label htmlFor="Client-picture">
         {imageFile || imageUrl ? profile : uploadbtn}
+
         <input
           accept="image/*"
           type="file"
@@ -80,7 +86,9 @@ const UploadAvatar = ({ selectedFile, image }) => {
       {(imageFile || imageUrl) && (
         <div className="ml-4 ">
           <div> Client picture </div>
-          <div className="text-red-500 text-xs cursor-pointer " onClick={deleteImage}>Delete</div>
+          <div className="text-red-500 text-xs cursor-pointer " onClick={deleteImage}>
+            Delete
+          </div>
         </div>
       )}
     </div>
@@ -88,9 +96,14 @@ const UploadAvatar = ({ selectedFile, image }) => {
 };
 
 UploadAvatar.propTypes = {
-  image: PropTypes.string,
+  file: PropTypes.string,
+  wrapperClassName: PropTypes.string,
+  onFileUpload: PropTypes.func.isRequired,
 };
 
-UploadAvatar.defaultProps = {};
+UploadAvatar.defaultProps = {
+  file: '',
+  wrapperClassName: '',
+};
 
 export default UploadAvatar;

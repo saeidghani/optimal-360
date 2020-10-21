@@ -8,9 +8,22 @@ export default {
     surveySettings: '',
     emailSettings: '',
     selectedTemplate: '',
+    surveyIntro: '',
   },
 
   effects: (dispatch) => ({
+    async createProject(payload) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: '/super-user/projects',
+          data: payload,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
     async fetchSurveySettings(surveyGroupId) {
       return actionWapper(async () => {
         const res = await axios({
@@ -59,21 +72,33 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
-    async createProject(payload) {
+    async setSelectedEmailTemplate(template) {
+      return actionWapper(async () => {
+        this.setSelectedEmailTemplate_reducer(template);
+      }, dispatch.util.errorHandler);
+    },
+
+    async fetchSurveyIntro(surveyGroupId) {
       return actionWapper(async () => {
         const res = await axios({
-          method: 'post',
-          url: '/super-user/projects',
-          data: payload,
+          method: 'get',
+          url: `super-user/wizard/survey-groups/${surveyGroupId}/survey-intro`,
         });
 
+        await this.fetchSurveyIntro_reducer(res?.data?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
 
-    async setSelectedEmailTemplate(template) {
+    async setSurveyIntro({ surveyGroupId, ...payload }) {
       return actionWapper(async () => {
-        this.setSelectedEmailTemplate_reducer(template);
+        const res = await axios({
+          method: 'post',
+          url: `super-user/wizard/survey-groups/${surveyGroupId}/survey-intro`,
+          data: payload,
+        });
+
+        return res;
       }, dispatch.util.errorHandler);
     },
   }),
@@ -92,6 +117,11 @@ export default {
     setSelectedEmailTemplate_reducer: (state, payload) => ({
       ...state,
       selectedTemplate: payload,
+    }),
+
+    fetchSurveyIntro_reducer: (state, payload) => ({
+      ...state,
+      surveyIntro: payload,
     }),
   },
 };

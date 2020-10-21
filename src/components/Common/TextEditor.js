@@ -32,6 +32,7 @@ const TextEditor = ({
   data,
   wrapperClassName,
   className,
+  label,
 }) => {
   const editorRef = React.useRef();
   // React.useLayoutEffect(() => {
@@ -87,6 +88,8 @@ const TextEditor = ({
 
   return (
     <div className={`c-text-editor ${wrapperClassName}`}>
+      {label && <p className="font-normal text-body text-base leading-snug mb-3.5">{label}</p>}
+
       <SunEditor
         className={` ${className}`}
         ref={editorRef}
@@ -145,6 +148,7 @@ TextEditor.propTypes = {
   data: PropTypes.shape({}),
   wrapperClassName: PropTypes.string,
   className: PropTypes.string,
+  label: PropTypes.string,
 };
 
 TextEditor.defaultProps = {
@@ -156,6 +160,7 @@ TextEditor.defaultProps = {
   data: {},
   wrapperClassName: '',
   className: '',
+  label: '',
 };
 
 export default TextEditor;
