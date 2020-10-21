@@ -33,9 +33,9 @@ const _Button = ({
   if (type === 'gray') {
     styles = {
       ...styles,
-      backgroundColor: 'whitesmoke',
-      color: '#b8b8b8',
-      borderColor: '#b8b8b8',
+      backgroundColor: '#F5F5F5',
+      color: '#B8B8B8',
+      borderColor: '#D9D9D9',
     };
   }
   if (type === 'pagination') {
@@ -62,7 +62,7 @@ const _Button = ({
     >
       {iconPosition === 'left' && RICON ? <RICON className="inline-flex" /> : null}
       {text ? (
-        <p className={`font-normal text-${textSize} leading-5 ${textClassName}`}>{text}</p>
+        <p className={`font-normal text-${textSize} leading-6 ${textClassName}`}>{text}</p>
       ) : (
         children || null
       )}

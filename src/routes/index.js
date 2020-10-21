@@ -15,7 +15,7 @@ import RatersStatusOverview from '../containers/SurveyGroups/RatersStatusOvervie
 import ProjectInfo from '../containers/Wizard/ProjectInfo';
 import SurveySetting from '../containers/Wizard/SurveySetting';
 import EmailSetting from '../containers/Wizard/EmailSetting';
-import RaterVerificationEmail from '../containers/Wizard/RaterVerificationEmail';
+import EmailTemplate from '../containers/Wizard/EmailTemplate';
 import SurveyIntro from '../containers/Wizard/SurveyIntro';
 import SurveyQuestionsList from '../containers/Wizard/SurveyQuestionsList';
 
@@ -46,9 +46,9 @@ const Index = () => (
     <PrivateRoute path="/super-user/new-project/survey-setting" exact component={SurveySetting} />
     <PrivateRoute path="/super-user/new-project/email-setting" exact component={EmailSetting} />
     <PrivateRoute
-      path="/super-user/new-project/rater-verification-email"
+      path="/super-user/new-project/email-setting/:template"
       exact
-      component={RaterVerificationEmail}
+      component={EmailTemplate}
     />
     <PrivateRoute path="/super-user/new-project/survey-intro" exact component={SurveyIntro} />
     <PrivateRoute
