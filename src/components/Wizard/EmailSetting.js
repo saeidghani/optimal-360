@@ -2,9 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
+import moment from 'moment';
 import { useHistory } from 'react-router-dom';
 
 import { useQuery } from '../../hooks/useQuery';
+import * as TEMPLATES from './Helper/EmailTemplates';
+import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
 
 import MainLayout from '../Common/Layout';
 import Checkbox from '../Common/Checkbox';
@@ -13,11 +16,17 @@ import Steps from '../Common/Steps';
 import Calendar from '../Common/Calendar';
 import Button from '../Common/Button';
 import Loading from '../Common/Loading';
-
-import * as TEMPLATES from './Helper/EmailTemplates';
-
 import Table from '../Common/Table';
-import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
+
+const pascalize = (txt) => {
+  if (!txt) return '';
+  let arr = txt?.split(' ');
+
+  arr = arr.map((word) => word.charAt(0).toUpperCase() + word.slice(1));
+  arr.splice(0, 1, arr[0].toLowerCase());
+
+  return arr.join('');
+};
 
 const EmailSetting = ({
   emailSettings,
@@ -88,8 +97,16 @@ const EmailSetting = ({
     },
   ];
 
+  const templateKey = `${projectId}-${surveyGroupId}`;
+  const TEMP = JSON.parse(localStorage.getItem(templateKey)) || {};
+  // console.log(TEMP);
+
   React.useEffect(() => {
-    if (selectedSurveyGroupKey && selectedSurveyGroupKey !== parsedQuery?.surveyGroupId) {
+    if (
+      isFormDone &&
+      selectedSurveyGroupKey &&
+      selectedSurveyGroupKey !== parsedQuery?.surveyGroupId
+    ) {
       setQuery({ surveyGroupId: selectedSurveyGroupKey });
       setIsFormDone(false);
       setSurveyGroupModal(false);
@@ -101,7 +118,7 @@ const EmailSetting = ({
   }, [projectId, surveyGroupId, fetchSurveyGroups]);
 
   React.useEffect(() => {
-    fetchEmailSettings(surveyGroupId);
+    if (surveyGroupId) fetchEmailSettings(surveyGroupId);
   }, [projectId, surveyGroupId, fetchEmailSettings]);
 
   React.useEffect(() => {
@@ -122,6 +139,31 @@ const EmailSetting = ({
     }
     // eslint-disable-next-line
   }, [JSON.stringify(surveyGroups.data)]);
+
+  React.useEffect(() => {
+    const validateForm = async () => {
+      try {
+        const errorObj = await formRef.current.validateForm(formRef?.current?.values);
+
+        if (errorObj && Object.values(errorObj).length > 0) {
+          throw errorObj;
+        } else {
+          setIsFormDone(true);
+        }
+      } catch (errorObj) {
+        formRef.current.setErrors(errorObj);
+        formRef.current.setTouched(errorObj);
+
+        if (selectedSurveyGroupKey !== parsedQuery?.surveyGroupId) setSurveyGroupModal(true);
+      }
+    };
+
+    if (selectedSurveyGroupKey && formRef?.current) {
+      validateForm(formRef?.current?.values);
+    }
+
+    // eslint-disable-next-line
+  }, [selectedSurveyGroupKey]);
 
   const emailSettingsStringified = JSON.stringify(emailSettings);
 
@@ -156,9 +198,39 @@ const EmailSetting = ({
   ];
 
   const _emailSettings = React.useMemo(() => {
-    return emailSettings && Object.values(emailSettings).length > 0
-      ? emailSettings.map((el) => ({ ...el, key: el.id.toString(), selected: false }))
-      : initialValues.map((el) => ({ ...el, key: el.id.toString(), selected: false }));
+    const settings = [];
+
+    initialValues.forEach((el) => {
+      // names are supposed to be unique
+      const duplicate = emailSettings.find((item) => item.name === el.name);
+
+      // if there is a duplicate item between initialValues and settings res from api
+      // we prioritize the item from api
+      const itemToPush = duplicate || el;
+
+      settings.push({
+        ...itemToPush,
+        key: itemToPush.id.toString(),
+        selected: !!itemToPush.date,
+        template: TEMP[pascalize(itemToPush.name)] || itemToPush.template,
+      });
+    });
+
+    return settings;
+
+    // return emailSettings && Object.values(emailSettings).length > 0
+    //   ? emailSettings.map((el) => ({
+    //       ...el,
+    //       key: el.id.toString(),
+    //       selected: !!el.date,
+    //       template: TEMP[pascalize(el.name)] || el.template,
+    //     }))
+    //   : initialValues.map((el) => ({
+    //       ...el,
+    //       key: el.id.toString(),
+    //       selected: !!el.date,
+    //       template: TEMP[pascalize(el.name)] || el.template,
+    //     }));
     // eslint-disable-next-line
   }, [emailSettingsStringified]);
 
@@ -166,7 +238,7 @@ const EmailSetting = ({
     return refArray.map((el) => {
       if (el.id === id) {
         return key === 'selected' && newVal === false
-          ? { id, name: el.name, date: '', copyToAdmin: false, template: '' }
+          ? { id, key: id, name: el.name, date: '', copyToAdmin: false, template: '' }
           : {
               ...el,
               [key]: newVal,
@@ -176,6 +248,21 @@ const EmailSetting = ({
       return el;
     });
   };
+
+  React.useEffect(() => {
+    if (surveyGroupId) {
+      fetchEmailSettings(surveyGroupId);
+    }
+
+    if (formRef?.current) {
+      // reset form state when surveyGroup changes
+      // happens when user decides to discard current settings and changes currentSurveyGroup
+      formRef.current.setTouched({});
+      formRef.current.setErrors({});
+      formRef.current.setValues({ emailSettings: _emailSettings });
+    }
+    // eslint-disable-next-line
+  }, [fetchEmailSettings, surveyGroupId, JSON.stringify(_emailSettings)]);
 
   const currentSurveyGroupName =
     surveyGroups?.data?.find((el) => el.id.toString() === parsedQuery?.surveyGroupId?.toString())
@@ -222,13 +309,29 @@ const EmailSetting = ({
               emailSettings: _emailSettings,
             }}
             validationSchema={schema}
-            onSubmit={(values) => {
-              console.log({ ...values, surveyGroupId });
-              // history.push(`/super-user/new-project/survey-intro${search}`);
+            onSubmit={async (values) => {
+              const chosenTemplates = [];
+
+              values.emailSettings.forEach((el) => {
+                if (el.selected) {
+                  chosenTemplates.push({
+                    ...el,
+                    id: el.id * 1,
+                    date: moment(el.date).toISOString(),
+                  });
+                }
+              });
+
+              if (chosenTemplates.length > 0) {
+                try {
+                  await setEmailSettings({ emailSettings: chosenTemplates, surveyGroupId });
+                  history.push(`/super-user/new-project/survey-intro${search}`);
+                } catch (error) {}
+              }
             }}
           >
             {({ values, errors, touched, handleSubmit, setFieldValue }) => (
-              <Form>
+              <Form onSubmit={handleSubmit}>
                 <div className="mt-16 flex flex-col">
                   <h1 className="text-xl text-secondary mb-12">Email Setting</h1>
 

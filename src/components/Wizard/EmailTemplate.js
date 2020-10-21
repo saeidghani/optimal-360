@@ -22,10 +22,10 @@ const pascalize = (txt) => {
 };
 
 const EmailTemplate = ({ loading, fetchSingleProject, singleProject, selectedTemplate }) => {
-  console.log({ selectedTemplate });
+  // console.log({ selectedTemplate });
   // const history = useHistory();
   const [parsedQuery] = useQuery();
-  const { projectId } = parsedQuery;
+  const { projectId, surveyGroupId } = parsedQuery;
   const { data: projectData = {} } = singleProject || {};
 
   const { template } = useParams();
@@ -66,7 +66,19 @@ const EmailTemplate = ({ loading, fetchSingleProject, singleProject, selectedTem
 
           <div className="flex flex-row">
             <Button size="middle" type="link" textSize="base" text="Cancel" className="" />
-            <Button size="middle" text="Save" textSize="base" className="" />
+            <Button
+              size="middle"
+              text="Save"
+              onClick={() => {
+                const templateKey = `${projectId}-${surveyGroupId}`;
+                localStorage.setItem(
+                  templateKey,
+                  JSON.stringify({ [chosenTemplate]: emailTemplate }),
+                );
+              }}
+              textSize="base"
+              className=""
+            />
           </div>
         </div>
 
