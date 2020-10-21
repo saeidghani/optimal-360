@@ -13,6 +13,7 @@ module.exports = {
   globals: {
     window: true,
     document: true,
+    localStorage: true,
   },
   rules: {
     'max-len': [2, { code: 110, tabWidth: 2, ignoreUrls: true }],
@@ -42,5 +43,7 @@ module.exports = {
     'react/jsx-one-expression-per-line': 'off',
     'template-curly-spacing': 'off',
     indent: 'off',
+    'operator-linebreak': 'off',
+    'arrow-body-style': 'off',
   },
 };

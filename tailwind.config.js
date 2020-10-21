@@ -30,11 +30,11 @@ module.exports = {
     extend: {
       colors: {
         heading: '#131621',
+        heading2: '#262626',
         body: '#303854',
         antgreen: '#48D2A1', // used for steps
         antteal: '#00d6a2', // used for primary Progress
         secondary: '#3D3D3D',
-        'gray-8': ' #595959',
         template: 'rgba(196, 196, 196, 0.2)',
         'list-border': '#F0F0F0',
         'list-bg': 'rgba(27, 183, 217, 0.05)',
@@ -53,6 +53,7 @@ module.exports = {
           400: '#F5F5F5',
           500: '#C4C4C4', // all input borders
           600: '#FAFAFA', // menu background color
+          800: '#595959',
         },
       },
       spacing: {
@@ -77,6 +78,7 @@ module.exports = {
         17: '4.25rem',
         18: '4.5rem',
         19: '4.875rem',
+        21: '5.25rem',
         22: '5.5rem',
         23.5: '6.375rem',
         24.5: '6.75rem',
