@@ -42,5 +42,6 @@ module.exports = {
     'react/jsx-one-expression-per-line': 'off',
     'template-curly-spacing': 'off',
     indent: 'off',
+    'operator-linebreak': 'off',
   },
 };

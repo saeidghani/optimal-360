@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+@import '~suneditor/dist/css/suneditor.min.css';
+/* @import '~react-draft-wysiwyg/dist/react-draft-wysiwyg.css'; */
+>>>>>>> 925a566b969947decfd3bf98f5bc90fd81300419
 @import './compiled-tailwind.css';
 @import './extras/animations.css';
 

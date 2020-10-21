@@ -22,15 +22,11 @@ class SurveySetting extends Component {
   setSurveySettings = async (data) => {
     const { setSurveySettings } = this.props;
 
-    console.log({ data });
-
-    await setSurveySettings(data);
+    return setSurveySettings(data);
   };
 
   render() {
     const { loading, surveySettings, surveyGroups } = this.props;
-
-    // console.log({ surveySettings, surveyGroups });
 
     return (
       <Layout
