@@ -88,6 +88,7 @@ const SurveySetting = ({
     },
   } = surveySettings || {};
 
+  const surveyGroupsStringified = JSON.stringify(surveyGroups.data);
   React.useEffect(() => {
     const sortedArr = surveyGroups?.data?.sort((el1, el2) => el1.id - el2.id) || [];
 
@@ -105,7 +106,7 @@ const SurveySetting = ({
       setQuery({ surveyGroupId: firstSurveyGroupId });
     }
     // eslint-disable-next-line
-  }, []);
+  }, [surveyGroupsStringified]);
 
   React.useEffect(() => {
     fetchSurveyGroups(projectId);
