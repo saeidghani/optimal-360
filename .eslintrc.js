@@ -14,6 +14,7 @@ module.exports = {
     window: true,
     document: true,
     localStorage: true,
+    FileReader: true,
   },
   rules: {
     'max-len': [2, { code: 110, tabWidth: 2, ignoreUrls: true }],
