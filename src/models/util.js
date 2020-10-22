@@ -12,7 +12,22 @@ export default {
     },
 
     async errorHandler(error) {
-      this.alert_reducer(error);
+      const { errors, message } = error?.response?.data;
+
+      if (errors) {
+        let description = '';
+        Object.values(error.response.data.errors).forEach((err) => {
+          description = err;
+        });
+
+        this.alert_reducer({
+          message,
+          description,
+          type: 'error',
+        });
+
+        return;
+      }
     },
 
     async clearNotifications() {

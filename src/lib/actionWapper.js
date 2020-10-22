@@ -12,12 +12,11 @@ const wrapper = (fn, errorHandler, notify) => {
       return res;
     })
     .catch((error) => {
-      console.log('error', error);
       console.log('error.config', error.config);
       console.log('error.response', error.response);
 
       if (errorHandler) {
-        errorHandler({ message: `Error ${error?.response?.status}`, type: 'error' });
+        errorHandler(error);
       }
 
       throw error;

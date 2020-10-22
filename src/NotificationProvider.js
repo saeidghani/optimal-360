@@ -12,10 +12,10 @@ const NotificationProvider = ({ children }) => {
   const { notification: _notification, lastChange } = useSelector((state) => state?.util);
 
   const openNotification = React.useCallback(
-    ({ message, type = 'info', placement = 'topRight' }) => {
+    ({ message, type = 'info', placement = 'topRight', description }) => {
       api[type]({
         message,
-        description: message,
+        description,
         placement,
         duration: 3,
         onClose: () => dispatch.util.clearNotifications(),

@@ -39,6 +39,7 @@ module.exports = {
         'list-border': '#F0F0F0',
         'list-bg': 'rgba(27, 183, 217, 0.05)',
         red: '#FA4D4D',
+        'red-500': '#FA4D4D',
         orange: '#FEC456',
         primary: {
           100: 'rgba(27, 183, 217, 0.1)',
