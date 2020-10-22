@@ -38,6 +38,8 @@ module.exports = {
         template: 'rgba(196, 196, 196, 0.2)',
         'list-border': '#F0F0F0',
         'list-bg': 'rgba(27, 183, 217, 0.05)',
+        red: '#FA4D4D',
+        orange: '#FEC456',
         primary: {
           100: 'rgba(27, 183, 217, 0.1)',
           200: '#F5F8FC',

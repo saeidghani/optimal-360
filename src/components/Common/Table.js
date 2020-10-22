@@ -13,6 +13,7 @@ const _Table = ({
   loading,
   onPaginationChange,
   pageSize,
+  pageNumber,
   onPageSizeChange,
   totalRecordSize,
   onRowSelectionChange,
@@ -95,6 +96,7 @@ const _Table = ({
           </div>
 
           <Pagination
+            current={pageNumber}
             onChange={onPaginationChange}
             pageSize={pageSize}
             showSizeChanger={false}
@@ -128,6 +130,7 @@ _Table.propTypes = {
     }),
   ).isRequired,
   pageSize: PropTypes.number,
+  pageNumber: PropTypes.number,
   onPageSizeChange: PropTypes.func,
   onPaginationChange: PropTypes.func,
   onRowSelectionChange: PropTypes.func,
@@ -151,6 +154,7 @@ _Table.defaultProps = {
   onRowClick: null,
   loading: false,
   pageSize: 10,
+  pageNumber: 1,
   selectedRowKeys: [],
   totalRecordSize: 10,
   size: 'default',
