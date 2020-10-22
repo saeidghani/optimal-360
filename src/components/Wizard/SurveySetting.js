@@ -346,20 +346,22 @@ const SurveySetting = ({
             }}
             validationSchema={schema}
             onSubmit={async (values) => {
-              await setSurveySettings({
-                ...values,
-                surveySetting: {
-                  ...values.surveySetting,
-                  startDate: moment(values.surveySetting?.startDate).toISOString(),
-                  endDate: moment(values.surveySetting?.endDate).toISOString(),
-                },
-                raterGroups: dataSource,
-                surveyGroupId,
-              });
+              try {
+                await setSurveySettings({
+                  ...values,
+                  surveySetting: {
+                    ...values.surveySetting,
+                    startDate: moment(values.surveySetting?.startDate).toISOString(),
+                    endDate: moment(values.surveySetting?.endDate).toISOString(),
+                  },
+                  raterGroups: dataSource,
+                  surveyGroupId,
+                });
 
-              const params = history?.location?.search;
+                const params = history?.location?.search;
 
-              history.push(`/super-user/new-project/email-setting${params}`);
+                history.push(`/super-user/new-project/email-setting${params}`);
+              } catch (error) {}
             }}
           >
             {({ values, errors, touched, handleSubmit, setFieldValue }) => (
