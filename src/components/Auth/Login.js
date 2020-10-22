@@ -50,7 +50,7 @@ const Login = ({ login, loading }) => {
             }}
           >
             {({ values, errors, touched, handleChange, handleSubmit, setFieldValue }) => (
-              <Form className="w-full">
+              <Form onSubmit={handleSubmit} className="w-full">
                 <Input
                   disabled={loading}
                   onChange={handleChange}
@@ -61,6 +61,7 @@ const Login = ({ login, loading }) => {
                   labelText="Email"
                   placeholder="Email"
                   errorMessage={touched.email && errors.email}
+                  onPressEnter={handleSubmit}
                 />
 
                 <Input
@@ -75,6 +76,7 @@ const Login = ({ login, loading }) => {
                   extrainfoText="Forgot Password?"
                   extrainfoLink="/forgot-password"
                   errorMessage={touched.password && errors.password}
+                  onPressEnter={handleSubmit}
                 />
 
                 <Checkbox
