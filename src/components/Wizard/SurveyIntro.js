@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 
@@ -23,6 +24,9 @@ const SurveyIntro = ({
   loading,
   surveyGroups,
 }) => {
+  const history = useHistory();
+  const { search } = history?.location;
+
   const formRef = React.useRef();
   const schema = yup.object({
     clientWelcomeMessage: yup.string().required('client welcome message is required'),
@@ -145,7 +149,10 @@ const SurveyIntro = ({
             initialValues={surveyIntro}
             validationSchema={schema}
             onSubmit={async (values) => {
-              await setSurveyIntro({ ...values, surveyGroupId });
+              try {
+                await setSurveyIntro({ ...values, surveyGroupId });
+                history.push(`/super-user/new-project/survey-intro${search}`);
+              } catch (error) {}
             }}
           >
             {({ values, errors, touched, handleSubmit, setFieldValue }) => (
