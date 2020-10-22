@@ -1,6 +1,6 @@
 import React from 'react';
 import * as yup from 'yup';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import PropTypes from 'prop-types';
 
@@ -19,6 +19,7 @@ const SetAdmin = ({ loading, setAdmin, fetchAdmin, clientAdmin }) => {
     status: yup.string().required('set admin activity status'),
   });
   const { projectId } = useParams();
+  const history = useHistory();
 
   React.useEffect(() => {
     if (projectId) fetchAdmin(projectId);
@@ -39,6 +40,7 @@ const SetAdmin = ({ loading, setAdmin, fetchAdmin, clientAdmin }) => {
           validationSchema={schema}
           onSubmit={async ({ email, password, status }) => {
             await setAdmin({ email, password, active: status === 'active', projectId });
+            history.replace('/super-user/projects?status=active&page_size=10&page_number=1');
           }}
           enableReinitialize
         >
