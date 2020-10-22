@@ -30,14 +30,16 @@ const SurveySetting = ({
 }) => {
   const schema = yup.object({
     surveySetting: yup.object({
-      startDate: yup.string().required('Start Date Cannot Be Empty'),
-      endDate: yup.string().required('End Date Cannot Be Empty'),
+      startDate: yup.string().required('Start Date Cannot Be Empty').nullable(),
+      endDate: yup.string().required('End Date Cannot Be Empty').nullable(),
       raterInvalidation: yup
         .number()
+        .nullable()
         .moreThan(0, 'Rater Invalidation Must Be Greater Than 0')
         .required('Rater Invalidation Cannot Be Empty'),
       itemInvalidation: yup
         .number()
+        .nullable()
         .moreThan(0, 'Rater Invalidation Must Be Greater Than 0')
         .required('Item Invalidation Cannot Be Empty'),
     }),
@@ -135,6 +137,7 @@ const SurveySetting = ({
           key: el.id?.toString() || '9999',
           remove: '',
           index: i,
+          disabled: i < 1,
         }))
       : [];
 
@@ -218,8 +221,9 @@ const SurveySetting = ({
     {
       title: 'abbr.',
       key: 'abbr',
-      render: (value, { key }) => (
+      render: (value, { key, disabled }) => (
         <Input
+          disabled={disabled}
           inputClass="uppercase border border-antgray-300"
           name="abbr"
           onChange={(e) => updateTable('abbr', e.target.value, key)}
@@ -231,8 +235,9 @@ const SurveySetting = ({
     {
       title: 'Group Name',
       key: 'name',
-      render: (value, { key }) => (
+      render: (value, { key, disabled }) => (
         <Input
+          disabled={disabled}
           inputClass="capitalize border border-antgray-300"
           name="name"
           onChange={(e) => updateTable('name', e.target.value, key)}
@@ -244,8 +249,9 @@ const SurveySetting = ({
     {
       title: 'Min.Raters',
       key: 'minRater',
-      render: (value, { key }) => (
+      render: (value, { key, disabled }) => (
         <Input
+          disabled={disabled}
           name="minRater"
           inputClass="border border-antgray-300"
           onChange={(e) => {
@@ -329,7 +335,7 @@ const SurveySetting = ({
         />
 
         <div className="px-6 py-5 col-start-3 col-span-10">
-          <Steps currentPosition={1} />
+          <Steps currentPosition={0} />
 
           <Formik
             innerRef={formRef}
@@ -425,6 +431,7 @@ const SurveySetting = ({
                           errors.surveySetting?.raterInvalidation
                         }
                       />
+
                       <InputNumber
                         size="large"
                         className="w-full"
@@ -449,7 +456,6 @@ const SurveySetting = ({
                   <h1 className="text-xl text-secondary mb-8">Rater Settings</h1>
 
                   <Table
-                    loading={loading}
                     rowSelection={false}
                     pagination={false}
                     columns={columns}
@@ -516,7 +522,7 @@ const SurveySetting = ({
                     </Checkbox>
 
                     {touched.surveyModeInUserDashboard && errors.surveyModeInUserDashboard && (
-                      <p className="text-red-500">{errors.surveyModeInUserDashboard}</p>
+                      <p className="text-red-500 mt-2">{errors.surveyModeInUserDashboard}</p>
                     )}
 
                     <div className="mt-17 pb-22  flex justify-end">
