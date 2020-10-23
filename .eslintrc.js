@@ -19,6 +19,7 @@ module.exports = {
   rules: {
     'max-len': [2, { code: 110, tabWidth: 2, ignoreUrls: true }],
     'react/jsx-filename-extension': ['error', { extensions: ['.js', '.jsx'] }],
+    'react/jsx-wrap-multilines': ['error', { declaration: false, assignment: false }],
     'global-require': 'off',
     'no-console': 'off',
     'import/no-extraneous-dependencies': 'off',

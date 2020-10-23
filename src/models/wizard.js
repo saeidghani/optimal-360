@@ -9,6 +9,7 @@ export default {
     emailSettings: '',
     selectedTemplate: '',
     surveyIntro: '',
+    surveyQuestions: '',
   },
 
   effects: (dispatch) => ({
@@ -101,6 +102,30 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+
+    async fetchSurveyQuestions(surveyGroupId) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `super-user/wizard/survey-groups/${surveyGroupId}/survey-questions`,
+        });
+
+        await this.fetchSurveyQuestions_reducer(res?.data?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async setSurveyQuestions({ surveyGroupId, ...payload }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: `super-user/wizard/survey-groups/${surveyGroupId}/survey-questions`,
+          data: payload,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
   }),
 
   reducers: {
@@ -122,6 +147,11 @@ export default {
     fetchSurveyIntro_reducer: (state, payload) => ({
       ...state,
       surveyIntro: payload,
+    }),
+
+    fetchSurveyQuestions_reducer: (state, payload) => ({
+      ...state,
+      surveyQuestions: payload,
     }),
   },
 };

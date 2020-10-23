@@ -23,7 +23,7 @@ const _Button = ({
   disabled,
 }) => {
   const RICON = ICONS[icon];
-  if (icon && typeof RICON === 'undefined' && !RICON) {
+  if (icon && typeof icon !== 'object' && typeof RICON === 'undefined' && !RICON) {
     console.warn(`icon name (${icon}) is not valid as an antd icon`);
   }
 
@@ -60,13 +60,25 @@ const _Button = ({
       style={styles}
       shape={shape}
     >
-      {iconPosition === 'left' && RICON ? <RICON className="inline-flex" /> : null}
+      {iconPosition === 'left' ? (
+        icon && typeof icon === 'object' ? (
+          icon
+        ) : RICON ? (
+          <RICON className="inline-flex" />
+        ) : null
+      ) : null}
       {text ? (
         <p className={`font-normal text-${textSize} leading-6 ${textClassName}`}>{text}</p>
       ) : (
         children || null
       )}
-      {iconPosition !== 'left' && RICON ? <RICON className="inline-flex" /> : null}
+      {iconPosition !== 'left' ? (
+        icon && typeof icon === 'object' ? (
+          icon
+        ) : RICON ? (
+          <RICON className="inline-flex" />
+        ) : null
+      ) : null}
     </Button>
   );
 };
@@ -83,7 +95,7 @@ _Button.propTypes = {
   children: PropTypes.node,
   iconPosition: PropTypes.string,
   shape: PropTypes.string,
-  icon: PropTypes.string,
+  icon: PropTypes.node,
   ghost: PropTypes.bool,
   loading: PropTypes.bool,
   light: PropTypes.bool,
