@@ -18,6 +18,7 @@ import EmailSetting from '../containers/Wizard/EmailSetting';
 import EmailTemplate from '../containers/Wizard/EmailTemplate';
 import SurveyIntro from '../containers/Wizard/SurveyIntro';
 import SurveyQuestionsList from '../containers/Wizard/SurveyQuestionsList';
+import Report from '../containers/Wizard/Report';
 
 import NotFound from '../components/404';
 import TestingArea from '../components/TestingArea';
@@ -56,7 +57,11 @@ const Index = () => (
       exact
       component={SurveyQuestionsList}
     />
-
+    <PrivateRoute
+      path="/super-user/new-project/report"
+      exact
+      component={Report}
+    />
     <CustomRoute path="/" exact component={TestingArea} />
     <Route component={NotFound} />
   </Switch>
