@@ -104,7 +104,7 @@ const SurveyIntro = () => {
               {reportList.map((item) => (
                 item.id < 12 &&
                 (
-                  <div className="bg-gray-100 px-10 py-5 w-full" key={item.id}>
+                  <div className="px-10 py-5 w-1/2 border-b border-gray-200" key={item.id}>
                     <Checkbox
                       labelClass="text-secondary"
                       onChange={(value) => onChangeCheckbox(item.id, value)}
