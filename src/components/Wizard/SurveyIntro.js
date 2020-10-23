@@ -151,7 +151,7 @@ const SurveyIntro = ({
             onSubmit={async (values) => {
               try {
                 await setSurveyIntro({ ...values, surveyGroupId });
-                history.push(`/super-user/new-project/survey-intro${search}`);
+                history.push(`/super-user/new-project/survey-questions${search}`);
               } catch (error) {}
             }}
           >

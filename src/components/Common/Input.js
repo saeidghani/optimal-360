@@ -68,7 +68,9 @@ const _Input = ({
       onPressEnter={onPressEnter}
     />
 
-    {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+    {/* {errorMessage &&  */}
+    <p className="text-red-500 h-5 mt-1">{errorMessage}</p>
+    {/* } */}
   </div>
 );
 

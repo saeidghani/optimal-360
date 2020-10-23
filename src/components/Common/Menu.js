@@ -1,65 +1,61 @@
 import React from 'react';
-import PropTypes, { number } from 'prop-types';
+import PropTypes from 'prop-types';
 import { Menu } from 'antd';
 
 const { SubMenu } = Menu;
+
 const _Menu = (props) => {
   const {
     className,
     title,
     titleClassName,
-    menuItems,
-    onClickMenu,
-    onClickCluter,
-    onClickCompetency,
-    onClickQuestion,
+    items,
+    onMenuClick,
+    onClusterClick,
+    onCompetencyClick,
+    onQuestionClick,
   } = props;
 
   return (
     <Menu
-      onClick={onClickMenu}
-      style={{ width: 202 }}
+      onClick={onMenuClick}
       className={`bg-antgray-600 ${className}`}
       defaultSelectedKeys={[]}
       defaultOpenKeys={[]}
       mode="inline"
     >
-      {title && <h4 className={titleClassName}>{title}</h4>}
+      {title && <Menu.Item className={titleClassName}>{title}</Menu.Item>}
 
-      {menuItems.map((cluter, index) => (
-        <>
-          <SubMenu
-            key={`cluter_${cluter.key}`}
-            title={
-              <span id={index} onClick={onClickCluter}>
-                {cluter.name}
-              </span>
-            }
-          >
-            {cluter.competencies.map((competency, competencyIndex) => (
-              <SubMenu
-                key={`cluter_${cluter.key}_competency_${competency.key}`}
-                className="inner-sub-menu"
-                title={
-                  <span id={index + '' + competencyIndex} onClick={onClickCompetency}>
-                    {competency.name}
-                  </span>
-                }
-              >
-                {competency.questions.map((question, questionIndex) => (
-                  <Menu.Item
-                    key={`cluter_${cluter.key}_competency_${competency.key}_question_${question.key}`}
-                    onClick={(event) =>
-                      onClickQuestion(event, index + '' + competencyIndex + '' + questionIndex)
-                    }
-                  >
-                    - ${question.name}
-                  </Menu.Item>
-                ))}
-              </SubMenu>
-            ))}
-          </SubMenu>
-        </>
+      {items.map((cluster, index1) => (
+        <SubMenu
+          key={`cluster_${cluster.id}`}
+          title={
+            <span id={index1} onClick={onClusterClick}>
+              {cluster.name}
+            </span>
+          }
+        >
+          {cluster.competencies.map((competency, index2) => (
+            <SubMenu
+              key={`cluster_${cluster.id}_competency_${competency.id}`}
+              className="inner-sub-menu"
+              title={
+                <span id={`${index1}${index2}`} onClick={onCompetencyClick}>
+                  {competency.name}
+                </span>
+              }
+            >
+              {competency.questions.map((question) => (
+                <Menu.Item
+                  key={`cluster_${cluster.id}_competency_${competency.id}_question_${question.id}`}
+                  onClick={() => onQuestionClick(question.id)}
+                >
+                  {question.label}
+                </Menu.Item>
+              ))}
+            </SubMenu>
+          ))}
+        </SubMenu>
       ))}
     </Menu>
   );
@@ -69,11 +65,11 @@ _Menu.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string,
   titleClassName: PropTypes.string,
-  menuItems: PropTypes.array,
-  onClickMenu: PropTypes.func,
-  onClickCluter: PropTypes.func,
-  onClickCompetency: PropTypes.func,
-  onClickQuestion: PropTypes.func,
+  items: PropTypes.array,
+  onMenuClick: PropTypes.func,
+  onClusterClick: PropTypes.func,
+  onCompetencyClick: PropTypes.func,
+  onQuestionClick: PropTypes.func,
 };
 
 _Menu.defaultProps = { className: '' };
