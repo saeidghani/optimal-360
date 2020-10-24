@@ -59,7 +59,7 @@ const Index = () => (
       component={SurveyQuestionsList}
     />
     <PrivateRoute
-      path="/bank/models"
+      path="/super-user/bank/models"
       exact
       component={BankModels}
     />
