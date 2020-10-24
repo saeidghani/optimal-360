@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button } from 'antd';
 import { PlusCircleOutlined, FileExcelOutlined, EditOutlined } from '@ant-design/icons';
 
+import Button from '../Common/Button';
 import MainLayout from '../Common/Layout';
 import Loading from '../Common/Loading';
 import Table from '../Common/Table';
