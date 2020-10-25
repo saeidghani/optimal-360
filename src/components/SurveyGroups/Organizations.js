@@ -12,8 +12,8 @@ import Button from '../Common/Button';
 import SearchBox from '../Common/SearchBox';
 
 const Organizations = ({ loading }) => {
-  const [pageSize, setPageSize] = React.useState(10);
-  const [selectedRows, setSelectedRows] = React.useState([]);
+  const [pageSize] = React.useState(10);
+  const [selectedRows] = React.useState([]);
 
   const renderHeader = React.useCallback(
     () => {
@@ -39,7 +39,6 @@ const Organizations = ({ loading }) => {
         </div>
       );
     },
-    // eslint-disable-next-line
     [loading, selectedRows.length],
   );
 
@@ -74,7 +73,7 @@ const Organizations = ({ loading }) => {
           </div>
         ),
       },
-    ]
+    ],
   );
 
   const dataSource = [
@@ -148,18 +147,14 @@ const Organizations = ({ loading }) => {
       contentClass="py-6 pl-21 pr-6"
     >
       <Table
-        size="small"
+        size="middle"
         className="p-6 bg-white rounded-lg shadow"
-        selectedRowKeys={selectedRows?.map((el) => el.key)}
         loading={loading}
         columns={columns}
         dataSource={dataSource}
         renderHeader={renderHeader}
         pageSize={pageSize * 1}
         pageNumber={1}
-        onRowSelectionChange={(_, rows) => {
-          setSelectedRows(rows);
-        }}
       />
     </MainLayout>
   );
