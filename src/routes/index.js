@@ -64,7 +64,7 @@ const Index = () => (
       component={Report}
     />
     <PrivateRoute
-      path="/organizations/users"
+      path="/super-user/organizations/users"
       exact
       component={OrganizationsUsers}
     />

@@ -2,23 +2,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {EditOutlined} from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 
 import budgetLogo from '../../assets/images/budget-logo.jpg';
 
 import MainLayout from '../Common/Layout';
 import Table from '../Common/Table';
 import Button from '../Common/Button';
-import SearchBox from '../Common/SearchBox';
 
-const OrganizationsUsers = ({loading}) => {
-  const [pageSize, setPageSize] = React.useState(10);
-  const [selectedRows, setSelectedRows] = React.useState([]);
+const OrganizationsUsers = ({ loading }) => {
+  const [pageSize] = React.useState(10);
+  const [selectedRows] = React.useState([]);
 
   const renderHeader = React.useCallback(
     () => {
-      const selectedRowsIds = selectedRows?.length > 0 ? selectedRows.map((el) => el.id) : [];
-
       return selectedRows && selectedRows?.length > 0 ? (
         <div className="flex flex-row items-center">
           <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
@@ -27,7 +24,7 @@ const OrganizationsUsers = ({loading}) => {
         <div className="flex flex-row justify-between items-center">
           <div className="inline-flex flex-row items-center justify-between">
             <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
-              <img className="w-8 h-4 absolute top-0 mt-3 mx-1" src={budgetLogo} alt=""/>
+              <img className="w-8 h-4 absolute top-0 mt-3 mx-1" src={budgetLogo} alt="" />
             </div>
             <p className="text-sm font-normal ml-2">Sime Darby Group Berhad</p>
           </div>
@@ -38,6 +35,7 @@ const OrganizationsUsers = ({loading}) => {
               text="Import Exel File"
               type="gray"
               className="mx-3 px-3 flex-row-reverse"
+              textClassName="mr-2"
               icon="FileExcelOutlined"
             />
             <Button
@@ -46,6 +44,7 @@ const OrganizationsUsers = ({loading}) => {
               text="New Staff Member"
               type="gray"
               className="mx-3 px-3 flex-row-reverse"
+              textClassName="mr-2"
               icon="UserAddOutlined"
             />
           </div>
@@ -82,7 +81,7 @@ const OrganizationsUsers = ({loading}) => {
           <span className="text-primary-500">
             <EditOutlined />
           </span>
-        )
+        ),
       },
     ],
     // eslint-disable-next-line
@@ -158,26 +157,18 @@ const OrganizationsUsers = ({loading}) => {
       <Table
         size="small"
         className="p-6 bg-white rounded-lg shadow"
-        selectedRowKeys={selectedRows?.map((el) => el.key)}
         loading={loading}
         columns={columns}
         dataSource={dataSource}
         renderHeader={renderHeader}
         pageSize={pageSize * 1}
         pageNumber={1}
-        // eslint-disable-next-line camelcase
-        onRowSelectionChange={(_, rows) => {
-          setSelectedRows(rows);
-        }}
       />
     </MainLayout>
   );
 };
 
 OrganizationsUsers.propTypes = {
-  duplicateProject: PropTypes.func.isRequired,
-  changeStatusOfProjects: PropTypes.func.isRequired,
-  removeProjects: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
 };
 

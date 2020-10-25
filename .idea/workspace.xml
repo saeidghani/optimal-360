@@ -31,9 +31,13 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e1b16bd2-6649-45ed-b2dd-61eafdb077bf" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="0efaa16c-9846-4e3d-9cb4-71645d9adf5a" name="Default Changelist" comment="added organizations new">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SurveyGroups/OrganizationsUsers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SurveyGroups/OrganizationsUsers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/containers/SurveyGroups/OrganizationsUsers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/containers/SurveyGroups/OrganizationsUsers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,17 +64,22 @@
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="js.linters.configure.manually.selectedeslint" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.standard" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.standard" value="" />
     <property name="nodejs_package_manager_path" value="yarn" />
+    <property name="settings.editor.selected.configurable" value="settings.javascript.linters.eslint" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="e1b16bd2-6649-45ed-b2dd-61eafdb077bf" name="Default Changelist" comment="" />
+      <changelist id="0efaa16c-9846-4e3d-9cb4-71645d9adf5a" name="Default Changelist" comment="added organizations new" />
       <created>1603539017403</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -78,6 +87,7 @@
       <workItem from="1603539018534" duration="19147000" />
       <workItem from="1603611203900" duration="1738000" />
       <workItem from="1603613846625" duration="4408000" />
+      <workItem from="1603635530497" duration="1504000" />
     </task>
     <servers />
   </component>
@@ -116,6 +126,10 @@
       <screen x="0" y="0" width="1280" height="728" />
     </state>
     <state width="1259" height="178" key="GridCell.Tab.0.right/0.0.1280.728@0.0.1280.728" timestamp="1603569003401" />
+    <state x="141" y="8" key="SettingsEditor" timestamp="1603635511952">
+      <screen x="0" y="0" width="1280" height="728" />
+    </state>
+    <state x="141" y="8" key="SettingsEditor/0.0.1280.728@0.0.1280.728" timestamp="1603635511952" />
     <state x="232" y="97" key="Vcs.Push.Dialog.v2" timestamp="1603567854164">
       <screen x="0" y="0" width="1280" height="728" />
     </state>
