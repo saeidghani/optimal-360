@@ -33,6 +33,8 @@ const Organizations = ({ loading }) => {
               text="New Organization"
               type="gray"
               className="mx-3 px-3"
+              icon="BankOutlined"
+              iconPosition="right"
             />
           </div>
         </div>
@@ -73,9 +75,7 @@ const Organizations = ({ loading }) => {
           </div>
         ),
       },
-    ],
-    // eslint-disable-next-line
-    [],
+    ]
   );
 
   const dataSource = [
