@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import { EditOutlined } from '@ant-design/icons';
 
 import Button from '../Common/Button';
@@ -97,7 +99,6 @@ const Models = ({ loading }) => {
         <div className="px-6">
           <div className="bg-white px-6 py-5">
             <div className="flex justify-end">
-
               <Button
                 className="flex items-center mr-3.5"
                 text="Add Cluster"
@@ -134,5 +135,11 @@ const Models = ({ loading }) => {
     </MainLayout>
   );
 };
+
+Models.propTypes = {
+  loading: PropTypes.bool.isRequired,
+};
+
+Models.defaultProps = {};
 
 export default Models;
