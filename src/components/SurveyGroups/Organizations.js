@@ -17,8 +17,6 @@ const Organizations = ({ loading }) => {
 
   const renderHeader = React.useCallback(
     () => {
-      const selectedRowsIds = selectedRows?.length > 0 ? selectedRows.map((el) => el.id) : [];
-
       return selectedRows && selectedRows?.length > 0 ? (
         <div className="flex flex-row items-center">
           <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
@@ -159,7 +157,6 @@ const Organizations = ({ loading }) => {
         renderHeader={renderHeader}
         pageSize={pageSize * 1}
         pageNumber={1}
-        // eslint-disable-next-line camelcase
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
         }}
