@@ -144,29 +144,51 @@
     }
   }
 
-  .ant-input-search-icon {
-    &::before {
-      display: none !important;
-    }
+  .ant-input{
+    border-right: solid 1px #c4c4c4 ;
+    min-width: 240px;
+    height: 32px;
+  }
+  .ant-input-group {
+    position: relative;
+    > .ant-input-group-addon {
+      position: absolute;
+      right: 0;
+      padding: 0;
+      background-color: transparent;
+      width: auto;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      > .ant-input-search-button,
+      .ant-input-search-icon {
+        &::before {
+          display: none !important;
+        }
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
-    width: 24px;
-    height: 24px;
-    margin-right: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        width: 24px;
+        height: 24px;
+        margin-right: 12px;
 
-    border-radius: 999px;
-    background-color: @primary-color;
+        border-radius: 999px;
+        background-color: @primary-color;
+        .anticon.anticon-search{
+          line-height: 0;
+        }
+        svg {
+          width: 10px;
+          height: 10px;
 
-    svg {
-      width: 9px;
-      height: 9px;
+          fill: #fff;
 
-      fill: #fff;
-
-      margin-left: 1px;
+          margin-left: 1px;
+        }
+      }
     }
   }
 }

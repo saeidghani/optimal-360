@@ -12,8 +12,8 @@ import Button from '../Common/Button';
 import SearchBox from '../Common/SearchBox';
 
 const Organizations = ({ loading }) => {
-  const [pageSize] = React.useState(10);
-  const [selectedRows] = React.useState([]);
+  const [pageSize, setPageSize] = React.useState(10);
+  const [selectedRows, setSelectedRows] = React.useState([]);
 
   const renderHeader = React.useCallback(
     () => {
@@ -24,16 +24,16 @@ const Organizations = ({ loading }) => {
       ) : (
         <div className="flex flex-row justify-end items-center">
           <div className="flex flex-row">
-            <SearchBox
-              className="text-xs"
-              loading={loading}
-            />
+            <SearchBox className="text-xs" loading={loading} />
             <Button
               size="middle"
               textSize="xs"
               text="New Organization"
+              textClassName="mr-2"
+              className="ml-3"
               type="gray"
-              className="mx-3 px-3"
+              icon="BankOutlined"
+              iconPosition="right"
             />
           </div>
         </div>
@@ -66,6 +66,7 @@ const Organizations = ({ loading }) => {
       {
         key: 'project',
         title: '',
+        width: 100,
         render: () => (
           <div className="inline-flex flex-row items-center justify-between text-right">
             <TeamOutlined className="text-lg text-primary-500" />
@@ -73,8 +74,7 @@ const Organizations = ({ loading }) => {
           </div>
         ),
       },
-    ],
-    [],
+    ]
   );
 
   const dataSource = [
@@ -85,44 +85,56 @@ const Organizations = ({ loading }) => {
       project: '',
     },
     {
-      key: '1',
-      id: '1',
+      key: '2',
+      id: '2',
       organization: 'Sime Darby Group Berhad',
       project: '',
     },
     {
-      key: '1',
-      id: '1',
+      key: '3',
+      id: '3',
       organization: 'Sime Darby Group Berhad',
       project: '',
     },
     {
-      key: '1',
-      id: '1',
+      key: '4',
+      id: '4',
       organization: 'Sime Darby Group Berhad',
       project: '',
     },
     {
-      key: '1',
-      id: '1',
+      key: '5',
+      id: '5',
       organization: 'Sime Darby Group Berhad',
       project: '',
     },
     {
-      key: '1',
-      id: '1',
+      key: '6',
+      id: '6',
       organization: 'Sime Darby Group Berhad',
       project: '',
     },
     {
-      key: '1',
-      id: '1',
+      key: '7',
+      id: '7',
       organization: 'Sime Darby Group Berhad',
       project: '',
     },
     {
-      key: '1',
-      id: '1',
+      key: '8',
+      id: '8',
+      organization: 'Sime Darby Group Berhad',
+      project: '',
+    },
+    {
+      key: '9',
+      id: '9',
+      organization: 'Sime Darby Group Berhad',
+      project: '',
+    },
+    {
+      key: '10',
+      id: '10',
       organization: 'Sime Darby Group Berhad',
       project: '',
     },
@@ -136,14 +148,18 @@ const Organizations = ({ loading }) => {
       contentClass="py-6 pl-21 pr-6"
     >
       <Table
-        size="middle"
+        size="small"
         className="p-6 bg-white rounded-lg shadow"
+        selectedRowKeys={selectedRows?.map((el) => el.key)}
         loading={loading}
         columns={columns}
         dataSource={dataSource}
         renderHeader={renderHeader}
         pageSize={pageSize * 1}
         pageNumber={1}
+        onRowSelectionChange={(_, rows) => {
+          setSelectedRows(rows);
+        }}
       />
     </MainLayout>
   );
