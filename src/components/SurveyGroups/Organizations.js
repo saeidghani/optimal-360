@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {TeamOutlined} from '@ant-design/icons';
+import { TeamOutlined } from '@ant-design/icons';
 
 import organizationImg from '../../assets/images/survey-groups-organization.jpg';
 
@@ -11,7 +11,7 @@ import Table from '../Common/Table';
 import Button from '../Common/Button';
 import SearchBox from '../Common/SearchBox';
 
-const Organizations = ({loading}) => {
+const Organizations = ({ loading }) => {
   const [pageSize, setPageSize] = React.useState(10);
   const [selectedRows, setSelectedRows] = React.useState([]);
 
@@ -26,10 +26,7 @@ const Organizations = ({loading}) => {
       ) : (
         <div className="flex flex-row justify-end items-center">
           <div className="flex flex-row">
-            <SearchBox
-              className="text-xs"
-              loading={loading}
-            />
+            <SearchBox className="text-xs" loading={loading} />
             <Button
               size="middle"
               textSize="xs"
@@ -58,7 +55,7 @@ const Organizations = ({loading}) => {
         render: (organization) => (
           <div className="inline-flex flex-row items-center justify-between">
             <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
-              <img className="w-8 h-4 absolute top-0 mt-3 ml-1" src={organizationImg} alt=""/>
+              <img className="w-8 h-4 absolute top-0 mt-3 ml-1" src={organizationImg} alt="" />
             </div>
             <p className="text-sm font-normal ml-2">{organization}</p>
           </div>
@@ -68,9 +65,10 @@ const Organizations = ({loading}) => {
       {
         key: 'project',
         title: '',
+        width: 100,
         render: () => (
           <div className="inline-flex flex-row items-center justify-between text-right">
-            <TeamOutlined className="text-lg text-primary-500"/>
+            <TeamOutlined className="text-lg text-primary-500" />
             <p className="text-sm text-primary-500 font-normal ml-2">Staff</p>
           </div>
         ),
@@ -88,44 +86,56 @@ const Organizations = ({loading}) => {
       project: '',
     },
     {
-      key: '1',
-      id: '1',
+      key: '2',
+      id: '2',
       organization: 'Sime Darby Group Berhad',
       project: '',
     },
     {
-      key: '1',
-      id: '1',
+      key: '3',
+      id: '3',
       organization: 'Sime Darby Group Berhad',
       project: '',
     },
     {
-      key: '1',
-      id: '1',
+      key: '4',
+      id: '4',
       organization: 'Sime Darby Group Berhad',
       project: '',
     },
     {
-      key: '1',
-      id: '1',
+      key: '5',
+      id: '5',
       organization: 'Sime Darby Group Berhad',
       project: '',
     },
     {
-      key: '1',
-      id: '1',
+      key: '6',
+      id: '6',
       organization: 'Sime Darby Group Berhad',
       project: '',
     },
     {
-      key: '1',
-      id: '1',
+      key: '7',
+      id: '7',
       organization: 'Sime Darby Group Berhad',
       project: '',
     },
     {
-      key: '1',
-      id: '1',
+      key: '8',
+      id: '8',
+      organization: 'Sime Darby Group Berhad',
+      project: '',
+    },
+    {
+      key: '9',
+      id: '9',
+      organization: 'Sime Darby Group Berhad',
+      project: '',
+    },
+    {
+      key: '10',
+      id: '10',
       organization: 'Sime Darby Group Berhad',
       project: '',
     },
