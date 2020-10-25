@@ -155,7 +155,7 @@ const OrganizationsUsers = ({ loading }) => {
       contentClass="py-6 pl-21 pr-6"
     >
       <Table
-        size="small"
+        size="middle"
         className="p-6 bg-white rounded-lg shadow"
         loading={loading}
         columns={columns}
