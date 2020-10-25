@@ -31,8 +31,9 @@ const Organizations = ({ loading }) => {
               size="middle"
               textSize="xs"
               text="New Organization"
+              textClassName="mr-2"
+              className="ml-3"
               type="gray"
-              className="mx-3 px-3"
               icon="BankOutlined"
               iconPosition="right"
             />
@@ -168,9 +169,6 @@ const Organizations = ({ loading }) => {
 };
 
 Organizations.propTypes = {
-  duplicateProject: PropTypes.func.isRequired,
-  changeStatusOfProjects: PropTypes.func.isRequired,
-  removeProjects: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
 };
 
