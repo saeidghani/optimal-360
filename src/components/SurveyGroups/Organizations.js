@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {TeamOutlined} from '@ant-design/icons';
+import { TeamOutlined } from '@ant-design/icons';
 
 import organizationImg from '../../assets/images/survey-groups-organization.jpg';
 
@@ -11,14 +11,12 @@ import Table from '../Common/Table';
 import Button from '../Common/Button';
 import SearchBox from '../Common/SearchBox';
 
-const Organizations = ({loading}) => {
-  const [pageSize, setPageSize] = React.useState(10);
-  const [selectedRows, setSelectedRows] = React.useState([]);
+const Organizations = ({ loading }) => {
+  const [pageSize] = React.useState(10);
+  const [selectedRows] = React.useState([]);
 
   const renderHeader = React.useCallback(
     () => {
-      const selectedRowsIds = selectedRows?.length > 0 ? selectedRows.map((el) => el.id) : [];
-
       return selectedRows && selectedRows?.length > 0 ? (
         <div className="flex flex-row items-center">
           <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
@@ -58,7 +56,7 @@ const Organizations = ({loading}) => {
         render: (organization) => (
           <div className="inline-flex flex-row items-center justify-between">
             <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
-              <img className="w-8 h-4 absolute top-0 mt-3 ml-1" src={organizationImg} alt=""/>
+              <img className="w-8 h-4 absolute top-0 mt-3 ml-1" src={organizationImg} alt="" />
             </div>
             <p className="text-sm font-normal ml-2">{organization}</p>
           </div>
@@ -70,13 +68,12 @@ const Organizations = ({loading}) => {
         title: '',
         render: () => (
           <div className="inline-flex flex-row items-center justify-between text-right">
-            <TeamOutlined className="text-lg text-primary-500"/>
+            <TeamOutlined className="text-lg text-primary-500" />
             <p className="text-sm text-primary-500 font-normal ml-2">Staff</p>
           </div>
         ),
       },
     ],
-    // eslint-disable-next-line
     [],
   );
 
@@ -139,28 +136,20 @@ const Organizations = ({loading}) => {
       contentClass="py-6 pl-21 pr-6"
     >
       <Table
-        size="small"
+        size="middle"
         className="p-6 bg-white rounded-lg shadow"
-        selectedRowKeys={selectedRows?.map((el) => el.key)}
         loading={loading}
         columns={columns}
         dataSource={dataSource}
         renderHeader={renderHeader}
         pageSize={pageSize * 1}
         pageNumber={1}
-        // eslint-disable-next-line camelcase
-        onRowSelectionChange={(_, rows) => {
-          setSelectedRows(rows);
-        }}
       />
     </MainLayout>
   );
 };
 
 Organizations.propTypes = {
-  duplicateProject: PropTypes.func.isRequired,
-  changeStatusOfProjects: PropTypes.func.isRequired,
-  removeProjects: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
 };
 
