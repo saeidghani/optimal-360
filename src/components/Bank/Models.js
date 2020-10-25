@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlusCircleOutlined, FileExcelOutlined, EditOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 
 import Button from '../Common/Button';
 import MainLayout from '../Common/Layout';
@@ -65,10 +65,17 @@ const Models = ({ loading }) => {
       // key: 'action',
       width: 100,
       render: () => (
-        <div className="flex">
-          <Button className="flex items-center mr-3.5">
-            <span className="text-12 pr-2">Export Exel File </span> <FileExcelOutlined />
-          </Button>
+        <div className="flex items-center">
+          <Button
+            className="flex items-center mr-3.5"
+            text="Export Exel File"
+            icon="FileExcelOutlined"
+            size="middle"
+            textSize="md"
+            textClassName="mr-2"
+            iconPosition="right"
+            type="gray"
+          />
           <EditOutlined className="text-xl text-primary-500 cursor-pointer" />
         </div>
       ),
@@ -90,14 +97,27 @@ const Models = ({ loading }) => {
         <div className="px-6">
           <div className="bg-white px-6 py-5">
             <div className="flex justify-end">
-              <Button className="flex items-center mr-3.5">
-                <span className="text-12 pr-2">Add Cluster</span>
-                <PlusCircleOutlined />
-              </Button>
-              <Button disabled className="flex items-center">
-                <span className="text-12 pr-2">Export Exel File</span>
-                <PlusCircleOutlined />
-              </Button>
+
+              <Button
+                className="flex items-center mr-3.5"
+                text="Add Cluster"
+                icon="PlusCircleOutlined"
+                textClassName="mr-2"
+                size="middle"
+                textSize="md"
+                iconPosition="right"
+                type="gray"
+              />
+              <Button
+                className="flex items-center mr-3.5"
+                text="Export Exel File"
+                icon="FileExcelOutlined"
+                textClassName="mr-2"
+                size="middle"
+                textSize="md"
+                iconPosition="right"
+                type="gray"
+              />
             </div>
             <div>
               <Table
