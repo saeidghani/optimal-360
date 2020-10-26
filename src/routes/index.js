@@ -72,5 +72,5 @@ const Index = () => (
     <Route component={NotFound} />
   </Switch>
 );
-//
+
 export default Index;
