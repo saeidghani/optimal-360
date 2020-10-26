@@ -28,5 +28,5 @@ debug.log
 #compiled-tailwind
 **/compiled-tailwind.css
 
-# related to webstorm IDE
+#related to webstorm IDE
 /.idea
