@@ -2,14 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import MainLayout from '../Common/Layout';
-
 import Input from '../Common/Input';
 import Button from '../Common/Button';
 
-const ProjectInfo = ({
-                       loading,
-                     }) => {
-
+const ProjectInfo = ({ loading }) => {
   return (
     <MainLayout
       titleClass="mt-3"
@@ -30,12 +26,7 @@ const ProjectInfo = ({
             placeholder="Organization Name"
             wrapperClassName="mb-2"
           />
-          <Button
-            text="Upload Logo"
-            textSize="xs"
-            type="gray"
-            className="px-2"
-          />
+          <Button text="Upload Logo" textSize="xs" type="gray" className="px-2" />
           <Button
             loading={loading}
             text="Create"
