@@ -12,11 +12,11 @@ export default {
     },
 
     async errorHandler(error) {
-      const { errors, message } = error?.response?.data;
+      const { errors = {}, message = '' } = error?.response?.data || {};
 
       if (errors) {
         let description = '';
-        Object.values(error.response.data.errors).forEach((err) => {
+        Object.values(errors).forEach((err) => {
           description = err;
         });
 
@@ -28,6 +28,12 @@ export default {
 
         return;
       }
+
+      this.alert_reducer({
+        message: 'Something went wrong',
+        description: 'Unknown error',
+        type: 'error',
+      });
     },
 
     async clearNotifications() {

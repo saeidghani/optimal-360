@@ -6,6 +6,7 @@ import arrayMove from 'array-move';
 import { LineOutlined } from '@ant-design/icons';
 
 import { useQuery } from '../../hooks/useQuery';
+import { useSurveyGroup } from '../../hooks';
 import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
 import Menu from './Helper/Menu';
 // import AddQuestionModal from './Helper/AddQuestionModal';
@@ -32,9 +33,8 @@ const SurveyQuestionsList = ({
   surveyQuestions,
   fetchSurveyQuestions,
   setSurveyQuestions,
-  fetchSurveyGroups,
   loading,
-  surveyGroups,
+  // surveyGroups,
 }) => {
   const formRef = React.useRef();
   const schema = yup.object({
@@ -73,74 +73,49 @@ const SurveyQuestionsList = ({
     ),
   });
 
-  const [parsedQuery, , setQuery] = useQuery();
-  const { projectId, surveyGroupId } = parsedQuery;
-  // const { search } = history?.location;
+  const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
 
+  // console.log({ surveyQuestions });
   const [surveyGroupModal, setSurveyGroupModal] = React.useState(false);
   const [isFormDone, setIsFormDone] = React.useState(false);
   const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
 
-  const [questionModal, setquestionModal] = React.useState(false);
-  const [feedbackModal, setfeedbackModal] = React.useState(false);
+  const [clusterEditMode, setClusterEditMode] = React.useState(false);
+  const [competencyEditMode, setCompetencyEditMode] = React.useState(false);
+  const [QuestionEditMode, setQuestionEditMode] = React.useState(false);
 
-  const data = [
-    {
-      key: '1',
-      name: '1',
-      index: 0,
-    },
-    {
-      key: '2',
-      name: '2',
-      index: 1,
-    },
-    {
-      key: '3',
-      name: '3',
-      index: 2,
-    },
-    {
-      key: '4',
-      name: '4',
-      index: 3,
-    },
-    {
-      key: '5',
-      name: '5',
-      index: 4,
-    },
-  ];
-  const [dataSource, setDataSource] = React.useState(data);
-
-  React.useEffect(() => {
-    fetchSurveyGroups(projectId);
-  }, [projectId, surveyGroupId, fetchSurveyGroups]);
+  const [parsedQuery, , setQuery] = useQuery();
+  // const { search } = history?.location;
 
   React.useEffect(() => {
     if (surveyGroupId) fetchSurveyQuestions(surveyGroupId);
-  }, [projectId, surveyGroupId, fetchSurveyQuestions]);
+  }, [surveyGroupId, fetchSurveyQuestions]);
 
-  console.log({ surveyQuestions, surveyGroups });
+  // console.log(formRef?.current?.values?.clusters);
 
-  React.useEffect(() => {
-    const sortedArr = surveyGroups?.data?.sort((el1, el2) => el1.id - el2.id) || [];
+  const handleSortEnd = ({ oldIndex, newIndex }, items) => {
+    // console.log(formRef?.current?.values?.clusters);
+    console.log({ oldIndex, newIndex }, items);
 
-    const firstSurveyGroupId = sortedArr?.length > 0 ? sortedArr[0].id : '';
+    if (oldIndex !== newIndex && formRef?.current?.values?.clusters) {
+      const clusters = arrayMove([].concat(items), oldIndex, newIndex).filter((el) => !!el);
 
-    const isURLSurveyGroupValid = !!sortedArr.find(
-      (el) => el.id?.toString() === parsedQuery?.surveyGroupId?.toString(),
-    );
+      console.log({ oldIndex, newIndex }, clusters);
 
-    if (
-      !isURLSurveyGroupValid &&
-      firstSurveyGroupId &&
-      firstSurveyGroupId !== parsedQuery?.surveyGroupId
-    ) {
-      setQuery({ surveyGroupId: firstSurveyGroupId });
+      formRef.current.setValues({ ...formRef.current.values, clusters });
     }
-    // eslint-disable-next-line
-  }, [JSON.stringify(surveyGroups.data)]);
+  };
+  const handleFormChange = (newVal, row, key, subKey) => {
+    const newValues = formRef.current.values[key].map((el) => {
+      if (el.id === row.id) {
+        return { ...el, [subKey]: newVal };
+      }
+
+      return el;
+    });
+
+    formRef.current.setValues({ ...formRef.current.values, [key]: newValues });
+  };
 
   React.useEffect(() => {
     if (
@@ -194,28 +169,160 @@ const SurveyQuestionsList = ({
     // eslint-disable-next-line
   }, [fetchSurveyQuestions, surveyGroupId]);
 
-  const handleSortEnd = ({ oldIndex, newIndex }) => {
-    if (oldIndex !== newIndex) {
-      const newData = arrayMove([].concat(dataSource), oldIndex, newIndex).filter((el) => !!el);
-      setDataSource(newData);
+  const selectedCluster =
+    formRef?.current?.values?.clusters?.length > 0
+      ? formRef.current.values.clusters.find((el) => el.id * 1 === parsedQuery.clusterId * 1)
+      : {};
+
+  const selectedCompetency =
+    selectedCluster?.competencies?.length > 0
+      ? selectedCluster.competencies.find((el) => el.id * 1 === parsedQuery.competencyId * 1)
+      : {};
+
+  const selectedQuestion =
+    selectedCompetency?.questions?.length > 0
+      ? selectedCompetency.questions.find((el) => el.id * 1 === parsedQuery.questionId * 1)
+      : {};
+
+  const renderHeader = () => {
+    return (clusterEditMode && selectedCluster) ||
+      (competencyEditMode && selectedCompetency) ||
+      (QuestionEditMode && selectedQuestion) ? (
+      <div
+        className="flex flex-row justify-between bg-antgray-600 p-4
+        items-center border-b border-list-border"
+      >
+        <p className="text-body">
+          All{' > '}
+          {selectedCluster?.name} {' > '}
+          {selectedCompetency?.name ? `${selectedCompetency.name} > ` : ''}
+          {selectedQuestion?.name ? `${selectedQuestion.name}` : ''}
+          Edit
+        </p>
+
+        <div className="flex flex-row items-center">
+          <Button
+            onClick={() => setQuery({ clusterId: null })}
+            text="Cancel"
+            type="link"
+            size="small"
+            textSize="base"
+          />
+          <Button text="Save" ghost size="small" textSize="base" />
+        </div>
+      </div>
+    ) : (
+      <div
+        className="flex flex-row justify-between bg-antgray-600 p-4
+                items-center border-b border-list-border"
+      >
+        <span>All</span>
+
+        <div className="flex items-center">
+          <Button
+            size="middle"
+            type="gray"
+            textSize="xs"
+            textClassName="mr-2"
+            text="Add Cluster"
+            className="mr-3 text-base"
+            // onClick={() => setquestionModal(true)}
+            icon="PlusCircleOutlined"
+            iconPosition="right"
+          />
+
+          <Button
+            size="middle"
+            type="gray"
+            textSize="xs"
+            textClassName="mr-2"
+            text="Export Exel File"
+            icon="PlusCircleOutlined"
+            iconPosition="right"
+            className="text-base"
+            onClick={() => setQuery()}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  const renderBodyWrapper = () => {
+    return clusterEditMode && selectedCluster ? (
+      <div className="flex flex-col">
+        <h1 className="text-secondary mb-3">Cluster</h1>
+
+        <Input placeholder="Cluster Name" value={selectedCluster.name} />
+      </div>
+    ) : (
+      false
+    );
+  };
+
+  const stringRef = formRef?.current?.values ? JSON.stringify(formRef.current.values) : '';
+  const getData = React.useCallback((initialize) => {
+    const clusters =
+      formRef?.current?.values?.clusters?.length > 0 ? formRef.current.values.clusters : [];
+    // const clusters =
+    //   formRef?.current?.values?.clusters?.length > 0
+    //     ? formRef.current.values.clusters
+    //     : surveyQuestions.clusters || [];
+
+    const { competencies = [] } =
+      clusters.find((el) => el.id * 1 === parsedQuery?.clusterId * 1) || {};
+    const { questions = [] } =
+      competencies.find((el) => el.id * 1 === parsedQuery?.competencyId * 1) || {};
+
+    let ref =
+      parsedQuery?.competencyId && questions
+        ? questions
+        : parsedQuery?.clusterId && competencies
+        ? competencies
+        : clusters;
+
+    ref = ref.map((el) => ({
+      ...el,
+      index: el.showOrder,
+      name: el.name || el.label,
+      key: el.id.toString(),
+    }));
+
+    console.log({ clusters, competencies, questions, parsedQuery, ref });
+
+    return initialize
+      ? (surveyQuestions.clusters || []).map((el) => ({
+          ...el,
+          index: el.showOrder,
+          name: el.name || el.label,
+          key: el.id.toString(),
+        }))
+      : formRef?.current && formRef.current.setValues({ ...formRef.current.values, clusters: ref });
+  }, []);
+
+  const onMenuClick = ({ clusterId, competencyId, questionId }) => {
+    setClusterEditMode(false);
+    setCompetencyEditMode(false);
+    setQuestionEditMode(false);
+
+    const Q = {};
+
+    if (clusterId) {
+      Q.clusterId = clusterId * 1 === parsedQuery?.clusterId * 1 ? null : clusterId;
+      Q.competencyId = null;
+      Q.questionId = null;
     }
+
+    if (competencyId) {
+      Q.competencyId = competencyId * 1 === parsedQuery?.competencyId * 1 ? null : competencyId;
+      Q.questionId = null;
+    }
+
+    if (questionId) {
+      Q.questionId = questionId * 1 === parsedQuery?.questionId * 1 ? null : questionId;
+    }
+
+    setQuery(Q);
   };
-
-  const handleFormChange = (newVal, row, key, subKey) => {
-    const newValues = formRef.current.values[key].map((el) => {
-      if (el.id === row.id) {
-        return { ...el, [subKey]: newVal };
-      }
-
-      return el;
-    });
-
-    formRef.current.setValues({ ...formRef.current.values, [key]: newValues });
-  };
-
-  const currentSurveyGroupName =
-    surveyGroups?.data?.find((el) => el.id.toString() === parsedQuery?.surveyGroupId?.toString())
-      ?.name || '';
 
   return (
     <MainLayout
@@ -241,7 +348,7 @@ const SurveyQuestionsList = ({
       />
 
       {/* <AddQuestionModal visible={questionModal} action={setquestionModal} />
-      <AddFeedbackModal visible={feedbackModal} action={setfeedbackModal} /> */}
+              <AddFeedbackModal visible={feedbackModal} action={setfeedbackModal} /> */}
 
       <div className="bg-white grid grid-cols-12 pl-15">
         <Menu
@@ -263,11 +370,16 @@ const SurveyQuestionsList = ({
                   ? surveyQuestions.ratingScales
                   : _ratingScales,
               feedbacks: surveyQuestions?.feedbacks?.length > 0 ? surveyQuestions.feedbacks : [],
-              clusters: surveyQuestions?.clusters?.length > 0 ? surveyQuestions.clusters : [],
+              // clusters:
+              //   surveyQuestions?.clusters?.length > 0
+              //     ? surveyQuestions.clusters.map((el) => ({ ...el, index: el.showOrder }))
+              //     : [],
+              clusters: getData(true),
             }}
             validationSchema={schema}
             onSubmit={async (values) => {
               console.log({ values });
+              // setSurveyQuestions()
             }}
           >
             {({ values, errors, touched, handleSubmit, setFieldValue }) => (
@@ -279,7 +391,7 @@ const SurveyQuestionsList = ({
                 <h4 className="text-secondary text-lg mb-8 mt-17">Rating Scale</h4>
 
                 {values.ratingScales.map((row, i) => (
-                  <div className="grid grid-cols-12">
+                  <div key={row.id || i} className="grid grid-cols-12">
                     <p className="col-span-12 text-heading mb-3">{i + 1}</p>
 
                     <Input
@@ -321,47 +433,24 @@ const SurveyQuestionsList = ({
                     title="ALL"
                     // titleClassName="pt-2.3 pb-5.5 pl-7.5 text-body font-medium font-sans"
                     className="py-3 col-span-3"
-                    items={values.clusters}
-                    onQuestionClick={(questionId) => setQuery({ questionId })}
+                    items={surveyQuestions?.clusters}
+                    onClusterClick={(clusterId) => onMenuClick({ clusterId })}
+                    onCompetencyClick={(competencyId) => onMenuClick({ competencyId })}
+                    onQuestionClick={(questionId) => onMenuClick({ questionId })}
                   />
 
                   <div className="col-span-9 p-6 rounded-7px border border-antgray-500 w-full">
-                    <div
-                      className="flex flex-row justify-between bg-antgray-600 h-14 w-full pl-8 py-3
-                     pr-6 items-center border-b border-list-border"
-                    >
-                      <span>All</span>
-
-                      <div className="flex items-center">
-                        <Button
-                          size="middle"
-                          type="gray"
-                          textSize="xs"
-                          textClassName="mr-2"
-                          text="Add Cluster"
-                          className="mr-3 text-base"
-                          onClick={() => setquestionModal(true)}
-                          icon="PlusCircleOutlined"
-                          iconPosition="right"
-                        />
-
-                        <Button
-                          size="middle"
-                          type="gray"
-                          textSize="xs"
-                          textClassName="mr-2"
-                          text="Export Exel File"
-                          icon="PlusCircleOutlined"
-                          iconPosition="right"
-                          className="text-base"
-                          onClick={() => setQuery()}
-                        />
-                      </div>
-                    </div>
-
                     <DraggableTable
-                      items={values.clusters}
-                      data={values.clusters.map((el) => ({ ...el, key: el.id.toString() }))}
+                      renderHeader={renderHeader}
+                      renderBodyWrapper={renderBodyWrapper}
+                      onClusterEdit={() => setClusterEditMode(true)}
+                      onClusterDelete={() => {}}
+                      onCompetencyEdit={() => setClusterEditMode(true)}
+                      onCompetencyDelete={() => {}}
+                      onQuestionEdit={() => setClusterEditMode(true)}
+                      onQuestionDelete={() => {}}
+                      // data={values.clusters}
+                      data={values.clusters}
                       onSortEnd={handleSortEnd}
                     />
                   </div>
@@ -379,13 +468,13 @@ const SurveyQuestionsList = ({
                       textClassName="mr-2"
                       textSize="xs"
                       type="gray"
-                      onClick={() => setfeedbackModal(true)}
+                      // onClick={() => setfeedbackModal(true)}
                     />
                   </div>
 
                   {values.feedbacks.map((row, i) => (
                     <div
-                      key={row.id}
+                      key={row.id || i}
                       className="grid grid-cols-12 gap-x-6 flex flex-row items-start my-6"
                     >
                       <Button
@@ -460,7 +549,6 @@ const SurveyQuestionsList = ({
 };
 
 SurveyQuestionsList.propTypes = {
-  fetchSurveyGroups: PropTypes.func.isRequired,
   fetchSurveyQuestions: PropTypes.func.isRequired,
   setSurveyQuestions: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
@@ -470,7 +558,7 @@ SurveyQuestionsList.propTypes = {
   surveyQuestions: PropTypes.shape({
     ratingScales: PropTypes.arrayOf(
       PropTypes.shape({
-        score: PropTypes.string,
+        score: PropTypes.number,
         description: PropTypes.string,
         label: PropTypes.string,
       }),
