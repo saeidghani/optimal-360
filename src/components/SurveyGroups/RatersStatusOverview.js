@@ -25,6 +25,7 @@ const RatersStatusOverview = ({ loading }) => {
           <span className="text-antgray-100">Ratee</span>
         </div>
       ),
+      width: 100,
     },
     {
       key: 'dueDate',
@@ -33,6 +34,7 @@ const RatersStatusOverview = ({ loading }) => {
           <span className="text-antgray-100">Due date</span>
         </div>
       ),
+      width: 100,
       render: (date) => <span className="text-12px">{date}</span>,
     },
     {
@@ -131,7 +133,7 @@ const RatersStatusOverview = ({ loading }) => {
           <span className="text-body text-opacity-75 text-12px">Min. 2</span>
         </div>
       ),
-      width: 100,
+      width: 50,
       render: (percentage) => (
         <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
           <Progress className="h-8" subClassName="mb-12 pb-2" status="sub" percentage={100} />
@@ -142,7 +144,7 @@ const RatersStatusOverview = ({ loading }) => {
     {
       key: 'status',
       title: '',
-      width: 100,
+      width: 50,
       render: (status) => (
         <div
           className="ml-auto text-12px text-antgray-100"
@@ -223,14 +225,20 @@ const RatersStatusOverview = ({ loading }) => {
 
   return (
     <MainLayout contentClass="pl-21 pr-6 py-4" title="Super User" titleClass="my-2" hasBreadCrumb>
-      <div className="lg:w-2/12 w-4/12">
+      <div className="lg:w-2/12 w-4/12 mt-3 mb-10">
         <h2 className="my-6 pt-6 pl-3 font-medium text-16px">Survey Group</h2>
-        <Dropdown showSearch value={1} type="gray" options={dropDownOptions} />
+        <Dropdown
+          className="c-autocomplete w-full"
+          showSearch
+          value={1}
+          type="gray"
+          options={dropDownOptions}
+        />
       </div>
       <div>
         <Tabs className="c-tabs-class" />
       </div>
-      <div className="bg-white p-6 pr-32 rounded-7px mb-6">
+      <div className="bg-white p-6 pr-32 rounded-7px my-6">
         <div className="flex justify-between items-center mb-5">
           <h1 className="font-medium text-24px">Overall Completion Rate</h1>
           <div className="flex justify-between items-center">
@@ -253,7 +261,7 @@ const RatersStatusOverview = ({ loading }) => {
               <span className="text-12px">Total No. Submission: </span>
               <span className="text-16px text-heading">6/20</span>
             </div>
-            <div className="mb-6">
+            <div className="mb-6 flex justify-center">
               <Progress percentage={38} />
             </div>
             <div>
@@ -271,7 +279,7 @@ const RatersStatusOverview = ({ loading }) => {
               <span className="text-12px">Total No. Submission: </span>
               <span className="text-16px text-heading">6/20</span>
             </div>
-            <div className="mb-6">
+            <div className="mb-6 flex justify-center">
               <Progress percentage={58} />
             </div>
             <div>
@@ -289,7 +297,7 @@ const RatersStatusOverview = ({ loading }) => {
               <span className="text-12px">Total No. Submission: </span>
               <span className="text-16px text-heading">6/20</span>
             </div>
-            <div className="mb-6">
+            <div className="mb-6 flex justify-center">
               <Progress percentage={100} />
             </div>
             <div>
@@ -325,7 +333,7 @@ const RatersStatusOverview = ({ loading }) => {
               <span className="text-12px">Total No. Submission: </span>
               <span className="text-16px text-heading">6/20</span>
             </div>
-            <div className="mb-6">
+            <div className="mb-6 flex justify-center">
               <Progress percentage={100} />
             </div>
             <div>

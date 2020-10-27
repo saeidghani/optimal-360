@@ -25,6 +25,7 @@ const _Dropdown = ({
     size={size}
     value={value}
     defaultValue={defaultValue}
+    style={{ width: '100%' }}
   >
     {options?.length > 0
       ? options.map((el, i) => (
