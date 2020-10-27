@@ -43,12 +43,12 @@ const Index = () => (
     />
 
     <PrivateRoute
-      path="/super-user/Participants/StatusOverview"
+      path="/super-user/participants/status-overview"
       exact
       component={RatersStatusOverview}
     />
     <PrivateRoute
-      path="/super-user/Participants/StatusDetails"
+      path="/super-user/participants/status-details"
       exact
       component={RatersStatusDetails}
     />

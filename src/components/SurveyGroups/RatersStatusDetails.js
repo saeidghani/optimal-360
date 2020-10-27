@@ -12,7 +12,7 @@ import Button from "../Common/Button";
 
 const RatersStatusDetails = ({loading}) => {
   const [pageSize] = React.useState(10);
-  const [selectedRows] = React.useState([]);
+  const [selectedRows, setSelectedRows] = React.useState([]);
 
   const dropDownOptions = [
     {title: 'Top Leadership', value: 1},
@@ -24,19 +24,38 @@ const RatersStatusDetails = ({loading}) => {
     () => {
       return selectedRows && selectedRows?.length > 0 ? (
         <div className="flex flex-row items-center">
+          <Button
+            size="middle"
+            textSize="xs"
+            text="Remove"
+            textClassName="mr-2"
+            className="ml-3"
+          />
+          <Button
+            size="middle"
+            textSize="xs"
+            text="Open Assessment"
+            textClassName="mr-2"
+            className="ml-3"
+          />
+          <Button
+            size="middle"
+            textSize="xs"
+            text="Close Assessment"
+            textClassName="mr-2"
+            className="ml-3"
+          />
           <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
         </div>
       ) : (
         <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row">
+          <div className="flex flex-row items-center">
             <Button
               size="middle"
               textSize="xs"
               text="View by raters"
               textClassName="mr-2"
               className="ml-3"
-              icon="PlusCircleOutlined"
-              iconPosition="right"
             />
             <Button
               size="middle"
@@ -44,8 +63,6 @@ const RatersStatusDetails = ({loading}) => {
               text="View by ratees"
               textClassName="mr-2"
               className="ml-3"
-              icon="PlusCircleOutlined"
-              iconPosition="right"
               light
             />
           </div>
@@ -132,6 +149,7 @@ const RatersStatusDetails = ({loading}) => {
 
   const dataSource = [
     {
+      key: '1',
       raterName: 'Jean Luc Picard',
       raterEmail: 'jtkirk@ufp.com',
       rateeName: 'Katherine Janeway',
@@ -140,6 +158,7 @@ const RatersStatusDetails = ({loading}) => {
       status: '100%',
     },
     {
+      key: '2',
       raterName: 'Jean Luc Picard',
       raterEmail: 'jtkirk@ufp.com',
       rateeName: 'Katherine Janeway',
@@ -148,6 +167,7 @@ const RatersStatusDetails = ({loading}) => {
       status: '100%',
     },
     {
+      key: '3',
       raterName: 'Jean Luc Picard',
       raterEmail: 'jtkirk@ufp.com',
       rateeName: 'Katherine Janeway',
@@ -156,6 +176,7 @@ const RatersStatusDetails = ({loading}) => {
       status: '100%',
     },
     {
+      key: '4',
       raterName: 'Jean Luc Picard',
       raterEmail: 'jtkirk@ufp.com',
       rateeName: 'Katherine Janeway',
@@ -164,6 +185,7 @@ const RatersStatusDetails = ({loading}) => {
       status: '100%',
     },
     {
+      key: '5',
       raterName: 'Jean Luc Picard',
       raterEmail: 'jtkirk@ufp.com',
       rateeName: 'Katherine Janeway',
@@ -197,6 +219,10 @@ const RatersStatusDetails = ({loading}) => {
         pageSize={pageSize * 1}
         pageNumber={1}
         renderHeader={renderHeader}
+        selectedRowKeys={selectedRows?.map((el) => el.key)}
+        onRowSelectionChange={(_, rows) => {
+          setSelectedRows(rows);
+        }}
       />
     </MainLayout>
   );
