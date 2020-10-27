@@ -16,6 +16,7 @@ const RatersStatusOverview = ({ loading }) => {
     { title: 'Top Leadership2', value: 2 },
     { title: 'Top Leadership3', value: 3 },
   ];
+ 
 
   const columns = React.useMemo(() => [
     {
@@ -238,6 +239,7 @@ const RatersStatusOverview = ({ loading }) => {
       <div>
         <Tabs className="c-tabs-class" />
       </div>
+
       <div className="bg-white p-6 pr-32 rounded-7px my-6">
         <div className="flex justify-between items-center mb-5">
           <h1 className="font-medium text-24px">Overall Completion Rate</h1>

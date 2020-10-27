@@ -11,6 +11,7 @@ import SetAdmin from '../containers/Projects/SetAdmin';
 
 import SurveyGroupList from '../containers/SurveyGroups/List';
 import RatersStatusOverview from '../containers/SurveyGroups/RatersStatusOverview';
+import RatersStatusDetails from '../containers/SurveyGroups/RatersStatusDetails';
 import Organizations from '../containers/SurveyGroups/Organizations';
 
 import ProjectInfo from '../containers/Wizard/ProjectInfo';
@@ -42,6 +43,11 @@ const Index = () => (
       path="/super-user/Participants/StatusOverview"
       exact
       component={RatersStatusOverview}
+    />
+    <PrivateRoute
+      path="/super-user/Participants/StatusDetails"
+      exact
+      component={RatersStatusDetails}
     />
 
     <PrivateRoute path="/super-user/new-project/project-info" exact component={ProjectInfo} />
