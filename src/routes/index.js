@@ -14,6 +14,7 @@ import RatersStatusOverview from '../containers/SurveyGroups/RatersStatusOvervie
 import Organizations from '../containers/SurveyGroups/Organizations';
 import OrganizationsUsers from '../containers/SurveyGroups/OrganizationsUsers';
 import OrganizationsNewStaff from '../containers/SurveyGroups/OrganizationsNewStaff';
+import NewOrganizations from '../containers/SurveyGroups/NewOrganizations';
 
 import ProjectInfo from '../containers/Wizard/ProjectInfo';
 import SurveySetting from '../containers/Wizard/SurveySetting';
@@ -68,6 +69,7 @@ const Index = () => (
       exact
       component={OrganizationsNewStaff}
     />
+    <PrivateRoute path="/super-user/organizations/users/new" exact component={NewOrganizations} />
     <CustomRoute path="/" exact component={TestingArea} />
     <Route component={NotFound} />
   </Switch>
