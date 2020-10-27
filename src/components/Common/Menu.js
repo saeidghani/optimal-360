@@ -8,10 +8,11 @@ const { SubMenu } = Menu;
 
 const _Menu = ({
   className,
+  defaultClusterId,
   title,
   titleClassName,
   items,
-  onMenuClick,
+  // onMenuClick,
   onClusterClick,
   onCompetencyClick,
   onQuestionClick,
@@ -19,21 +20,27 @@ const _Menu = ({
   const [parsedQuery] = useQuery();
   const { clusterId, competencyId, questionId } = parsedQuery;
 
-  const selectedKeys = [
-    `cluster_${clusterId}`,
-    `cluster_${clusterId}_competency_${competencyId}`,
-    `cluster_${clusterId}_competency_${competencyId}_question_${questionId}`,
-  ];
+  const activeKeys = [];
+
+  if (clusterId) {
+    activeKeys.push(`cluster_${clusterId}`);
+
+    if (competencyId) {
+      activeKeys.push(`cluster_${clusterId}_competency_${competencyId}`);
+
+      if (questionId) {
+        activeKeys.push(`cluster_${clusterId}_competency_${competencyId}_question_${questionId}`);
+      }
+    }
+  }
 
   return (
     <Menu
-      level={3}
-      selectedKeys={selectedKeys}
-      openKeys={selectedKeys}
-      onClick={onMenuClick}
+      selectedKeys={activeKeys}
+      openKeys={activeKeys}
+      defaultSelectedKeys={[`cluster_${defaultClusterId}`]}
+      // onClick={onMenuClick}
       className={`bg-antgray-600 ${className}`}
-      // defaultSelectedKeys={[]}
-      // defaultOpenKeys={[]}
       mode="inline"
     >
       {title && <Menu.Item className={titleClassName}>{title}</Menu.Item>}
@@ -70,14 +77,21 @@ const _Menu = ({
 _Menu.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string,
+  defaultClusterId: PropTypes.number,
   titleClassName: PropTypes.string,
   items: PropTypes.arrayOf(PropTypes.shape({})),
-  onMenuClick: PropTypes.func,
-  onClusterClick: PropTypes.func,
-  onCompetencyClick: PropTypes.func,
-  onQuestionClick: PropTypes.func,
+  // onMenuClick: PropTypes.func.isRequired,
+  onClusterClick: PropTypes.func.isRequired,
+  onCompetencyClick: PropTypes.func.isRequired,
+  onQuestionClick: PropTypes.func.isRequired,
 };
 
-_Menu.defaultProps = { items: [], className: '' };
+_Menu.defaultProps = {
+  items: [],
+  className: '',
+  titleClassName: '',
+  defaultClusterId: 0,
+  title: '',
+};
 
 export default _Menu;

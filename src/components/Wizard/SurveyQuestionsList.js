@@ -7,8 +7,13 @@ import { LineOutlined } from '@ant-design/icons';
 
 import { useQuery } from '../../hooks/useQuery';
 import { useSurveyGroup } from '../../hooks';
+
 import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
 import Menu from './Helper/Menu';
+
+import ClusterEditSection from './Helper/ClusterEditSection';
+import CompetencyEditSection from './Helper/CompetencyEditSection';
+import QuestionEditSection from './Helper/QuestionEditSection';
 // import AddQuestionModal from './Helper/AddQuestionModal';
 // import AddFeedbackModal from './Helper/AddFeedbackModal';
 
@@ -75,23 +80,20 @@ const SurveyQuestionsList = ({
 
   const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
 
-  // console.log({ surveyQuestions });
   const [surveyGroupModal, setSurveyGroupModal] = React.useState(false);
   const [isFormDone, setIsFormDone] = React.useState(false);
   const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
 
-  const [clusterEditMode, setClusterEditMode] = React.useState(false);
-  const [competencyEditMode, setCompetencyEditMode] = React.useState(false);
-  const [QuestionEditMode, setQuestionEditMode] = React.useState(false);
+  const [selectedCluster, setSelectedCluster] = React.useState('');
+  const [selectedCompetency, setSelectedCompetency] = React.useState('');
+  const [selectedQuestion, setSelectedQuestion] = React.useState('');
 
-  const [parsedQuery, , setQuery] = useQuery();
+  const [parsedQuery, query, setQuery] = useQuery();
   // const { search } = history?.location;
 
   React.useEffect(() => {
     if (surveyGroupId) fetchSurveyQuestions(surveyGroupId);
   }, [surveyGroupId, fetchSurveyQuestions]);
-
-  // console.log(formRef?.current?.values?.clusters);
 
   const handleSortEnd = ({ oldIndex, newIndex }, items) => {
     // console.log(formRef?.current?.values?.clusters);
@@ -169,110 +171,32 @@ const SurveyQuestionsList = ({
     // eslint-disable-next-line
   }, [fetchSurveyQuestions, surveyGroupId]);
 
-  const selectedCluster =
-    formRef?.current?.values?.clusters?.length > 0
-      ? formRef.current.values.clusters.find((el) => el.id * 1 === parsedQuery.clusterId * 1)
+  const clusterStringified = JSON.stringify(surveyQuestions.clusters);
+  const firstClusterItem = React.useMemo(() => {
+    return surveyQuestions?.clusters?.length > 0 ? surveyQuestions.clusters[0] : {};
+  }, [clusterStringified]);
+
+  const _selectedCluster = React.useMemo(() => {
+    return surveyQuestions?.clusters?.length > 0
+      ? surveyQuestions.clusters.find((el) => el.id * 1 === parsedQuery.clusterId * 1)
       : {};
+  }, [clusterStringified, parsedQuery.clusterId]);
 
-  const selectedCompetency =
-    selectedCluster?.competencies?.length > 0
-      ? selectedCluster.competencies.find((el) => el.id * 1 === parsedQuery.competencyId * 1)
+  const _selectedCompetency = React.useMemo(() => {
+    return _selectedCluster?.competencies?.length > 0
+      ? _selectedCluster.competencies.find((el) => el.id * 1 === parsedQuery.competencyId * 1)
       : {};
+  }, [clusterStringified, parsedQuery.competencyId]);
 
-  const selectedQuestion =
-    selectedCompetency?.questions?.length > 0
-      ? selectedCompetency.questions.find((el) => el.id * 1 === parsedQuery.questionId * 1)
-      : {};
-
-  const renderHeader = () => {
-    return (clusterEditMode && selectedCluster) ||
-      (competencyEditMode && selectedCompetency) ||
-      (QuestionEditMode && selectedQuestion) ? (
-      <div
-        className="flex flex-row justify-between bg-antgray-600 p-4
-        items-center border-b border-list-border"
-      >
-        <p className="text-body">
-          All{' > '}
-          {selectedCluster?.name} {' > '}
-          {selectedCompetency?.name ? `${selectedCompetency.name} > ` : ''}
-          {selectedQuestion?.name ? `${selectedQuestion.name}` : ''}
-          Edit
-        </p>
-
-        <div className="flex flex-row items-center">
-          <Button
-            onClick={() => setQuery({ clusterId: null })}
-            text="Cancel"
-            type="link"
-            size="small"
-            textSize="base"
-          />
-          <Button text="Save" ghost size="small" textSize="base" />
-        </div>
-      </div>
-    ) : (
-      <div
-        className="flex flex-row justify-between bg-antgray-600 p-4
-                items-center border-b border-list-border"
-      >
-        <span>All</span>
-
-        <div className="flex items-center">
-          <Button
-            size="middle"
-            type="gray"
-            textSize="xs"
-            textClassName="mr-2"
-            text="Add Cluster"
-            className="mr-3 text-base"
-            // onClick={() => setquestionModal(true)}
-            icon="PlusCircleOutlined"
-            iconPosition="right"
-          />
-
-          <Button
-            size="middle"
-            type="gray"
-            textSize="xs"
-            textClassName="mr-2"
-            text="Export Exel File"
-            icon="PlusCircleOutlined"
-            iconPosition="right"
-            className="text-base"
-            onClick={() => setQuery()}
-          />
-        </div>
-      </div>
-    );
-  };
-
-  const renderBodyWrapper = () => {
-    return clusterEditMode && selectedCluster ? (
-      <div className="flex flex-col">
-        <h1 className="text-secondary mb-3">Cluster</h1>
-
-        <Input placeholder="Cluster Name" value={selectedCluster.name} />
-      </div>
-    ) : (
-      false
-    );
-  };
-
-  const stringRef = formRef?.current?.values ? JSON.stringify(formRef.current.values) : '';
-  const getData = React.useCallback((initialize) => {
-    const clusters =
-      formRef?.current?.values?.clusters?.length > 0 ? formRef.current.values.clusters : [];
-    // const clusters =
-    //   formRef?.current?.values?.clusters?.length > 0
-    //     ? formRef.current.values.clusters
-    //     : surveyQuestions.clusters || [];
-
+  React.useEffect(() => {
+    const clusters = surveyQuestions.clusters || [];
     const { competencies = [] } =
       clusters.find((el) => el.id * 1 === parsedQuery?.clusterId * 1) || {};
     const { questions = [] } =
       competencies.find((el) => el.id * 1 === parsedQuery?.competencyId * 1) || {};
 
+    // prioratize question over competencies over clusters
+    // (bottom to top)
     let ref =
       parsedQuery?.competencyId && questions
         ? questions
@@ -280,6 +204,7 @@ const SurveyQuestionsList = ({
         ? competencies
         : clusters;
 
+    // refactoring data to match sorting algorithm
     ref = ref.map((el) => ({
       ...el,
       index: el.showOrder,
@@ -287,22 +212,13 @@ const SurveyQuestionsList = ({
       key: el.id.toString(),
     }));
 
-    console.log({ clusters, competencies, questions, parsedQuery, ref });
-
-    return initialize
-      ? (surveyQuestions.clusters || []).map((el) => ({
-          ...el,
-          index: el.showOrder,
-          name: el.name || el.label,
-          key: el.id.toString(),
-        }))
-      : formRef?.current && formRef.current.setValues({ ...formRef.current.values, clusters: ref });
-  }, []);
+    formRef.current.setValues({ ...formRef.current.values, clusters: ref });
+  }, [query, clusterStringified]);
 
   const onMenuClick = ({ clusterId, competencyId, questionId }) => {
-    setClusterEditMode(false);
-    setCompetencyEditMode(false);
-    setQuestionEditMode(false);
+    setSelectedCluster('');
+    setSelectedCompetency('');
+    setSelectedQuestion('');
 
     const Q = {};
 
@@ -323,6 +239,9 @@ const SurveyQuestionsList = ({
 
     setQuery(Q);
   };
+
+  // console.log({ selectedCluster, selectedCompetency, selectedQuestion });
+  console.log({ surveyQuestions });
 
   return (
     <MainLayout
@@ -347,8 +266,10 @@ const SurveyQuestionsList = ({
         visible={surveyGroupModal}
       />
 
-      {/* <AddQuestionModal visible={questionModal} action={setquestionModal} />
-              <AddFeedbackModal visible={feedbackModal} action={setfeedbackModal} /> */}
+      {/* 
+          <AddQuestionModal visible={questionModal} action={setquestionModal} />
+          <AddFeedbackModal visible={feedbackModal} action={setfeedbackModal} /> 
+      */}
 
       <div className="bg-white grid grid-cols-12 pl-15">
         <Menu
@@ -365,16 +286,13 @@ const SurveyQuestionsList = ({
             innerRef={formRef}
             enableReinitialize
             initialValues={{
-              ratingScales:
-                surveyQuestions?.ratingScales?.length > 0
-                  ? surveyQuestions.ratingScales
-                  : _ratingScales,
-              feedbacks: surveyQuestions?.feedbacks?.length > 0 ? surveyQuestions.feedbacks : [],
-              // clusters:
-              //   surveyQuestions?.clusters?.length > 0
-              //     ? surveyQuestions.clusters.map((el) => ({ ...el, index: el.showOrder }))
-              //     : [],
-              clusters: getData(true),
+              ratingScales: surveyQuestions?.ratingScales
+                ? surveyQuestions.ratingScales
+                : _ratingScales,
+              feedbacks: surveyQuestions?.feedbacks ? surveyQuestions.feedbacks : [],
+              clusters: surveyQuestions?.clusters
+                ? surveyQuestions.clusters.map((el) => ({ ...el, index: el.showOrder }))
+                : [],
             }}
             validationSchema={schema}
             onSubmit={async (values) => {
@@ -384,7 +302,7 @@ const SurveyQuestionsList = ({
           >
             {({ values, errors, touched, handleSubmit, setFieldValue }) => (
               <Form className="pr-28" onSubmit={handleSubmit}>
-                {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
+                <pre>{console.log(values)}</pre>
                 {/* <pre>{JSON.stringify(touched, null, 2)}</pre> */}
                 {/* <pre>{JSON.stringify(errors, null, 2)}</pre> */}
 
@@ -425,34 +343,61 @@ const SurveyQuestionsList = ({
 
                 <h4 className="text-secondary text-lg mt-8.5">Data Model</h4>
 
-                <div
-                  className="grid grid-cols-12 gap-x-8"
-                  //  className="flex flex-row mt-8 mb-7.5 w-full"
-                >
+                <div className="grid grid-cols-12 gap-x-8">
                   <SecondaryMenu
                     title="ALL"
-                    // titleClassName="pt-2.3 pb-5.5 pl-7.5 text-body font-medium font-sans"
                     className="py-3 col-span-3"
                     items={surveyQuestions?.clusters}
+                    defaultClusterId={firstClusterItem.id}
                     onClusterClick={(clusterId) => onMenuClick({ clusterId })}
                     onCompetencyClick={(competencyId) => onMenuClick({ competencyId })}
                     onQuestionClick={(questionId) => onMenuClick({ questionId })}
                   />
 
                   <div className="col-span-9 p-6 rounded-7px border border-antgray-500 w-full">
-                    <DraggableTable
-                      renderHeader={renderHeader}
-                      renderBodyWrapper={renderBodyWrapper}
-                      onClusterEdit={() => setClusterEditMode(true)}
-                      onClusterDelete={() => {}}
-                      onCompetencyEdit={() => setClusterEditMode(true)}
-                      onCompetencyDelete={() => {}}
-                      onQuestionEdit={() => setClusterEditMode(true)}
-                      onQuestionDelete={() => {}}
-                      // data={values.clusters}
-                      data={values.clusters}
-                      onSortEnd={handleSortEnd}
-                    />
+                    {selectedQuestion ? (
+                      <QuestionEditSection
+                        onCancel={() => setSelectedQuestion('')}
+                        onSave={(vals) => {
+                          setSelectedQuestion('');
+                          console.log({ vals });
+                        }}
+                        data={selectedQuestion}
+                        clusterName={_selectedCluster?.name}
+                        competencyName={_selectedCompetency?.name}
+                      />
+                    ) : selectedCompetency ? (
+                      <CompetencyEditSection
+                        onCancel={() => setSelectedCompetency('')}
+                        onSave={(vals) => {
+                          setSelectedCompetency('');
+                          console.log({ vals });
+                        }}
+                        data={selectedCompetency}
+                        clusterName={_selectedCluster?.name}
+                      />
+                    ) : selectedCluster ? (
+                      <ClusterEditSection
+                        selectedCluster={selectedCluster}
+                        onSave={(vals) => {
+                          setSelectedCluster('');
+                          console.log({ vals });
+                        }}
+                        onCancel={() => setSelectedCluster('')}
+                      />
+                    ) : (
+                      <DraggableTable
+                        onClusterEdit={(item) => setSelectedCluster(item)}
+                        onClusterDelete={() => {}}
+                        onCompetencyEdit={(item) => setSelectedCompetency(item)}
+                        onCompetencyDelete={() => {}}
+                        onQuestionEdit={(item) => setSelectedQuestion(item)}
+                        onQuestionDelete={() => {}}
+                        // data={values.clusters}
+                        data={values.clusters}
+                        onSortEnd={handleSortEnd}
+                      />
+                    )}
                   </div>
                 </div>
 

@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import arrayMove from 'array-move';
-
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import { MenuOutlined } from '@ant-design/icons';
 import { Table } from 'antd';
@@ -18,9 +16,7 @@ const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 
 const SortableTable = ({
   data,
-  renderHeader,
   onSortEnd,
-  renderBodyWrapper,
   onClusterEdit,
   onClusterDelete,
   onCompetencyEdit,
@@ -51,11 +47,11 @@ const SortableTable = ({
           <Button
             onClick={() => {
               if (item?.competencies) {
-                onClusterDelete(item.id);
+                onClusterDelete(item);
               } else if (item?.questions) {
-                onCompetencyDelete(item.id);
+                onCompetencyDelete(item);
               } else {
-                onQuestionDelete(item.id);
+                onQuestionDelete(item);
               }
             }}
             type="link"
@@ -65,11 +61,11 @@ const SortableTable = ({
           <Button
             onClick={() => {
               if (item?.competencies) {
-                onClusterEdit(item.id);
+                onClusterEdit(item);
               } else if (item?.questions) {
-                onCompetencyEdit(item.id);
+                onCompetencyEdit(item);
               } else {
-                onQuestionEdit(item.id);
+                onQuestionEdit(item);
               }
             }}
             type="link"
@@ -98,17 +94,52 @@ const SortableTable = ({
     />
   );
 
+  const Header = () => (
+    <div
+      className="flex flex-row justify-between bg-antgray-600 p-4
+        items-center border-b border-list-border"
+    >
+      <span>All</span>
+
+      <div className="flex items-center">
+        <Button
+          size="middle"
+          type="gray"
+          textSize="xs"
+          textClassName="mr-2"
+          text="Add Cluster"
+          className="mr-3 text-base"
+          // onClick={() => setquestionModal(true)}
+          icon="PlusCircleOutlined"
+          iconPosition="right"
+        />
+
+        <Button
+          size="middle"
+          type="gray"
+          textSize="xs"
+          textClassName="mr-2"
+          text="Export Exel File"
+          icon="PlusCircleOutlined"
+          iconPosition="right"
+          className="text-base"
+          // onClick={() => setQuery()}
+        />
+      </div>
+    </div>
+  );
+
   return (
     <Table
       pagination={false}
       showHeader={false}
-      title={renderHeader}
       dataSource={data}
+      title={Header}
       columns={columns}
       rowKey="index"
       components={{
         body: {
-          wrapper: renderBodyWrapper() ? renderBodyWrapper : DraggableContainer,
+          wrapper: DraggableContainer,
           row: DraggableBodyRow,
         },
       }}
@@ -124,8 +155,6 @@ SortableTable.propTypes = {
   onCompetencyDelete: PropTypes.func.isRequired,
   onQuestionEdit: PropTypes.func.isRequired,
   onQuestionDelete: PropTypes.func.isRequired,
-  renderHeader: PropTypes.func.isRequired,
-  renderBodyWrapper: PropTypes.func.isRequired,
   data: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
