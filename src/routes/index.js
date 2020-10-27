@@ -58,16 +58,8 @@ const Index = () => (
       exact
       component={SurveyQuestionsList}
     />
-    <PrivateRoute
-      path="/super-user/new-project/report"
-      exact
-      component={Report}
-    />
-    <PrivateRoute
-      path="/super-user/projects/survey-groups"
-      exact
-      component={Organizations}
-    />
+    <PrivateRoute path="/super-user/new-project/report" exact component={Report} />
+    <PrivateRoute path="/super-user/projects/survey-groups" exact component={Organizations} />
     <CustomRoute path="/" exact component={TestingArea} />
     <Route component={NotFound} />
   </Switch>
