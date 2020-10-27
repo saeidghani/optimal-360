@@ -23,51 +23,46 @@ const RatersStatusRaterEmail = ({loading}) => {
     () => {
       return selectedRows && selectedRows?.length > 0 ? (
         <div className="flex flex-row items-center">
+          <Button
+            size="middle"
+            textSize="xs"
+            text="Send reminder email"
+            textClassName="mr-2"
+            className="ml-3"
+            icon="FileExcelOutlined"
+            iconPosition="right"
+          />
+          <Button
+            size="middle"
+            textSize="xs"
+            text="Send reset password email"
+            textClassName="mr-2"
+            className="ml-3"
+            icon="FileExcelOutlined"
+            iconPosition="right"
+          />
+          <Button
+            size="middle"
+            textSize="xs"
+            text="Send verification email"
+            textClassName="mr-2"
+            className="ml-3"
+            icon="FileExcelOutlined"
+            iconPosition="right"
+          />
+          <Button
+            size="middle"
+            textSize="xs"
+            text="Send login email"
+            textClassName="mr-2"
+            className="ml-3"
+            icon="FileExcelOutlined"
+            iconPosition="right"
+          />
           <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
         </div>
       ) : (
-        <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row items-center">
-            <Button
-              size="middle"
-              textSize="xs"
-              text="Send reminder email"
-              textClassName="mr-2"
-              className="ml-3"
-              icon="FileExcelOutlined"
-              iconPosition="right"
-            />
-            <Button
-              size="middle"
-              textSize="xs"
-              text="Send reset password email"
-              textClassName="mr-2"
-              className="ml-3"
-              icon="FileExcelOutlined"
-              iconPosition="right"
-            />
-            <Button
-              size="middle"
-              textSize="xs"
-              text="Send verification email"
-              textClassName="mr-2"
-              className="ml-3"
-              icon="FileExcelOutlined"
-              iconPosition="right"
-            />
-            <Button
-              size="middle"
-              textSize="xs"
-              text="Send login email"
-              textClassName="mr-2"
-              className="ml-3"
-              icon="FileExcelOutlined"
-              iconPosition="right"
-            />
-          <span className="ml-3">
-            Selected 2 items
-          </span>
-          </div>
+        <div className="flex flex-row justify-end items-center">
           <div className="flex flex-row">
             <SearchBox className="text-xs" placeholder="SEARCH" loading={loading}/>
             <Button
