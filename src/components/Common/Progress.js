@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Progress } from 'antd';
 
-const _Progress = ({ percentage, className, status, type }) => {
+const _Progress = ({ percentage, className, subClassName, status, type }) => {
   let strokeColor = '';
   if (percentage < 50) {
     strokeColor = '#fa4d4d'; // red under 50
@@ -22,7 +22,15 @@ const _Progress = ({ percentage, className, status, type }) => {
         status={status}
         type={type}
         strokeColor={strokeColor}
-        format={status === 'sub' ? () => <span className="text-antteal">SUB</span> : null}
+        format={
+          status === 'sub'
+            ? () => (
+              <div className="flex justify-center items-center text-antteal">
+                <span className={`text-base ${subClassName}`}>SUB</span>
+              </div>
+            )
+            : null
+        }
       />
     </div>
   );
@@ -31,6 +39,7 @@ const _Progress = ({ percentage, className, status, type }) => {
 _Progress.propTypes = {
   percentage: PropTypes.number,
   className: PropTypes.string,
+  subClassName: PropTypes.string,
   status: PropTypes.string,
   type: PropTypes.string,
 };
@@ -38,6 +47,7 @@ _Progress.propTypes = {
 _Progress.defaultProps = {
   percentage: 0,
   className: '',
+  subClassName: '',
   status: 'normal', // sub also available
   type: 'circle', // line also available
 };
