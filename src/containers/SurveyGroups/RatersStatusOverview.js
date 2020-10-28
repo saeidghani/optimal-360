@@ -3,18 +3,25 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Layout from '../../components/SurveyGroups/RatersStatusOverview';
+import {PropTypes} from "prop-types";
 
 class RatersStatusOverview extends Component {
   state = {};
 
   render() {
-    return <Layout />;
+    const { loading } = this.props;
+
+    return <Layout loading={loading} />;
   }
 }
 
-RatersStatusOverview.propTypes = {};
+RatersStatusOverview.propTypes = {
+  loading: PropTypes.bool.isRequired,
+};
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  loading: state.loading.global || false,
+});
 
 const mapDispatchToProps = (dispatch) => ({});
 
