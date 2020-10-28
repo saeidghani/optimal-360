@@ -1,6 +1,6 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
-import {TeamOutlined} from '@ant-design/icons';
+import { TeamOutlined } from '@ant-design/icons';
 
 import PropTypes from 'prop-types';
 import MainLayout from '../Common/Layout';
@@ -9,19 +9,19 @@ import Tabs from '../Common/Tabs';
 import Progress from '../Common/Progress';
 import Table from '../Common/Table';
 
-const RatersStatusOverview = ({loading}) => {
+const RatersStatusOverview = ({ loading }) => {
   const [pageSize] = React.useState(10);
   const dropDownOptions = [
-    {title: 'Top Leadership', value: 1},
-    {title: 'Top Leadership2', value: 2},
-    {title: 'Top Leadership3', value: 3},
+    { title: 'Top Leadership', value: 1 },
+    { title: 'Top Leadership2', value: 2 },
+    { title: 'Top Leadership3', value: 3 },
   ];
 
   const tabOptions = [
-    {title: 'Status Overview', key: 1},
-    {title: 'Status Details', key: 2},
-    {title: 'Rater Email', key: 3},
-    {title: 'Results', key: 4},
+    { title: 'Status Overview', key: 1 },
+    { title: 'Status Details', key: 2 },
+    { title: 'Rater Email', key: 3 },
+    { title: 'Results', key: 4 },
   ];
 
   const columns = React.useMemo(() => [
@@ -64,7 +64,7 @@ const RatersStatusOverview = ({loading}) => {
       width: 100,
       render: () => (
         <div className="w-20 mt-5 flex-inline flex-col items-center justify-center">
-          <Progress subClassName="mb-10" status="sub" percentage={100}/>
+          <Progress subClassName="mb-10" status="sub" percentage={100} />
         </div>
       ),
     },
@@ -79,7 +79,7 @@ const RatersStatusOverview = ({loading}) => {
       width: 100,
       render: (percentage) => (
         <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
-          <Progress className="h-8" subClassName="mb-12 pb-2" status="sub" percentage={100}/>
+          <Progress className="h-8" subClassName="mb-12 pb-2" status="sub" percentage={100} />
           <div className="text-center">{percentage}</div>
         </div>
       ),
@@ -95,7 +95,7 @@ const RatersStatusOverview = ({loading}) => {
       width: 100,
       render: (percentage) => (
         <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
-          <Progress className="h-8" subClassName="mb-12 pb-2" status="sub" percentage={100}/>
+          <Progress className="h-8" subClassName="mb-12 pb-2" status="sub" percentage={100} />
           <div className="text-center">{percentage}</div>
         </div>
       ),
@@ -111,7 +111,7 @@ const RatersStatusOverview = ({loading}) => {
       width: 100,
       render: (percentage) => (
         <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
-          <Progress className="h-8" subClassName="mb-12 pb-2" status="sub" percentage={100}/>
+          <Progress className="h-8" subClassName="mb-12 pb-2" status="sub" percentage={100} />
           <div className="text-center">{percentage}</div>
         </div>
       ),
@@ -127,7 +127,7 @@ const RatersStatusOverview = ({loading}) => {
       width: 100,
       render: (percentage) => (
         <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
-          <Progress className="h-8" subClassName="mb-12 pb-2" status="sub" percentage={100}/>
+          <Progress className="h-8" subClassName="mb-12 pb-2" status="sub" percentage={100} />
           <div className="text-center">{percentage}</div>
         </div>
       ),
@@ -143,7 +143,7 @@ const RatersStatusOverview = ({loading}) => {
       width: 50,
       render: (percentage) => (
         <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
-          <Progress className="h-8" subClassName="mb-12 pb-2" status="sub" percentage={100}/>
+          <Progress className="h-8" subClassName="mb-12 pb-2" status="sub" percentage={100} />
           <div className="text-center">{percentage}</div>
         </div>
       ),
@@ -249,12 +249,12 @@ const RatersStatusOverview = ({loading}) => {
         <div className="flex justify-between items-center mb-5">
           <h1 className="font-medium text-2xl">Overall Completion Rate</h1>
           <div className="flex justify-between items-center">
-            <TeamOutlined className="bg-primary-100 p-2 text-primary-500 mr-5 rounded-sm"/>
+            <TeamOutlined className="bg-primary-100 p-2 text-primary-500 mr-5 rounded-sm" />
             <span className="font-medium text-2xl mr-5">20</span>
             <span className="text-xs text-antgray-100 ">Total Ratee(s)</span>
           </div>
         </div>
-        <Progress type="line" percentage="38"/>
+        <Progress type="line" percentage="38" />
       </div>
 
       <div className="grid grid-cols-5 gap-6">
@@ -269,7 +269,7 @@ const RatersStatusOverview = ({loading}) => {
               <span className="text-base text-heading">6/20</span>
             </div>
             <div className="mb-6 flex justify-center">
-              <Progress percentage={38}/>
+              <Progress percentage={38} />
             </div>
             <div>
               <h2 className="text-center">Total Self</h2>
@@ -287,7 +287,7 @@ const RatersStatusOverview = ({loading}) => {
               <span className="text-base text-heading">6/20</span>
             </div>
             <div className="mb-6 flex justify-center">
-              <Progress percentage={58}/>
+              <Progress percentage={58} />
             </div>
             <div>
               <h2 className="text-center">Total Self</h2>
@@ -305,7 +305,7 @@ const RatersStatusOverview = ({loading}) => {
               <span className="text-base text-heading">6/20</span>
             </div>
             <div className="mb-6 flex justify-center">
-              <Progress percentage={100}/>
+              <Progress percentage={100} />
             </div>
             <div>
               <h2 className="text-center">Total Self</h2>
@@ -323,7 +323,7 @@ const RatersStatusOverview = ({loading}) => {
               <span className="text-base text-heading">6/20</span>
             </div>
             <div className="mb-6">
-              <Progress percentage={70}/>
+              <Progress percentage={70} />
             </div>
             <div>
               <h2 className="text-center">Total Self</h2>
@@ -341,7 +341,7 @@ const RatersStatusOverview = ({loading}) => {
               <span className="text-base text-heading">6/20</span>
             </div>
             <div className="mb-6 flex justify-center">
-              <Progress percentage={100}/>
+              <Progress percentage={100} />
             </div>
             <div>
               <h2 className="text-center">Total Self</h2>
