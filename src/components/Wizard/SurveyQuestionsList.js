@@ -6,7 +6,7 @@ import arrayMove from 'array-move';
 import { LineOutlined } from '@ant-design/icons';
 
 import { useQuery } from '../../hooks/useQuery';
-import { useSurveyGroup } from '../../hooks';
+import { useSurveyGroup, usePersist } from '../../hooks';
 
 import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
 import Menu from './Helper/Menu';
@@ -50,24 +50,24 @@ const SurveyQuestionsList = ({
         label: yup.string().required('label is required'),
       }),
     ),
-    clusters: yup.array(
-      yup.object({
-        name: yup.string().required('name is required'),
-        showOrder: yup.number().required('showOrder is required'),
-        definition: yup.string().required('definition is required'),
-        lowScores: yup.array(yup.string()).required('lowScores is required'),
-        highScores: yup.array(yup.string()).required('highScores is required'),
-        questions: yup.array(
-          yup.object({
-            label: yup.string().required('label is required'),
-            statement: yup.string().required('statement is required'),
-            statementType: yup.string().required('statementType is required'),
-            required: yup.bool().required('required is required'),
-            showOrder: yup.number().required('showOrder is required'),
-          }),
-        ),
-      }),
-    ),
+    // clusters: yup.array(
+    //   yup.object({
+    //     name: yup.string().required('name is required'),
+    //     showOrder: yup.number().required('showOrder is required'),
+    //     definition: yup.string().required('definition is required'),
+    //     lowScores: yup.array(yup.string()).required('lowScores is required'),
+    //     highScores: yup.array(yup.string()).required('highScores is required'),
+    //     questions: yup.array(
+    //       yup.object({
+    //         label: yup.string().required('label is required'),
+    //         statement: yup.string().required('statement is required'),
+    //         statementType: yup.string().required('statementType is required'),
+    //         required: yup.bool().required('required is required'),
+    //         showOrder: yup.number().required('showOrder is required'),
+    //       }),
+    //     ),
+    //   }),
+    // ),
     feedbacks: yup.array(
       yup.object({
         label: yup.string().required('label is required'),
@@ -79,6 +79,9 @@ const SurveyQuestionsList = ({
   });
 
   const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
+  const [persistedData, setPersistData] = usePersist();
+
+  console.log({ persistedData });
 
   const [surveyGroupModal, setSurveyGroupModal] = React.useState(false);
   const [isFormDone, setIsFormDone] = React.useState(false);
@@ -91,22 +94,72 @@ const SurveyQuestionsList = ({
   const [parsedQuery, query, setQuery] = useQuery();
   // const { search } = history?.location;
 
+  const surveyQuestionsStringified = JSON.stringify(surveyQuestions);
+  const firstClusterItem = React.useMemo(() => {
+    return surveyQuestions?.clusters?.length > 0 ? surveyQuestions.clusters[0] : {};
+    // eslint-disable-next-line
+  }, [surveyQuestionsStringified]);
+
   React.useEffect(() => {
     if (surveyGroupId) fetchSurveyQuestions(surveyGroupId);
   }, [surveyGroupId, fetchSurveyQuestions]);
 
-  const handleSortEnd = ({ oldIndex, newIndex }, items) => {
-    // console.log(formRef?.current?.values?.clusters);
-    console.log({ oldIndex, newIndex }, items);
+  const handleSortEnd = ({ oldIndex, newIndex }) => {
+    if (oldIndex !== newIndex && formRef?.current) {
+      const arrSwitch = (arr) =>
+        arrayMove([].concat(arr), oldIndex, newIndex)
+          .filter((el) => !!el)
+          .map((el) => ({ ...el, name: el.name || el.label }));
 
-    if (oldIndex !== newIndex && formRef?.current?.values?.clusters) {
-      const clusters = arrayMove([].concat(items), oldIndex, newIndex).filter((el) => !!el);
+      const clusterRefactor = (clusters) => {
+        const { clusterId, competencyId } = parsedQuery;
 
-      console.log({ oldIndex, newIndex }, clusters);
+        const index = clusters.findIndex((cluster) => cluster.id * 1 === clusterId * 1);
+        const updatedClusterIndex = index === -1 ? 0 : index;
 
-      formRef.current.setValues({ ...formRef.current.values, clusters });
+        if (!clusterId) {
+          const switchedArr = arrSwitch(clusters);
+          return switchedArr;
+        }
+
+        const { competencies } = clusters[updatedClusterIndex];
+
+        if (!competencyId) {
+          const switchedArr = arrSwitch(competencies);
+          const newClusters = [...clusters];
+          newClusters[updatedClusterIndex].competencies = switchedArr;
+
+          return newClusters;
+        }
+
+        const updatedCompetencyIndex = competencies.findIndex(
+          (competency) => competency.id * 1 === competencyId * 1,
+        );
+        const { questions } = clusters?.[updatedClusterIndex]?.competencies?.[
+          updatedCompetencyIndex
+        ];
+
+        const switchedArr = arrSwitch(questions);
+        const newClusters = [...clusters];
+        newClusters[updatedClusterIndex].competencies[
+          updatedCompetencyIndex
+        ].questions = switchedArr;
+
+        return newClusters;
+      };
+
+      const oldValues = formRef.current.values || {};
+
+      const clusters = clusterRefactor(oldValues.clusters);
+      setPersistData(clusters);
+
+      formRef.current.setValues({
+        ...oldValues,
+        clusters,
+      });
     }
   };
+
   const handleFormChange = (newVal, row, key, subKey) => {
     const newValues = formRef.current.values[key].map((el) => {
       if (el.id === row.id) {
@@ -166,54 +219,23 @@ const SurveyQuestionsList = ({
       // happens when user decides to discard current settings and changes currentSurveyGroup
       formRef.current.setTouched({});
       formRef.current.setErrors({});
-      // formRef.current.setValues({ emailSettings: _emailSettings });
     }
     // eslint-disable-next-line
   }, [fetchSurveyQuestions, surveyGroupId]);
-
-  const clusterStringified = JSON.stringify(surveyQuestions.clusters);
-  const firstClusterItem = React.useMemo(() => {
-    return surveyQuestions?.clusters?.length > 0 ? surveyQuestions.clusters[0] : {};
-  }, [clusterStringified]);
 
   const _selectedCluster = React.useMemo(() => {
     return surveyQuestions?.clusters?.length > 0
       ? surveyQuestions.clusters.find((el) => el.id * 1 === parsedQuery.clusterId * 1)
       : {};
-  }, [clusterStringified, parsedQuery.clusterId]);
+    // eslint-disable-next-line
+  }, [surveyQuestionsStringified, parsedQuery.clusterId]);
 
   const _selectedCompetency = React.useMemo(() => {
     return _selectedCluster?.competencies?.length > 0
       ? _selectedCluster.competencies.find((el) => el.id * 1 === parsedQuery.competencyId * 1)
       : {};
-  }, [clusterStringified, parsedQuery.competencyId]);
-
-  React.useEffect(() => {
-    const clusters = surveyQuestions.clusters || [];
-    const { competencies = [] } =
-      clusters.find((el) => el.id * 1 === parsedQuery?.clusterId * 1) || {};
-    const { questions = [] } =
-      competencies.find((el) => el.id * 1 === parsedQuery?.competencyId * 1) || {};
-
-    // prioratize question over competencies over clusters
-    // (bottom to top)
-    let ref =
-      parsedQuery?.competencyId && questions
-        ? questions
-        : parsedQuery?.clusterId && competencies
-        ? competencies
-        : clusters;
-
-    // refactoring data to match sorting algorithm
-    ref = ref.map((el) => ({
-      ...el,
-      index: el.showOrder,
-      name: el.name || el.label,
-      key: el.id.toString(),
-    }));
-
-    formRef.current.setValues({ ...formRef.current.values, clusters: ref });
-  }, [query, clusterStringified]);
+    // eslint-disable-next-line
+  }, [surveyQuestionsStringified, parsedQuery.competencyId]);
 
   const onMenuClick = ({ clusterId, competencyId, questionId }) => {
     setSelectedCluster('');
@@ -240,8 +262,74 @@ const SurveyQuestionsList = ({
     setQuery(Q);
   };
 
-  // console.log({ selectedCluster, selectedCompetency, selectedQuestion });
-  console.log({ surveyQuestions });
+  const updateCluster = (name, clusterId) => {
+    const clusters = [...formRef.current.values.clusters];
+    const updatedClusterIndex = clusters.findIndex((cluster) => cluster.id * 1 === clusterId * 1);
+
+    clusters[updatedClusterIndex] = { ...clusters[updatedClusterIndex], name };
+
+    setPersistData(clusters);
+    formRef.current.setValues({ ...formRef.current.values, clusters });
+  };
+
+  const updateCompetency = (newValues, clusterId, competencyId) => {
+    const clusters = [...formRef.current.values.clusters];
+    const updatedClusterIndex = clusters.findIndex((cluster) => cluster.id * 1 === clusterId * 1);
+
+    const updatedCompetencyIndex = clusters[updatedClusterIndex].competencies.findIndex(
+      (competency) => competency.id * 1 === competencyId * 1,
+    );
+
+    clusters[updatedClusterIndex].competencies[updatedCompetencyIndex] = {
+      ...clusters[updatedClusterIndex].competencies[updatedCompetencyIndex],
+      ...newValues,
+    };
+
+    setPersistData(clusters);
+    formRef.current.setValues({
+      ...formRef.current.values,
+      clusters,
+    });
+  };
+
+  const initialValues = React.useMemo(() => {
+    const clusters =
+      persistedData?.data?.length > 0 ? persistedData.data : surveyQuestions.clusters || [];
+
+    return {
+      ratingScales:
+        surveyQuestions?.ratingScales?.length > 0 ? surveyQuestions.ratingScales : _ratingScales,
+      feedbacks: surveyQuestions?.feedbacks?.length > 0 ? surveyQuestions.feedbacks : [],
+      clusters: clusters.map((el) => ({ ...el, index: el.showOrder, name: el.name || el.label })),
+    };
+
+    // eslint-disable-next-line
+  }, [query, surveyQuestionsStringified]);
+
+  const getData = (values) => {
+    const format = (arr) =>
+      arr.map((el) => ({ ...el, index: el.showOrder, name: el.name || el.label }));
+
+    const { clusterId, competencyId } = parsedQuery;
+
+    const { clusters = [] } = values || {};
+
+    const { competencies = [] } =
+      clusters.find((el) => el.id * 1 === parsedQuery?.clusterId * 1) || {};
+
+    const { questions = [] } =
+      competencies.find((el) => el.id * 1 === parsedQuery?.competencyId * 1) || {};
+
+    if (competencyId) {
+      return format(questions);
+    }
+
+    if (clusterId) {
+      return format(competencies);
+    }
+
+    return format(clusters);
+  };
 
   return (
     <MainLayout
@@ -285,26 +373,23 @@ const SurveyQuestionsList = ({
           <Formik
             innerRef={formRef}
             enableReinitialize
-            initialValues={{
-              ratingScales: surveyQuestions?.ratingScales
-                ? surveyQuestions.ratingScales
-                : _ratingScales,
-              feedbacks: surveyQuestions?.feedbacks ? surveyQuestions.feedbacks : [],
-              clusters: surveyQuestions?.clusters
-                ? surveyQuestions.clusters.map((el) => ({ ...el, index: el.showOrder }))
-                : [],
-            }}
+            initialValues={initialValues}
+            // initialValues={{
+            //   ratingScales: _ratingScales,
+            //   feedbacks: [],
+            //   clusters: [],
+            //   tableData: [],
+            // }}
             validationSchema={schema}
-            onSubmit={async (values) => {
+            onSubmit={(values) => {
               console.log({ values });
               // setSurveyQuestions()
             }}
           >
-            {({ values, errors, touched, handleSubmit, setFieldValue }) => (
+            {({ values, errors, touched, handleSubmit }) => (
               <Form className="pr-28" onSubmit={handleSubmit}>
-                <pre>{console.log(values)}</pre>
-                {/* <pre>{JSON.stringify(touched, null, 2)}</pre> */}
-                {/* <pre>{JSON.stringify(errors, null, 2)}</pre> */}
+                {/* <pre>{console.log({ values, touched, errors })}</pre> */}
+                {/* <pre>{console.log({ values })}</pre> */}
 
                 <h4 className="text-secondary text-lg mb-8 mt-17">Rating Scale</h4>
 
@@ -347,7 +432,7 @@ const SurveyQuestionsList = ({
                   <SecondaryMenu
                     title="ALL"
                     className="py-3 col-span-3"
-                    items={surveyQuestions?.clusters}
+                    items={values.clusters}
                     defaultClusterId={firstClusterItem.id}
                     onClusterClick={(clusterId) => onMenuClick({ clusterId })}
                     onCompetencyClick={(competencyId) => onMenuClick({ competencyId })}
@@ -360,7 +445,6 @@ const SurveyQuestionsList = ({
                         onCancel={() => setSelectedQuestion('')}
                         onSave={(vals) => {
                           setSelectedQuestion('');
-                          console.log({ vals });
                         }}
                         data={selectedQuestion}
                         clusterName={_selectedCluster?.name}
@@ -370,8 +454,8 @@ const SurveyQuestionsList = ({
                       <CompetencyEditSection
                         onCancel={() => setSelectedCompetency('')}
                         onSave={(vals) => {
+                          updateCompetency(vals, parsedQuery?.clusterId, selectedCompetency.id);
                           setSelectedCompetency('');
-                          console.log({ vals });
                         }}
                         data={selectedCompetency}
                         clusterName={_selectedCluster?.name}
@@ -379,9 +463,9 @@ const SurveyQuestionsList = ({
                     ) : selectedCluster ? (
                       <ClusterEditSection
                         selectedCluster={selectedCluster}
-                        onSave={(vals) => {
+                        onSave={({ clusterName }) => {
+                          updateCluster(clusterName, selectedCluster.id);
                           setSelectedCluster('');
-                          console.log({ vals });
                         }}
                         onCancel={() => setSelectedCluster('')}
                       />
@@ -393,15 +477,15 @@ const SurveyQuestionsList = ({
                         onCompetencyDelete={() => {}}
                         onQuestionEdit={(item) => setSelectedQuestion(item)}
                         onQuestionDelete={() => {}}
-                        // data={values.clusters}
-                        data={values.clusters}
+                        data={getData(values)}
+                        // data={tableData}
                         onSortEnd={handleSortEnd}
                       />
                     )}
                   </div>
                 </div>
 
-                <div className="bg-antgray-600 rounded-lg p-6">
+                <div className="bg-antgray-600 rounded-lg p-6 mt-12">
                   <div className="flex flex-row items-center justify-between">
                     <p className="text-secondary text-lg ml-2.3">Feedbacks</p>
 

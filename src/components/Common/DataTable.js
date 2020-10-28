@@ -79,7 +79,8 @@ const SortableTable = ({
 
   const DraggableBodyRow = (rowProps) => {
     // function findIndex base on Table rowKey props and should always be a right array index
-    const index = data.findIndex((x) => x.index === rowProps['data-row-key']);
+    const index = data.findIndex((x) => x.id.toString() === rowProps['data-row-key'].toString());
+
     return <SortableItem index={index} {...rowProps} />;
   };
 
@@ -87,9 +88,7 @@ const SortableTable = ({
     <SortableContainer
       useDragHandle
       helperClass="row-dragging"
-      onSortEnd={(val) => {
-        onSortEnd(val, data);
-      }}
+      onSortEnd={(val) => onSortEnd(val, data)}
       {...containerProps}
     />
   );
@@ -136,7 +135,7 @@ const SortableTable = ({
       dataSource={data}
       title={Header}
       columns={columns}
-      rowKey="index"
+      rowKey="id"
       components={{
         body: {
           wrapper: DraggableContainer,

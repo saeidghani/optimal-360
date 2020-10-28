@@ -1,5 +1,5 @@
 import React from 'react';
-import { Formik, Form } from 'formik';
+import { Formik } from 'formik';
 import * as yup from 'yup';
 import PropTypes from 'prop-types';
 
@@ -17,8 +17,6 @@ const CompetencyEditSection = ({ data, onSave, onCancel, clusterName, competency
   const formRef = React.useRef();
   const questionName = data?.name;
 
-  console.log({ data });
-
   return (
     <Formik
       innerRef={formRef}
@@ -30,7 +28,7 @@ const CompetencyEditSection = ({ data, onSave, onCancel, clusterName, competency
       }}
     >
       {({ values, errors, touched, handleSubmit, handleChange, setFieldValue }) => (
-        <Form onSubmit={handleSubmit}>
+        <>
           <div
             className="flex flex-row justify-between bg-antgray-600 p-4
         items-center border-b border-list-border"
@@ -93,7 +91,7 @@ const CompetencyEditSection = ({ data, onSave, onCancel, clusterName, competency
           >
             This question is required to answer
           </Checkbox>
-        </Form>
+        </>
       )}
     </Formik>
   );
