@@ -8,10 +8,13 @@ import Tabs from '../Common/Tabs';
 import Table from '../Common/Table';
 import Progress from '../Common/Progress';
 import Button from '../Common/Button';
+import Modal from '../Common/Modal';
+import Checkbox from '../Common/Checkbox';
 
 const RatersStatusRaterEmail = ({ loading }) => {
   const [pageSize] = React.useState(10);
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const [visible, setVisible] = React.useState(false);
 
   const dropDownOptions = [
     { title: 'Top Leadership', value: 1 },
@@ -40,6 +43,7 @@ const RatersStatusRaterEmail = ({ loading }) => {
           text="Force generate report"
           textClassName="mr-2"
           className="ml-3"
+          onClick={() => setVisible(true)}
         />
         <Button
           size="middle"
@@ -49,6 +53,7 @@ const RatersStatusRaterEmail = ({ loading }) => {
           className="ml-3"
           icon="FileExcelOutlined"
           iconPosition="right"
+          onClick={() => setVisible(true)}
         />
         <Button
           size="middle"
@@ -58,6 +63,7 @@ const RatersStatusRaterEmail = ({ loading }) => {
           className="ml-3"
           icon="FileExcelOutlined"
           iconPosition="right"
+          onClick={() => setVisible(true)}
         />
         <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
       </div>
@@ -225,6 +231,53 @@ const RatersStatusRaterEmail = ({ loading }) => {
 
   return (
     <MainLayout contentClass="pl-21 pr-6 py-4" title="Super User" titleClass="my-2" hasBreadCrumb>
+      <Modal
+        okText="Discard These Settings"
+        cancelText="Cancel"
+        visible={visible}
+        cancelButtonText="Cancel"
+        okButtonText="Export"
+        handleOk={() => setVisible(false)}
+        handleCancel={() => setVisible(false)}
+        width={605}
+      >
+        <div className="grid grid-cols-2 mb-3">
+          <div>
+            <Checkbox className="block mb-3" labelClass="text-sm">
+              All
+            </Checkbox>
+            <Checkbox className="block mb-3" labelClass="text-sm">
+              Employment location
+            </Checkbox>
+            <Checkbox className="block mb-3" labelClass="text-sm">
+              Sector
+            </Checkbox>
+            <Checkbox className="block mb-3" labelClass="text-sm">
+              Industry
+            </Checkbox>
+            <Checkbox className="block mb-3" labelClass="text-sm">
+              Job Function
+            </Checkbox>
+            <Checkbox className="block mb-3" labelClass="text-sm">
+              Job Level
+            </Checkbox>
+          </div>
+          <div>
+            <Checkbox className="block mb-3" labelClass="text-sm">
+              Length of service in current role
+            </Checkbox>
+            <Checkbox className="block mb-3" labelClass="text-sm">
+              Age Group
+            </Checkbox>
+            <Checkbox className="block mb-3" labelClass="text-sm">
+              Gender
+            </Checkbox>
+            <Checkbox className="block mb-3" labelClass="text-sm">
+              Highest education attained
+            </Checkbox>
+          </div>
+        </div>
+      </Modal>
       <div className="grid grid-cols-7 mt-3 mb-10">
         <h2 className="col-start-1 my-6 pt-6 pl-3 font-medium text-base">Survey Group</h2>
         <Dropdown
