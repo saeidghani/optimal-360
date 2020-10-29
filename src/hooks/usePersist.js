@@ -2,7 +2,7 @@ import React from 'react';
 import { useQuery } from './useQuery';
 
 const usePersist = () => {
-  const [parsedQuery] = useQuery();
+  const [parsedQuery, query] = useQuery();
   const { projectId, surveyGroupId } = parsedQuery;
   const KEY = `${projectId}--${surveyGroupId}`;
 
@@ -23,17 +23,14 @@ const usePersist = () => {
     }
   };
 
-  // React.useEffect(() => {
-  //   const _clustersStringified = localStorage.getItem('clusters');
+  React.useEffect(() => {
+    const _clustersStringified = localStorage.getItem(`clusters-${KEY}`);
 
-  //   if (clustersStringified !== _clustersStringified) {
-  //     const storageData = JSON.parse(_clustersStringified);
+    const parsedClusters = JSON.parse(_clustersStringified);
+    setPersistData(parsedClusters?.data);
 
-  //     setPersistData(storageData);
-  //   }
-
-  //   // eslint-disable-next-line
-  // }, [clustersStringified, clusters.lastChange]);
+    // eslint-disable-next-line
+  }, [query]);
 
   return [persistedData, setPersistData];
 };

@@ -80,6 +80,7 @@ const CompetencyEditSection = ({ data, onSave, onCancel, clusterName, competency
                 placeholder="Question Statement"
                 value={values.statement}
                 onChange={handleChange}
+                onPressEnter={handleSubmit}
                 errorMessage={touched.statement && errors.statement}
               />
             </div>

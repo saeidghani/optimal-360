@@ -17,6 +17,7 @@ const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 const SortableTable = ({
   data,
   onSortEnd,
+  addCluster,
   onClusterEdit,
   onClusterDelete,
   onCompetencyEdit,
@@ -108,7 +109,7 @@ const SortableTable = ({
           textClassName="mr-2"
           text="Add Cluster"
           className="mr-3 text-base"
-          // onClick={() => setquestionModal(true)}
+          onClick={addCluster}
           icon="PlusCircleOutlined"
           iconPosition="right"
         />
@@ -147,6 +148,7 @@ const SortableTable = ({
 };
 
 SortableTable.propTypes = {
+  addCluster: PropTypes.func.isRequired,
   onSortEnd: PropTypes.func.isRequired,
   onClusterEdit: PropTypes.func.isRequired,
   onClusterDelete: PropTypes.func.isRequired,

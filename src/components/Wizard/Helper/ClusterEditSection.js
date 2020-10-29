@@ -48,6 +48,7 @@ const ClusterEditSection = ({ selectedCluster, onCancel, onSave }) => {
               placeholder="Cluster Name"
               value={values.clusterName}
               onChange={handleChange}
+              onPressEnter={handleSubmit}
             />
           </div>
         </>
