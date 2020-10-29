@@ -7,6 +7,7 @@ const _Tabs = ({ className, defaultActiveKey, tabOptions }) => {
   function callback(key) {
     console.log(key);
   }
+
   return (
     <Tabs
       tabBarStyle={{ color: '#131621' }}

@@ -11,11 +11,12 @@ import SetAdmin from '../containers/Projects/SetAdmin';
 
 import SurveyGroupList from '../containers/SurveyGroups/List';
 import RatersStatusOverview from '../containers/SurveyGroups/RatersStatusOverview';
+import RatersStatusDetails from '../containers/SurveyGroups/RatersStatusDetails';
+import RatersStatusRaterEmail from '../containers/SurveyGroups/RatersStatusRaterEmail';
 import Organizations from '../containers/SurveyGroups/Organizations';
 import OrganizationsUsers from '../containers/SurveyGroups/OrganizationsUsers';
 import OrganizationsNewStaff from '../containers/SurveyGroups/OrganizationsNewStaff';
 import NewOrganizations from '../containers/SurveyGroups/NewOrganizations';
-import RatersStatusRaterEmail from '../containers/SurveyGroups/RatersStatusRaterEmail';
 
 import ProjectInfo from '../containers/Wizard/ProjectInfo';
 import SurveySetting from '../containers/Wizard/SurveySetting';
@@ -43,9 +44,14 @@ const Index = () => (
     />
 
     <PrivateRoute
-      path="/super-user/Participants/StatusOverview"
+      path="/super-user/participants/status-overview"
       exact
       component={RatersStatusOverview}
+    />
+    <PrivateRoute
+      path="/super-user/participants/status-details"
+      exact
+      component={RatersStatusDetails}
     />
     <PrivateRoute
       path="/super-user/participants/rater-email"
