@@ -4,9 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MainLayout from '../Common/Layout';
 import Dropdown from '../Common/Dropdown';
-import Tabs from '../Common/Tabs';
 import Table from '../Common/Table';
-import SearchBox from '../Common/SearchBox';
 import Button from '../Common/Button';
 
 const GroupReports = ({ loading }) => {
@@ -19,33 +17,25 @@ const GroupReports = ({ loading }) => {
     { title: 'Top Leadership3', value: 3 },
   ];
 
-  const primaryTabOptions = [
-    { title: 'Status Overview', key: 1 },
-    { title: 'Status Details', key: 2 },
-    { title: 'Rater Email', key: 3 },
-    { title: 'Results', key: 4 },
-  ];
-
   const renderHeader = React.useCallback(() => {
-    return selectedRows && selectedRows?.length > 0 ? (
-      <div className="flex flex-row items-center">
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Select Clusters"
-          textClassName="mr-2"
-          className="ml-3"
-        />
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Select Competencies"
-          textClassName="mr-2"
-          className="ml-3"
-        />
-      </div>
-    ) : (
-      <div className="flex flex-row justify-end items-center">
+    return (
+      <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-row items-center">
+          <Button
+            size="middle"
+            textSize="xs"
+            text="Select Clusters"
+            textClassName="mr-2"
+            className="ml-3"
+          />
+          <Button
+            size="middle"
+            textSize="xs"
+            text="Select Competencies"
+            textClassName="mr-2"
+            className="ml-3"
+          />
+        </div>
         <div className="flex flex-row">
           <Button
             size="middle"
@@ -125,6 +115,17 @@ const GroupReports = ({ loading }) => {
     },
   ];
 
+  const footer = React.useCallback(() => {
+    return (
+      <div className="flex justify-end">
+        <div className="flex items-center">
+          <span className="text-primary-500">Cancel</span>
+          <Button size="middle" textSize="base" text="Save" textClassName="mr-2" className="ml-3" />
+        </div>
+      </div>
+    );
+  }, []);
+
   return (
     <MainLayout contentClass="pl-21 pr-6 py-4" title="Super User" titleClass="my-2" hasBreadCrumb>
       <div className="lg:w-2/12 w-4/12 mt-3 mb-10">
@@ -137,9 +138,6 @@ const GroupReports = ({ loading }) => {
           options={dropDownOptions}
         />
       </div>
-      <div>
-        <Tabs className="c-tabs-class" defaultActiveKey="3" tabOptions={primaryTabOptions} />
-      </div>
       <Table
         size="middle"
         className="p-6 mt-5 bg-white rounded-lg shadow"
@@ -149,25 +147,13 @@ const GroupReports = ({ loading }) => {
         pageSize={pageSize * 1}
         pageNumber={1}
         renderHeader={renderHeader}
+        footer={footer}
         selectedRowKeys={selectedRows?.map((el) => el.key)}
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
         }}
+        pagination={false}
       />
-      <div className="flex justify-end">
-        <div className="flex items-center">
-          <span className="text-primary">Cancel</span>
-          <Button
-            size="middle"
-            textSize="xs"
-            text="Select Clusters"
-            textClassName="mr-2"
-            className="ml-3"
-          >
-            Save
-          </Button>
-        </div>
-      </div>
     </MainLayout>
   );
 };
