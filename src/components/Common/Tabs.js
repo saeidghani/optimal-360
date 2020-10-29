@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 
 const { TabPane } = Tabs;
-const _Tabs = ({ className, defaultActiveKey }) => {
+const _Tabs = ({ className, defaultActiveKey, tabOptions }) => {
   function callback(key) {
     console.log(key);
   }
@@ -14,16 +14,21 @@ const _Tabs = ({ className, defaultActiveKey }) => {
       defaultActiveKey={defaultActiveKey}
       onChange={callback}
     >
-      <TabPane tab="Status Overview" key="1" />
-      <TabPane tab="Status Details" key="2" />
-      <TabPane tab="Rater Email" key="3" />
-      <TabPane tab="Results" key="4" />
+      {tabOptions.map((tab) => (
+        <TabPane tab={tab.title} key={tab.key} />
+      ))}
     </Tabs>
   );
 };
 
 _Tabs.propTypes = {
   defaultActiveKey: PropTypes.number,
+  tabOptions: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.number,
+      title: PropTypes.string,
+    }),
+  ).isRequired,
   className: PropTypes.string,
 };
 
