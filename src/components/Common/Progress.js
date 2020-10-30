@@ -25,9 +25,9 @@ const _Progress = ({ percentage, className, subClassName, status, type }) => {
         format={
           status === 'sub'
             ? () => (
-                <div className="flex justify-center items-center text-antteal">
-                  <span className={`text-base ${subClassName}`}>SUB</span>
-                </div>
+              <div className="flex justify-center items-center text-antteal">
+                <span className={`text-base ${subClassName}`}>SUB</span>
+              </div>
               )
             : null
         }

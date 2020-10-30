@@ -19,7 +19,7 @@ const _Dropdown = ({
   // <div>
   <Select
     showSearch={showSearch}
-    className={`c-arrow-color text-12px ${className} ${type}-dropdown`}
+    className={`c-arrow-color text-xs ${className} ${type}-dropdown`}
     onChange={handleChange}
     placeholder={placeholder}
     size={size}
