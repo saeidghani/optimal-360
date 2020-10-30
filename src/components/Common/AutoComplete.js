@@ -60,6 +60,7 @@ const _AutoComplete = ({
       value={value}
       options={options}
       className={`c-autocomplete c-sufix-prefix-gray text-12px w-full ${className}`}
+      dropdownClassName="capitalize"
       onSelect={(_, val) => {
         // setValue('');
         onSelect(val);
