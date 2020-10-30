@@ -51,23 +51,27 @@ const _Menu = ({
           onTitleClick={() => onClusterClick(cluster.id)}
           title={cluster.name}
         >
-          {cluster.competencies.map((competency) => (
-            <SubMenu
-              key={`cluster_${cluster.id}_competency_${competency.id}`}
-              className="inner-sub-menu"
-              onTitleClick={() => onCompetencyClick(competency.id)}
-              title={competency.name}
-            >
-              {competency.questions.map((question) => (
-                <Menu.Item
-                  key={`cluster_${cluster.id}_competency_${competency.id}_question_${question.id}`}
-                  onClick={() => onQuestionClick(question.id)}
+          {cluster?.competencies?.length > 0
+            ? cluster.competencies.map((competency) => (
+                <SubMenu
+                  key={`cluster_${cluster.id}_competency_${competency.id}`}
+                  className="inner-sub-menu"
+                  onTitleClick={() => onCompetencyClick(competency.id)}
+                  title={competency.name}
                 >
-                  {question.label}
-                </Menu.Item>
-              ))}
-            </SubMenu>
-          ))}
+                  {competency?.questions?.length > 0
+                    ? competency.questions.map((question) => (
+                        <Menu.Item
+                          key={`cluster_${cluster.id}_competency_${competency.id}_question_${question.id}`}
+                          onClick={() => onQuestionClick(question.id)}
+                        >
+                          {question.label}
+                        </Menu.Item>
+                      ))
+                    : null}
+                </SubMenu>
+              ))
+            : null}
         </SubMenu>
       ))}
     </Menu>

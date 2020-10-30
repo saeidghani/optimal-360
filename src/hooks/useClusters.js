@@ -1,7 +1,8 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { useSurveyGroup, useQuery } from './index';
+import { useQuery } from './useQuery';
+import { useSurveyGroup } from './useSurveyGroup';
 
 const useClusters = () => {
   const [parsedQuery] = useQuery();

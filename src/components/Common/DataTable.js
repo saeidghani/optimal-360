@@ -17,7 +17,7 @@ const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 const SortableTable = ({
   data,
   onSortEnd,
-  addCluster,
+  renderHeader,
   onClusterEdit,
   onClusterDelete,
   onCompetencyEdit,
@@ -94,47 +94,12 @@ const SortableTable = ({
     />
   );
 
-  const Header = () => (
-    <div
-      className="flex flex-row justify-between bg-antgray-600 p-4
-        items-center border-b border-list-border"
-    >
-      <span>All</span>
-
-      <div className="flex items-center">
-        <Button
-          size="middle"
-          type="gray"
-          textSize="xs"
-          textClassName="mr-2"
-          text="Add Cluster"
-          className="mr-3 text-base"
-          onClick={addCluster}
-          icon="PlusCircleOutlined"
-          iconPosition="right"
-        />
-
-        <Button
-          size="middle"
-          type="gray"
-          textSize="xs"
-          textClassName="mr-2"
-          text="Export Exel File"
-          icon="PlusCircleOutlined"
-          iconPosition="right"
-          className="text-base"
-          // onClick={() => setQuery()}
-        />
-      </div>
-    </div>
-  );
-
   return (
     <Table
       pagination={false}
       showHeader={false}
       dataSource={data}
-      title={Header}
+      title={renderHeader}
       columns={columns}
       rowKey="id"
       components={{
@@ -148,7 +113,7 @@ const SortableTable = ({
 };
 
 SortableTable.propTypes = {
-  addCluster: PropTypes.func.isRequired,
+  renderHeader: PropTypes.func.isRequired,
   onSortEnd: PropTypes.func.isRequired,
   onClusterEdit: PropTypes.func.isRequired,
   onClusterDelete: PropTypes.func.isRequired,

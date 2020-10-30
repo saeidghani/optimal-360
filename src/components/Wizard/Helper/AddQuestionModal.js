@@ -1,42 +1,115 @@
 import React from 'react';
-import { Modal } from 'antd';
-import Input from '../../Common/Input';
-import Select from '../../Common/Select';
-import Checkbox from '../../Common/Checkbox';
-import Button from '../../Common/Button';
+import PropTypes from 'prop-types';
+import { Formik, Form } from 'formik';
+import * as yup from 'yup';
 
-const AddQuestionModal = ({ visible, action }) => {
+import Input from '../../Common/Input';
+import Checkbox from '../../Common/Checkbox';
+import Modal from '../../Common/Modal';
+import AutoComplete from '../../Common/AutoComplete';
+
+const AddFeedbackModal = ({ visible, onSave, onCancel }) => {
+  const formRef = React.useRef();
+  const schema = yup.object({
+    label: yup.string().required('Question label is required'),
+    statement: yup.string().required('Question statement is required'),
+    required: yup.bool(),
+  });
+
   return (
-    <Modal visible={visible} centered footer={false} closable={false} width={'50%'}>
-      <div className="px-16 py-15">
-        <h4 className="text-secondary text-20px">Add Question</h4>
-        <div className="mt-6 grid grid-cols-2 gap-x-5.5 w-full gap-y-8  ">
-          <Input labelText="Question Label" placeholder="Question Label" />
-          <div className="w-full">
-            <label className="text-heading">Statement Type</label>
-            <Select className="mt-2.3"></Select>
-          </div>
-          <Input
-            labelText="Question Statement"
-            placeholder="Question Statement"
-            wrapperClassName="col-span-2"
-          />
-          <Checkbox className="col-span-2" labelClass="text-body">
-            This question is required to answer
-          </Checkbox>
-        </div>
-        <div className="mt-10 flex justify-end">
-          <Button
-            type="link"
-            text="Cancel"
-            className="text-base w-24.5 h-9.5 flex items-center justify-center"
-            onClick={() => action(false)}
-          />
-          <Button text="Add" className="text-base w-24.5 h-9.5 flex items-center justify-center" />
-        </div>
-      </div>
+    <Modal
+      destroyOnClose
+      cancelText="Cancel"
+      handleCancel={onCancel}
+      okText="Add"
+      handleOk={() => {
+        if (formRef.current) formRef.current.submitForm();
+      }}
+      visible={visible}
+    >
+      <Formik
+        innerRef={formRef}
+        initialValues={{
+          label: '',
+          statement: '',
+          statementType: 'positive',
+          required: false,
+        }}
+        validationSchema={schema}
+        onSubmit={(values) => {
+          onSave(values);
+        }}
+      >
+        {({ values, errors, touched, handleSubmit, handleChange, setFieldValue }) => (
+          <Form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-12 gap-x-5">
+              <div className="col-span-12 mb-5">
+                <h2 className="text-secondary text-lg">Add Question</h2>
+              </div>
+
+              <div className="col-span-6">
+                <Input
+                  labelText="Question Label"
+                  name="label"
+                  placeholder="Question Label"
+                  value={values.label}
+                  onChange={handleChange}
+                  errorMessage={touched.label && errors.label}
+                />
+              </div>
+
+              <div className="col-span-6">
+                <AutoComplete
+                  labelText="Statement Type"
+                  onSelect={(item) => setFieldValue('statementType', item.value)}
+                  placeholder="Search"
+                  options={['positive', 'negative'].map((val, i) => ({
+                    label: val,
+                    value: val,
+                    key: i,
+                  }))}
+                  onChange={() => {}}
+                  value={values.statementType}
+                  errorMessage={touched.statementType && errors.statementType}
+                />
+              </div>
+
+              <div className="col-span-12 my-5">
+                <Input
+                  labelText="Question Statement"
+                  name="statement"
+                  placeholder="Question Statement"
+                  value={values.statement}
+                  onChange={handleChange}
+                  onPressEnter={handleSubmit}
+                  errorMessage={touched.statement && errors.statement}
+                />
+              </div>
+
+              <div className="col-span-12 mt-5">
+                <Checkbox
+                  checked={values.required}
+                  onChange={(required) => setFieldValue('required', required)}
+                >
+                  This question is required to answer
+                </Checkbox>
+              </div>
+            </div>
+          </Form>
+        )}
+      </Formik>
     </Modal>
   );
 };
 
-export default AddQuestionModal;
+AddFeedbackModal.propTypes = {
+  onCancel: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
+  visible: PropTypes.bool,
+};
+
+AddFeedbackModal.defaultProps = {
+  visible: false,
+};
+
+export default AddFeedbackModal;

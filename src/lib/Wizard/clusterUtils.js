@@ -1,6 +1,6 @@
 import arrayMove from 'array-move';
 
-const isIndexValid = (index) => Number.isInteger(index) && index !== -1;
+const isIndexValid = (index) => Number.isInteger(index) && index >= 0;
 
 const fetchIndex = (parsedQuery, oldClusters, ids) => {
   const {
@@ -11,6 +11,8 @@ const fetchIndex = (parsedQuery, oldClusters, ids) => {
 
   const clusters = [...oldClusters];
   const clusterIndex = clusters.findIndex((cluster) => cluster.id * 1 === clusterId * 1);
+  // const foundClusterIndex = clusters.findIndex((cluster) => cluster.id * 1 === clusterId * 1);
+  // const clusterIndex = foundClusterIndex !== -1 ? foundClusterIndex : 0;
 
   const competencyIndex = (clusters[clusterIndex]?.competencies || []).findIndex(
     (competency) => competency.id * 1 === competencyId * 1,
@@ -31,6 +33,8 @@ const updateItem = (parsedQuery, oldClusters, newValues, ids) => {
   // if  we're updating clusters
   if (!isIndexValid(competencyIndex) && !isIndexValid(questionIndex)) {
     clusters[clusterIndex] = { ...clusters[clusterIndex], ...newValues };
+
+    return clusters;
   }
 
   // if we're updating competencies
@@ -39,6 +43,8 @@ const updateItem = (parsedQuery, oldClusters, newValues, ids) => {
       ...clusters[clusterIndex].competencies[competencyIndex],
       ...newValues,
     };
+
+    return clusters;
   }
 
   // if we're updating questions
@@ -47,6 +53,8 @@ const updateItem = (parsedQuery, oldClusters, newValues, ids) => {
       ...clusters[clusterIndex].competencies[competencyIndex].questions[questionIndex],
       ...newValues,
     };
+
+    return clusters;
   }
 
   return clusters;
@@ -137,23 +145,76 @@ const getTableData = (parsedQuery, values) => {
   return format(clusters);
 };
 
-const addCluster = (oldClusters) => {
+const addItem = (oldClusters, ids, newItem, parsedQuery) => {
   const clusters = [...oldClusters];
-  const lastCluster = clusters[clusters.length - 1];
-  const newIndex = lastCluster.index + 1;
-  const newId = lastCluster.id + 100;
 
-  const newClusters = {
-    name: `Cluster ${newIndex}`,
-    showOrder: newIndex,
-    index: newIndex,
-    id: newId,
-    competencies: [],
+  const generateNewItemProperties = (refArr) => {
+    const lastItem = refArr?.length > 0 ? refArr[refArr.length - 1] : { index: -1 };
+    const index = lastItem.index + 1;
+    const showOrder = index + 1;
+
+    // creating a unique id
+    const refArrIds = refArr?.length > 0 ? refArr.map((el) => el.id * 1) : [1];
+    const id = refArrIds.reduce((prevValue, currentValue) => prevValue + currentValue);
+
+    return {
+      index,
+      id,
+      showOrder,
+    };
   };
 
-  clusters.push(newClusters);
+  if (!newItem && !ids.clusterId) {
+    // means that we're adding a cluster
+
+    const { id, index, showOrder } = generateNewItemProperties(clusters);
+
+    const newClusters = {
+      name: `Cluster ${index}`,
+      competencies: [],
+      showOrder,
+      index,
+      id,
+    };
+
+    clusters.push(newClusters);
+
+    return clusters;
+  }
+
+  const [clusterIndex, competencyIndex] = fetchIndex(parsedQuery, oldClusters, ids);
+
+  if (isIndexValid(clusterIndex) && !isIndexValid(competencyIndex)) {
+    // means that we're adding a competency
+
+    const { id, index, showOrder } = generateNewItemProperties(clusters[clusterIndex].competencies);
+    const newCompetency = {
+      ...newItem,
+      questions: [],
+      id,
+      index,
+      showOrder,
+    };
+
+    clusters[clusterIndex].competencies.push(newCompetency);
+
+    return clusters;
+  }
+
+  if (isIndexValid(competencyIndex) && isIndexValid(clusterIndex)) {
+    // means that we're adding a question
+
+    const { id, index, showOrder } = generateNewItemProperties(
+      clusters[clusterIndex].competencies[competencyIndex].questions,
+    );
+
+    const newQuestion = { ...newItem, id, index, showOrder };
+    clusters[clusterIndex].competencies[competencyIndex].questions.push(newQuestion);
+
+    return clusters;
+  }
 
   return clusters;
 };
 
-export { updateItem, deleteItem, clusterSortRefactor, getTableData, addCluster };
+export { updateItem, deleteItem, clusterSortRefactor, getTableData, addItem };

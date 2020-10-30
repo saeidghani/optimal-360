@@ -73,7 +73,7 @@ const CompetencyEditSection = ({ data, onSave, onCancel, clusterName }) => {
               <Input
                 name={`lowScores[${i}]`}
                 key={i}
-                placeholder="Lorem"
+                placeholder="low score title"
                 value={item}
                 onChange={handleChange}
                 errorMessage={touched.lowScores?.[i] && errors.lowScores?.[i]}
@@ -115,7 +115,7 @@ const CompetencyEditSection = ({ data, onSave, onCancel, clusterName }) => {
               <Input
                 name={`highScores[${i}]`}
                 key={i}
-                placeholder="Lorem"
+                placeholder="high score title"
                 value={item}
                 onChange={handleChange}
                 errorMessage={touched.highScores?.[i] && errors.highScores?.[i]}

@@ -14,12 +14,10 @@ const CompetencyEditSection = ({ data, onSave, onCancel, clusterName, competency
     statement: yup.string().required('Question statement is required'),
   });
 
-  const formRef = React.useRef();
   const questionName = data?.name;
 
   return (
     <Formik
-      innerRef={formRef}
       enableReinitialize
       initialValues={data}
       validationSchema={schema}
@@ -58,7 +56,6 @@ const CompetencyEditSection = ({ data, onSave, onCancel, clusterName, competency
 
             <div className="col-span-6">
               <AutoComplete
-                wrapperClassName="capitalize"
                 labelText="Statement Type"
                 onSelect={(item) => setFieldValue('statementType', item.value)}
                 placeholder="Search"
