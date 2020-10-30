@@ -19,6 +19,7 @@ import OrganizationsNewStaff from '../containers/SurveyGroups/OrganizationsNewSt
 import NewOrganizations from '../containers/SurveyGroups/NewOrganizations';
 import RatersStatusIndividualReport from '../containers/SurveyGroups/RatersStatusIndividualReport';
 import RatersStatusGroupReportReview from '../containers/SurveyGroups/RatersStatusGroupReportReview';
+import GroupReports from '../containers/SurveyGroups/GroupReports';
 
 import ProjectInfo from '../containers/Wizard/ProjectInfo';
 import SurveySetting from '../containers/Wizard/SurveySetting';
@@ -69,6 +70,12 @@ const Index = () => (
       path="/super-user/participants/group-report-review"
       exact
       component={RatersStatusGroupReportReview}
+    />
+
+    <PrivateRoute
+      path="/super-user/new-project/reports/group-reports"
+      exact
+      component={GroupReports}
     />
 
     <PrivateRoute path="/super-user/new-project/project-info" exact component={ProjectInfo} />

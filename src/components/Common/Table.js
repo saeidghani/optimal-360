@@ -23,6 +23,7 @@ const _Table = ({
   size,
   pagination,
   rowSelection,
+  footer,
 }) => {
   const _columns = (columns || []).map((el) => {
     if (typeof el === 'undefined' && !el) return null;
@@ -72,6 +73,7 @@ const _Table = ({
           }
         }
         pagination={false}
+        footer={footer}
       />
 
       {pagination ? (
@@ -141,6 +143,7 @@ _Table.propTypes = {
   size: PropTypes.string,
   pagination: PropTypes.bool,
   rowSelection: PropTypes.bool,
+  footer: PropTypes.func,
 };
 
 _Table.defaultProps = {
@@ -160,6 +163,7 @@ _Table.defaultProps = {
   size: 'default',
   pagination: true,
   rowSelection: true,
+  footer: null,
 };
 
 export default _Table;
