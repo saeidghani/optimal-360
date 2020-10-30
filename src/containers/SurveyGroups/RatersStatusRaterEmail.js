@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-// import { PropTypes } from 'prop-types';
+import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
-import { PropTypes } from 'prop-types';
-import Layout from '../../components/SurveyGroups/RatersStatusOverview';
+import Layout from '../../components/SurveyGroups/RatersStatusRaterEmail';
 
 class RatersStatusOverview extends Component {
   state = {};
@@ -23,6 +22,6 @@ const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
 });
 
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = () => ({});
 
 export default connect(mapStateToProps, mapDispatchToProps)(RatersStatusOverview);
