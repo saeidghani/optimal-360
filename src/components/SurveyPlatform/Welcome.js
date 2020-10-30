@@ -17,7 +17,7 @@ const Welcome = () => {
 
   return (
     <Layout title="Welcome">
-      <div className="text-left">Welcome</div>
+      <div className="text-left text-heading">Welcome</div>
       <div className="grid grid-cols-12 mb-10 mt-8">
         <div className="col-start-1 col-span-6 text-base text-body mb-3">Select Project</div>
         <Dropdown
