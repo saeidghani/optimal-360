@@ -30,6 +30,7 @@ import Report from '../containers/Wizard/Report';
 
 import SurveyPlatformLogin from '../containers/SurveyPlatform/Login';
 import SurveyPlatformForgotPassword from '../containers/SurveyPlatform/ForgotPassword';
+import SurveyPlatformWelcome from '../containers/SurveyPlatform/Welcome';
 
 import NotFound from '../components/404';
 import TestingArea from '../components/TestingArea';
@@ -103,6 +104,7 @@ const Index = () => (
       exact
       component={SurveyPlatformForgotPassword}
     />
+    <PrivateRoute path="/survey-platform/welcome" exact component={SurveyPlatformWelcome} />
 
     <PrivateRoute path="/super-user/organizations/users/new" exact component={NewOrganizations} />
     <CustomRoute path="/" exact component={TestingArea} />
