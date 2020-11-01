@@ -8,9 +8,10 @@ import Tabs from '../Common/Tabs';
 import Progress from '../Common/Progress';
 import Table from '../Common/Table';
 
+import graphIcon from '../../assets/images/graph-icon.svg';
+
 const AllRatees = ({ loading }) => {
   const [pageSize] = React.useState(10);
-  const [selectedRows, setSelectedRows] = React.useState([]);
 
   const dropdownOptions = [
     { title: 'Top Leadership', value: 1 },
@@ -23,55 +24,6 @@ const AllRatees = ({ loading }) => {
     { title: 'Group', key: '2' },
     { title: 'All', key: '3' },
   ];
-
-  const renderHeader = React.useCallback(() => {
-    return selectedRows && selectedRows?.length > 0 ? (
-      <div className="flex flex-row items-center">
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Force generate report"
-          textClassName="mr-2"
-          className="ml-3"
-        />
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Download report"
-          textClassName="mr-2"
-          className="ml-3"
-          icon="FileExcelOutlined"
-          iconPosition="right"
-        />
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Export results to Excel"
-          textClassName="mr-2"
-          className="ml-3"
-          icon="FileExcelOutlined"
-          iconPosition="right"
-        />
-        <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
-      </div>
-    ) : (
-      <div className="flex justify-between items-center">
-        <div>
-          <Tabs className="c-tabs-class" defaultActiveKey="3" tabOptions={secondaryTabOptions} />
-        </div>
-        <div className="flex justify-between">
-          <span className="">Survey Ends on 28 Sep</span>
-          <span className="mx-3">|</span>
-          <div className="">
-            <span className="mr-2 text-purple-500">29d</span>
-            and
-            <span className="mx-2 text-purple-500">2h</span>
-            left
-          </div>
-        </div>
-      </div>
-    );
-  }, [loading, selectedRows.length]);
 
   const columns = React.useMemo(() => [
     {
@@ -91,15 +43,10 @@ const AllRatees = ({ loading }) => {
       title: 'Rate',
       width: 100,
       render: (percentage) => (
-        <div className="w-16 flex items-center justify-between">
-          <div className="">{percentage}</div>
-          <div className="w-20">
-            <Progress
-              className="-mb-12 ml-auto"
-              subClassName="mb-10 pb-2"
-              status="sub"
-              percentage={percentage}
-            />
+        <div className="w-16 h-16 flex items-center justify-between pt-2">
+          <div className="pb-2 mr-1 md:mr-4">{percentage}</div>
+          <div className="w-12 h-full">
+            <Progress className="-mb-12 ml-auto" percentage={percentage} showPercent={false} />
           </div>
         </div>
       ),
@@ -113,7 +60,45 @@ const AllRatees = ({ loading }) => {
       relationship: 'Katherine Kan',
       rate: 100,
     },
+    {
+      key: '2',
+      name: '1000001',
+      relationship: 'Katherine Kan',
+      rate: 50,
+    },
+    {
+      key: '3',
+      name: '1000001',
+      relationship: 'Katherine Kan',
+      rate: 100,
+    },
+    {
+      key: '4',
+      name: '1000001',
+      relationship: 'Katherine Kan',
+      rate: 70,
+    },
+    {
+      key: '5',
+      name: '1000001',
+      relationship: 'Katherine Kan',
+      rate: 30,
+    },
   ];
+
+  const ExtraDetails = () => (
+    <div className="flex flex-col items-center mt-10">
+      <div className="flex items-center">
+        <span className="relative w-10 h-10 rounded-full bg-primary-500">
+          <img src={graphIcon} className="absolute bottom-0 pb-3 pl-2 w-3/4" alt="" />
+        </span>
+        <span className="mx-2 text-body text-sm">extraDetails</span>
+        <span className="text-heading text-xl">In progress</span>
+      </div>
+      <Progress className="mt-10" percentage={60} showPercent />
+      <div className="mt-10 text-antgray-100">Collective Completion Rate</div>
+    </div>
+  );
 
   return (
     <Layout>
@@ -127,7 +112,7 @@ const AllRatees = ({ loading }) => {
           options={dropdownOptions}
         />
       </div>
-      <div className="flex">
+      <div className="flex flex-col items-center md:flex-row">
         <Button
           className="mr-1 bg-white border-list-border shadow-none"
           textClassName="text-heading"
@@ -135,7 +120,7 @@ const AllRatees = ({ loading }) => {
           text="Top Leadership"
         />
         <Button
-          className="mr-1 bg-white border-list-border shadow-none"
+          className="mr-1 bg-white border-list-border shadow-none px-8 md:px-1"
           textClassName="text-heading text-primary-500"
           textSize="sm"
           text="Managers"
@@ -147,25 +132,60 @@ const AllRatees = ({ loading }) => {
           text="High Potentials"
         />
       </div>
+      <div className="p-4 md:p-6 bg-white rounded-lg shadow">
+        <div className="flex flex-col justify-between items-center md:flex-row">
+          <div className="md:w-1/2">
+            <Tabs
+              className="md:c-tabs-class"
+              defaultActiveKey="3"
+              tabOptions={secondaryTabOptions}
+            />
+          </div>
+          <div className="flex">
+            <span className="text-xs md:text-sm">Survey Ends on 28 Sep</span>
+            <span className="mx-1 md:mx-3">|</span>
+            <div className="text-xs md:text-sm">
+              <span className="mr-1 text-purple-500">29d</span>
+              <span>and</span>
+              <span className="mx-1 text-purple-500">2h</span>
+              <span>left</span>
+            </div>
+          </div>
+        </div>
+        <div className="md:hidden">
+          <ExtraDetails />
+        </div>
+        <Table
+          size="middle"
+          className="hidden md:grid grid-cols-6"
+          tableClassName="col-span-4"
+          loading={loading}
+          columns={columns}
+          dataSource={dataSource}
+          pageSize={pageSize * 1}
+          pageNumber={1}
+          rowSelection={false}
+          extraDetails={<ExtraDetails />}
+          extraDetailsClassName="row-start-1 col-start-5 col-span-2"
+          paginationClassName="row-start-2 col-start-1 col-span-6"
+        />
+      </div>
       <Table
         size="middle"
-        className="p-6 bg-white rounded-lg shadow"
+        className="md:hidden mt-5"
         loading={loading}
         columns={columns}
         dataSource={dataSource}
         pageSize={pageSize * 1}
         pageNumber={1}
-        renderHeader={renderHeader}
         rowSelection={false}
-        selectedRowKeys={selectedRows?.map((el) => el.key)}
-        onRowSelectionChange={(_, rows) => {
-          setSelectedRows(rows);
-        }}
+        paginationClassName="flex flex-col justify-between h-24"
       />
-      <div className="flex justify-end mb-16">
-        <Button className="mt-6 mr-3" text="Continue Rating" />
+
+      <div className="md:flex justify-end mb-40 md:mb-24">
+        <Button className="mt-6 mr-3 w-full md:w-auto" text="Continue Rating" />
         <Button
-          className="mt-6 bg-transparent text-primary-500 outline-none border-none shadow-none"
+          className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
           text="Submit All"
         />
       </div>
