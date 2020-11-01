@@ -18,7 +18,7 @@ import budgetLogo from '../../../assets/images/budget-logo.svg';
 
 const Layout = ({ children, className, wrapperClassName, title }) => (
   <div
-    className={`min-h-screen bg-primary-200 flex flex-col
+    className={`min-h-screen relative bg-primary-200 flex flex-col
        ${wrapperClassName}`}
   >
     <div className="bg-white w-full hidden md:flex justify-between items-center px-8 py-6 md:px-20 lg:px-32 lg:py-10">
@@ -57,7 +57,7 @@ const Layout = ({ children, className, wrapperClassName, title }) => (
     >
       {children}
     </div>
-    <div className="bg-antgray-100 bg-opacity-25 grid grid-cols-12 items-center gap-y-3 px-8 py-6 lg:px-32 lg:py-10">
+    <div className="absolute bottom-0 bg-antgray-100 bg-opacity-25 grid grid-cols-12 items-center gap-y-3 px-8 py-6 lg:px-32 lg:py-10">
       <Logo />
       <p className="text-antgray-100 text-sm text-center row-start-2 col-start-1 col-span-12 md:row-start-1 md:col-start-3 md:col-span-8 md:px-6">
         Copyright 2020. Optimal 360 Ltd is registered in England and Wales with company number
