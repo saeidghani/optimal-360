@@ -130,16 +130,21 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
   }, [selectedSurveyGroupKey]);
 
   React.useEffect(() => {
+    const resetForm = async () => {
+      await fetchSurveyQuestions(surveyGroupId);
+
+      if (formRef?.current) {
+        // reset form state when surveyGroup changes
+        // happens when user decides to discard current settings and changes currentSurveyGroup
+        formRef.current.setTouched({});
+        formRef.current.setErrors({});
+      }
+    };
+
     if (surveyGroupId) {
-      fetchSurveyQuestions(surveyGroupId);
+      resetForm();
     }
 
-    if (formRef?.current) {
-      // reset form state when surveyGroup changes
-      // happens when user decides to discard current settings and changes currentSurveyGroup
-      formRef.current.setTouched({});
-      formRef.current.setErrors({});
-    }
     // eslint-disable-next-line
   }, [fetchSurveyQuestions, surveyGroupId]);
 

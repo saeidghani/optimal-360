@@ -5,7 +5,7 @@ import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import moment from 'moment';
 
-import { useQuery } from '../../hooks/useQuery';
+import { useQuery, useSurveyGroup } from '../../hooks';
 
 import Menu from './Helper/Menu';
 import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
@@ -20,14 +20,7 @@ import Checkbox from '../Common/Checkbox';
 import InputNumber from '../Common/InputNumber';
 import Loading from '../Common/Loading';
 
-const SurveySetting = ({
-  surveySettings,
-  fetchSurveySettings,
-  fetchSurveyGroups,
-  setSurveySettings,
-  loading,
-  surveyGroups,
-}) => {
+const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings, loading }) => {
   const schema = yup.object({
     surveySetting: yup.object({
       startDate: yup.string().required('Start Date Cannot Be Empty').nullable(),
@@ -43,6 +36,15 @@ const SurveySetting = ({
         .moreThan(0, 'Rater Invalidation Must Be Greater Than 0')
         .required('Item Invalidation Cannot Be Empty'),
     }),
+    raterGroups: yup.array(
+      yup.object({
+        abbr: yup.string().required('Abbr Cannot Be Empty'),
+        name: yup.string().required('Group Name Cannot Be Empty'),
+        minRater: yup
+          .number('Min. Raters must be a number')
+          .min(1, 'Min. Raters must be greater than 0'),
+      }),
+    ),
     surveyModeInUserDashboard: yup
       .object({
         individual: yup.bool(),
@@ -57,13 +59,15 @@ const SurveySetting = ({
       }),
   });
 
+  const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
+
+  const [parsedQuery, query, setQuery] = useQuery();
+
   const formRef = React.useRef();
   const history = useHistory();
   const [surveyGroupModal, setSurveyGroupModal] = React.useState(false);
   const [isFormDone, setIsFormDone] = React.useState(false);
   const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
-  const [parsedQuery, , setQuery] = useQuery();
-  const { projectId, surveyGroupId } = parsedQuery;
 
   const {
     surveySetting = {
@@ -72,17 +76,7 @@ const SurveySetting = ({
       raterInvalidation: 0,
       itemInvalidation: 0,
     },
-    raterGroups = [
-      {
-        key: '1',
-        abbr: 'SF',
-        name: 'Self',
-        minRater: 1,
-        includeAverage: false,
-        remove: '',
-        index: 1,
-      },
-    ],
+    raterGroups = [],
     surveyModeInUserDashboard = {
       individual: false,
       ratingGroup: false,
@@ -90,65 +84,25 @@ const SurveySetting = ({
     },
   } = surveySettings || {};
 
-  const surveyGroupsStringified = JSON.stringify(surveyGroups.data);
   React.useEffect(() => {
-    const sortedArr = surveyGroups?.data?.sort((el1, el2) => el1.id - el2.id) || [];
+    const resetForm = async () => {
+      await fetchSurveySettings(surveyGroupId);
 
-    const firstSurveyGroupId = sortedArr?.length > 0 ? sortedArr[0].id : '';
+      if (formRef?.current) {
+        // reset form state when surveyGroup changes
+        // happens when user decides to discard current settings and changes currentSurveyGroup
+        formRef.current.setTouched({});
+        formRef.current.setErrors({});
+        formRef.current.setValues({ ...formRef?.current?.values });
+      }
+    };
 
-    const isURLSurveyGroupValid = !!sortedArr.find(
-      (el) => el.id?.toString() === parsedQuery?.surveyGroupId?.toString(),
-    );
-
-    if (
-      !isURLSurveyGroupValid &&
-      firstSurveyGroupId &&
-      firstSurveyGroupId !== parsedQuery?.surveyGroupId
-    ) {
-      setQuery({ surveyGroupId: firstSurveyGroupId });
-    }
-    // eslint-disable-next-line
-  }, [surveyGroupsStringified]);
-
-  React.useEffect(() => {
-    fetchSurveyGroups(projectId);
-  }, [projectId, surveyGroupId, fetchSurveyGroups]);
-
-  React.useEffect(() => {
     if (surveyGroupId) {
-      fetchSurveySettings(surveyGroupId);
+      resetForm();
     }
 
-    if (formRef?.current) {
-      // reset form state when surveyGroup changes
-      // happens when user decides to discard current settings and changes currentSurveyGroup
-      formRef.current.setTouched({});
-      formRef.current.setErrors({});
-      formRef.current.setValues({ surveySetting, surveyModeInUserDashboard });
-    }
     // eslint-disable-next-line
   }, [fetchSurveySettings, surveyGroupId]);
-
-  const raterGroupsStringified = JSON.stringify(raterGroups);
-  const getInitialData = React.useCallback(() => {
-    return raterGroups?.length > 0
-      ? raterGroups.map((el, i) => ({
-          ...el,
-          key: el.id?.toString() || '9999',
-          remove: '',
-          index: i,
-          disabled: i < 1,
-        }))
-      : [];
-
-    // eslint-disable-next-line
-  }, [raterGroupsStringified]);
-
-  const [dataSource, setDataSource] = React.useState(() => getInitialData());
-
-  React.useEffect(() => {
-    setDataSource(() => getInitialData());
-  }, [projectId, surveyGroupId, getInitialData]);
 
   React.useEffect(() => {
     const validateForm = async () => {
@@ -183,73 +137,101 @@ const SurveySetting = ({
     }
   }, [isFormDone, selectedSurveyGroupKey, setQuery]);
 
+  const formatRaterGroupItems = (arr) =>
+    arr.map((el, i) => ({
+      ...el,
+      index: i,
+      // key: `${i}`,
+      remove: '',
+      disabled: i < 1,
+    }));
+
   const updateTable = (key, value, id) => {
-    const newData = [...dataSource];
+    const oldValues = formRef?.current?.values || {};
+    const newRaterGroups = [...(oldValues?.raterGroups || [])];
 
-    const oldItem = newData.find((item) => item.key * 1 === id * 1);
-    oldItem[key] = value;
+    const updateIndex = newRaterGroups.findIndex((el) => el.id * 1 === id * 1);
+    newRaterGroups[updateIndex][key] = value;
 
-    setDataSource(newData);
+    formRef.current.setValues({ ...oldValues, raterGroups: formatRaterGroupItems(newRaterGroups) });
   };
 
-  const removeTableRow = (key) => {
-    const newDate = [...dataSource];
-    const foundIndex = newDate.findIndex((item) => item.key === key);
+  const removeTableRow = (id) => {
+    const oldValues = formRef?.current?.values || {};
+    const newRaterGroups = [...(oldValues?.raterGroups || [])];
 
-    newDate.splice(foundIndex, 1);
+    const removeIndex = newRaterGroups.findIndex((el) => el.id * 1 === id * 1);
+    newRaterGroups.splice(removeIndex, 1);
 
-    setDataSource(newDate);
+    formRef.current.setValues({ ...oldValues, raterGroups: formatRaterGroupItems(newRaterGroups) });
   };
 
   const addTableRow = () => {
-    const newKey = dataSource[dataSource.length - 1].key * 1 + 1;
+    const oldValues = formRef?.current?.values || {};
+    const newRaterGroups = [...(oldValues?.raterGroups || [])];
 
-    setDataSource((prevState) => [
-      ...prevState,
-      {
-        key: newKey.toString(),
-        abbr: '',
-        name: '',
-        minRater: '',
-        includeAverage: false,
-        remove: '',
-      },
-    ]);
+    const ids = newRaterGroups.map((el) => el.id * 1);
+    const newId = ids.reduce((acc, cur) => acc + cur, 1);
+
+    const newItem = {
+      abbr: '',
+      name: '',
+      minRater: 0,
+      includeAverage: false,
+      remove: '',
+      id: newId,
+    };
+    newRaterGroups.push(newItem);
+
+    formRef.current.setValues({ ...oldValues, raterGroups: formatRaterGroupItems(newRaterGroups) });
   };
 
-  const columns = [
+  const surveySettingsStringified = JSON.stringify(surveySettings);
+  const initialValues = React.useMemo(() => {
+    return {
+      surveySetting,
+      raterGroups: formatRaterGroupItems(raterGroups),
+      surveyModeInUserDashboard,
+    };
+
+    // eslint-disable-next-line
+  }, [query, surveySettingsStringified]);
+
+  const getColumns = (touched, errors) => [
     {
       title: 'abbr.',
       key: 'abbr',
-      render: (value, { key, disabled }) => (
+      render: (value, { id, disabled, index }) => (
         <Input
           disabled={disabled}
           inputClass="uppercase border border-antgray-300"
           name="abbr"
-          onChange={(e) => updateTable('abbr', e.target.value, key)}
+          onChange={(e) => updateTable('abbr', e.target.value, id)}
           value={value}
           placeholder="ABBR."
+          errorMessage={touched?.raterGroups?.[index]?.abbr && errors?.raterGroups?.[index]?.abbr}
         />
       ),
     },
     {
       title: 'Group Name',
       key: 'name',
-      render: (value, { key, disabled }) => (
+      render: (value, { id, disabled, index }) => (
         <Input
           disabled={disabled}
           inputClass="capitalize border border-antgray-300"
           name="name"
-          onChange={(e) => updateTable('name', e.target.value, key)}
+          onChange={(e) => updateTable('name', e.target.value, id)}
           value={value}
           placeholder="Group Name"
+          errorMessage={touched?.raterGroups?.[index]?.name && errors?.raterGroups?.[index]?.name}
         />
       ),
     },
     {
       title: 'Min.Raters',
       key: 'minRater',
-      render: (value, { key, disabled }) => (
+      render: (value, { id, disabled, index }) => (
         <Input
           disabled={disabled}
           name="minRater"
@@ -257,23 +239,26 @@ const SurveySetting = ({
           onChange={(e) => {
             const val = e.target.value;
 
-            updateTable('minRater', Number.isInteger(val * 1) ? val * 1 : val, key);
+            updateTable('minRater', Number.isInteger(val * 1) ? val * 1 : val, id);
           }}
           value={value.toString()}
           placeholder="Min Raters"
+          errorMessage={
+            touched?.raterGroups?.[index]?.minRater && errors?.raterGroups?.[index]?.minRater
+          }
         />
       ),
     },
     {
       title: 'Include Average',
       key: 'includeAverage',
-      render: (value, { key, index }) => (
+      render: (value, { id, index }) => (
         <div style={{ minWidth: '80px' }} className="justify-center items-center">
           {index !== 0 && (
             <Checkbox
               labelClass="text-body text-sm"
               checked={!!value}
-              onChange={(val) => updateTable('includeAverage', val, key)}
+              onChange={(val) => updateTable('includeAverage', val, id)}
             >
               Include
             </Checkbox>
@@ -284,11 +269,11 @@ const SurveySetting = ({
     {
       title: '',
       key: 'remove',
-      render: (_, { key, index }) => (
+      render: (_, { id, index }) => (
         <div style={{ minWidth: '80px' }} className="justify-center items-center">
           {index !== 0 ? (
             <Button
-              onClick={() => removeTableRow(key)}
+              onClick={() => removeTableRow(id)}
               type="link"
               className="text-base text-antgray-200"
               icon="DeleteOutlined"
@@ -298,10 +283,6 @@ const SurveySetting = ({
       ),
     },
   ];
-
-  const currentSurveyGroupName =
-    surveyGroups?.data?.find((el) => el.id.toString() === parsedQuery?.surveyGroupId?.toString())
-      ?.name || '';
 
   return (
     <MainLayout
@@ -340,10 +321,7 @@ const SurveySetting = ({
           <Formik
             innerRef={formRef}
             enableReinitialize
-            initialValues={{
-              surveySetting,
-              surveyModeInUserDashboard,
-            }}
+            initialValues={initialValues}
             validationSchema={schema}
             onSubmit={async (values) => {
               try {
@@ -354,7 +332,7 @@ const SurveySetting = ({
                     startDate: moment(values.surveySetting?.startDate).toISOString(),
                     endDate: moment(values.surveySetting?.endDate).toISOString(),
                   },
-                  raterGroups: dataSource,
+                  raterGroups: values.raterGroups,
                   surveyGroupId,
                 });
 
@@ -460,13 +438,13 @@ const SurveySetting = ({
                   <Table
                     rowSelection={false}
                     pagination={false}
-                    columns={columns}
-                    dataSource={dataSource}
+                    columns={getColumns(touched, errors)}
+                    dataSource={values.raterGroups}
                     renderHeader={() => (
                       <div className="flex justify-between items-center">
                         <p className="text-14px">Set rater group (limit to 5, including Self):</p>
                         <Button
-                          disabled={dataSource.length > 4}
+                          disabled={!!(values.raterGroups?.length > 4)}
                           onClick={addTableRow}
                           textSize="12px"
                           text="Add Rater Group"
@@ -475,9 +453,6 @@ const SurveySetting = ({
                       </div>
                     )}
                   />
-                  {dataSource.find(
-                    (item) => item.minRater !== '' && typeof item.minRater !== 'number',
-                  ) && <p className="text-red-500 mt-2">Min. Raters values must be numbers</p>}
 
                   <div className="flex flex-col mt-16 ">
                     <p className="mb-10 text-secondary text-sm">
@@ -547,14 +522,9 @@ const SurveySetting = ({
 };
 
 SurveySetting.propTypes = {
-  fetchSurveyGroups: PropTypes.func.isRequired,
   fetchSurveySettings: PropTypes.func.isRequired,
   setSurveySettings: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
-  surveyGroups: PropTypes.shape({
-    data: PropTypes.arrayOf(PropTypes.object),
-    timeStamp: PropTypes.number,
-  }),
   surveySettings: PropTypes.shape({
     raterGroups: PropTypes.arrayOf(PropTypes.object),
     surveyModeInUserDashboard: PropTypes.shape({}),
@@ -563,9 +533,6 @@ SurveySetting.propTypes = {
 };
 
 SurveySetting.defaultProps = {
-  surveyGroups: {
-    data: [],
-  },
   surveySettings: {
     raterGroups: [],
     surveyModeInUserDashboard: {},

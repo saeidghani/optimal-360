@@ -6,30 +6,21 @@ import { useQuery } from '../../hooks/useQuery';
 
 import * as TEMPLATES from './Helper/EmailTemplates';
 
+import pascalize from '../../lib/pascalize';
+
 import MainLayout from '../Common/Layout';
 import Button from '../Common/Button';
 import Loading from '../Common/Loading';
 import TextEditor from '../Common/TextEditor';
 
-const pascalize = (txt) => {
-  if (!txt) return '';
-  let arr = txt?.split('-');
-
-  arr = arr.map((word) => word.charAt(0).toUpperCase() + word.slice(1));
-  arr.splice(0, 1, arr[0].toLowerCase());
-
-  return arr.join('');
-};
-
 const EmailTemplate = ({ loading, fetchSingleProject, singleProject, selectedTemplate }) => {
-  // console.log({ selectedTemplate });
-  // const history = useHistory();
   const [parsedQuery] = useQuery();
   const { projectId, surveyGroupId } = parsedQuery;
   const { data: projectData = {} } = singleProject || {};
 
   const { template } = useParams();
-  const chosenTemplate = pascalize(template);
+
+  const chosenTemplate = pascalize(template, { splitBy: '-' });
 
   if (!TEMPLATES[chosenTemplate]) {
     console.warn(`Template ${template} does not exist`);
