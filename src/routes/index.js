@@ -73,26 +73,49 @@ const Index = () => (
     />
 
     <PrivateRoute
-      path="/super-user/new-project/reports/group-reports"
+      path="/super-user/new-project/project-info"
       exact
-      component={GroupReports}
+      scrollToTop
+      component={ProjectInfo}
     />
-
-    <PrivateRoute path="/super-user/new-project/project-info" exact component={ProjectInfo} />
-    <PrivateRoute path="/super-user/new-project/survey-settings" exact component={SurveySetting} />
-    <PrivateRoute path="/super-user/new-project/email-settings" exact component={EmailSetting} />
+    <PrivateRoute
+      path="/super-user/new-project/survey-settings"
+      exact
+      scrollToTop
+      component={SurveySetting}
+    />
+    <PrivateRoute
+      path="/super-user/new-project/email-settings"
+      exact
+      scrollToTop
+      component={EmailSetting}
+    />
     <PrivateRoute
       path="/super-user/new-project/email-settings/:template"
       exact
+      scrollToTop
       component={EmailTemplate}
     />
-    <PrivateRoute path="/super-user/new-project/survey-intro" exact component={SurveyIntro} />
+    <PrivateRoute
+      path="/super-user/new-project/survey-intro"
+      exact
+      scrollToTop
+      component={SurveyIntro}
+    />
     <PrivateRoute
       path="/super-user/new-project/survey-questions"
       exact
+      scrollToTop
       component={SurveyQuestions}
     />
-    <PrivateRoute path="/super-user/new-project/report" exact component={Report} />
+    <PrivateRoute path="/super-user/new-project/report" exact scrollToTop component={Report} />
+    <PrivateRoute
+      path="/super-user/new-project/reports/group-reports"
+      exact
+      scrollToTop
+      component={GroupReports}
+    />
+
     <PrivateRoute path="/super-user/projects/survey-groups" exact component={Organizations} />
     <PrivateRoute path="/super-user/organizations/users" exact component={OrganizationsUsers} />
     <PrivateRoute
