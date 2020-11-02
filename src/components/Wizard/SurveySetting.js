@@ -360,7 +360,7 @@ const SurveySetting = ({
 
                 const params = history?.location?.search;
 
-                history.push(`/super-user/new-project/email-setting${params}`);
+                history.push(`/super-user/new-project/email-settings${params}`);
               } catch (error) {}
             }}
           >
@@ -528,8 +528,12 @@ const SurveySetting = ({
                     )}
 
                     <div className="mt-17 pb-22  flex justify-end">
-                      <Button type="link" text="Back" className="px-8 py-3" />
-                      <Button onClick={handleSubmit} text="Next" className="px-8 py-3" />
+                      {/* <Button type="link" text="Back" className="px-8 py-3" /> */}
+                      <Button
+                        onClick={handleSubmit}
+                        text="Next"
+                        className="px-8 py-3 w-24.5 h-9.5"
+                      />
                     </div>
                   </div>
                 </div>

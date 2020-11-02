@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 
-import { useQuery } from '../../hooks/useQuery';
+import { useQuery, stringify } from '../../hooks/useQuery';
 
 import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
 
@@ -189,8 +189,20 @@ const SurveyIntro = ({
                   )}
 
                   <div className="pt-23.5 pb-22 flex justify-end pr-33">
-                    <Button type="link" text="Back" />
-                    <Button onClick={handleSubmit} text="Next" />
+                    <Button
+                      className="w-24.5 h-9.5"
+                      type="link"
+                      onClick={() => {
+                        const params = stringify({
+                          projectId: parsedQuery?.projectId,
+                          surveyGroupId: parsedQuery?.surveyGroupId,
+                        });
+
+                        history.push(`/super-user/new-project/email-settings${params}`);
+                      }}
+                      text="Back"
+                    />
+                    <Button className="w-24.5 h-9.5" text="Next" onClick={handleSubmit} />
                   </div>
                 </div>
               </Form>

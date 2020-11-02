@@ -70,7 +70,7 @@ const ProjectInfo = ({
                 projectId,
               });
 
-              history.push(`/super-user/new-project/survey-setting${params}`);
+              history.replace(`/super-user/new-project/survey-settings${params}`);
             } catch (_) {}
           }}
         >
@@ -178,7 +178,7 @@ const ProjectInfo = ({
                 onClick={handleSubmit}
                 text="Next"
                 textSize="base"
-                className="ml-auto c-force-padding-y-px px-8 mt-10"
+                className="ml-auto c-force-padding-y-px px-8 mt-10 w-24.5 h-9.5"
               />
             </Form>
           )}

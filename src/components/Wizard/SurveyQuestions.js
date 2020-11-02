@@ -542,8 +542,27 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                 </div>
 
                 <div className="mt-16 pb-22 flex justify-end">
-                  <Button type="link" text="Back" textSize="base" onClick={() => {}} />
-                  <Button text="Next" onClick={handleSubmit} textSize="base" />
+                  <Button
+                    className="w-24.5 h-9.5"
+                    type="link"
+                    text="Back"
+                    textSize="base"
+                    onClick={() => {
+                      const params = stringify({
+                        projectId: parsedQuery?.projectId,
+                        surveyGroupId: parsedQuery?.surveyGroupId,
+                      });
+
+                      history.push(`/super-user/new-project/survey-intro${params}`);
+                    }}
+                  />
+
+                  <Button
+                    className="w-24.5 h-9.5"
+                    text="Next"
+                    textSize="base"
+                    onClick={handleSubmit}
+                  />
                 </div>
               </Form>
             )}
