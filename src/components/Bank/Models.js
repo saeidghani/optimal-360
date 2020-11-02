@@ -122,7 +122,7 @@ const Models = ({ loading }) => {
             </div>
             <div>
               <Table
-                size="small"
+                size="middle"
                 loading={loading}
                 columns={columns}
                 dataSource={data}
