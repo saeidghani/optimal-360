@@ -36,6 +36,8 @@ import Information from '../containers/SurveyPlatform/Information';
 import AllRatees from '../containers/SurveyPlatform/AllRatees';
 import Individual from '../containers/SurveyPlatform/Individual';
 
+import BankModels from '../containers/Bank/Models';
+
 import NotFound from '../components/404';
 import TestingArea from '../components/TestingArea';
 
@@ -137,6 +139,9 @@ const Index = () => (
       exact
       component={SurveyPlatformForgotPassword}
     />
+
+    <PrivateRoute path="/super-user/bank/models" exact component={BankModels} />
+
     <PrivateRoute path="/survey-platform/welcome" exact component={SurveyPlatformWelcome} />
     <PrivateRoute path="/survey-platform/information" exact component={Information} />
     <PrivateRoute path="/survey-platform/managers/all-ratees" exact component={AllRatees} />
