@@ -1,30 +1,36 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Route, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-// import { hasAuthToken } from '../lib/jwt';
+import { Route, Redirect, useLocation } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
-const PrivateRoute = ({ ...rest }) => {
-  const { member } = rest;
+import { stringify } from '../hooks/useQuery';
 
-  // Not logged in - redirect to /login
-  // if (!hasAuthToken() || !member) {
-  if (!member) {
-    return <Redirect to="/login" />;
+const PrivateRoute = ({ scrollToTop, ...props }) => {
+  const token = Cookies.get('token');
+
+  const { pathname, search } = useLocation();
+  const prevPath = stringify({ prevPath: `${pathname}${search}` });
+
+  // set page scroll to top of the page in specified pages
+  React.useEffect(() => {
+    if (scrollToTop) window.scrollTo(0, 0);
+  }, [window.top.scrollY]);
+
+  // Not logged in - redirect to (/login) with previous path (/prevPath)
+  if (!token) {
+    return <Redirect to={`/login${prevPath}`} />;
   }
 
   // Logged in and verified
-  return <Route {...rest} />;
+  return <Route {...props} />;
 };
 
 PrivateRoute.propTypes = {
-  member: PropTypes.shape({}).isRequired,
+  scrollToTop: PropTypes.bool,
 };
 
-const mapStateToProps = (state: any) => ({
-  member: state.member || {},
-});
+PrivateRoute.defaultProps = {
+  scrollToTop: false,
+};
 
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(PrivateRoute);
+export default PrivateRoute;
