@@ -1,91 +1,70 @@
 import React from 'react';
+import { Formik, Form } from 'formik';
+import { useHistory } from 'react-router-dom';
+import * as yup from 'yup';
 
 import Layout from './Helper/Layout';
 
 import Dropdown from '../Common/Dropdown';
 import Button from '../Common/Button';
 import RadioGroup from '../Common/RadioGroup';
+import Input from '../Common/Input';
 
 const Information = () => {
+  const schema = yup.object({
+    lengthOfService: yup.string().required('Length Of Service Cannot Be Empty'),
+  });
+
+  const history = useHistory();
+
   const radioGroupOptions = [
     { title: 'Male', value: 1 },
     { title: 'Female', value: 2 },
   ];
 
   const selectOptions = [
+    { title: 'Leadership Development1', value: 1 },
+    { title: 'Leadership Development2', value: 2 },
+    { title: 'Leadership Development3', value: 3 },
+  ];
+
+  const selects = [
     {
       id: 1,
       title: 'Employment location',
-      dropdownOptions: [
-        { title: 'Leadership Development1', value: 1 },
-        { title: 'Leadership Development2', value: 2 },
-        { title: 'Leadership Development3', value: 3 },
-      ],
+      dropdownOptions: selectOptions,
     },
     {
       id: 5,
       title: 'Your sector',
-      dropdownOptions: [
-        { title: 'Leadership Development1', value: 1 },
-        { title: 'Leadership Development2', value: 2 },
-        { title: 'Leadership Development3', value: 3 },
-      ],
+      dropdownOptions: selectOptions,
     },
     {
       id: 3,
       title: 'Your industry',
-      dropdownOptions: [
-        { title: 'Leadership Development1', value: 1 },
-        { title: 'Leadership Development2', value: 2 },
-        { title: 'Leadership Development3', value: 3 },
-      ],
+      dropdownOptions: selectOptions,
     },
 
     {
       id: 4,
       title: 'Your job function',
-      dropdownOptions: [
-        { title: 'Leadership Development1', value: 1 },
-        { title: 'Leadership Development2', value: 2 },
-        { title: 'Leadership Development3', value: 3 },
-      ],
+      dropdownOptions: selectOptions,
     },
     {
       id: 5,
       title: 'Your job level',
-      dropdownOptions: [
-        { title: 'Leadership Development1', value: 1 },
-        { title: 'Leadership Development2', value: 2 },
-        { title: 'Leadership Development3', value: 3 },
-      ],
+      dropdownOptions: selectOptions,
     },
 
     {
       id: 6,
       title: 'Your highest education attained',
-      dropdownOptions: [
-        { title: 'Leadership Development1', value: 1 },
-        { title: 'Leadership Development2', value: 2 },
-        { title: 'Leadership Development3', value: 3 },
-      ],
+      dropdownOptions: selectOptions,
     },
     {
       id: 7,
       title: 'Your age group',
-      dropdownOptions: [
-        { title: 'Leadership Development1', value: 1 },
-        { title: 'Leadership Development2', value: 2 },
-        { title: 'Leadership Development3', value: 3 },
-      ],
-    },
-    {
-      id: 8,
-      title: 'Length of service in your current role',
-      dropdownOptions: [
-        { title: 'Leadership Development1', value: 1 },
-        { title: 'Leadership Development2', value: 2 },
-        { title: 'Leadership Development3', value: 3 },
-      ],
+      dropdownOptions: selectOptions,
     },
   ];
 
@@ -103,22 +82,45 @@ const Information = () => {
         information will be identified nor disclosed. We highly encourage your participation in our
         research.
       </p>
-      <RadioGroup items={radioGroupOptions} value={2} className="mt-4" />
+      <Formik
+        initialValues={{
+          a: '',
+        }}
+        validationSchema={schema}
+        onSubmit={(values) => {
+          console.log(values);
+          history.push('/survey-platform/managers/all-ratees');
+        }}
+      >
+        {({ values, errors, touched, handleSubmit, setFieldValue }) => (
+          <Form>
+            <RadioGroup items={radioGroupOptions} value={2} className="mt-4" />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 mt-10">
-        {selectOptions.map((item) => (
-          <div key={item.id} className="mt-8 ">
-            <div className="text-sm text-body mb-3">{item.title}</div>
-            <Dropdown
-              className="c-autocomplete w-full"
-              showSearch
-              options={item.dropdownOptions}
-              placeholder="Select"
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 mt-10">
+              {selects.map((item) => (
+                <div key={item.id} className="mt-8 ">
+                  <div className="text-sm text-body mb-3">{item.title}</div>
+                  <Dropdown
+                    className="c-autocomplete w-full"
+                    showSearch
+                    options={item.dropdownOptions}
+                    placeholder="Select"
+                  />
+                </div>
+              ))}
+              <div className="mt-8">
+                <div className="text-sm text-body mb-3">Length of service in your current role</div>
+                <Input name="lengthOfService" placeholder="Length of service" value="" />
+              </div>
+            </div>
+            <Button
+              onClick={handleSubmit}
+              className="w-full mt-12 md:w-auto md:ml-auto"
+              text="Next"
             />
-          </div>
-        ))}
-      </div>
-      <Button className="w-full mt-12 md:w-auto md:ml-auto" text="Next" />
+          </Form>
+        )}
+      </Formik>
     </Layout>
   );
 };

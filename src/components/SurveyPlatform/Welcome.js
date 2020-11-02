@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import comma from '../../assets/images/comma.svg';
 import person from '../../assets/images/surveyPlatformWelcome.svg';
@@ -9,11 +10,17 @@ import Dropdown from '../Common/Dropdown';
 import Button from '../Common/Button';
 
 const Welcome = () => {
+  const history = useHistory();
+
   const dropdownOptions = [
     { title: 'Leadership Development1', value: 1 },
     { title: 'Leadership Development2', value: 2 },
     { title: 'Leadership Development3', value: 3 },
   ];
+
+  const handleNextClick = () => {
+    history.push('/survey-platform/information');
+  };
 
   return (
     <Layout title="Welcome">
@@ -60,7 +67,7 @@ const Welcome = () => {
           <span className="text-antgray-100">CHRO Sime Darby Group</span>
         </div>
       </div>
-      <Button className="ml-auto mt-6" text="Next" />
+      <Button className="ml-auto mt-6" text="Next" onClick={handleNextClick} />
     </Layout>
   );
 };

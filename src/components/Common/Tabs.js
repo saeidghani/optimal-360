@@ -15,7 +15,7 @@ const _Tabs = ({ className, defaultActiveKey, tabOptions }) => {
       defaultActiveKey={defaultActiveKey}
       onChange={callback}
     >
-      {tabOptions.map((tab) => (
+      {tabOptions?.map((tab) => (
         <TabPane tab={tab.title} key={tab.key} />
       ))}
     </Tabs>

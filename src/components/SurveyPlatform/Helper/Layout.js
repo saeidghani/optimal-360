@@ -52,8 +52,8 @@ const Layout = ({ children, className, wrapperClassName, title }) => (
     </div>
 
     <div
-      className={`flex flex-col py-6 px-4
-       sm:py-4 sm:px-10 lg:pt-5 lg:pb-28 mt-8 sm:mt-5 lg:mt-0 lg:px-28 ${className}`}
+      className={`flex flex-col py-6 px-4 mb-40
+       sm:py-4 sm:px-10 sm:mb-28 lg:pt-5 lg:pb-16 mt-8 sm:mt-5 lg:mt-0 lg:px-28 ${className}`}
     >
       {children}
     </div>
