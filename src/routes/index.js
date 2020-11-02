@@ -23,7 +23,7 @@ import GroupReports from '../containers/SurveyGroups/GroupReports';
 
 import ProjectInfo from '../containers/Wizard/ProjectInfo';
 import SurveySetting from '../containers/Wizard/SurveySetting';
-import EmailSetting from '../containers/Wizard/EmailSetting';
+import EmailSettings from '../containers/Wizard/EmailSettings';
 import EmailTemplate from '../containers/Wizard/EmailTemplate';
 import SurveyIntro from '../containers/Wizard/SurveyIntro';
 import SurveyQuestions from '../containers/Wizard/SurveyQuestions';
@@ -88,7 +88,7 @@ const Index = () => (
       path="/super-user/new-project/email-settings"
       exact
       scrollToTop
-      component={EmailSetting}
+      component={EmailSettings}
     />
     <PrivateRoute
       path="/super-user/new-project/email-settings/:template"

@@ -24,6 +24,8 @@ const _Table = ({
   pagination,
   rowSelection,
   footer,
+  rowKey,
+  ...props
 }) => {
   const _columns = (columns || []).map((el) => {
     if (typeof el === 'undefined' && !el) return null;
@@ -62,6 +64,7 @@ const _Table = ({
         columns={_columns}
         dataSource={dataSource}
         title={renderHeader}
+        rowKey={rowKey}
         onChange={(pagination, filters, sorter, extra) =>
           onTableChange({ pagination, filters, sorter, extra })
         }
@@ -74,6 +77,7 @@ const _Table = ({
         }
         pagination={false}
         footer={footer}
+        {...props}
       />
 
       {pagination ? (
@@ -144,6 +148,7 @@ _Table.propTypes = {
   pagination: PropTypes.bool,
   rowSelection: PropTypes.bool,
   footer: PropTypes.func,
+  rowKey: PropTypes.string,
 };
 
 _Table.defaultProps = {
@@ -164,6 +169,7 @@ _Table.defaultProps = {
   pagination: true,
   rowSelection: true,
   footer: null,
+  rowKey: 'id',
 };
 
 export default _Table;
