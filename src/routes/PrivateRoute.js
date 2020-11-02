@@ -16,9 +16,9 @@ const PrivateRoute = ({ scrollToTop, ...props }) => {
     if (scrollToTop) window.scrollTo(0, 0);
   }, [window.top.scrollY]);
 
-  // Not logged in - redirect to (/login) with previous path (/prevPath)
+  // Not logged in - redirect to (/super-user/login) with previous path (/prevPath)
   if (!token) {
-    return <Redirect to={`/login${prevPath}`} />;
+    return <Redirect to={`/super-user/login${prevPath}`} />;
   }
 
   // Logged in and verified

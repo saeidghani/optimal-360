@@ -5,7 +5,7 @@
   "scripts": {
     "start": "craco start",
     "watch:start": "npm run watch:css && craco start",
-    "build": "craco build",
+    "build": "SET NODE_ENV=production build:css && craco build",
     "test": "craco test",
     "eject": "craco eject",
     "predeploy": "craco build",

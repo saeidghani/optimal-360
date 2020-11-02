@@ -21,7 +21,7 @@ const Success = () => (
         </p>
 
         <Button
-          href="/login"
+          href="/super-user/login"
           className="mt-12 c-force-padding-y-px px-7 w-full sm:w-auto"
           text="Log in"
         />
