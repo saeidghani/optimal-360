@@ -8,11 +8,13 @@ const _Table = ({
   columns,
   renderHeader,
   className,
+  tableClassName,
   dataSource,
   rowClassName,
   loading,
   onPaginationChange,
   pageSize,
+  pageNumber,
   onPageSizeChange,
   totalRecordSize,
   onRowSelectionChange,
@@ -21,7 +23,13 @@ const _Table = ({
   onTableChange,
   size,
   pagination,
+  paginationClassName,
+  extraDetails,
+  extraDetailsClassName,
   rowSelection,
+  footer,
+  rowKey,
+  ...props
 }) => {
   const _columns = (columns || []).map((el) => {
     if (typeof el === 'undefined' && !el) return null;
@@ -50,6 +58,7 @@ const _Table = ({
   return (
     <div className={`${className}`}>
       <Table
+        className={tableClassName}
         size={size}
         loading={loading}
         onRow={(record, rowIndex) => ({
@@ -60,6 +69,7 @@ const _Table = ({
         columns={_columns}
         dataSource={dataSource}
         title={renderHeader}
+        rowKey={rowKey}
         onChange={(pagination, filters, sorter, extra) =>
           onTableChange({ pagination, filters, sorter, extra })
         }
@@ -71,10 +81,13 @@ const _Table = ({
           }
         }
         pagination={false}
+        footer={footer}
+        {...props}
       />
+      {extraDetails && <div className={extraDetailsClassName}>{extraDetails}</div>}
 
       {pagination ? (
-        <div className="flex flex-row justify-between items-center mt-10">
+        <div className={`flex flex-row justify-between items-center mt-10 ${paginationClassName}`}>
           <div className="flex flex-row items-center justify-between">
             <p className="text-sm text-antgray-100 whitespace-no-wrap">
               Number of results per page
@@ -95,6 +108,7 @@ const _Table = ({
           </div>
 
           <Pagination
+            current={pageNumber}
             onChange={onPaginationChange}
             pageSize={pageSize}
             showSizeChanger={false}
@@ -128,6 +142,7 @@ _Table.propTypes = {
     }),
   ).isRequired,
   pageSize: PropTypes.number,
+  pageNumber: PropTypes.number,
   onPageSizeChange: PropTypes.func,
   onPaginationChange: PropTypes.func,
   onRowSelectionChange: PropTypes.func,
@@ -138,6 +153,12 @@ _Table.propTypes = {
   size: PropTypes.string,
   pagination: PropTypes.bool,
   rowSelection: PropTypes.bool,
+  footer: PropTypes.func,
+  rowKey: PropTypes.string,
+  tableClassName: PropTypes.string,
+  paginationClassName: PropTypes.string,
+  extraDetailsClassName: PropTypes.string,
+  extraDetails: PropTypes.node,
 };
 
 _Table.defaultProps = {
@@ -151,11 +172,18 @@ _Table.defaultProps = {
   onRowClick: null,
   loading: false,
   pageSize: 10,
+  pageNumber: 1,
   selectedRowKeys: [],
   totalRecordSize: 10,
   size: 'default',
   pagination: true,
   rowSelection: true,
+  footer: null,
+  rowKey: 'id',
+  tableClassName: '',
+  paginationClassName: '',
+  extraDetailsClassName: '',
+  extraDetails: null,
 };
 
 export default _Table;

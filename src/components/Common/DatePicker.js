@@ -26,7 +26,7 @@ const _DatePicker = ({
       size={size}
     />
 
-    {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+    <p className="text-red-500 h-5">{errorMessage}</p>
   </div>
 );
 

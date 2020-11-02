@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 
-import { useQuery } from '../../hooks/useQuery';
+import { useQuery, stringify } from '../../hooks/useQuery';
+import { useSurveyGroup } from '../../hooks';
 
 import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
 
@@ -15,14 +17,12 @@ import Button from '../Common/Button';
 import TextEditor from '../Common/TextEditor';
 import UploadAvatar from '../Common/UploadAvatar';
 
-const SurveyIntro = ({
-  surveyIntro,
-  fetchSurveyIntro,
-  fetchSurveyGroups,
-  setSurveyIntro,
-  loading,
-  surveyGroups,
-}) => {
+const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading }) => {
+  const history = useHistory();
+  const { search } = history?.location;
+
+  const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
+
   const formRef = React.useRef();
   const schema = yup.object({
     clientWelcomeMessage: yup.string().required('client welcome message is required'),
@@ -31,38 +31,35 @@ const SurveyIntro = ({
   });
 
   const [parsedQuery, , setQuery] = useQuery();
-  const { projectId, surveyGroupId } = parsedQuery;
+  const { projectId } = parsedQuery;
+
+  React.useEffect(() => {
+    const resetForm = async () => {
+      await fetchSurveyIntro(surveyGroupId);
+
+      if (formRef?.current) {
+        // reset form state when surveyGroup changes
+        // happens when user decides to discard current settings and changes currentSurveyGroup
+        formRef.current.setTouched({});
+        formRef.current.setErrors({});
+        formRef.current.setValues({ ...formRef?.current?.values });
+      }
+    };
+
+    if (surveyGroupId) {
+      resetForm();
+    }
+
+    // eslint-disable-next-line
+  }, [fetchSurveyIntro, surveyGroupId]);
 
   const [surveyGroupModal, setSurveyGroupModal] = React.useState(false);
   const [isFormDone, setIsFormDone] = React.useState(false);
   const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
 
   React.useEffect(() => {
-    fetchSurveyGroups(projectId);
-  }, [projectId, surveyGroupId, fetchSurveyGroups]);
-
-  React.useEffect(() => {
     if (surveyGroupId) fetchSurveyIntro(surveyGroupId);
   }, [projectId, surveyGroupId, fetchSurveyIntro]);
-
-  React.useEffect(() => {
-    const sortedArr = surveyGroups?.data?.sort((el1, el2) => el1.id - el2.id) || [];
-
-    const firstSurveyGroupId = sortedArr?.length > 0 ? sortedArr[0].id : '';
-
-    const isURLSurveyGroupValid = !!sortedArr.find(
-      (el) => el.id?.toString() === parsedQuery?.surveyGroupId?.toString(),
-    );
-
-    if (
-      !isURLSurveyGroupValid &&
-      firstSurveyGroupId &&
-      firstSurveyGroupId !== parsedQuery?.surveyGroupId
-    ) {
-      setQuery({ surveyGroupId: firstSurveyGroupId });
-    }
-    // eslint-disable-next-line
-  }, [JSON.stringify(surveyGroups.data)]);
 
   React.useEffect(() => {
     if (
@@ -100,10 +97,6 @@ const SurveyIntro = ({
 
     // eslint-disable-next-line
   }, [selectedSurveyGroupKey]);
-
-  const currentSurveyGroupName =
-    surveyGroups?.data?.find((el) => el.id.toString() === parsedQuery?.surveyGroupId?.toString())
-      ?.name || '';
 
   return (
     <MainLayout
@@ -145,7 +138,10 @@ const SurveyIntro = ({
             initialValues={surveyIntro}
             validationSchema={schema}
             onSubmit={async (values) => {
-              await setSurveyIntro({ ...values, surveyGroupId });
+              try {
+                await setSurveyIntro({ ...values, surveyGroupId });
+                history.push(`/super-user/new-project/survey-questions${search}`);
+              } catch (error) {}
             }}
           >
             {({ values, errors, touched, handleSubmit, setFieldValue }) => (
@@ -181,9 +177,21 @@ const SurveyIntro = ({
                     <p className="text-red-500 py-2">{errors.surveyMessage}</p>
                   )}
 
-                  <div className="pt-23.5 pb-22 flex justify-end pr-33">
-                    <Button type="link" text="Back" />
-                    <Button onClick={handleSubmit} text="Next" />
+                  <div className="pt-23.5 pb-22 flex justify-end">
+                    <Button
+                      className="w-24.5 h-9.5"
+                      type="link"
+                      onClick={() => {
+                        const params = stringify({
+                          projectId: parsedQuery?.projectId,
+                          surveyGroupId: parsedQuery?.surveyGroupId,
+                        });
+
+                        history.push(`/super-user/new-project/email-settings${params}`);
+                      }}
+                      text="Back"
+                    />
+                    <Button className="w-24.5 h-9.5" text="Next" onClick={handleSubmit} />
                   </div>
                 </div>
               </Form>
@@ -196,14 +204,9 @@ const SurveyIntro = ({
 };
 
 SurveyIntro.propTypes = {
-  fetchSurveyGroups: PropTypes.func.isRequired,
   fetchSurveyIntro: PropTypes.func.isRequired,
   setSurveyIntro: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
-  surveyGroups: PropTypes.shape({
-    data: PropTypes.arrayOf(PropTypes.object),
-    timeStamp: PropTypes.number,
-  }),
   surveyIntro: PropTypes.shape({
     clientPicture: PropTypes.string,
     clientWelcomeMessage: PropTypes.string,
@@ -212,9 +215,6 @@ SurveyIntro.propTypes = {
 };
 
 SurveyIntro.defaultProps = {
-  surveyGroups: {
-    data: [],
-  },
   surveyIntro: { clientPicture: '', clientWelcomeMessage: '', surveyMessage: '' },
 };
 

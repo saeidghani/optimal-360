@@ -11,13 +11,30 @@ import SetAdmin from '../containers/Projects/SetAdmin';
 
 import SurveyGroupList from '../containers/SurveyGroups/List';
 import RatersStatusOverview from '../containers/SurveyGroups/RatersStatusOverview';
+import RatersStatusDetails from '../containers/SurveyGroups/RatersStatusDetails';
+import RatersStatusRaterEmail from '../containers/SurveyGroups/RatersStatusRaterEmail';
+import Organizations from '../containers/SurveyGroups/Organizations';
+import OrganizationsUsers from '../containers/SurveyGroups/OrganizationsUsers';
+import OrganizationsNewStaff from '../containers/SurveyGroups/OrganizationsNewStaff';
+import NewOrganizations from '../containers/SurveyGroups/NewOrganizations';
+import RatersStatusIndividualReport from '../containers/SurveyGroups/RatersStatusIndividualReport';
+import RatersStatusGroupReportReview from '../containers/SurveyGroups/RatersStatusGroupReportReview';
+import GroupReports from '../containers/SurveyGroups/GroupReports';
 
 import ProjectInfo from '../containers/Wizard/ProjectInfo';
 import SurveySetting from '../containers/Wizard/SurveySetting';
-import EmailSetting from '../containers/Wizard/EmailSetting';
+import EmailSettings from '../containers/Wizard/EmailSettings';
 import EmailTemplate from '../containers/Wizard/EmailTemplate';
 import SurveyIntro from '../containers/Wizard/SurveyIntro';
-import SurveyQuestionsList from '../containers/Wizard/SurveyQuestionsList';
+import SurveyQuestions from '../containers/Wizard/SurveyQuestions';
+import Report from '../containers/Wizard/Report';
+
+import SurveyPlatformLogin from '../containers/SurveyPlatform/Login';
+import SurveyPlatformForgotPassword from '../containers/SurveyPlatform/ForgotPassword';
+import SurveyPlatformWelcome from '../containers/SurveyPlatform/Welcome';
+import Information from '../containers/SurveyPlatform/Information';
+import AllRatees from '../containers/SurveyPlatform/AllRatees';
+import Individual from '../containers/SurveyPlatform/Individual';
 
 import BankModels from '../containers/Bank/Models';
 
@@ -39,30 +56,98 @@ const Index = () => (
     />
 
     <PrivateRoute
-      path="/super-user/Participants/StatusOverview"
+      path="/super-user/participants/status-overview"
       exact
       component={RatersStatusOverview}
     />
-
-    <PrivateRoute path="/super-user/new-project/project-info" exact component={ProjectInfo} />
-    <PrivateRoute path="/super-user/new-project/survey-setting" exact component={SurveySetting} />
-    <PrivateRoute path="/super-user/new-project/email-setting" exact component={EmailSetting} />
     <PrivateRoute
-      path="/super-user/new-project/email-setting/:template"
+      path="/super-user/participants/status-details"
       exact
+      component={RatersStatusDetails}
+    />
+    <PrivateRoute
+      path="/super-user/participants/rater-email"
+      exact
+      component={RatersStatusRaterEmail}
+    />
+    <PrivateRoute
+      path="/super-user/participants/individual-report"
+      exact
+      component={RatersStatusIndividualReport}
+    />
+    <PrivateRoute
+      path="/super-user/participants/group-report-review"
+      exact
+      component={RatersStatusGroupReportReview}
+    />
+
+    <PrivateRoute
+      path="/super-user/new-project/project-info"
+      exact
+      scrollToTop
+      component={ProjectInfo}
+    />
+    <PrivateRoute
+      path="/super-user/new-project/survey-settings"
+      exact
+      scrollToTop
+      component={SurveySetting}
+    />
+    <PrivateRoute
+      path="/super-user/new-project/email-settings"
+      exact
+      scrollToTop
+      component={EmailSettings}
+    />
+    <PrivateRoute
+      path="/super-user/new-project/email-settings/:template"
+      exact
+      scrollToTop
       component={EmailTemplate}
     />
-    <PrivateRoute path="/super-user/new-project/survey-intro" exact component={SurveyIntro} />
+    <PrivateRoute
+      path="/super-user/new-project/survey-intro"
+      exact
+      scrollToTop
+      component={SurveyIntro}
+    />
     <PrivateRoute
       path="/super-user/new-project/survey-questions"
       exact
-      component={SurveyQuestionsList}
+      scrollToTop
+      component={SurveyQuestions}
     />
+    <PrivateRoute path="/super-user/new-project/report" exact scrollToTop component={Report} />
     <PrivateRoute
-      path="/super-user/bank/models"
+      path="/super-user/new-project/reports/group-reports"
       exact
-      component={BankModels}
+      scrollToTop
+      component={GroupReports}
     />
+
+    <PrivateRoute path="/super-user/projects/survey-groups" exact component={Organizations} />
+    <PrivateRoute path="/super-user/organizations/users" exact component={OrganizationsUsers} />
+    <PrivateRoute
+      path="/super-user/organizations/new-staff"
+      exact
+      component={OrganizationsNewStaff}
+    />
+
+    <PrivateRoute path="/survey-platform/login" exact component={SurveyPlatformLogin} />
+    <PrivateRoute
+      path="/survey-platform/forgot-password"
+      exact
+      component={SurveyPlatformForgotPassword}
+    />
+
+    <PrivateRoute path="/super-user/bank/models" exact component={BankModels} />
+
+    <PrivateRoute path="/survey-platform/welcome" exact component={SurveyPlatformWelcome} />
+    <PrivateRoute path="/survey-platform/information" exact component={Information} />
+    <PrivateRoute path="/survey-platform/managers/all-ratees" exact component={AllRatees} />
+    <PrivateRoute path="/survey-platform/managers/individual" exact component={Individual} />
+
+    <PrivateRoute path="/super-user/organizations/users/new" exact component={NewOrganizations} />
     <CustomRoute path="/" exact component={TestingArea} />
     <Route component={NotFound} />
   </Switch>

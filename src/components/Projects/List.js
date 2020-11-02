@@ -22,6 +22,8 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
   const [selectedRows, setSelectedRows] = React.useState([]);
   const history = useHistory();
 
+  const pageNumber = React.useMemo(() => parsedQuery?.page_number, [parsedQuery.page_number]);
+
   const dispatch = useDispatch();
   const { projects = {} } = useSelector((state) => state.projects);
 
@@ -49,7 +51,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
             }}
             size="middle"
             className="text-base flex flex-row justify-center items-center
-            text-primary-500 bg-primary-500 bg-opacity-8"
+            text-primary-500 bg-primary-500 bg-opacity-8 w-8 h-8"
             icon="DeleteOutlined"
           />
 
@@ -61,7 +63,6 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
               );
 
               fetch();
-
               setSelectedRows([]);
             }}
             size="middle"
@@ -77,19 +78,28 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
           <div className="flex flex-row">
             <Button
               size="middle"
-              // onClick={() => setQuery({ status: parsedQuery?.status === 'active' ? '' : 'active' })}
-              onClick={() => setQuery({ status: 'active' })}
+              onClick={() => setQuery({ status: 'active', page_number: 1 })}
               textSize="xs"
               text="Active Projects"
               className="mr-3 px-3"
               light={parsedQuery?.status === 'active'}
             />
+
             <Button
               size="middle"
-              onClick={() => setQuery({ status: 'inactive' })}
+              onClick={() => setQuery({ status: 'inactive', page_number: 1 })}
               textSize="xs"
               text="Inactive Projects"
               light={parsedQuery?.status === 'inactive'}
+              className="mr-3 px-3"
+            />
+
+            <Button
+              size="middle"
+              onClick={() => setQuery({ status: 'complete', page_number: 1 })}
+              textSize="xs"
+              text="Complete Projects"
+              light={parsedQuery?.status === 'complete'}
               className=" px-3"
             />
           </div>
@@ -175,7 +185,10 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
         key: 'status',
         title: 'Status',
         render: (status) => (
-          <Tag color={status !== 'active' ? 'orange' : ''} text={status.toUpperCase()} />
+          <Tag
+            color={status === 'complete' ? 'orange' : status === 'inactive' ? 'red' : ''}
+            text={status.toUpperCase()}
+          />
         ),
       },
       {
@@ -208,7 +221,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
   );
 
   const dataSource = React.useMemo(
-    () => projects?.data?.map((item) => ({ ...item, key: `${item.id}` })),
+    () => (projects?.data || []).map((item) => ({ ...item, key: `${item.id}` })),
     // eslint-disable-next-line
     [projects.timeStamp],
   );
@@ -242,6 +255,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
           setQuery({ page_size: size, page_number: 1 });
         }}
         pageSize={pageSize * 1}
+        pageNumber={pageNumber * 1}
         // eslint-disable-next-line camelcase
         onPaginationChange={(page_number, page_size) => {
           setSelectedRows([]);

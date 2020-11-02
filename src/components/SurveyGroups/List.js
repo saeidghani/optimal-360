@@ -8,9 +8,7 @@ import moment from 'moment';
 import MainLayout from '../Common/Layout';
 import Table from '../Common/Table';
 import Button from '../Common/Button';
-import SearchBox from '../Common/SearchBox';
 import Tag from '../Common/Tag';
-import DatePicker from '../Common/DatePicker';
 
 import { useQuery } from '../../hooks/useQuery';
 
@@ -48,6 +46,18 @@ const SurveyGroups = ({ loading }) => {
         <div className="flex flex-row items-center">
           <Button
             // onClick={async () => {
+            //   await removeProjects(selectedRowsIds);
+            //   setSelectedRows([]);
+            //   fetch();
+            // }}
+            size="middle"
+            className="text-base flex flex-row justify-center items-center
+            text-primary-500 bg-primary-500 bg-opacity-8 w-8 h-8 mr-3"
+            icon="DeleteOutlined"
+          />
+
+          <Button
+            // onClick={async () => {
             //   await changeStatusOfProjects(
             //     selectedRowsIds,
             //     parsedQuery?.status === 'active' ? 'inactive' : 'active',
@@ -59,7 +69,6 @@ const SurveyGroups = ({ loading }) => {
             // }}
             text="Export Demographic Data"
             size="middle"
-            className="ml-3"
             textSize="xs"
           />
 
@@ -74,35 +83,6 @@ const SurveyGroups = ({ loading }) => {
           </p>
 
           <div className="flex flex-row items-center">
-            <SearchBox
-              className="text-xs"
-              loading={loading}
-              onSearch={(val) => setQuery({ q: val })}
-              onPressEnter={(e) => setQuery({ q: e.target.value })}
-            />
-
-            <div className="flex flex-row items-center">
-              <p className="mx-3 text-xs whitespace-no-wrap">Start Date</p>
-
-              <DatePicker
-                onChange={(val) => setQuery({ start_Date: moment(val).toISOString() })}
-                wrapperClassName="w-32"
-                size="large"
-                placeholder="Select"
-              />
-            </div>
-
-            <div className="flex flex-row items-center">
-              <p className="mx-3 text-xs whitespace-no-wrap">End Date</p>
-
-              <DatePicker
-                onChange={(val) => setQuery({ end_date: moment(val).toISOString() })}
-                wrapperClassName="w-32"
-                size="large"
-                placeholder="Select"
-              />
-            </div>
-
             <Button
               size="middle"
               textSize="xs"
@@ -161,7 +141,10 @@ const SurveyGroups = ({ loading }) => {
         key: 'status',
         title: 'Status',
         render: (status) => (
-          <Tag color={status !== 'active' ? 'orange' : ''} text={status.toUpperCase()} />
+          <Tag
+            color={status === 'complete' ? 'orange' : status === 'inactive' ? 'red' : ''}
+            text={status.toUpperCase()}
+          />
         ),
       },
       {

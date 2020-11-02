@@ -10,6 +10,10 @@ const _Tag = ({ children, text, className, textClassName, color, closable, onClo
   const customClassName =
     color === 'gray'
       ? 'bg-antgray-400 text-antgray-200 border border border-antgray-300'
+      : color === 'orange'
+      ? 'text-orange bg-orange bg-opacity-10'
+      : color === 'red'
+      ? 'text-red bg-red bg-opacity-10'
       : !color && 'bg-antteal bg-opacity-10 border-antteal text-antteal';
 
   return (

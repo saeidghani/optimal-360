@@ -38,6 +38,9 @@ module.exports = {
         template: 'rgba(196, 196, 196, 0.2)',
         'list-border': '#F0F0F0',
         'list-bg': 'rgba(27, 183, 217, 0.05)',
+        red: '#FA4D4D',
+        'red-500': '#FA4D4D',
+        orange: '#FEC456',
         primary: {
           100: 'rgba(27, 183, 217, 0.1)',
           200: '#F5F8FC',
@@ -53,6 +56,7 @@ module.exports = {
           400: '#F5F5F5',
           500: '#C4C4C4', // all input borders
           600: '#FAFAFA', // menu background color
+          700: '#F3F3F3',
           800: '#595959',
         },
       },

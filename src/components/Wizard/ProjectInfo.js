@@ -45,7 +45,7 @@ const ProjectInfo = ({
       <div
         className="col-span-10 col-start-1 md:col-span-8 md:col-start-3
         lg:col-start-4 lg:col-span-6 xl:col-start-5 xl:col-span-4
-        rounded-7px sm:px-16 px-4 sm:pb-10 sm:pt-12 py-6 bg-white"
+        rounded-lg sm:px-16 px-4 sm:pb-10 sm:pt-12 py-6 bg-white"
       >
         <Formik
           initialValues={{
@@ -66,12 +66,11 @@ const ProjectInfo = ({
               });
 
               const params = stringify({
-                // organizationId: organization.id, // incase we want to come back to this page
                 projectId,
               });
 
-              history.push(`/super-user/new-project/survey-setting${params}`);
-            } catch (_) {}
+              history.replace(`/super-user/new-project/survey-settings${params}`);
+            } catch (error) {}
           }}
         >
           {({
@@ -120,17 +119,12 @@ const ProjectInfo = ({
               />
 
               <AutoComplete
+                disabled={values.surveyGroup.length > 4}
                 wrapperClassName="mb-6"
                 labelText="Survey Group"
                 extrainfoText="Create New"
                 onSelect={(val) => {
-                  const surveyGroup = [...values.surveyGroup];
-
-                  if (!surveyGroup.find((el) => el.label === val.label)) {
-                    surveyGroup.push(val);
-                  }
-
-                  setFieldValue('surveyGroup', surveyGroup);
+                  setFieldValue('surveyGroup', [...values.surveyGroup, val]);
                   setQuery(null);
                 }}
                 extrainfoLink="#"
@@ -148,20 +142,15 @@ const ProjectInfo = ({
               />
 
               {values.surveyGroup?.length > 0 ? (
-                <div className="">
+                <div>
                   {values.surveyGroup.map((el, i) => (
                     <Tag
                       className="mb-3"
                       key={i}
                       closable
-                      onClose={(label) => {
-                        const newSurveyGroups = [];
-
-                        values.surveyGroup.forEach((item) => {
-                          if (item.label.toLowerCase() !== label.toLowerCase()) {
-                            newSurveyGroups.push(item);
-                          }
-                        });
+                      onClose={() => {
+                        const newSurveyGroups = [...values.surveyGroup];
+                        newSurveyGroups.splice(i, 1);
 
                         setFieldValue('surveyGroup', newSurveyGroups);
                       }}
@@ -177,7 +166,7 @@ const ProjectInfo = ({
                 onClick={handleSubmit}
                 text="Next"
                 textSize="base"
-                className="ml-auto c-force-padding-y-px px-8 mt-10"
+                className="ml-auto c-force-padding-y-px px-8 mt-10 w-24.5 h-9.5"
               />
             </Form>
           )}

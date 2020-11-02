@@ -20,6 +20,7 @@ const _Input = ({
   disabled,
   errorMessage,
   inputStyles,
+  onPressEnter,
 }) => (
   <div name={name} className={`flex flex-col  ${wrapperClassName}`}>
     {labelText || (extrainfoText && extrainfoLink) ? (
@@ -64,9 +65,12 @@ const _Input = ({
       placeholder={placeholder}
       suffix={suffix}
       prefix={prefix}
+      onPressEnter={onPressEnter}
     />
 
-    {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+    {/* {errorMessage &&  */}
+    <p className="text-red-500 h-5 mt-1">{errorMessage}</p>
+    {/* } */}
   </div>
 );
 
@@ -88,6 +92,7 @@ _Input.propTypes = {
   errorMessage: PropTypes.string,
   inputStyles: PropTypes.shape({}),
   onExtraInfoLinkClick: PropTypes.func,
+  onPressEnter: PropTypes.func,
 };
 
 _Input.defaultProps = {
@@ -106,6 +111,7 @@ _Input.defaultProps = {
   disabled: false,
   inputStyles: {},
   onExtraInfoLinkClick: () => {},
+  onPressEnter: () => {},
 };
 
 export default _Input;

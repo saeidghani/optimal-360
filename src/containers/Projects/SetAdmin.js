@@ -10,7 +10,7 @@ class SetAdmin extends Component {
   setAdmin = async (data) => {
     const { setClientAdmin } = this.props;
 
-    await setClientAdmin(data);
+    return setClientAdmin(data);
   };
 
   fetchAdmin = async (id) => {
