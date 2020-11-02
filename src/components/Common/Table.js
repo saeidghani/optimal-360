@@ -27,6 +27,9 @@ const _Table = ({
   extraDetails,
   extraDetailsClassName,
   rowSelection,
+  footer,
+  rowKey,
+  ...props
 }) => {
   const _columns = (columns || []).map((el) => {
     if (typeof el === 'undefined' && !el) return null;
@@ -66,6 +69,7 @@ const _Table = ({
         columns={_columns}
         dataSource={dataSource}
         title={renderHeader}
+        rowKey={rowKey}
         onChange={(pagination, filters, sorter, extra) =>
           onTableChange({ pagination, filters, sorter, extra })
         }
@@ -77,6 +81,8 @@ const _Table = ({
           }
         }
         pagination={false}
+        footer={footer}
+        {...props}
       />
       {extraDetails && <div className={extraDetailsClassName}>{extraDetails}</div>}
 
@@ -147,6 +153,8 @@ _Table.propTypes = {
   size: PropTypes.string,
   pagination: PropTypes.bool,
   rowSelection: PropTypes.bool,
+  footer: PropTypes.func,
+  rowKey: PropTypes.string,
   tableClassName: PropTypes.string,
   paginationClassName: PropTypes.string,
   extraDetailsClassName: PropTypes.string,
@@ -170,6 +178,8 @@ _Table.defaultProps = {
   size: 'default',
   pagination: true,
   rowSelection: true,
+  footer: null,
+  rowKey: 'id',
   tableClassName: '',
   paginationClassName: '',
   extraDetailsClassName: '',

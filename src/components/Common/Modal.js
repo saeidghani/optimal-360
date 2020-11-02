@@ -7,6 +7,7 @@ import Button from './Button';
 const _Modal = ({
   title,
   className,
+  wrapClassName,
   footerClassName,
   footer,
   visible,
@@ -18,9 +19,11 @@ const _Modal = ({
   okText,
   cancelText,
   width,
+  ...props
 }) => (
   <Modal
     className={`p-0 ${className}`}
+    wrapClassName={wrapClassName}
     centered
     title={title}
     visible={visible}
@@ -46,6 +49,7 @@ const _Modal = ({
         </div>
       )
     }
+    {...props}
   >
     {children}
   </Modal>
@@ -58,6 +62,7 @@ _Modal.propTypes = {
   handleOk: PropTypes.func.isRequired,
   children: PropTypes.node,
   className: PropTypes.string,
+  wrapClassName: PropTypes.string,
   footer: PropTypes.node,
   footerClassName: PropTypes.string,
   okButtonProps: PropTypes.string,
@@ -73,6 +78,7 @@ _Modal.defaultProps = {
   footer: '',
   title: '',
   className: '',
+  wrapClassName: '',
   footerClassName: '',
   okButtonProps: '',
   cancelButtonProps: '',

@@ -2,9 +2,9 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
-import Layout from '../../components/Wizard/SurveyQuestionsList';
+import Layout from '../../components/Wizard/SurveyQuestions';
 
-class SurveyQuestionsList extends React.Component {
+class SurveyQuestions extends React.Component {
   state = {};
 
   fetchSurveyQuestions = async (surveyGroupId) => {
@@ -41,7 +41,7 @@ class SurveyQuestionsList extends React.Component {
   }
 }
 
-SurveyQuestionsList.propTypes = {
+SurveyQuestions.propTypes = {
   fetchSurveyQuestions: PropTypes.func.isRequired,
   fetchSurveyGroups: PropTypes.func.isRequired,
   setSurveyQuestions: PropTypes.func.isRequired,
@@ -50,7 +50,7 @@ SurveyQuestionsList.propTypes = {
   surveyGroups: PropTypes.shape({}),
 };
 
-SurveyQuestionsList.defaultProps = {
+SurveyQuestions.defaultProps = {
   surveyQuestions: {},
   surveyGroups: {},
 };
@@ -67,4 +67,4 @@ const mapDispatchToProps = (dispatch) => ({
   fetchSurveyGroups: dispatch.projects.fetchSurveyGroups,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SurveyQuestionsList);
+export default connect(mapStateToProps, mapDispatchToProps)(SurveyQuestions);

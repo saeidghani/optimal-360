@@ -5,7 +5,11 @@ import * as yup from 'yup';
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
 
-import { useQuery } from '../../hooks/useQuery';
+import { useQuery, stringify } from '../../hooks/useQuery';
+import { useSurveyGroup } from '../../hooks';
+
+import pascalize from '../../lib/pascalize';
+
 import * as TEMPLATES from './Helper/EmailTemplates';
 import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
 
@@ -18,24 +22,12 @@ import Button from '../Common/Button';
 import Loading from '../Common/Loading';
 import Table from '../Common/Table';
 
-const pascalize = (txt) => {
-  if (!txt) return '';
-  let arr = txt?.split(' ');
-
-  arr = arr.map((word) => word.charAt(0).toUpperCase() + word.slice(1));
-  arr.splice(0, 1, arr[0].toLowerCase());
-
-  return arr.join('');
-};
-
-const EmailSetting = ({
+const EmailSettings = ({
   emailSettings,
   fetchEmailSettings,
-  fetchSurveyGroups,
   setEmailSettings,
   setSelectedEmailTemplate,
   loading,
-  surveyGroups,
 }) => {
   const formRef = React.useRef();
   const schema = yup.object({
@@ -51,14 +43,17 @@ const EmailSetting = ({
     ),
   });
   const history = useHistory();
+
   const [parsedQuery, , setQuery] = useQuery();
   const { search } = history?.location;
+
+  const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
 
   const [surveyGroupModal, setSurveyGroupModal] = React.useState(false);
   const [isFormDone, setIsFormDone] = React.useState(false);
   const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
 
-  const { projectId, surveyGroupId } = parsedQuery;
+  const { projectId } = parsedQuery;
   const initialValues = [
     {
       id: '1',
@@ -98,8 +93,7 @@ const EmailSetting = ({
   ];
 
   const templateKey = `${projectId}-${surveyGroupId}`;
-  const TEMP = JSON.parse(localStorage.getItem(templateKey)) || {};
-  // console.log(TEMP);
+  const TEMPLATE = JSON.parse(localStorage.getItem(templateKey)) || {};
 
   React.useEffect(() => {
     if (
@@ -114,31 +108,8 @@ const EmailSetting = ({
   }, [isFormDone, selectedSurveyGroupKey, setQuery, parsedQuery.surveyGroupId]);
 
   React.useEffect(() => {
-    fetchSurveyGroups(projectId);
-  }, [projectId, surveyGroupId, fetchSurveyGroups]);
-
-  React.useEffect(() => {
     if (surveyGroupId) fetchEmailSettings(surveyGroupId);
   }, [projectId, surveyGroupId, fetchEmailSettings]);
-
-  React.useEffect(() => {
-    const sortedArr = surveyGroups?.data?.sort((el1, el2) => el1.id - el2.id) || [];
-
-    const firstSurveyGroupId = sortedArr?.length > 0 ? sortedArr[0].id : '';
-
-    const isURLSurveyGroupValid = !!sortedArr.find(
-      (el) => el.id?.toString() === parsedQuery?.surveyGroupId?.toString(),
-    );
-
-    if (
-      !isURLSurveyGroupValid &&
-      firstSurveyGroupId &&
-      firstSurveyGroupId !== parsedQuery?.surveyGroupId
-    ) {
-      setQuery({ surveyGroupId: firstSurveyGroupId });
-    }
-    // eslint-disable-next-line
-  }, [JSON.stringify(surveyGroups.data)]);
 
   React.useEffect(() => {
     const validateForm = async () => {
@@ -183,7 +154,7 @@ const EmailSetting = ({
           onClick={async () => {
             await setSelectedEmailTemplate(template);
             history.push(
-              `/super-user/new-project/email-setting/${name
+              `/super-user/new-project/email-settings/${name
                 .toLowerCase()
                 .replaceAll(' ', '-')}${search}`,
             );
@@ -212,25 +183,12 @@ const EmailSetting = ({
         ...itemToPush,
         key: itemToPush.id.toString(),
         selected: !!itemToPush.date,
-        template: TEMP[pascalize(itemToPush.name)] || itemToPush.template,
+        template: TEMPLATE[pascalize(itemToPush.name)] || itemToPush.template,
       });
     });
 
     return settings;
 
-    // return emailSettings && Object.values(emailSettings).length > 0
-    //   ? emailSettings.map((el) => ({
-    //       ...el,
-    //       key: el.id.toString(),
-    //       selected: !!el.date,
-    //       template: TEMP[pascalize(el.name)] || el.template,
-    //     }))
-    //   : initialValues.map((el) => ({
-    //       ...el,
-    //       key: el.id.toString(),
-    //       selected: !!el.date,
-    //       template: TEMP[pascalize(el.name)] || el.template,
-    //     }));
     // eslint-disable-next-line
   }, [emailSettingsStringified]);
 
@@ -250,23 +208,24 @@ const EmailSetting = ({
   };
 
   React.useEffect(() => {
+    const resetForm = async () => {
+      await fetchEmailSettings(surveyGroupId);
+
+      if (formRef?.current) {
+        // reset form state when surveyGroup changes
+        // happens when user decides to discard current settings and changes currentSurveyGroup
+        formRef.current.setTouched({});
+        formRef.current.setErrors({});
+        formRef.current.setValues({ ...formRef?.current?.values });
+      }
+    };
+
     if (surveyGroupId) {
-      fetchEmailSettings(surveyGroupId);
+      resetForm();
     }
 
-    if (formRef?.current) {
-      // reset form state when surveyGroup changes
-      // happens when user decides to discard current settings and changes currentSurveyGroup
-      formRef.current.setTouched({});
-      formRef.current.setErrors({});
-      formRef.current.setValues({ emailSettings: _emailSettings });
-    }
     // eslint-disable-next-line
-  }, [fetchEmailSettings, surveyGroupId, JSON.stringify(_emailSettings)]);
-
-  const currentSurveyGroupName =
-    surveyGroups?.data?.find((el) => el.id.toString() === parsedQuery?.surveyGroupId?.toString())
-      ?.name || '';
+  }, [fetchEmailSettings, surveyGroupId]);
 
   return (
     <MainLayout
@@ -322,11 +281,13 @@ const EmailSetting = ({
                 }
               });
 
-              if (chosenTemplates.length > 0) {
-                try {
+              try {
+                if (chosenTemplates.length > 0) {
                   await setEmailSettings({ emailSettings: chosenTemplates, surveyGroupId });
-                  history.push(`/super-user/new-project/survey-intro${search}`);
-                } catch (error) {}
+                }
+              } catch (error) {
+              } finally {
+                history.push(`/super-user/new-project/survey-intro${search}`);
               }
             }}
           >
@@ -340,6 +301,7 @@ const EmailSetting = ({
                       <div className="col-span-3 flex flex-row items-center">
                         <Checkbox
                           checked={!!selected}
+                          className="flex flex-row items-center"
                           onChange={(val) => {
                             formRef.current.setTouched({ emailSettings: true });
 
@@ -348,9 +310,12 @@ const EmailSetting = ({
                               updateArr(values.emailSettings, id, 'selected', val),
                             );
                           }}
+                          textNode={
+                            <p className=" whitespace-no-wrap ml-3 text-sm text-secondary">
+                              {name}
+                            </p>
+                          }
                         />
-
-                        <p className=" whitespace-no-wrap ml-3 text-sm text-secondary">{name}</p>
                       </div>
 
                       <div className="col-span-2">
@@ -371,6 +336,7 @@ const EmailSetting = ({
                       <div className="col-span-2 flex flex-row items-center">
                         <Checkbox
                           checked={!!copyToAdmin}
+                          className="flex flex-row items-center"
                           onChange={(val) =>
                             setFieldValue(
                               'emailSettings',
@@ -378,14 +344,15 @@ const EmailSetting = ({
                             )
                           }
                           disabled={!selected}
+                          textNode={
+                            <p
+                              style={{ opacity: selected ? '1' : '0.3' }}
+                              className=" whitespace-no-wrap ml-3 text-sm text-secondary"
+                            >
+                              Send copy to Admin
+                            </p>
+                          }
                         />
-
-                        <p
-                          style={{ opacity: selected ? '1' : '0.3' }}
-                          className=" whitespace-no-wrap ml-3 text-sm text-secondary"
-                        >
-                          Send copy to Admin
-                        </p>
                       </div>
 
                       {(touched || touched.length > 0) &&
@@ -438,12 +405,22 @@ const EmailSetting = ({
                   <Button
                     type="link"
                     text="Back"
-                    className="text-base w-24.5 h-9.5 flex items-center justify-center"
+                    textSize="base"
+                    className="w-24.5 h-9.5"
+                    onClick={() => {
+                      const params = stringify({
+                        projectId: parsedQuery?.projectId,
+                        surveyGroupId: parsedQuery?.surveyGroupId,
+                      });
+
+                      history.push(`/super-user/new-project/survey-settings${params}`);
+                    }}
                   />
 
                   <Button
+                    className="w-24.5 h-9.5"
                     text="Next"
-                    className="text-base w-24.5 h-9.5 flex items-center justify-center"
+                    textSize="base"
                     onClick={handleSubmit}
                   />
                 </div>
@@ -456,24 +433,16 @@ const EmailSetting = ({
   );
 };
 
-EmailSetting.propTypes = {
-  fetchSurveyGroups: PropTypes.func.isRequired,
+EmailSettings.propTypes = {
   fetchEmailSettings: PropTypes.func.isRequired,
   setSelectedEmailTemplate: PropTypes.func.isRequired,
   setEmailSettings: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
-  surveyGroups: PropTypes.shape({
-    data: PropTypes.arrayOf(PropTypes.object),
-    timeStamp: PropTypes.number,
-  }),
   emailSettings: PropTypes.arrayOf(PropTypes.object),
 };
 
-EmailSetting.defaultProps = {
-  surveyGroups: {
-    data: [],
-  },
+EmailSettings.defaultProps = {
   emailSettings: [],
 };
 
-export default EmailSetting;
+export default EmailSettings;

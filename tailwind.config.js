@@ -56,6 +56,7 @@ module.exports = {
           400: '#F5F5F5',
           500: '#C4C4C4', // all input borders
           600: '#FAFAFA', // menu background color
+          700: '#F3F3F3',
           800: '#595959',
         },
       },

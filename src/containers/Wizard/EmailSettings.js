@@ -2,9 +2,9 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
-import Layout from '../../components/Wizard/EmailSetting';
+import Layout from '../../components/Wizard/EmailSettings';
 
-class EmailSetting extends React.Component {
+class EmailSettings extends React.Component {
   state = {};
 
   fetchEmailSettings = async (surveyGroupId) => {
@@ -48,7 +48,7 @@ class EmailSetting extends React.Component {
   }
 }
 
-EmailSetting.propTypes = {
+EmailSettings.propTypes = {
   fetchEmailSettings: PropTypes.func.isRequired,
   setSelectedEmailTemplate: PropTypes.func.isRequired,
   fetchSurveyGroups: PropTypes.func.isRequired,
@@ -58,7 +58,7 @@ EmailSetting.propTypes = {
   surveyGroups: PropTypes.shape({}),
 };
 
-EmailSetting.defaultProps = {
+EmailSettings.defaultProps = {
   emailSettings: [],
   surveyGroups: {},
 };
@@ -76,4 +76,4 @@ const mapDispatchToProps = (dispatch) => ({
   fetchSurveyGroups: dispatch.projects.fetchSurveyGroups,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(EmailSetting);
+export default connect(mapStateToProps, mapDispatchToProps)(EmailSettings);

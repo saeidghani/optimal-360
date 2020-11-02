@@ -19,13 +19,14 @@ import OrganizationsNewStaff from '../containers/SurveyGroups/OrganizationsNewSt
 import NewOrganizations from '../containers/SurveyGroups/NewOrganizations';
 import RatersStatusIndividualReport from '../containers/SurveyGroups/RatersStatusIndividualReport';
 import RatersStatusGroupReportReview from '../containers/SurveyGroups/RatersStatusGroupReportReview';
+import GroupReports from '../containers/SurveyGroups/GroupReports';
 
 import ProjectInfo from '../containers/Wizard/ProjectInfo';
 import SurveySetting from '../containers/Wizard/SurveySetting';
-import EmailSetting from '../containers/Wizard/EmailSetting';
+import EmailSettings from '../containers/Wizard/EmailSettings';
 import EmailTemplate from '../containers/Wizard/EmailTemplate';
 import SurveyIntro from '../containers/Wizard/SurveyIntro';
-import SurveyQuestionsList from '../containers/Wizard/SurveyQuestionsList';
+import SurveyQuestions from '../containers/Wizard/SurveyQuestions';
 import Report from '../containers/Wizard/Report';
 
 import SurveyPlatformLogin from '../containers/SurveyPlatform/Login';
@@ -78,21 +79,50 @@ const Index = () => (
       component={RatersStatusGroupReportReview}
     />
 
-    <PrivateRoute path="/super-user/new-project/project-info" exact component={ProjectInfo} />
-    <PrivateRoute path="/super-user/new-project/survey-setting" exact component={SurveySetting} />
-    <PrivateRoute path="/super-user/new-project/email-setting" exact component={EmailSetting} />
     <PrivateRoute
-      path="/super-user/new-project/email-setting/:template"
+      path="/super-user/new-project/project-info"
       exact
+      scrollToTop
+      component={ProjectInfo}
+    />
+    <PrivateRoute
+      path="/super-user/new-project/survey-settings"
+      exact
+      scrollToTop
+      component={SurveySetting}
+    />
+    <PrivateRoute
+      path="/super-user/new-project/email-settings"
+      exact
+      scrollToTop
+      component={EmailSettings}
+    />
+    <PrivateRoute
+      path="/super-user/new-project/email-settings/:template"
+      exact
+      scrollToTop
       component={EmailTemplate}
     />
-    <PrivateRoute path="/super-user/new-project/survey-intro" exact component={SurveyIntro} />
+    <PrivateRoute
+      path="/super-user/new-project/survey-intro"
+      exact
+      scrollToTop
+      component={SurveyIntro}
+    />
     <PrivateRoute
       path="/super-user/new-project/survey-questions"
       exact
-      component={SurveyQuestionsList}
+      scrollToTop
+      component={SurveyQuestions}
     />
-    <PrivateRoute path="/super-user/new-project/report" exact component={Report} />
+    <PrivateRoute path="/super-user/new-project/report" exact scrollToTop component={Report} />
+    <PrivateRoute
+      path="/super-user/new-project/reports/group-reports"
+      exact
+      scrollToTop
+      component={GroupReports}
+    />
+
     <PrivateRoute path="/super-user/projects/survey-groups" exact component={Organizations} />
     <PrivateRoute path="/super-user/organizations/users" exact component={OrganizationsUsers} />
     <PrivateRoute
