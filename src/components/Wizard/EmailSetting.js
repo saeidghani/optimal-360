@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
 
-import { useQuery } from '../../hooks/useQuery';
+import { useQuery, stringify } from '../../hooks/useQuery';
 import * as TEMPLATES from './Helper/EmailTemplates';
 import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
 
@@ -183,7 +183,7 @@ const EmailSetting = ({
           onClick={async () => {
             await setSelectedEmailTemplate(template);
             history.push(
-              `/super-user/new-project/email-setting/${name
+              `/super-user/new-project/email-settings/${name
                 .toLowerCase()
                 .replaceAll(' ', '-')}${search}`,
             );
@@ -438,12 +438,22 @@ const EmailSetting = ({
                   <Button
                     type="link"
                     text="Back"
-                    className="text-base w-24.5 h-9.5 flex items-center justify-center"
+                    textSize="base"
+                    className="w-24.5 h-9.5"
+                    onClick={() => {
+                      const params = stringify({
+                        projectId: parsedQuery?.projectId,
+                        surveyGroupId: parsedQuery?.surveyGroupId,
+                      });
+
+                      history.push(`/super-user/new-project/survey-settings${params}`);
+                    }}
                   />
 
                   <Button
+                    className="w-24.5 h-9.5"
                     text="Next"
-                    className="text-base w-24.5 h-9.5 flex items-center justify-center"
+                    textSize="base"
                     onClick={handleSubmit}
                   />
                 </div>

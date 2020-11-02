@@ -26,7 +26,7 @@ import SurveySetting from '../containers/Wizard/SurveySetting';
 import EmailSetting from '../containers/Wizard/EmailSetting';
 import EmailTemplate from '../containers/Wizard/EmailTemplate';
 import SurveyIntro from '../containers/Wizard/SurveyIntro';
-import SurveyQuestionsList from '../containers/Wizard/SurveyQuestionsList';
+import SurveyQuestions from '../containers/Wizard/SurveyQuestions';
 import Report from '../containers/Wizard/Report';
 
 import NotFound from '../components/404';
@@ -79,10 +79,10 @@ const Index = () => (
     />
 
     <PrivateRoute path="/super-user/new-project/project-info" exact component={ProjectInfo} />
-    <PrivateRoute path="/super-user/new-project/survey-setting" exact component={SurveySetting} />
-    <PrivateRoute path="/super-user/new-project/email-setting" exact component={EmailSetting} />
+    <PrivateRoute path="/super-user/new-project/survey-settings" exact component={SurveySetting} />
+    <PrivateRoute path="/super-user/new-project/email-settings" exact component={EmailSetting} />
     <PrivateRoute
-      path="/super-user/new-project/email-setting/:template"
+      path="/super-user/new-project/email-settings/:template"
       exact
       component={EmailTemplate}
     />
@@ -90,7 +90,7 @@ const Index = () => (
     <PrivateRoute
       path="/super-user/new-project/survey-questions"
       exact
-      component={SurveyQuestionsList}
+      component={SurveyQuestions}
     />
     <PrivateRoute path="/super-user/new-project/report" exact component={Report} />
     <PrivateRoute path="/super-user/projects/survey-groups" exact component={Organizations} />

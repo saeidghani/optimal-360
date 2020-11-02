@@ -65,8 +65,15 @@ const EmailTemplate = ({ loading, fetchSingleProject, singleProject, selectedTem
           </div>
 
           <div className="flex flex-row">
-            <Button size="middle" type="link" textSize="base" text="Cancel" className="" />
             <Button
+              className="w-24.5 h-9.5"
+              size="middle"
+              type="link"
+              textSize="base"
+              text="Cancel"
+            />
+            <Button
+              className="w-24.5 h-9.5"
               size="middle"
               text="Save"
               onClick={() => {
@@ -77,7 +84,6 @@ const EmailTemplate = ({ loading, fetchSingleProject, singleProject, selectedTem
                 );
               }}
               textSize="base"
-              className=""
             />
           </div>
         </div>
