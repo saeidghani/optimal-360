@@ -8,6 +8,7 @@ const _Table = ({
   columns,
   renderHeader,
   className,
+  tableClassName,
   dataSource,
   rowClassName,
   loading,
@@ -22,6 +23,9 @@ const _Table = ({
   onTableChange,
   size,
   pagination,
+  paginationClassName,
+  extraDetails,
+  extraDetailsClassName,
   rowSelection,
   footer,
   rowKey,
@@ -54,6 +58,7 @@ const _Table = ({
   return (
     <div className={`${className}`}>
       <Table
+        className={tableClassName}
         size={size}
         loading={loading}
         onRow={(record, rowIndex) => ({
@@ -79,9 +84,10 @@ const _Table = ({
         footer={footer}
         {...props}
       />
+      {extraDetails && <div className={extraDetailsClassName}>{extraDetails}</div>}
 
       {pagination ? (
-        <div className="flex flex-row justify-between items-center mt-10">
+        <div className={`flex flex-row justify-between items-center mt-10 ${paginationClassName}`}>
           <div className="flex flex-row items-center justify-between">
             <p className="text-sm text-antgray-100 whitespace-no-wrap">
               Number of results per page
@@ -149,6 +155,10 @@ _Table.propTypes = {
   rowSelection: PropTypes.bool,
   footer: PropTypes.func,
   rowKey: PropTypes.string,
+  tableClassName: PropTypes.string,
+  paginationClassName: PropTypes.string,
+  extraDetailsClassName: PropTypes.string,
+  extraDetails: PropTypes.node,
 };
 
 _Table.defaultProps = {
@@ -170,6 +180,10 @@ _Table.defaultProps = {
   rowSelection: true,
   footer: null,
   rowKey: 'id',
+  tableClassName: '',
+  paginationClassName: '',
+  extraDetailsClassName: '',
+  extraDetails: null,
 };
 
 export default _Table;
