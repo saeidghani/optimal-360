@@ -119,7 +119,7 @@ const Routes = ({ match }) => (
     />
 
     <PrivateRoute path={`${match.path}/projects/survey-groups`} exact component={Organizations} />
-    <PrivateRoute path={`${match.path}/organizations/users`} exact component={OrganizationsUsers} />
+    <PrivateRoute path={`${match.path}/organizations/:organizationId/users`} exact component={OrganizationsUsers} />
     <PrivateRoute
       path={`${match.path}/organizations/new-staff`}
       exact

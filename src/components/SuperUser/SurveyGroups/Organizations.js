@@ -98,11 +98,16 @@ const Organizations = ({ loading }) => {
       key: 'project',
       title: '',
       width: 100,
-      render: () => (
-        <div className="inline-flex flex-row items-center justify-between text-right">
-          <TeamOutlined className="text-lg text-primary-500" />
-          <p className="text-sm text-primary-500 font-normal ml-2">Staff</p>
-        </div>
+      render: (data, allData) => (
+        <Button
+          onClick={() => history.push(`/super-user/organizations/${allData.id}/users`)}
+          icon={<TeamOutlined className="text-lg text-primary-500" />}
+          text="&nbsp;Staff"
+          textSize="small"
+          type="link"
+          className="text-lg mr-7"
+          size="middle"
+        />
       ),
     },
   ]);
