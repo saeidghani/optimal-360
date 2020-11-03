@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import organizationImg from '../../../assets/images/survey-groups-organization.jpg';
 
@@ -10,6 +9,7 @@ import Button from '../../Common/Button';
 import SearchBox from '../../Common/SearchBox';
 
 import { useQuery } from '../../../hooks/useQuery';
+import { useHistory } from 'react-router-dom';
 
 const Organizations = ({ fetchOrganizations, loading }) => {
   const history = useHistory();
