@@ -12,10 +12,11 @@ import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 
 import { useQuery } from '../../../hooks/useQuery';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 const OrganizationsUsers = ({ loading }) => {
   const [parsedQuery, query, setQuery] = useQuery();
+  const history = useHistory();
 
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
@@ -66,6 +67,7 @@ const OrganizationsUsers = ({ loading }) => {
               className="mx-3 px-3 flex-row-reverse"
               textClassName="mr-2"
               icon="UserAddOutlined"
+              onClick={() => history.push(`/super-user/organizations/${organizationId}/new-staff`)}
             />
           </div>
         </div>
