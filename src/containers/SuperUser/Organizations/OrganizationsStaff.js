@@ -9,6 +9,7 @@ class OrganizationsStaff extends Component {
 
   fetchOrganizationsStaffs = async (data) => {
     const { fetchOrganizationsStaffs } = this.props;
+
     return fetchOrganizationsStaffs({ ...data });
   };
 
