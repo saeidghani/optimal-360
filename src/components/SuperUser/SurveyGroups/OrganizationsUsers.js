@@ -116,64 +116,6 @@ const OrganizationsUsers = ({ loading }) => {
     [],
   );
 
-  // const dataSource = [
-  //   {
-  //     key: '1',
-  //     id: '2020060422',
-  //     name: 'James Kirk',
-  //     email: 'jtkirk@ufp.com',
-  //     password: 'asdfgtfq4124#%',
-  //   },
-  //   {
-  //     key: '2',
-  //     id: '2020060422',
-  //     name: 'James Kirk',
-  //     email: 'jtkirk@ufp.com',
-  //     password: 'asdfgtfq4124#%',
-  //   },
-  //   {
-  //     key: '3',
-  //     id: '2020060422',
-  //     name: 'James Kirk',
-  //     email: 'jtkirk@ufp.com',
-  //     password: 'asdfgtfq4124#%',
-  //   },
-  //   {
-  //     key: '4',
-  //     id: '2020060422',
-  //     name: 'James Kirk',
-  //     email: 'jtkirk@ufp.com',
-  //     password: 'asdfgtfq4124#%',
-  //   },
-  //   {
-  //     key: '5',
-  //     id: '2020060422',
-  //     name: 'James Kirk',
-  //     email: 'jtkirk@ufp.com',
-  //     password: 'asdfgtfq4124#%',
-  //   },
-  //   {
-  //     key: '6',
-  //     id: '2020060422',
-  //     name: 'James Kirk',
-  //     email: 'jtkirk@ufp.com',
-  //     password: 'asdfgtfq4124#%',
-  //   },
-  //   {
-  //     key: '7',
-  //     id: '2020060422',
-  //     name: 'James Kirk',
-  //     email: 'jtkirk@ufp.com',
-  //     password: 'asdfgtfq4124#%',
-  //   },
-  //   {
-  //     key: '8',
-  //     id: '2020060422',
-  //     name: 'James Kirk',
-  //     email: 'jtkirk@ufp.com',
-  //     password: 'asdfgtfq4124#%',
-  //   },
-  // ];
   const sort = (sorter) => {
     // eslint-disable-next-line operator-linebreak
     const order = parsedQuery?.sort?.[0] === '+' ? '-' : '+';
