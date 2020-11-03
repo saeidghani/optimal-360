@@ -1,9 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
-
-import { EditOutlined } from '@ant-design/icons';
 
 import budgetLogo from '../../../assets/images/budget-logo.jpg';
 
@@ -14,26 +11,27 @@ import Button from '../../Common/Button';
 import { useQuery } from '../../../hooks/useQuery';
 import { useHistory, useParams } from 'react-router-dom';
 
-const OrganizationsStaff = ({ loading }) => {
+const OrganizationsStaff = ({ fetchOrganizationsStaffs, loading }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
+  const { organizationId } = useParams();
 
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
-  const { organizationId } = useParams();
+  const [organizationStaffs, setOrganizationStaffs] = React.useState({});
 
   const pageNumber = React.useMemo(() => parsedQuery?.page_number, [parsedQuery.page_number]);
-  const dispatch = useDispatch();
-  const { organizationStaffs = {} } = useSelector((state) => state.organizations);
-
-  const fetch = React.useCallback(async () => {
-    const newQuery = query || '?page_size=10&page_number=1';
-    await dispatch.organizations.fetchOrganizationsStaffs({ organizationId, query: newQuery });
-  }, [dispatch, query, organizationId]);
 
   React.useEffect(() => {
+    const fetch = async () => {
+      const newQuery = query || '?page_size=10&page_number=1';
+      fetchOrganizationsStaffs({ organizationId, query: newQuery }).then((response) => {
+        console.log(response);
+        setOrganizationStaffs(response?.data);
+      });
+    };
     fetch();
-  }, [query, fetch]);
+  }, [query]);
 
   const renderHeader = React.useCallback(
     () => {
@@ -114,7 +112,6 @@ const OrganizationsStaff = ({ loading }) => {
             type="link"
             icon="EditOutlined"
             iconPosition="right"
-            onClick={() => history.push('#')}
           />
 
         ),
@@ -176,6 +173,7 @@ const OrganizationsStaff = ({ loading }) => {
 };
 
 OrganizationsStaff.propTypes = {
+  fetchOrganizationsStaffs: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
 };
 

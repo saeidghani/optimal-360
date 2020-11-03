@@ -7,14 +7,20 @@ import Layout from '../../../components/SuperUser/Organizations/OrganizationsSta
 class OrganizationsStaff extends Component {
   state = {};
 
+  fetchOrganizationsStaffs = async (data) => {
+    const { fetchOrganizationsStaffs } = this.props;
+    return fetchOrganizationsStaffs({ ...data });
+  };
+
   render() {
     const { loading } = this.props;
 
-    return <Layout loading={loading} />;
+    return <Layout fetchOrganizationsStaffs={this.fetchOrganizationsStaffs} loading={loading} />;
   }
 }
 
 OrganizationsStaff.propTypes = {
+  fetchOrganizationsStaffs: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
 };
 
@@ -22,6 +28,9 @@ const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
 });
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = (dispatch) => ({
+  fetchOrganizationsStaffs: dispatch.organizations.fetchOrganizationsStaffs,
+
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrganizationsStaff);
