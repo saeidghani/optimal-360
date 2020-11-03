@@ -20,6 +20,21 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+
+    async addNewOrganization({ name, logo }) {
+      return actionWapper(async () => {
+          const res = await axios({
+            method: 'post',
+            url: '/super-user/organizations',
+            data: { name, logo },
+          });
+
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
+    },
   }),
 
   reducers: {
