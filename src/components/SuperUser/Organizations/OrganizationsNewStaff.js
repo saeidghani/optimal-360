@@ -6,9 +6,10 @@ import MainLayout from '../../Common/Layout';
 
 import Input from '../../Common/Input';
 import Button from '../../Common/Button';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
+  const history = useHistory();
   const { organizationId } = useParams();
 
   const schema = yup.object({
@@ -40,9 +41,16 @@ const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
               password: '',
             }}
             validationSchema={schema}
-            onSubmit={(values) => {
-              addNewOrganizationStaff({ ...values, organizationId });
-            }}
+            onSubmit={
+
+              async (values) => {
+                try {
+                  await addNewOrganizationStaff({ ...values, organizationId });
+                  history.push(`/super-user/organizations/${organizationId}/`);
+                } catch (error) {
+                }
+              }
+            }
           >
             {({ values, errors, touched, handleChange, handleSubmit, setFieldValue }) => (
 

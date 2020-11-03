@@ -11,7 +11,6 @@ class OrganizationsNewStaff extends Component {
     const { addNewOrganizationStaff } = this.props;
 
     await addNewOrganizationStaff(params);
-    setTimeout(() => window.location.replace(`/super-user/organizations/${params.organizationId}/users`), 4000);
   };
 
   render() {
