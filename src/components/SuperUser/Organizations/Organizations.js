@@ -58,7 +58,7 @@ const Organizations = ({ loading }) => {
             type="gray"
             icon="BankOutlined"
             iconPosition="right"
-            onClick={() => history.push('/super-user/organizations/users/new')}
+            onClick={() => history.push('/super-user/organizations/new')}
           />
         </div>
       </div>
@@ -100,10 +100,10 @@ const Organizations = ({ loading }) => {
       width: 100,
       render: (data, allData) => (
         <Button
-          onClick={() => history.push(`/super-user/organizations/${allData.id}/users`)}
-          icon={<TeamOutlined className="text-lg text-primary-500" />}
+          onClick={() => history.push(`/super-user/organizations/${allData.id}`)}
+          icon="TeamOutlined"
           text="&nbsp;Staff"
-          textSize="small"
+          textSize="sm"
           type="link"
           className="text-lg mr-7"
           size="middle"

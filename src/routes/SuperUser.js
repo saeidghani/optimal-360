@@ -147,11 +147,6 @@ const Routes = ({ match }) => (
       component={Organizations}
     />
     <PrivateRoute
-      path={`${match.path}/organizations/:organizationId`}
-      exact
-      component={OrganizationsStaff}
-    />
-    <PrivateRoute
       path={`${match.path}/organizations/:organizationId/new-staff`}
       exact
       component={OrganizationsNewStaff}
@@ -160,6 +155,11 @@ const Routes = ({ match }) => (
       path={`${match.path}/organizations/new`}
       exact
       component={NewOrganizations}
+    />
+    <PrivateRoute
+      path={`${match.path}/organizations/:organizationId`}
+      exact
+      component={OrganizationsStaff}
     />
 
     {/* other */}

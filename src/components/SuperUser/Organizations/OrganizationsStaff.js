@@ -108,9 +108,15 @@ const OrganizationsStaff = ({ loading }) => {
         key: 'edit',
         title: '',
         render: () => (
-          <span className="text-primary-500">
-            <EditOutlined />
-          </span>
+          <Button
+            size="middle"
+            className="text-primary-500"
+            type="link"
+            icon="EditOutlined"
+            iconPosition="right"
+            onClick={() => history.push('#')}
+          />
+
         ),
       },
     ],
