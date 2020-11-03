@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { TeamOutlined } from '@ant-design/icons';
-
 import organizationImg from '../../../assets/images/survey-groups-organization.jpg';
 
 import MainLayout from '../../Common/Layout';
@@ -11,9 +11,26 @@ import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import SearchBox from '../../Common/SearchBox';
 
+import { useQuery } from '../../../hooks/useQuery';
+
 const Organizations = ({ loading }) => {
-  const [pageSize] = React.useState(10);
-  const [selectedRows] = React.useState([]);
+  const [parsedQuery, query, setQuery] = useQuery();
+
+  const [selectedRows, setSelectedRows] = React.useState([]);
+  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
+
+  const pageNumber = React.useMemo(() => parsedQuery?.page_number, [parsedQuery.page_number]);
+  const dispatch = useDispatch();
+  const { organizations = {} } = useSelector((state) => state.organizations);
+
+  const fetch = React.useCallback(async () => {
+    const newQuery = query || '?page_size=10&page_number=1';
+    await dispatch.organizations.fetchOrganizations(newQuery);
+  }, [dispatch, query]);
+
+  React.useEffect(() => {
+    fetch();
+  }, [query, fetch]);
 
   const renderHeader = React.useCallback(() => {
     return selectedRows && selectedRows?.length > 0 ? (
@@ -23,7 +40,12 @@ const Organizations = ({ loading }) => {
     ) : (
       <div className="flex flex-row justify-end items-center">
         <div className="flex flex-row">
-          <SearchBox className="text-xs" loading={loading} />
+          <SearchBox
+            className="text-xs"
+            loading={loading}
+            onSearch={(val) => setQuery({ q: val })}
+            onPressEnter={(e) => setQuery({ q: e.target.value })}
+          />
           <Button
             size="middle"
             textSize="xs"
@@ -39,15 +61,26 @@ const Organizations = ({ loading }) => {
     );
   }, [loading, selectedRows.length]);
 
+  const getSortOrder = (key) => {
+    return parsedQuery?.sort?.includes(key)
+      ? parsedQuery?.sort?.[0] === '+'
+        ? 'ascend'
+        : 'descend'
+      : '';
+  };
+
   const columns = React.useMemo(() => [
     {
       key: 'id',
       title: 'ID',
       sorter: true,
+      sortOrder: getSortOrder('id'),
     },
     {
-      key: 'organization',
+      key: 'name',
       title: 'Organization',
+      sorter: true,
+      sortOrder: getSortOrder('name'),
       render: (organization) => (
         <div className="inline-flex flex-row items-center justify-between">
           <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
@@ -56,7 +89,6 @@ const Organizations = ({ loading }) => {
           <p className="text-sm font-normal ml-2">{organization}</p>
         </div>
       ),
-      sorter: true,
     },
     {
       key: 'project',
@@ -71,69 +103,19 @@ const Organizations = ({ loading }) => {
     },
   ]);
 
-  const dataSource = [
-    {
-      key: '1',
-      id: '1',
-      organization: 'Sime Darby Group Berhad',
-      project: '',
-    },
-    {
-      key: '2',
-      id: '2',
-      organization: 'Sime Darby Group Berhad',
-      project: '',
-    },
-    {
-      key: '3',
-      id: '3',
-      organization: 'Sime Darby Group Berhad',
-      project: '',
-    },
-    {
-      key: '4',
-      id: '4',
-      organization: 'Sime Darby Group Berhad',
-      project: '',
-    },
-    {
-      key: '5',
-      id: '5',
-      organization: 'Sime Darby Group Berhad',
-      project: '',
-    },
-    {
-      key: '6',
-      id: '6',
-      organization: 'Sime Darby Group Berhad',
-      project: '',
-    },
-    {
-      key: '7',
-      id: '7',
-      organization: 'Sime Darby Group Berhad',
-      project: '',
-    },
-    {
-      key: '8',
-      id: '8',
-      organization: 'Sime Darby Group Berhad',
-      project: '',
-    },
-    {
-      key: '9',
-      id: '9',
-      organization: 'Sime Darby Group Berhad',
-      project: '',
-    },
-    {
-      key: '10',
-      id: '10',
-      organization: 'Sime Darby Group Berhad',
-      project: '',
-    },
-  ];
+  const sort = (sorter) => {
+    // eslint-disable-next-line operator-linebreak
+    const order = parsedQuery?.sort?.[0] === '+' ? '-' : '+';
+    const newItem = `${order}${sorter.columnKey}`;
 
+    setQuery({ sort: newItem });
+  };
+
+  const dataSource = React.useMemo(
+    () => (organizations?.data || []).map((item) => ({ ...item, key: `${item.id}` })),
+    // eslint-disable-next-line
+    [organizations.timeStamp],
+  );
   return (
     <MainLayout
       titleClass="mb-6 mt-3"
@@ -142,14 +124,31 @@ const Organizations = ({ loading }) => {
       contentClass="py-6 pl-21 pr-6"
     >
       <Table
+        onTableChange={({ sorter }) => sort(sorter)}
         size="middle"
         className="p-6 bg-white rounded-lg shadow"
         loading={loading}
         columns={columns}
         dataSource={dataSource}
         renderHeader={renderHeader}
+        onPageSizeChange={(size) => {
+          setPageSize(size);
+          setQuery({ page_size: size, page_number: 1 });
+        }}
         pageSize={pageSize * 1}
-        pageNumber={1}
+        pageNumber={pageNumber * 1}
+        // eslint-disable-next-line camelcase
+        onPaginationChange={(page_number, page_size) => {
+          setSelectedRows([]);
+          setQuery({
+            page_size,
+            page_number,
+          });
+        }}
+        onRowSelectionChange={(_, rows) => {
+          setSelectedRows(rows);
+        }}
+        totalRecordSize={organizations?.metaData?.pagination?.totalRecords * 1}
       />
     </MainLayout>
   );

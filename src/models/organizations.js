@@ -16,7 +16,7 @@ export default {
           url: `/super-user/organizations${query}`,
         });
 
-        await this.fetchOrganizations_reducer(res?.data?.data);
+        await this.fetchOrganizations_reducer(res?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
