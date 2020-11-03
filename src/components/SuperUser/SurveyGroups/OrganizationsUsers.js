@@ -57,9 +57,6 @@ const OrganizationsUsers = ({ loading }) => {
               className="mx-3 px-3 flex-row-reverse"
               textClassName="mr-2"
               icon="FileExcelOutlined"
-              onClick={() => {
-                console.log(organizationStaffs);
-              }}
             />
             <Button
               size="middle"
