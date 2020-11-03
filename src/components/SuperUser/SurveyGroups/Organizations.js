@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -22,6 +23,8 @@ const Organizations = ({ loading }) => {
   const pageNumber = React.useMemo(() => parsedQuery?.page_number, [parsedQuery.page_number]);
   const dispatch = useDispatch();
   const { organizations = {} } = useSelector((state) => state.organizations);
+
+  const history = useHistory();
 
   const fetch = React.useCallback(async () => {
     const newQuery = query || '?page_size=10&page_number=1';
@@ -55,6 +58,7 @@ const Organizations = ({ loading }) => {
             type="gray"
             icon="BankOutlined"
             iconPosition="right"
+            onClick={() => history.push('/super-user/organizations/users/new')}
           />
         </div>
       </div>
