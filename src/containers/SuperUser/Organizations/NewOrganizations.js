@@ -11,7 +11,6 @@ class NewOrganizations extends Component {
     const { addNewOrganization } = this.props;
 
     await addNewOrganization({ name, logo });
-    setTimeout(() => window.location.replace('/super-user/projects/survey-groups'), 4000);
   };
 
   render() {

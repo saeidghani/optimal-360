@@ -6,8 +6,11 @@ import { Formik, Form } from 'formik';
 import MainLayout from '../../Common/Layout';
 import Input from '../../Common/Input';
 import Button from '../../Common/Button';
+import { useHistory } from 'react-router-dom';
 
 const NewOrganizations = ({ addNewOrganization, loading }) => {
+  const history = useHistory();
+
   const schema = yup.object({
     name: yup.string().required('Organization Name field is required'),
     logo: yup.string().required('Logo is required'),
@@ -33,8 +36,12 @@ const NewOrganizations = ({ addNewOrganization, loading }) => {
               logo: '/20200909/photos-0cf793d1-5cbc-46f3-9aea-87ca1c0a9007.jpg', // TODO: upload logo
             }}
             validationSchema={schema}
-            onSubmit={(values) => {
-              addNewOrganization(values);
+            onSubmit={async (values) => {
+              try {
+                await addNewOrganization(values);
+                history.push('/super-user/organizations/');
+              } catch (error) {
+              }
             }}
           >
             {({ values, errors, touched, handleChange, handleSubmit, setFieldValue }) => (
