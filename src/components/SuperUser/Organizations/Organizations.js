@@ -3,8 +3,6 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
-
-import { TeamOutlined } from '@ant-design/icons';
 import organizationImg from '../../../assets/images/survey-groups-organization.jpg';
 
 import MainLayout from '../../Common/Layout';
