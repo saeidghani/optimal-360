@@ -2,7 +2,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
 import organizationImg from '../../../assets/images/survey-groups-organization.jpg';
 
 import MainLayout from '../../Common/Layout';
@@ -12,26 +11,25 @@ import SearchBox from '../../Common/SearchBox';
 
 import { useQuery } from '../../../hooks/useQuery';
 
-const Organizations = ({ loading }) => {
+const Organizations = ({ fetchOrganizations, loading }) => {
+  const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
 
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
+  const [organizations, setOrganizations] = React.useState({});
 
   const pageNumber = React.useMemo(() => parsedQuery?.page_number, [parsedQuery.page_number]);
-  const dispatch = useDispatch();
-  const { organizations = {} } = useSelector((state) => state.organizations);
-
-  const history = useHistory();
-
-  const fetch = React.useCallback(async () => {
-    const newQuery = query || '?page_size=10&page_number=1';
-    await dispatch.organizations.fetchOrganizations(newQuery);
-  }, [dispatch, query]);
 
   React.useEffect(() => {
+    const fetch = async () => {
+      const newQuery = query || '?page_size=10&page_number=1';
+      fetchOrganizations(newQuery).then((response) => {
+        setOrganizations(response?.data);
+      });
+    };
     fetch();
-  }, [query, fetch]);
+  }, [query]);
 
   const renderHeader = React.useCallback(() => {
     return selectedRows && selectedRows?.length > 0 ? (
@@ -162,6 +160,7 @@ const Organizations = ({ loading }) => {
 };
 
 Organizations.propTypes = {
+  fetchOrganizations: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
 };
 
