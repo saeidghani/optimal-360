@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
-import Layout from '../../../components/SuperUser/SurveyGroups/NewOrganizations';
+import Layout from '../../../components/SuperUser/Organizations/NewOrganizations';
 
 class NewOrganizations extends Component {
   state = {};

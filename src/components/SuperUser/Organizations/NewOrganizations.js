@@ -7,7 +7,7 @@ import MainLayout from '../../Common/Layout';
 import Input from '../../Common/Input';
 import Button from '../../Common/Button';
 
-const ProjectInfo = ({ addNewOrganization, loading }) => {
+const NewOrganizations = ({ addNewOrganization, loading }) => {
   const schema = yup.object({
     name: yup.string().required('Organization Name field is required'),
     logo: yup.string().required('Logo is required'),
@@ -67,9 +67,9 @@ const ProjectInfo = ({ addNewOrganization, loading }) => {
   );
 };
 
-ProjectInfo.propTypes = {
+NewOrganizations.propTypes = {
   addNewOrganization: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
 };
 
-export default ProjectInfo;
+export default NewOrganizations;

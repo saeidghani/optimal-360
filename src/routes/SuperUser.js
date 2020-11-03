@@ -14,10 +14,10 @@ import SurveyGroupList from '../containers/SuperUser/SurveyGroups/List';
 import RatersStatusOverview from '../containers/SuperUser/SurveyGroups/RatersStatusOverview';
 import RatersStatusDetails from '../containers/SuperUser/SurveyGroups/RatersStatusDetails';
 import RatersStatusRaterEmail from '../containers/SuperUser/SurveyGroups/RatersStatusRaterEmail';
-import Organizations from '../containers/SuperUser/SurveyGroups/Organizations';
-import OrganizationsUsers from '../containers/SuperUser/SurveyGroups/OrganizationsUsers';
-import OrganizationsNewStaff from '../containers/SuperUser/SurveyGroups/OrganizationsNewStaff';
-import NewOrganizations from '../containers/SuperUser/SurveyGroups/NewOrganizations';
+import Organizations from '../containers/SuperUser/Organizations/Organizations';
+import OrganizationsStaff from '../containers/SuperUser/Organizations/OrganizationsStaff';
+import OrganizationsNewStaff from '../containers/SuperUser/Organizations/OrganizationsNewStaff';
+import NewOrganizations from '../containers/SuperUser/Organizations/NewOrganizations';
 import RatersStatusIndividualReport from '../containers/SuperUser/SurveyGroups/RatersStatusIndividualReport';
 import RatersStatusGroupReportReview from '../containers/SuperUser/SurveyGroups/RatersStatusGroupReportReview';
 import GroupReports from '../containers/SuperUser/SurveyGroups/GroupReports';
@@ -112,11 +112,6 @@ const Routes = ({ match }) => (
       scrollToTop
       component={GroupReports}
     />
-    <PrivateRoute
-      path={`${match.path}/projects/survey-groups`}
-      exact
-      component={Organizations}
-    />
 
     {/* participants */}
     <PrivateRoute
@@ -147,9 +142,14 @@ const Routes = ({ match }) => (
 
     {/* organizations */}
     <PrivateRoute
-      path={`${match.path}/organizations/:organizationId/users`}
+      path={`${match.path}/organizations/`}
       exact
-      component={OrganizationsUsers}
+      component={Organizations}
+    />
+    <PrivateRoute
+      path={`${match.path}/organizations/:organizationId`}
+      exact
+      component={OrganizationsStaff}
     />
     <PrivateRoute
       path={`${match.path}/organizations/:organizationId/new-staff`}
@@ -157,17 +157,17 @@ const Routes = ({ match }) => (
       component={OrganizationsNewStaff}
     />
     <PrivateRoute
-      path={`${match.path}/bank/models`}
-      exact
-      component={BankModels}
-    />
-    <PrivateRoute
-      path={`${match.path}/organizations/users/new`}
+      path={`${match.path}/organizations/new`}
       exact
       component={NewOrganizations}
     />
 
     {/* other */}
+    <PrivateRoute
+      path={`${match.path}/bank/models`}
+      exact
+      component={BankModels}
+    />
     <Route component={NotFound} />
   </Switch>
 );

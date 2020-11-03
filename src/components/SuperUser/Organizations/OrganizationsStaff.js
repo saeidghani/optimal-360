@@ -14,7 +14,7 @@ import Button from '../../Common/Button';
 import { useQuery } from '../../../hooks/useQuery';
 import { useHistory, useParams } from 'react-router-dom';
 
-const OrganizationsUsers = ({ loading }) => {
+const OrganizationsStaff = ({ loading }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
 
@@ -169,10 +169,10 @@ const OrganizationsUsers = ({ loading }) => {
   );
 };
 
-OrganizationsUsers.propTypes = {
+OrganizationsStaff.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
-OrganizationsUsers.defaultProps = {};
+OrganizationsStaff.defaultProps = {};
 
-export default OrganizationsUsers;
+export default OrganizationsStaff;

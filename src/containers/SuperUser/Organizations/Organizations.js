@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
-import Layout from '../../../components/SuperUser/SurveyGroups/OrganizationsUsers';
+import Layout from '../../../components/SuperUser/Organizations/Organizations';
 
-class OrganizationsUsers extends Component {
+class Organizations extends Component {
   state = {};
 
   render() {
@@ -14,7 +14,7 @@ class OrganizationsUsers extends Component {
   }
 }
 
-OrganizationsUsers.propTypes = {
+Organizations.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
@@ -24,4 +24,4 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = () => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(OrganizationsUsers);
+export default connect(mapStateToProps, mapDispatchToProps)(Organizations);
