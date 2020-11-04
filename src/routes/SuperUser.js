@@ -37,28 +37,12 @@ import NotFound from '../components/404';
 const Routes = ({ match }) => (
   <Switch>
     {/* authentication */}
-    <CustomRoute
-      path={`${match.path}/login`}
-      exact
-      component={Login}
-    />
-    <CustomRoute
-      path={`${match.path}/forgot-password`}
-      exact
-      component={ForgotPassword}
-    />
+    <CustomRoute path={`${match.path}/login`} exact component={Login} />
+    <CustomRoute path={`${match.path}/forgot-password`} exact component={ForgotPassword} />
 
     {/* projects */}
-    <PrivateRoute
-      path={`${match.path}/projects`}
-      exact
-      component={ProjectsList}
-    />
-    <PrivateRoute
-      path={`${match.path}/projects/:projectId/set-admin`}
-      exact
-      component={SetAdmin}
-    />
+    <PrivateRoute path={`${match.path}/projects`} exact component={ProjectsList} />
+    <PrivateRoute path={`${match.path}/projects/:projectId/set-admin`} exact component={SetAdmin} />
     <PrivateRoute
       path={`${match.path}/projects/:projectId/survey-groups`}
       exact
@@ -100,12 +84,7 @@ const Routes = ({ match }) => (
       scrollToTop
       component={SurveyQuestions}
     />
-    <PrivateRoute
-      path={`${match.path}/new-project/report`}
-      exact
-      scrollToTop
-      component={Report}
-    />
+    <PrivateRoute path={`${match.path}/new-project/report`} exact scrollToTop component={Report} />
     <PrivateRoute
       path={`${match.path}/new-project/reports/group-reports`}
       exact
@@ -141,21 +120,13 @@ const Routes = ({ match }) => (
     />
 
     {/* organizations */}
-    <PrivateRoute
-      path={`${match.path}/organizations/`}
-      exact
-      component={Organizations}
-    />
+    <PrivateRoute path={`${match.path}/organizations`} exact component={Organizations} />
     <PrivateRoute
       path={`${match.path}/organizations/:organizationId/new-staff`}
       exact
       component={OrganizationsNewStaff}
     />
-    <PrivateRoute
-      path={`${match.path}/organizations/new`}
-      exact
-      component={NewOrganizations}
-    />
+    <PrivateRoute path={`${match.path}/organizations/new`} exact component={NewOrganizations} />
     <PrivateRoute
       path={`${match.path}/organizations/:organizationId`}
       exact
@@ -163,11 +134,7 @@ const Routes = ({ match }) => (
     />
 
     {/* other */}
-    <PrivateRoute
-      path={`${match.path}/bank/models`}
-      exact
-      component={BankModels}
-    />
+    <PrivateRoute path={`${match.path}/bank/models`} exact component={BankModels} />
     <Route component={NotFound} />
   </Switch>
 );
