@@ -22,7 +22,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
   const [selectedRows, setSelectedRows] = React.useState([]);
   const history = useHistory();
 
-  const pageNumber = React.useMemo(() => parsedQuery?.page_number, [parsedQuery.page_number]);
+  const pageNumber = parsedQuery?.page_number;
 
   const dispatch = useDispatch();
   const { projects = {} } = useSelector((state) => state.projects);
@@ -123,6 +123,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
               text="New Organization"
               type="gray"
               className="mx-3 px-3"
+              onClick={() => history.push('/super-user/organizations/users/new')}
             />
             <Button
               onClick={() => history.push('/super-user/new-project/project-info')}

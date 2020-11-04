@@ -2,17 +2,36 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { EditOutlined } from '@ant-design/icons';
-
 import budgetLogo from '../../../assets/images/budget-logo.jpg';
 
 import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 
-const OrganizationsUsers = ({ loading }) => {
-  const [pageSize] = React.useState(10);
-  const [selectedRows] = React.useState([]);
+import { useQuery } from '../../../hooks/useQuery';
+import { useHistory, useParams } from 'react-router-dom';
+
+const OrganizationsStaff = ({ fetchOrganizationsStaffs, loading }) => {
+  const [parsedQuery, query, setQuery] = useQuery();
+  const history = useHistory();
+  const { organizationId } = useParams();
+
+  const [selectedRows, setSelectedRows] = React.useState([]);
+  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
+  const [organizationStaffs, setOrganizationStaffs] = React.useState({});
+
+  const pageNumber = parsedQuery?.page_number;
+
+  React.useEffect(() => {
+    const fetch = async () => {
+      const newQuery = query || '?page_size=10&page_number=1';
+      fetchOrganizationsStaffs({ organizationId, query: newQuery }).then((response) => {
+        console.log(response);
+        setOrganizationStaffs(response?.data);
+      });
+    };
+    fetch();
+  }, [query]);
 
   const renderHeader = React.useCallback(
     () => {
@@ -46,6 +65,7 @@ const OrganizationsUsers = ({ loading }) => {
               className="mx-3 px-3 flex-row-reverse"
               textClassName="mr-2"
               icon="UserAddOutlined"
+              onClick={() => history.push(`/super-user/organizations/${organizationId}/new-staff`)}
             />
           </div>
         </div>
@@ -54,6 +74,13 @@ const OrganizationsUsers = ({ loading }) => {
     // eslint-disable-next-line
     [loading, selectedRows.length],
   );
+  const getSortOrder = (key) => {
+    return parsedQuery?.sort?.includes(key)
+      ? parsedQuery?.sort?.[0] === '+'
+        ? 'ascend'
+        : 'descend'
+      : '';
+  };
 
   const columns = React.useMemo(
     () => [
@@ -61,6 +88,7 @@ const OrganizationsUsers = ({ loading }) => {
         key: 'id',
         title: 'ID',
         sorter: true,
+        sortOrder: getSortOrder('id'),
       },
       {
         key: 'name',
@@ -78,9 +106,14 @@ const OrganizationsUsers = ({ loading }) => {
         key: 'edit',
         title: '',
         render: () => (
-          <span className="text-primary-500">
-            <EditOutlined />
-          </span>
+          <Button
+            size="middle"
+            className="text-primary-500"
+            type="link"
+            icon="EditOutlined"
+            iconPosition="right"
+          />
+
         ),
       },
     ],
@@ -88,65 +121,19 @@ const OrganizationsUsers = ({ loading }) => {
     [],
   );
 
-  const dataSource = [
-    {
-      key: '1',
-      id: '2020060422',
-      name: 'James Kirk',
-      email: 'jtkirk@ufp.com',
-      password: 'asdfgtfq4124#%',
-    },
-    {
-      key: '2',
-      id: '2020060422',
-      name: 'James Kirk',
-      email: 'jtkirk@ufp.com',
-      password: 'asdfgtfq4124#%',
-    },
-    {
-      key: '3',
-      id: '2020060422',
-      name: 'James Kirk',
-      email: 'jtkirk@ufp.com',
-      password: 'asdfgtfq4124#%',
-    },
-    {
-      key: '4',
-      id: '2020060422',
-      name: 'James Kirk',
-      email: 'jtkirk@ufp.com',
-      password: 'asdfgtfq4124#%',
-    },
-    {
-      key: '5',
-      id: '2020060422',
-      name: 'James Kirk',
-      email: 'jtkirk@ufp.com',
-      password: 'asdfgtfq4124#%',
-    },
-    {
-      key: '6',
-      id: '2020060422',
-      name: 'James Kirk',
-      email: 'jtkirk@ufp.com',
-      password: 'asdfgtfq4124#%',
-    },
-    {
-      key: '7',
-      id: '2020060422',
-      name: 'James Kirk',
-      email: 'jtkirk@ufp.com',
-      password: 'asdfgtfq4124#%',
-    },
-    {
-      key: '8',
-      id: '2020060422',
-      name: 'James Kirk',
-      email: 'jtkirk@ufp.com',
-      password: 'asdfgtfq4124#%',
-    },
-  ];
+  const sort = (sorter) => {
+    // eslint-disable-next-line operator-linebreak
+    const order = parsedQuery?.sort?.[0] === '+' ? '-' : '+';
+    const newItem = `${order}${sorter.columnKey}`;
 
+    setQuery({ sort: newItem });
+  };
+
+  const dataSource = React.useMemo(
+    () => (organizationStaffs?.data || []).map((item) => ({ ...item, key: `${item.id}` })),
+    // eslint-disable-next-line
+    [organizationStaffs.timeStamp],
+  );
   return (
     <MainLayout
       titleClass="mb-6 mt-3"
@@ -155,23 +142,41 @@ const OrganizationsUsers = ({ loading }) => {
       contentClass="py-6 pl-21 pr-6"
     >
       <Table
+        onTableChange={({ sorter }) => sort(sorter)}
         size="middle"
         className="p-6 bg-white rounded-lg shadow"
         loading={loading}
         columns={columns}
         dataSource={dataSource}
         renderHeader={renderHeader}
+        onPageSizeChange={(size) => {
+          setPageSize(size);
+          setQuery({ page_size: size, page_number: 1 });
+        }}
         pageSize={pageSize * 1}
-        pageNumber={1}
+        pageNumber={pageNumber * 1}
+        // eslint-disable-next-line camelcase
+        onPaginationChange={(page_number, page_size) => {
+          setSelectedRows([]);
+          setQuery({
+            page_size,
+            page_number,
+          });
+        }}
+        onRowSelectionChange={(_, rows) => {
+          setSelectedRows(rows);
+        }}
+        totalRecordSize={organizationStaffs?.metaData?.pagination?.totalRecords * 1}
       />
     </MainLayout>
   );
 };
 
-OrganizationsUsers.propTypes = {
+OrganizationsStaff.propTypes = {
+  fetchOrganizationsStaffs: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
 };
 
-OrganizationsUsers.defaultProps = {};
+OrganizationsStaff.defaultProps = {};
 
-export default OrganizationsUsers;
+export default OrganizationsStaff;
