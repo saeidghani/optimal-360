@@ -33,11 +33,9 @@ const Sidebar = () => {
         <Link
           className={`py-5 w-full flex flex-row justify-center items-center text-center text-xl
           hover:text-primary-500 ${
-            pathname === '/super-user/projects/survey-groups'
-              ? activeClassNames
-              : 'text-antgray-100'
+            pathname === '/super-user/organizations' ? activeClassNames : 'text-antgray-100'
           } `}
-          to="/super-user/projects/survey-groups"
+          to="/super-user/organizations"
         >
           <HomeOutlined />
         </Link>
