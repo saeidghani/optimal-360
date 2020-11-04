@@ -19,7 +19,7 @@ const Organizations = ({ fetchOrganizations, loading }) => {
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [organizations, setOrganizations] = React.useState({});
 
-  const pageNumber = React.useMemo(() => parsedQuery?.page_number, [parsedQuery.page_number]);
+  const pageNumber = parsedQuery?.page_number;
 
   React.useEffect(() => {
     const fetch = async () => {
@@ -94,9 +94,9 @@ const Organizations = ({ fetchOrganizations, loading }) => {
       key: 'project',
       title: '',
       width: 100,
-      render: (data, allData) => (
+      render: (_data, { id }) => (
         <Button
-          onClick={() => history.push(`/super-user/organizations/${allData.id}`)}
+          onClick={() => history.push(`/super-user/organizations/${id}`)}
           icon="TeamOutlined"
           text="&nbsp;Staff"
           textSize="sm"

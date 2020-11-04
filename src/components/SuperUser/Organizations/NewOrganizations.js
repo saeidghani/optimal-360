@@ -7,6 +7,7 @@ import MainLayout from '../../Common/Layout';
 import Input from '../../Common/Input';
 import Button from '../../Common/Button';
 import { useHistory } from 'react-router-dom';
+import UploadAvatar from '../../Common/UploadAvatar';
 
 const NewOrganizations = ({ addNewOrganization, loading }) => {
   const history = useHistory();
@@ -33,7 +34,7 @@ const NewOrganizations = ({ addNewOrganization, loading }) => {
           <Formik
             initialValues={{
               name: '',
-              logo: '/20200909/photos-0cf793d1-5cbc-46f3-9aea-87ca1c0a9007.jpg', // TODO: upload logo
+              logo: '',
             }}
             validationSchema={schema}
             onSubmit={async (values) => {
@@ -58,6 +59,13 @@ const NewOrganizations = ({ addNewOrganization, loading }) => {
                   errorMessage={touched.name && errors.name}
                 />
                 <Button text="Upload Logo" textSize="xs" type="gray" className="px-2" />
+                {/* TODO: using UploadAvatar component  */}
+                {/* <UploadAvatar */}
+                {/*   wrapperClassName="mt-14 mb-3" */}
+                {/*   type="gray" */}
+                {/*   onFileUpload={(file) => setFieldValue('logo', file)} */}
+                {/*   image={values.logo} */}
+                {/* /> */}
                 <Button
                   loading={loading}
                   onClick={handleSubmit}

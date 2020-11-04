@@ -20,7 +20,7 @@ const OrganizationsStaff = ({ fetchOrganizationsStaffs, loading }) => {
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [organizationStaffs, setOrganizationStaffs] = React.useState({});
 
-  const pageNumber = React.useMemo(() => parsedQuery?.page_number, [parsedQuery.page_number]);
+  const pageNumber = parsedQuery?.page_number;
 
   React.useEffect(() => {
     const fetch = async () => {
