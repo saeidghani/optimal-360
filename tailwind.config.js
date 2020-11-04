@@ -115,6 +115,9 @@ module.exports = {
         '22px': '1.375rem',
         '24px': '1.5rem',
       },
+      backgroundOpacity: {
+        10: '0.1',
+      },
       borderRadius: {
         '2px': '2px',
         '7px': '7px',
