@@ -92,12 +92,14 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
-    async setSurveyIntro({ surveyGroupId, ...payload }) {
+    async setSurveyIntro({ surveyGroupId, clientPicture, ...payload }) {
       return actionWapper(async () => {
+        const path = await dispatch.util.uploadImage(clientPicture);
+
         const res = await axios({
           method: 'post',
           url: `super-user/wizard/survey-groups/${surveyGroupId}/survey-intro`,
-          data: payload,
+          data: { ...payload, clientPicture: path },
         });
 
         return res;

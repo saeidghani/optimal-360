@@ -29,7 +29,7 @@ export default {
       return actionWapper(async () => {
         const res = await axios({
           method: 'post',
-          url: '/super-user/auth/forget-password',
+          url: '/super-user/auth/reset-password',
           data: payload,
         });
 

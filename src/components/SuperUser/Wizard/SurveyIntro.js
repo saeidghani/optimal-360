@@ -148,8 +148,9 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
               <Form onSubmit={handleSubmit}>
                 <UploadAvatar
                   wrapperClassName="mt-14 mb-3"
-                  onFileUpload={(file) => setFieldValue('clientPicture', file)}
-                  image={values.clientPicture}
+                  originalFile={surveyIntro?.clientPicture}
+                  setFile={(file) => setFieldValue('clientPicture', file)}
+                  file={values.clientPicture}
                 />
                 {touched.clientPicture && errors.clientPicture && (
                   <p className="ml-2 text-red-500 py-2">{errors.clientPicture}</p>
