@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
+import React from 'react';
 import PropTypes from 'prop-types';
 
-const UploadAvatar = ({ onFileUpload, file, wrapperClassName }) => {
-  const [imageFile, setImageFile] = useState();
-  const [imageUrl, setImageUrl] = useState('');
-  const [loading, setLoading] = useState(false);
+import { Spin } from 'antd';
 
-  useEffect(() => {
-    setImageUrl(file);
-  });
+import { fetchFullURL } from '../../lib/utils';
+
+const UploadAvatar = ({ setFile, file, originalFile, wrapperClassName }) => {
+  const [preview, setPreview] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
 
   const handleChange = (info) => {
     const pickedFile = info?.target?.files[0];
@@ -21,88 +19,95 @@ const UploadAvatar = ({ onFileUpload, file, wrapperClassName }) => {
       reader.onload = (res) => {
         setLoading(false);
 
-        setImageFile(res.target.result);
-        onFileUpload(res.target.result);
+        setPreview(res.target.result);
+        setFile(pickedFile);
       };
 
       reader.readAsDataURL(pickedFile); // convert to base64 string
     }
   };
 
-  const profile = (
-    <div className="w-20 relative cursor-pointer">
-      {imageFile && (
-        <img className="rounded-full w-full border h-20 w-20" src={imageFile} alt="avatar" />
-      )}
+  const imageSource = preview || fetchFullURL(file);
 
-      {file && !imageFile && (
-        <img
-          className="rounded-full w-full border h-20 w-20"
-          src={imageUrl}
-          alt="uploaded avatar"
-        />
-      )}
-
-      {loading ? (
-        <LoadingOutlined className="absolute left-0 top-0 text-white bg-gray-400 rounded-full m-2" />
-      ) : (
-        <PlusOutlined className="absolute left-0 top-0 text-white bg-gray-400 rounded-full m-2" />
-      )}
-    </div>
-  );
-
-  const deleteImage = () => {
-    setImageFile();
-    setImageUrl('');
-  };
-
-  const uploadbtn = (
-    <div className="flex justify-start items-center">
-      <span className="px-5 py-3 cursor-pointer border rounded border-blue-400 text-blue-400">
-        Upload
-      </span>
-    </div>
-  );
+  React.useEffect(() => {
+    if (imageSource && !loading) {
+      setLoading(true);
+    }
+  }, [imageSource]);
 
   return (
     <div className={`flex items-center ${wrapperClassName}`}>
-      {!imageFile && !imageUrl && (
-        <span className="mx-4 text-black-500 text-lg">Client picture</span>
-      )}
-
-      <label htmlFor="Client-picture">
-        {imageFile || imageUrl ? profile : uploadbtn}
-
-        <input
-          accept="image/*"
-          type="file"
-          className="hidden"
-          id="Client-picture"
-          name="Client-picture"
-          onChange={handleChange}
-        />
-      </label>
-
-      {(imageFile || imageUrl) && (
-        <div className="ml-4 ">
-          <div> Client picture </div>
-          <div className="text-red-500 text-xs cursor-pointer " onClick={deleteImage}>
-            Delete
-          </div>
+      {loading && (
+        <div className="z-20 w-full flex flex-row items-center bg-white">
+          <Spin tip="Loading..." className="ml-3" />
         </div>
       )}
+
+      <div className={`${loading && 'hidden'} flex flex-row items-center justify-center`}>
+        {!imageSource && <span className="mx-4 text-black-500 text-lg">Client picture</span>}
+
+        <label htmlFor="Client-picture">
+          {imageSource ? (
+            <img
+              onLoad={() => setLoading(false)}
+              className="rounded-full border h-20 w-20"
+              src={imageSource}
+              alt="uploaded file"
+            />
+          ) : (
+            <div
+              className="w-24.5 h-9.5 flex justify-center items-center
+          cursor-pointer border rounded border-primary-500 text-primary-500"
+            >
+              <p className="text-base">Upload</p>
+            </div>
+          )}
+
+          <input
+            accept="image/*"
+            type="file"
+            className="hidden"
+            id="Client-picture"
+            name="Client-picture"
+            onChange={handleChange}
+          />
+        </label>
+
+        {imageSource && (
+          <div className="ml-4 ">
+            <div> Client picture </div>
+
+            <div
+              className="text-red-500 text-xs cursor-pointer "
+              onClick={() => {
+                if (originalFile && preview) {
+                  setFile(originalFile);
+                  setPreview('');
+                } else {
+                  setFile('');
+                  setPreview('');
+                }
+              }}
+            >
+              Delete
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
 UploadAvatar.propTypes = {
-  file: PropTypes.string,
+  originalFile: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  file: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   wrapperClassName: PropTypes.string,
-  onFileUpload: PropTypes.func.isRequired,
+  setFile: PropTypes.func.isRequired,
 };
 
 UploadAvatar.defaultProps = {
   file: '',
+  originalFile: null,
   wrapperClassName: '',
 };
 
