@@ -59,16 +59,22 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
             onClick={async () => {
               await changeStatusOfProjects(
                 selectedRowsIds,
-                parsedQuery?.status === 'active' ? 'inactive' : 'active',
+                parsedQuery?.status === 'active' || parsedQuery?.status === 'complete'
+                  ? 'inactive'
+                  : 'active',
               );
 
               fetch();
               setSelectedRows([]);
             }}
             size="middle"
-            className="ml-3 "
+            className="ml-3"
             textSize="xs"
-            text={parsedQuery?.status === 'active' ? 'Deactivate' : 'Activate'}
+            text={
+              parsedQuery?.status === 'active' || parsedQuery?.status === 'complete'
+                ? 'Deactivate'
+                : 'Activate'
+            }
           />
 
           <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
@@ -82,7 +88,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
               textSize="xs"
               text="Active Projects"
               className="mr-3 px-3"
-              light={parsedQuery?.status === 'active'}
+              light={parsedQuery?.status !== 'active'}
             />
 
             <Button
@@ -90,7 +96,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
               onClick={() => setQuery({ status: 'inactive', page_number: 1 })}
               textSize="xs"
               text="Inactive Projects"
-              light={parsedQuery?.status === 'inactive'}
+              light={parsedQuery?.status !== 'inactive'}
               className="mr-3 px-3"
             />
 
@@ -99,7 +105,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
               onClick={() => setQuery({ status: 'complete', page_number: 1 })}
               textSize="xs"
               text="Complete Projects"
-              light={parsedQuery?.status === 'complete'}
+              light={parsedQuery?.status !== 'complete'}
               className=" px-3"
             />
           </div>
@@ -242,6 +248,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
       contentClass="py-6 pl-21 pr-6"
     >
       <Table
+        showSorterTooltip={false}
         onTableChange={({ sorter }) => sort(sorter)}
         size="small"
         className="p-6 bg-white rounded-lg shadow"
