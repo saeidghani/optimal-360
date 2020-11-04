@@ -145,6 +145,7 @@ const OrganizationsStaff = ({ fetchOrganizationsStaffs, loading }) => {
         onTableChange={({ sorter }) => sort(sorter)}
         size="middle"
         className="p-6 bg-white rounded-lg shadow"
+        selectedRowKeys={selectedRows?.map((el) => el.key)}
         loading={loading}
         columns={columns}
         dataSource={dataSource}
