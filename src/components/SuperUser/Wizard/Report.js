@@ -224,17 +224,22 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
                         )
                       }
                       textNode={
-                        <p className="antgray-100 text-xs leading-4 ml-8 whitespace-no-wrap">
+                        <p className="text-antgray-100 text-xs leading-4 ml-8 whitespace-no-wrap">
                           Report content:
                         </p>
                       }
                     />
                   </div>
 
-                  {Object.entries(values[reportType] || {}).map(([key, value]) => {
+                  {Object.entries(values[reportType] || {}).map(([key, value], i) => {
                     return LABELS[key] ? (
                       // eslint-disable-next-line react/jsx-indent
-                      <div key={key} className="col-span-6 py-5 px-8.3 flex flex-row items-center">
+                      <div
+                        key={key}
+                        className={`col-span-6 py-5 px-8.3 flex flex-row items-center ${
+                          i > 0 && 'border-b border-antgray-900'
+                        }`}
+                      >
                         <Checkbox
                           className="flex flex-row items-center"
                           onChange={(newVal) => {
@@ -246,7 +251,7 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
                           }}
                           checked={value}
                           textNode={
-                            <p className="antgray-100 text-xs leading-4 ml-8 whitespace-no-wrap">
+                            <p className="text-body text-xs leading-4 ml-8 whitespace-no-wrap">
                               {LABELS[key]}
                             </p>
                           }
@@ -256,14 +261,14 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
                   })}
                 </div>
 
-                <div className="flex flex-wrap">
+                <div className="flex flex-col pl-8 pr-10">
                   <TextEditor
                     wrapperClassName="w-full mt-16"
                     value={values[reportType]?.competencyModelTemplate}
                     onChange={(val) => {
                       const newValues = { ...values };
 
-                      if (newValues[reportType]) {
+                      if (newValues[reportType] && formRef?.current) {
                         newValues[reportType].competencyModelTemplate = val;
 
                         formRef.current.setValues({ ...newValues });
@@ -278,35 +283,53 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
 
                   <p className="w-full mt-12 text-base font-medium">Additional Report Setting:</p>
 
-                  <Checkbox
-                    className="flex flex-row items-center py-5"
-                    checked={!!values[reportType]?.includePreviousResults}
-                    onChange={(val) => {
-                      const newValues = { ...values };
+                  <div className="flex flex-row items-center">
+                    <Checkbox
+                      className="flex flex-row items-center py-5"
+                      checked={!!values[reportType]?.includePreviousResults}
+                      onChange={(val) => {
+                        const newValues = { ...values };
 
-                      newValues[reportType].includePreviousResults = val;
+                        newValues[reportType].includePreviousResults = val;
 
-                      formRef.current.setValues({ ...newValues });
-                    }}
-                    textNode={<p>Include Previous Results Data</p>}
-                  />
+                        formRef.current.setValues({ ...newValues });
+                      }}
+                      textNode={
+                        <p
+                          className={`text-heading font-medium ${
+                            !values[reportType]?.includePreviousResults && 'opacity-30'
+                          }`}
+                        >
+                          Include Previous Results Data
+                        </p>
+                      }
+                    />
 
-                  <Checkbox
-                    className="flex flex-row items-center py-5"
-                    checked={!!values[reportType]?.includeMissionCriticalData}
-                    onChange={(val) => {
-                      const newValues = { ...values };
+                    <Checkbox
+                      className="flex flex-row items-center py-5"
+                      checked={!!values[reportType]?.includeMissionCriticalData}
+                      onChange={(val) => {
+                        const newValues = { ...values };
 
-                      newValues[reportType].includeMissionCriticalData = val;
+                        newValues[reportType].includeMissionCriticalData = val;
 
-                      formRef.current.setValues({ ...newValues });
-                    }}
-                    textNode={<p>Include Mission Critical Data</p>}
-                  />
-                </div>
+                        formRef.current.setValues({ ...newValues });
+                      }}
+                      textNode={
+                        <p
+                          className={`text-heading font-medium ${
+                            !values[reportType]?.includeMissionCriticalData && 'opacity-30'
+                          }`}
+                        >
+                          Include Mission Critical Data
+                        </p>
+                      }
+                    />
+                  </div>
 
-                <div className="pt-23.5 pb-22 flex justify-end pr-33">
-                  <Button className="w-24.5 h-9.5" onClick={handleSubmit} text="Submit" />
+                  <div className="pt-23.5 pb-22 flex justify-end">
+                    <Button className="w-24.5 h-9.5" onClick={handleSubmit} text="Submit" />
+                  </div>
                 </div>
               </Form>
             )}

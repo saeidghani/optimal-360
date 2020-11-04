@@ -380,11 +380,6 @@
   border-color: #1890ff;
 }
 
-.ant-checkbox-checked .ant-checkbox-inner {
-  background-color: #1890ff;
-  border-color: #1890ff;
-}
-
 .c-loading {
   .ant-modal-content {
     background-color: transparent;
@@ -744,15 +739,17 @@
   border-color: #1890ff;
 }
 
-.ant-checkbox-checked .ant-checkbox-inner {
-  background-color: #1890ff;
-  border-color: #1890ff;
-}
+.ant-checkbox {
+  top: 0 !important;
 
-.ant-checkbox-disabled {
   .ant-checkbox-inner {
-    border: 1px solid #d9d9d9 !important;
-    background-color: #fff !important;
+    border: 1px solid #d9d9d9;
+    background-color: #fff;
+  }
+
+  &.ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #1890ff !important;
+    border-color: #1890ff !important;
   }
 }
 
@@ -994,8 +991,4 @@
       border-right: 0 !important;
     }
   }
-}
-
-.ant-checkbox {
-  top: 0 !important;
 }
