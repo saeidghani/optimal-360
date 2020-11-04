@@ -11,7 +11,7 @@ import Button from '../../Common/Button';
 
 const SetAdmin = ({ loading, setAdmin, fetchAdmin, clientAdmin }) => {
   const schema = yup.object({
-    email: yup.string().email('email is not valid').required('email feild is required'),
+    email: yup.string().email('email is not valid').required('email field is required'),
     password: yup
       .string()
       .min(8, 'password must  be at least 8 characters long')

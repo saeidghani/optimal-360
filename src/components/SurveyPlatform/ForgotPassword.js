@@ -10,7 +10,7 @@ import AuthLayout from './Helper/AuthLayout';
 
 const ForgotPassword = ({ loading, forgotPassword }) => {
   const schema = yup.object({
-    email: yup.string().email('email is not valid').required('email feild is required'),
+    email: yup.string().email('email is not valid').required('email field is required'),
   });
 
   return (
