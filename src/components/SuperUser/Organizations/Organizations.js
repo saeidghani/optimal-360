@@ -133,6 +133,7 @@ const Organizations = ({ fetchOrganizations, loading }) => {
         size="middle"
         className="p-6 bg-white rounded-lg shadow"
         loading={loading}
+        selectedRowKeys={selectedRows?.map((el) => el.key)}
         columns={columns}
         dataSource={dataSource}
         renderHeader={renderHeader}
