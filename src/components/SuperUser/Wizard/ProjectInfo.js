@@ -93,11 +93,15 @@ const ProjectInfo = ({
                 }}
                 extrainfoLink="#"
                 placeholder="Name of Organization"
-                options={organizations.map(({ name, id }) => ({
-                  label: name,
-                  value: name,
-                  id,
-                }))}
+                options={
+                  organizations?.data?.length > 0
+                    ? organizations.data.map(({ name, id }) => ({
+                        label: name,
+                        value: name,
+                        id,
+                      }))
+                    : []
+                }
                 onChange={(txt) => {
                   setFieldValue('organization', txt);
                   setQuery({ oq: txt });
@@ -129,12 +133,16 @@ const ProjectInfo = ({
                 }}
                 extrainfoLink="#"
                 placeholder="Search"
-                options={surveyGroups.map(({ name, id }) => ({
-                  label: name,
-                  value: name,
-                  id,
-                  key: id,
-                }))}
+                options={
+                  surveyGroups?.length > 0
+                    ? surveyGroups.map(({ name, id }) => ({
+                        label: name,
+                        value: name,
+                        id,
+                        key: id,
+                      }))
+                    : []
+                }
                 onChange={(txt) => setQuery({ sq: txt })}
                 value={parsedQuery.sq}
                 errorMessage={touched.surveyGroup && errors.surveyGroup}
@@ -181,8 +189,16 @@ ProjectInfo.propTypes = {
   fetchOrganizations: PropTypes.func.isRequired,
   fetchSurveyGroups: PropTypes.func.isRequired,
   createProject: PropTypes.func.isRequired,
-  organizations: PropTypes.arrayOf(PropTypes.object).isRequired,
+  organizations: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.object),
+  }),
   surveyGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
+
+ProjectInfo.defaultProps = {
+  organizations: {
+    data: [],
+  },
 };
 
 export default ProjectInfo;
