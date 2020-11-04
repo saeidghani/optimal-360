@@ -10,6 +10,7 @@ export default {
     selectedTemplate: '',
     surveyIntro: '',
     surveyQuestions: '',
+    reports: '',
   },
 
   effects: (dispatch) => ({
@@ -126,6 +127,30 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+
+    async fetchReports(surveyGroupId) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `super-user/wizard/survey-groups/${surveyGroupId}/reports`,
+        });
+
+        await this.fetchReports_reducer(res?.data?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async setReports({ surveyGroupId, ...payload }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: `super-user/wizard/survey-groups/${surveyGroupId}/reports`,
+          data: payload,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
   }),
 
   reducers: {
@@ -152,6 +177,11 @@ export default {
     fetchSurveyQuestions_reducer: (state, payload) => ({
       ...state,
       surveyQuestions: payload,
+    }),
+
+    fetchReports_reducer: (state, payload) => ({
+      ...state,
+      reports: payload,
     }),
   },
 };
