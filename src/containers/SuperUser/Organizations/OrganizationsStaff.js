@@ -7,40 +7,40 @@ import Layout from '../../../components/SuperUser/Organizations/OrganizationsSta
 class OrganizationsStaff extends Component {
   state = {};
 
-  fetchOrganizationsStaffs = async (data) => {
-    const { fetchOrganizationsStaffs } = this.props;
+  fetchOrganizationsStaff = async (data) => {
+    const { fetchOrganizationsStaff } = this.props;
 
-    return fetchOrganizationsStaffs({ ...data });
+    return fetchOrganizationsStaff({ ...data });
   };
 
   render() {
-    const { loading, staffs } = this.props;
+    const { loading, staff } = this.props;
 
     return (<Layout
-      fetchOrganizationsStaffs={this.fetchOrganizationsStaffs}
-      staffs={staffs}
+      fetchOrganizationsStaff={this.fetchOrganizationsStaff}
+      staff={staff}
       loading={loading}
     />);
   }
 }
 
 OrganizationsStaff.propTypes = {
-  fetchOrganizationsStaffs: PropTypes.func.isRequired,
+  fetchOrganizationsStaff: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
-  staffs: PropTypes.shape({}),
+  staff: PropTypes.shape({}),
 };
 
 OrganizationsStaff.defaultProps = {
-  staffs: {},
+  staff: {},
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
-  staffs: state.organizations?.staffs || {},
+  staff: state.organizations?.staff || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchOrganizationsStaffs: dispatch.organizations.fetchOrganizationsStaffs,
+  fetchOrganizationsStaff: dispatch.organizations.fetchOrganizationsStaff,
 
 });
 

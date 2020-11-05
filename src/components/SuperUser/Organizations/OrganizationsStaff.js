@@ -1,41 +1,31 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import budgetLogo from '../../../assets/images/budget-logo.jpg';
+import { useHistory, useParams } from 'react-router-dom';
+import { useQuery } from '../../../hooks';
 
 import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 
-import { useQuery } from '../../../hooks/useQuery';
-import { useHistory, useParams } from 'react-router-dom';
+import budgetLogo from '../../../assets/images/budget-logo.jpg';
 
-const OrganizationsStaff = ({ staffs, fetchOrganizationsStaffs, loading }) => {
+const OrganizationsStaff = ({ staff, fetchOrganizationsStaff, loading }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const { organizationId } = useParams();
 
-  const [selectedRows, setSelectedRows] = React.useState([]);
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
 
   const pageNumber = parsedQuery?.page_number;
 
   React.useEffect(() => {
-    const fetch = async () => {
-      const newQuery = query || '?page_size=10&page_number=1';
-      await fetchOrganizationsStaffs({ organizationId, query: newQuery });
-    };
-    fetch();
-  }, [fetchOrganizationsStaffs, query]);
+    const newQuery = query || '?page_size=10&page_number=1';
+    fetchOrganizationsStaff({ organizationId, query: newQuery });
+  }, [fetchOrganizationsStaff, query]);
 
   const renderHeader = React.useCallback(
     () => {
-      return selectedRows && selectedRows?.length > 0 ? (
-        <div className="flex flex-row items-center">
-          <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
-        </div>
-      ) : (
+      return (
         <div className="flex flex-row justify-between items-center">
           <div className="inline-flex flex-row items-center justify-between">
             <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
@@ -68,7 +58,7 @@ const OrganizationsStaff = ({ staffs, fetchOrganizationsStaffs, loading }) => {
       );
     },
     // eslint-disable-next-line
-    [loading, selectedRows.length],
+    [loading],
   );
   const getSortOrder = (key) => {
     return parsedQuery?.sort?.includes(key)
@@ -126,9 +116,9 @@ const OrganizationsStaff = ({ staffs, fetchOrganizationsStaffs, loading }) => {
   };
 
   const dataSource = React.useMemo(
-    () => (staffs?.data || []).map((item) => ({ ...item, key: `${item.id}` })),
+    () => (staff?.data || []).map((item) => ({ ...item, key: `${item.id}` })),
     // eslint-disable-next-line
-    [staffs.timeStamp],
+    [staff.timeStamp],
   );
   return (
     <MainLayout
@@ -141,9 +131,9 @@ const OrganizationsStaff = ({ staffs, fetchOrganizationsStaffs, loading }) => {
         onTableChange={({ sorter }) => sort(sorter)}
         size="middle"
         className="p-6 bg-white rounded-lg shadow"
-        selectedRowKeys={selectedRows?.map((el) => el.key)}
         loading={loading}
         columns={columns}
+        rowSelection={false}
         dataSource={dataSource}
         renderHeader={renderHeader}
         onPageSizeChange={(size) => {
@@ -154,32 +144,30 @@ const OrganizationsStaff = ({ staffs, fetchOrganizationsStaffs, loading }) => {
         pageNumber={pageNumber * 1}
         // eslint-disable-next-line camelcase
         onPaginationChange={(page_number, page_size) => {
-          setSelectedRows([]);
           setQuery({
             page_size,
             page_number,
           });
         }}
-        onRowSelectionChange={(_, rows) => {
-          setSelectedRows(rows);
-        }}
-        totalRecordSize={staffs?.metaData?.pagination?.totalRecords * 1}
+        totalRecordSize={staff?.metaData?.pagination?.totalRecords * 1}
       />
     </MainLayout>
   );
 };
 
 OrganizationsStaff.propTypes = {
-  fetchOrganizationsStaffs: PropTypes.func.isRequired,
-  staffs: PropTypes.shape({
+  fetchOrganizationsStaff: PropTypes.func.isRequired,
+  staff: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
+    // eslint-disable-next-line react/forbid-prop-types
+    metaData: PropTypes.any,
     timeStamp: PropTypes.number,
   }),
   loading: PropTypes.bool.isRequired,
 };
 
 OrganizationsStaff.defaultProps = {
-  staffs: {
+  staff: {
     data: [],
     timeStamp: '',
   },

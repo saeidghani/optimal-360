@@ -6,7 +6,7 @@ export default {
 
   state: {
     organizations: '',
-    staffs: '',
+    staff: '',
   },
 
   effects: (dispatch) => ({
@@ -36,14 +36,14 @@ export default {
         dispatch.util.alert,
       );
     },
-    async fetchOrganizationsStaffs({ organizationId, query }) {
+    async fetchOrganizationsStaff({ organizationId, query }) {
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
           url: `/super-user/organizations/${organizationId}/staffs${query}`,
         });
 
-        await this.fetchOrganizationsStaffs_reducer(res?.data);
+        await this.fetchOrganizationsStaff_reducer(res?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
@@ -69,9 +69,9 @@ export default {
       ...state,
       organizations: payload,
     }),
-    fetchOrganizationsStaffs_reducer: (state, payload) => ({
+    fetchOrganizationsStaff_reducer: (state, payload) => ({
       ...state,
-      staffs: payload,
+      staff: payload,
     }),
   },
 };

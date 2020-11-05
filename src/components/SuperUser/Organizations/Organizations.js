@@ -1,38 +1,29 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
-import organizationImg from '../../../assets/images/survey-groups-organization.jpg';
+import { useHistory } from 'react-router-dom';
+import { useQuery } from '../../../hooks';
 
 import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import SearchBox from '../../Common/SearchBox';
 
-import { useQuery } from '../../../hooks/useQuery';
-import { useHistory } from 'react-router-dom';
+import organizationImg from '../../../assets/images/survey-groups-organization.jpg';
 
 const Organizations = ({ organizations, fetchOrganizations, loading }) => {
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
 
-  const [selectedRows, setSelectedRows] = React.useState([]);
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const pageNumber = parsedQuery?.page_number;
 
   React.useEffect(() => {
-    const fetch = async () => {
-      const newQuery = query || '?page_size=10&page_number=1';
-      await fetchOrganizations(newQuery);
-    };
-    fetch();
+    const newQuery = query || '?page_size=10&page_number=1';
+    fetchOrganizations(newQuery);
   }, [fetchOrganizations, query]);
 
   const renderHeader = React.useCallback(() => {
-    return selectedRows && selectedRows?.length > 0 ? (
-      <div className="flex flex-row items-center">
-        <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
-      </div>
-    ) : (
+    return (
       <div className="flex flex-row justify-end items-center">
         <div className="flex flex-row">
           <SearchBox
@@ -55,7 +46,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
         </div>
       </div>
     );
-  }, [loading, selectedRows.length]);
+  }, [loading]);
 
   const getSortOrder = (key) => {
     return parsedQuery?.sort?.includes(key)
@@ -129,8 +120,8 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
         size="middle"
         className="p-6 bg-white rounded-lg shadow"
         loading={loading}
-        selectedRowKeys={selectedRows?.map((el) => el.key)}
         columns={columns}
+        rowSelection={false}
         dataSource={dataSource}
         renderHeader={renderHeader}
         onPageSizeChange={(size) => {
@@ -141,14 +132,10 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
         pageNumber={pageNumber * 1}
         // eslint-disable-next-line camelcase
         onPaginationChange={(page_number, page_size) => {
-          setSelectedRows([]);
           setQuery({
             page_size,
             page_number,
           });
-        }}
-        onRowSelectionChange={(_, rows) => {
-          setSelectedRows(rows);
         }}
         totalRecordSize={organizations?.metaData?.pagination?.totalRecords * 1}
       />
@@ -160,6 +147,8 @@ Organizations.propTypes = {
   fetchOrganizations: PropTypes.func.isRequired,
   organizations: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
+    // eslint-disable-next-line react/forbid-prop-types
+    metaData: PropTypes.any,
     timeStamp: PropTypes.number,
   }),
   loading: PropTypes.bool.isRequired,
