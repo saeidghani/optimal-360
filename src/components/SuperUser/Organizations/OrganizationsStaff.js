@@ -159,8 +159,13 @@ OrganizationsStaff.propTypes = {
   fetchOrganizationsStaff: PropTypes.func.isRequired,
   staff: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
-    // eslint-disable-next-line react/forbid-prop-types
-    metaData: PropTypes.any,
+    metaData: PropTypes.shape({
+      pagination: PropTypes.shape({
+        pageNumber: PropTypes.string,
+        pageSize: PropTypes.string,
+        totalRecords: PropTypes.string,
+      }),
+    }),
     timeStamp: PropTypes.number,
   }),
   loading: PropTypes.bool.isRequired,

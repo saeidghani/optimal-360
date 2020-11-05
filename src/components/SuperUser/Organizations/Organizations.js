@@ -8,7 +8,7 @@ import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import SearchBox from '../../Common/SearchBox';
 
-import config from '../../../constants/config';
+import { fetchFullURL } from '../../../lib/utils';
 
 const Organizations = ({ organizations, fetchOrganizations, loading }) => {
   const history = useHistory();
@@ -72,7 +72,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
         return (
           <div className="inline-flex flex-row items-center justify-between">
             <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
-              <img className="rounded-full w-10 h-10" src={config.mediaBaseUrl + logo} alt="" />
+              <img className="rounded-full w-10 h-10" src={fetchFullURL(logo)} alt="logo" />
             </div>
             <p className="text-sm font-normal ml-2">{organization}</p>
           </div>
@@ -149,8 +149,13 @@ Organizations.propTypes = {
   fetchOrganizations: PropTypes.func.isRequired,
   organizations: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
-    // eslint-disable-next-line react/forbid-prop-types
-    metaData: PropTypes.any,
+    metaData: PropTypes.shape({
+      pagination: PropTypes.shape({
+        pageNumber: PropTypes.string,
+        pageSize: PropTypes.string,
+        totalRecords: PropTypes.string,
+      }),
+    }),
     timeStamp: PropTypes.number,
   }),
   loading: PropTypes.bool.isRequired,
