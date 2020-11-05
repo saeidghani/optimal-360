@@ -114,7 +114,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
     <MainLayout
       titleClass="mb-6 mt-3"
       hasBreadCrumb
-      title="Super User"
+      title="Organizations"
       contentClass="py-6 pl-21 pr-6"
     >
       <Table
