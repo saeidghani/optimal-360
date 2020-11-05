@@ -35,56 +35,8 @@ const TextEditor = ({
   label,
 }) => {
   const editorRef = React.useRef();
-  // React.useLayoutEffect(() => {
-  //   // replacing toolbar icons in the most idiotic way possible
-  //   const data = [
-  //     { newElement: '<span>Styles</span>', selector: '[data-command="textStyle"]' },
-  //     // { newElement: '<span>Format</span>', selector: '[data-command="formatBlock"]' },
-  //     // { newElement: renderToString(<OrderedListOutlined />), selector: '[data-command="OL"]' },
-  //     // { newElement: renderToString(<UnorderedListOutlined />), selector: '[data-command="UL"]' },
-  //   ];
-
-  //   data.forEach(({ selector, newElement }) => {
-  //     const el = document.querySelector(selector);
-  //     el.classList.add('se-btn-select');
-  //     // const children = el.childNodes;
-  //     // children[0].remove();
-  //     // el.insertAdjacentHTML('afterbegin', newElement);
-  //   });
-  // }, []);
 
   const content = editorValue || template;
-
-  React.useMemo(() => {
-    let tempVal = content;
-
-    Object.entries(data || {}).forEach(([key, value]) => {
-      const replaceWith =
-        key === 'table'
-          ? `
-          <table>
-            <tbody>
-              <tr>
-                ${value.header.map((txt) => `<td><div>${txt}</div></td>`)}
-              </tr>
-    
-              ${value.body.map(
-                (arr1) => `<tr>${arr1.map((arr2) => `<td><div>${arr2}</div></td>`)}</tr>`,
-              )}
-            </tbody>
-          </table>
-          `
-          : value;
-
-      tempVal = tempVal.replaceAll(`!${key.toUpperCase()}!`, replaceWith).replaceAll(',', '');
-    });
-
-    if (editorRef?.current?.editor) {
-      editorRef.current.editor.onload(() => editorRef.current.editor.setContents(tempVal));
-    }
-
-    // eslint-disable-next-line
-  }, [JSON.stringify(data), editorValue, template]);
 
   return (
     <div className={`c-text-editor ${wrapperClassName}`}>
@@ -99,7 +51,7 @@ const TextEditor = ({
         placeholder={placeholder}
         resizingBar={false}
         setOptions={{
-          height: 300,
+          height: 170,
           icons: {
             undo: renderToString(<UndoOutlined />),
             redo: renderToString(<RedoOutlined />),

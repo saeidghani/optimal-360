@@ -7,7 +7,7 @@ export default {
   state: {
     surveySettings: '',
     emailSettings: '',
-    selectedTemplate: '',
+    selectedTemplates: '',
     surveyIntro: '',
     surveyQuestions: '',
     reports: '',
@@ -74,9 +74,9 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
-    async setSelectedEmailTemplate(template) {
+    async setSelectedEmailTemplates(template) {
       return actionWapper(async () => {
-        this.setSelectedEmailTemplate_reducer(template);
+        this.setSelectedEmailTemplates_reducer(template);
       }, dispatch.util.errorHandler);
     },
 
@@ -166,9 +166,9 @@ export default {
       emailSettings: payload,
     }),
 
-    setSelectedEmailTemplate_reducer: (state, payload) => ({
+    setSelectedEmailTemplates_reducer: (state, payload) => ({
       ...state,
-      selectedTemplate: payload,
+      selectedTemplates: payload,
     }),
 
     fetchSurveyIntro_reducer: (state, payload) => ({
