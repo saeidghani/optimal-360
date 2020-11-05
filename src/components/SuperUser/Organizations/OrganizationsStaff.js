@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '../../../hooks';
@@ -8,8 +8,17 @@ import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 
 import budgetLogo from '../../../assets/images/budget-logo.jpg';
+import { fetchFullURL } from "../../../lib/utils";
 
-const OrganizationsStaff = ({ staff, fetchOrganizationsStaff, loading }) => {
+const OrganizationsStaff = (
+  {
+    organizationsInfo,
+    staff,
+    fetchOrganizationsInfo,
+    fetchOrganizationsStaff,
+    loading,
+  },
+) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const { organizationId } = useParams();
@@ -18,10 +27,14 @@ const OrganizationsStaff = ({ staff, fetchOrganizationsStaff, loading }) => {
 
   const pageNumber = parsedQuery?.page_number;
 
-  React.useEffect(() => {
+  useEffect(() => {
     const newQuery = query || '?page_size=10&page_number=1';
     fetchOrganizationsStaff({ organizationId, query: newQuery });
   }, [fetchOrganizationsStaff, query]);
+
+  useEffect(() => {
+    fetchOrganizationsInfo(organizationId);
+  }, []);
 
   const renderHeader = React.useCallback(
     () => {
@@ -29,9 +42,9 @@ const OrganizationsStaff = ({ staff, fetchOrganizationsStaff, loading }) => {
         <div className="flex flex-row justify-between items-center">
           <div className="inline-flex flex-row items-center justify-between">
             <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
-              <img className="w-8 h-4 absolute top-0 mt-3 mx-1" src={budgetLogo} alt="" />
+              <img className="rounded-full w-10 h-10" src={fetchFullURL(organizationsInfo.logo)} alt="logo" />
             </div>
-            <p className="text-sm font-normal ml-2">Sime Darby Group Berhad</p>
+            <p className="text-sm font-normal ml-2">{organizationsInfo.name}</p>
           </div>
           <div className="flex flex-row">
             <Button
@@ -124,7 +137,7 @@ const OrganizationsStaff = ({ staff, fetchOrganizationsStaff, loading }) => {
     <MainLayout
       titleClass="mb-6 mt-3"
       hasBreadCrumb
-      title="Organizations"
+      title="Staff"
       contentClass="py-6 pl-21 pr-6"
     >
       <Table
@@ -157,6 +170,7 @@ const OrganizationsStaff = ({ staff, fetchOrganizationsStaff, loading }) => {
 
 OrganizationsStaff.propTypes = {
   fetchOrganizationsStaff: PropTypes.func.isRequired,
+  fetchOrganizationsInfo: PropTypes.func.isRequired,
   staff: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
     metaData: PropTypes.shape({
@@ -168,6 +182,11 @@ OrganizationsStaff.propTypes = {
     }),
     timeStamp: PropTypes.number,
   }),
+  organizationsInfo: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    logo: PropTypes.string,
+  }),
   loading: PropTypes.bool.isRequired,
 };
 
@@ -176,6 +195,7 @@ OrganizationsStaff.defaultProps = {
     data: [],
     timeStamp: '',
   },
+  organizationsInfo: {},
 };
 
 export default OrganizationsStaff;
