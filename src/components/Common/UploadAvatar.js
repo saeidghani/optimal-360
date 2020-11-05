@@ -5,7 +5,7 @@ import { Spin } from 'antd';
 
 import { fetchFullURL } from '../../lib/utils';
 
-const UploadAvatar = ({ setFile, file, originalFile, wrapperClassName }) => {
+const UploadAvatar = ({ setFile, file, originalFile, wrapperClassName, title, pickedTitle }) => {
   const [preview, setPreview] = React.useState('');
   const [loading, setLoading] = React.useState(false);
 
@@ -44,7 +44,7 @@ const UploadAvatar = ({ setFile, file, originalFile, wrapperClassName }) => {
       )}
 
       <div className={`${loading && 'hidden'} flex flex-row items-center justify-center`}>
-        {!imageSource && <span className="mx-4 text-black-500 text-lg">Client picture</span>}
+        {!imageSource && <span className={`${title && 'mx-4'} text-black-500 text-lg`}>{title}</span>}
 
         <label htmlFor="Client-picture">
           {imageSource ? (
@@ -75,7 +75,7 @@ const UploadAvatar = ({ setFile, file, originalFile, wrapperClassName }) => {
 
         {imageSource && (
           <div className="ml-4 ">
-            <div> Client picture </div>
+            <div>{pickedTitle}</div>
 
             <div
               className="text-red-500 text-xs cursor-pointer "
@@ -102,6 +102,8 @@ UploadAvatar.propTypes = {
   originalFile: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   file: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   wrapperClassName: PropTypes.string,
+  title: PropTypes.string,
+  pickedTitle: PropTypes.string,
   setFile: PropTypes.func.isRequired,
 };
 
@@ -109,6 +111,8 @@ UploadAvatar.defaultProps = {
   file: '',
   originalFile: null,
   wrapperClassName: '',
+  title: 'Client picture',
+  pickedTitle: 'Client picture',
 };
 
 export default UploadAvatar;

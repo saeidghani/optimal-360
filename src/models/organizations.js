@@ -6,7 +6,7 @@ export default {
 
   state: {
     organizations: '',
-    organizationStaffs: '',
+    staff: '',
   },
 
   effects: (dispatch) => ({
@@ -24,10 +24,12 @@ export default {
 
     async addNewOrganization({ name, logo }) {
       return actionWapper(async () => {
+          const path = await dispatch.util.uploadImage(logo);
+
           const res = await axios({
             method: 'post',
             url: '/super-user/organizations',
-            data: { name, logo },
+            data: { name, logo: path },
           });
 
           return res;
@@ -36,19 +38,18 @@ export default {
         dispatch.util.alert,
       );
     },
-    async fetchOrganizationsStaffs({ organizationId, query }) {
+    async fetchOrganizationsStaff({ organizationId, query }) {
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
           url: `/super-user/organizations/${organizationId}/staffs${query}`,
         });
 
-        await this.fetchOrganizationsStaffs_reducer(res?.data);
+        await this.fetchOrganizationsStaff_reducer(res?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
     async addNewOrganizationStaff({ organizationId, name, email, password }) {
-      console.log(organizationId, name, email, password);
       return actionWapper(async () => {
           const res = await axios({
             method: 'post',
@@ -69,9 +70,9 @@ export default {
       ...state,
       organizations: payload,
     }),
-    fetchOrganizationsStaffs_reducer: (state, payload) => ({
+    fetchOrganizationsStaff_reducer: (state, payload) => ({
       ...state,
-      organizationStaffs: payload,
+      staff: payload,
     }),
   },
 };

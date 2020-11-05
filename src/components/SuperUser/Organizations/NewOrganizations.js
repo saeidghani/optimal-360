@@ -58,14 +58,13 @@ const NewOrganizations = ({ addNewOrganization, loading }) => {
                   wrapperClassName="mb-2"
                   errorMessage={touched.name && errors.name}
                 />
-                <Button text="Upload Logo" textSize="xs" type="gray" className="px-2" />
-                {/* TODO: using UploadAvatar component  */}
-                {/* <UploadAvatar */}
-                {/*   wrapperClassName="mt-14 mb-3" */}
-                {/*   type="gray" */}
-                {/*   onFileUpload={(file) => setFieldValue('logo', file)} */}
-                {/*   image={values.logo} */}
-                {/* /> */}
+                <UploadAvatar
+                  wrapperClassName="mt-14 mb-3"
+                  title=""
+                  pickedTitle="Organization picture"
+                  setFile={(file) => setFieldValue('logo', file)}
+                  file={values.clientPicture}
+                />
                 <Button
                   loading={loading}
                   onClick={handleSubmit}
