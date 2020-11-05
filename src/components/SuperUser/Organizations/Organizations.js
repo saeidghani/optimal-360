@@ -8,7 +8,7 @@ import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import SearchBox from '../../Common/SearchBox';
 
-import organizationImg from '../../../assets/images/survey-groups-organization.jpg';
+import config from '../../../constants/config';
 
 const Organizations = ({ organizations, fetchOrganizations, loading }) => {
   const history = useHistory();
@@ -68,14 +68,16 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
       title: 'Organization',
       sorter: true,
       sortOrder: getSortOrder('name'),
-      render: (organization) => (
-        <div className="inline-flex flex-row items-center justify-between">
-          <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
-            <img className="w-8 h-4 absolute top-0 mt-3 ml-1" src={organizationImg} alt="" />
+      render: (organization, { logo }) => {
+        return (
+          <div className="inline-flex flex-row items-center justify-between">
+            <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
+              <img className="rounded-full w-10 h-10" src={config.mediaBaseUrl + logo} alt="" />
+            </div>
+            <p className="text-sm font-normal ml-2">{organization}</p>
           </div>
-          <p className="text-sm font-normal ml-2">{organization}</p>
-        </div>
-      ),
+        );
+      },
     },
     {
       key: 'project',

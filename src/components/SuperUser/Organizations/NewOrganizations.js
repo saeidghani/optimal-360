@@ -60,6 +60,8 @@ const NewOrganizations = ({ addNewOrganization, loading }) => {
                 />
                 <UploadAvatar
                   wrapperClassName="mt-14 mb-3"
+                  title=""
+                  pickedTitle="Organization picture"
                   setFile={(file) => setFieldValue('logo', file)}
                   file={values.clientPicture}
                 />
