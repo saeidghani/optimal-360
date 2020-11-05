@@ -50,6 +50,7 @@ const UploadAvatar = ({ setFile, file, originalFile, wrapperClassName }) => {
           {imageSource ? (
             <img
               onLoad={() => setLoading(false)}
+              onError={() => setLoading(false)}
               className="rounded-full border h-20 w-20"
               src={imageSource}
               alt="uploaded file"

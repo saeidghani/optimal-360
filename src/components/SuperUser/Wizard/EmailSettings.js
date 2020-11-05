@@ -22,13 +22,7 @@ import Button from '../../Common/Button';
 import Loading from '../../Common/Loading';
 import Table from '../../Common/Table';
 
-const EmailSettings = ({
-  emailSettings,
-  fetchEmailSettings,
-  setEmailSettings,
-  setSelectedEmailTemplate,
-  loading,
-}) => {
+const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, loading }) => {
   const formRef = React.useRef();
   const schema = yup.object({
     emailSettings: yup.array(
@@ -60,40 +54,32 @@ const EmailSettings = ({
       name: 'Rater verification email',
       date: '',
       copyToAdmin: false,
-      template: TEMPLATES.raterVerificationEmail,
     },
     {
       id: '2',
       name: 'Login email (self)',
       date: '',
       copyToAdmin: false,
-      template: TEMPLATES.loginEmailSelf,
     },
     {
       id: '3',
       name: 'Login email (others)',
       date: '',
       copyToAdmin: false,
-      template: TEMPLATES.loginEmailOthers,
     },
     {
       id: '4',
       name: 'Reminder email (1)',
       date: '',
       copyToAdmin: false,
-      template: TEMPLATES.reminderEmails,
     },
     {
       id: '5',
       name: 'Reminder email (2)',
       date: '',
       copyToAdmin: false,
-      template: TEMPLATES.reminderEmails,
     },
   ];
-
-  const templateKey = `${projectId}-${surveyGroupId}`;
-  const TEMPLATE = JSON.parse(localStorage.getItem(templateKey)) || {};
 
   React.useEffect(() => {
     if (
@@ -149,10 +135,9 @@ const EmailSettings = ({
       title: '',
       dataIndex: 'button',
       key: 'button ',
-      render: (_, { template, name }) => (
+      render: (_, { name }) => (
         <Button
           onClick={async () => {
-            await setSelectedEmailTemplate(template);
             history.push(
               `/super-user/new-project/email-settings/${name
                 .toLowerCase()
@@ -183,7 +168,6 @@ const EmailSettings = ({
         ...itemToPush,
         key: itemToPush.id.toString(),
         selected: !!itemToPush.date,
-        template: TEMPLATE[pascalize(itemToPush.name)] || itemToPush.template,
       });
     });
 
@@ -192,19 +176,14 @@ const EmailSettings = ({
     // eslint-disable-next-line
   }, [emailSettingsStringified]);
 
-  const updateArr = (refArray, id, key, newVal) => {
-    return refArray.map((el) => {
-      if (el.id === id) {
-        return key === 'selected' && newVal === false
-          ? { id, key: id, name: el.name, date: '', copyToAdmin: false, template: '' }
-          : {
-              ...el,
-              [key]: newVal,
-            };
-      }
+  const updateForm = (id, key, newVal) => {
+    const newValues = { ...formRef?.current?.values };
 
-      return el;
-    });
+    const updateIndex = newValues.emailSettings.findIndex((el) => el.id * 1 === id * 1);
+    newValues.emailSettings[updateIndex][key] = newVal;
+
+    formRef.current.setValues({ ...newValues });
+    localStorage.setItem(`emailSettings-${surveyGroupId}`, JSON.stringify(newValues.emailSettings));
   };
 
   React.useEffect(() => {
@@ -265,7 +244,9 @@ const EmailSettings = ({
             innerRef={formRef}
             enableReinitialize
             initialValues={{
-              emailSettings: _emailSettings,
+              emailSettings: localStorage.getItem(`emailSettings-${surveyGroupId}`)
+                ? JSON.parse(localStorage.getItem(`emailSettings-${surveyGroupId}`))
+                : _emailSettings,
             }}
             validationSchema={schema}
             onSubmit={async (values) => {
@@ -277,16 +258,23 @@ const EmailSettings = ({
                     ...el,
                     id: el.id * 1,
                     date: moment(el.date).toISOString(),
+                    template:
+                      localStorage.getItem(`${pascalize(el.name)}-${projectId}-${surveyGroupId}`) ||
+                      TEMPLATES[pascalize(el.name)],
                   });
                 }
               });
 
-              try {
-                if (chosenTemplates.length > 0) {
+              console.log({ chosenTemplates });
+
+              if (chosenTemplates.length > 0) {
+                try {
                   await setEmailSettings({ emailSettings: chosenTemplates, surveyGroupId });
-                }
-              } catch (error) {
-              } finally {
+                  localStorage.clear();
+                  history.push(`/super-user/new-project/survey-intro${search}`);
+                } catch (error) {}
+              } else {
+                localStorage.clear();
                 history.push(`/super-user/new-project/survey-intro${search}`);
               }
             }}
@@ -305,10 +293,7 @@ const EmailSettings = ({
                           onChange={(val) => {
                             formRef.current.setTouched({ emailSettings: true });
 
-                            setFieldValue(
-                              'emailSettings',
-                              updateArr(values.emailSettings, id, 'selected', val),
-                            );
+                            updateForm(id, 'selected', val);
                           }}
                           textNode={
                             <p className=" whitespace-no-wrap ml-3 text-sm text-secondary">
@@ -320,12 +305,7 @@ const EmailSettings = ({
 
                       <div className="col-span-2">
                         <Calendar
-                          onChange={(val) =>
-                            setFieldValue(
-                              'emailSettings',
-                              updateArr(values.emailSettings, id, 'date', val),
-                            )
-                          }
+                          onChange={(val) => updateForm(id, 'date', val)}
                           value={date}
                           disabled={!selected}
                           icon={!date}
@@ -337,12 +317,7 @@ const EmailSettings = ({
                         <Checkbox
                           checked={!!copyToAdmin}
                           className="flex flex-row items-center"
-                          onChange={(val) =>
-                            setFieldValue(
-                              'emailSettings',
-                              updateArr(values.emailSettings, id, 'copyToAdmin', val),
-                            )
-                          }
+                          onChange={(val) => updateForm(id, 'copyToAdmin', val)}
                           disabled={!selected}
                           textNode={
                             <p
@@ -435,7 +410,6 @@ const EmailSettings = ({
 
 EmailSettings.propTypes = {
   fetchEmailSettings: PropTypes.func.isRequired,
-  setSelectedEmailTemplate: PropTypes.func.isRequired,
   setEmailSettings: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   emailSettings: PropTypes.arrayOf(PropTypes.object),
