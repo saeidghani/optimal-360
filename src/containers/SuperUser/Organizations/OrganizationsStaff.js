@@ -14,19 +14,29 @@ class OrganizationsStaff extends Component {
   };
 
   render() {
-    const { loading } = this.props;
+    const { loading, staffs } = this.props;
 
-    return <Layout fetchOrganizationsStaffs={this.fetchOrganizationsStaffs} loading={loading} />;
+    return (<Layout
+      fetchOrganizationsStaffs={this.fetchOrganizationsStaffs}
+      staffs={staffs}
+      loading={loading}
+    />);
   }
 }
 
 OrganizationsStaff.propTypes = {
   fetchOrganizationsStaffs: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
+  staffs: PropTypes.shape({}),
+};
+
+OrganizationsStaff.defaultProps = {
+  staffs: {},
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
+  staffs: state.organizations?.staffs || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({

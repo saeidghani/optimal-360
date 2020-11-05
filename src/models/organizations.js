@@ -6,7 +6,7 @@ export default {
 
   state: {
     organizations: '',
-    organizationStaffs: '',
+    staffs: '',
   },
 
   effects: (dispatch) => ({
@@ -71,7 +71,7 @@ export default {
     }),
     fetchOrganizationsStaffs_reducer: (state, payload) => ({
       ...state,
-      organizationStaffs: payload,
+      staffs: payload,
     }),
   },
 };

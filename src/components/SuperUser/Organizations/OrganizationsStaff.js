@@ -11,27 +11,23 @@ import Button from '../../Common/Button';
 import { useQuery } from '../../../hooks/useQuery';
 import { useHistory, useParams } from 'react-router-dom';
 
-const OrganizationsStaff = ({ fetchOrganizationsStaffs, loading }) => {
+const OrganizationsStaff = ({ staffs, fetchOrganizationsStaffs, loading }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const { organizationId } = useParams();
 
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
-  const [organizationStaffs, setOrganizationStaffs] = React.useState({});
 
   const pageNumber = parsedQuery?.page_number;
 
   React.useEffect(() => {
     const fetch = async () => {
       const newQuery = query || '?page_size=10&page_number=1';
-      fetchOrganizationsStaffs({ organizationId, query: newQuery }).then((response) => {
-        console.log(response);
-        setOrganizationStaffs(response?.data);
-      });
+      await fetchOrganizationsStaffs({ organizationId, query: newQuery });
     };
     fetch();
-  }, [query]);
+  }, [fetchOrganizationsStaffs, query]);
 
   const renderHeader = React.useCallback(
     () => {
@@ -130,9 +126,9 @@ const OrganizationsStaff = ({ fetchOrganizationsStaffs, loading }) => {
   };
 
   const dataSource = React.useMemo(
-    () => (organizationStaffs?.data || []).map((item) => ({ ...item, key: `${item.id}` })),
+    () => (staffs?.data || []).map((item) => ({ ...item, key: `${item.id}` })),
     // eslint-disable-next-line
-    [organizationStaffs.timeStamp],
+    [staffs.timeStamp],
   );
   return (
     <MainLayout
@@ -167,7 +163,7 @@ const OrganizationsStaff = ({ fetchOrganizationsStaffs, loading }) => {
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
         }}
-        totalRecordSize={organizationStaffs?.metaData?.pagination?.totalRecords * 1}
+        totalRecordSize={staffs?.metaData?.pagination?.totalRecords * 1}
       />
     </MainLayout>
   );
@@ -175,9 +171,18 @@ const OrganizationsStaff = ({ fetchOrganizationsStaffs, loading }) => {
 
 OrganizationsStaff.propTypes = {
   fetchOrganizationsStaffs: PropTypes.func.isRequired,
+  staffs: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.object),
+    timeStamp: PropTypes.number,
+  }),
   loading: PropTypes.bool.isRequired,
 };
 
-OrganizationsStaff.defaultProps = {};
+OrganizationsStaff.defaultProps = {
+  staffs: {
+    data: [],
+    timeStamp: '',
+  },
+};
 
 export default OrganizationsStaff;

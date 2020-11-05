@@ -14,19 +14,30 @@ class Organizations extends Component {
   };
 
   render() {
-    const { loading } = this.props;
-
-    return <Layout loading={loading} fetchOrganizations={this.fetchOrganizations} />;
+    const { loading, organizations } = this.props;
+    return (
+      <Layout
+        loading={loading}
+        organizations={organizations}
+        fetchOrganizations={this.fetchOrganizations}
+      />
+    );
   }
 }
 
 Organizations.propTypes = {
   fetchOrganizations: PropTypes.func.isRequired,
+  organizations: PropTypes.shape({}),
   loading: PropTypes.bool.isRequired,
+};
+
+Organizations.defaultProps = {
+  organizations: [],
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
+  organizations: state.organizations?.organizations || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({

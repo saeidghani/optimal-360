@@ -11,25 +11,21 @@ import SearchBox from '../../Common/SearchBox';
 import { useQuery } from '../../../hooks/useQuery';
 import { useHistory } from 'react-router-dom';
 
-const Organizations = ({ fetchOrganizations, loading }) => {
+const Organizations = ({ organizations, fetchOrganizations, loading }) => {
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
 
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
-  const [organizations, setOrganizations] = React.useState({});
-
   const pageNumber = parsedQuery?.page_number;
 
   React.useEffect(() => {
     const fetch = async () => {
       const newQuery = query || '?page_size=10&page_number=1';
-      fetchOrganizations(newQuery).then((response) => {
-        setOrganizations(response?.data);
-      });
+      await fetchOrganizations(newQuery);
     };
     fetch();
-  }, [query]);
+  }, [fetchOrganizations, query]);
 
   const renderHeader = React.useCallback(() => {
     return selectedRows && selectedRows?.length > 0 ? (
@@ -162,9 +158,18 @@ const Organizations = ({ fetchOrganizations, loading }) => {
 
 Organizations.propTypes = {
   fetchOrganizations: PropTypes.func.isRequired,
+  organizations: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.object),
+    timeStamp: PropTypes.number,
+  }),
   loading: PropTypes.bool.isRequired,
 };
 
-Organizations.defaultProps = {};
+Organizations.defaultProps = {
+  organizations: {
+    data: [],
+    timeStamp: '',
+  },
+};
 
 export default Organizations;
