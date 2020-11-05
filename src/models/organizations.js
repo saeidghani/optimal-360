@@ -24,10 +24,12 @@ export default {
 
     async addNewOrganization({ name, logo }) {
       return actionWapper(async () => {
+          const path = await dispatch.util.uploadImage(logo);
+
           const res = await axios({
             method: 'post',
             url: '/super-user/organizations',
-            data: { name, logo },
+            data: { name, logo: path },
           });
 
           return res;
@@ -48,7 +50,6 @@ export default {
       }, dispatch.util.errorHandler);
     },
     async addNewOrganizationStaff({ organizationId, name, email, password }) {
-      console.log(organizationId, name, email, password);
       return actionWapper(async () => {
           const res = await axios({
             method: 'post',
