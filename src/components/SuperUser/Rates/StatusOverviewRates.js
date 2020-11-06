@@ -9,20 +9,8 @@ import Tabs from '../../Common/Tabs';
 import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
 
-const RatersStatusOverview = ({ loading }) => {
+const StatusOverviewRates = ({ loading }) => {
   const [pageSize] = React.useState(10);
-  const dropDownOptions = [
-    { title: 'Top Leadership', value: 1 },
-    { title: 'Top Leadership2', value: 2 },
-    { title: 'Top Leadership3', value: 3 },
-  ];
-
-  const tabOptions = [
-    { title: 'Status Overview', key: 1 },
-    { title: 'Status Details', key: 2 },
-    { title: 'Rater Email', key: 3 },
-    { title: 'Results', key: 4 },
-  ];
 
   const columns = React.useMemo(() => [
     {
@@ -231,20 +219,7 @@ const RatersStatusOverview = ({ loading }) => {
   ];
 
   return (
-    <MainLayout contentClass="pl-21 pr-6 py-4" title="Super User" titleClass="my-2" hasBreadCrumb>
-      <div className="grid grid-cols-7 mt-3 mb-10">
-        <h2 className="col-start-1 my-6 pt-6 pl-3 font-medium text-base">Survey Group</h2>
-        <Dropdown
-          className="c-autocomplete col-start-1 w-full"
-          showSearch
-          value={1}
-          type="gray"
-          options={dropDownOptions}
-        />
-      </div>
-      <div>
-        <Tabs className="c-tabs-class" tabOptions={tabOptions} />
-      </div>
+    <>
       <div className="bg-white p-6 pr-32 rounded-md my-6">
         <div className="flex justify-between items-center mb-5">
           <h1 className="font-medium text-2xl">Overall Completion Rate</h1>
@@ -359,14 +334,15 @@ const RatersStatusOverview = ({ loading }) => {
         pageNumber={1}
         rowSelection={false}
       />
-    </MainLayout>
+
+    </>
   );
 };
 
-RatersStatusOverview.propTypes = {
+StatusOverviewRates.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
-RatersStatusOverview.defaultProps = {};
+StatusOverviewRates.defaultProps = {};
 
-export default RatersStatusOverview;
+export default StatusOverviewRates;

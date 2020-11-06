@@ -1,82 +1,84 @@
-import React from 'react';
+import React, { useState } from 'react';
 // import PropTypes from 'prop-types';
 
 import PropTypes from 'prop-types';
-import MainLayout from '../../Common/Layout';
-import Dropdown from '../../Common/Dropdown';
-import Tabs from '../../Common/Tabs';
+import { Tabs } from 'antd';
 import Table from '../../Common/Table';
 import Progress from '../../Common/Progress';
 import Button from '../../Common/Button';
 import Modal from '../../Common/Modal';
 import Checkbox from '../../Common/Checkbox';
+import SearchBox from '../../Common/SearchBox';
 
-const RatersStatusRaterEmail = ({ loading }) => {
+const ResultRates = ({ loading }) => {
   const [pageSize] = React.useState(10);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [visible, setVisible] = React.useState(false);
+  const [selectedTab, setSelectedTab] = useState('1');
+  const { TabPane } = Tabs;
 
-  const dropDownOptions = [
-    { title: 'Top Leadership', value: 1 },
-    { title: 'Top Leadership2', value: 2 },
-    { title: 'Top Leadership3', value: 3 },
-  ];
-
-  const primaryTabOptions = [
-    { title: 'Status Overview', key: 1 },
-    { title: 'Status Details', key: 2 },
-    { title: 'Rater Email', key: 3 },
-    { title: 'Results', key: 4 },
-  ];
-
-  const secondaryTabOptions = [
-    { title: 'Individual Report', key: 1 },
-    { title: 'RateeGroup Report', key: 2 },
-  ];
+  function tabChangeCallback(key) {
+    setSelectedTab(key);
+  }
 
   const renderHeader = React.useCallback(() => {
-    return selectedRows && selectedRows?.length > 0 ? (
-      <div className="flex flex-row items-center">
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Force generate report"
-          textClassName="mr-2"
-          className="ml-3"
-          onClick={() => setVisible(true)}
-        />
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Download report"
-          textClassName="mr-2"
-          className="ml-3"
-          icon="FileExcelOutlined"
-          iconPosition="right"
-          onClick={() => setVisible(true)}
-        />
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Export results to Excel"
-          textClassName="mr-2"
-          className="ml-3"
-          icon="FileExcelOutlined"
-          iconPosition="right"
-          onClick={() => setVisible(true)}
-        />
-        <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
-      </div>
-    ) : (
-      <div className="inline-flex justify-start">
-        <div>
-          <Tabs className="c-tabs-class" defaultActiveKey={1} tabOptions={secondaryTabOptions} />
+    return (
+      (selectedRows && selectedRows?.length > 0) ? (
+        <div className="flex flex-row items-center">
+          <Button
+            size="middle"
+            textSize="xs"
+            text="Force generate report"
+            textClassName="mr-2"
+            className="ml-3"
+            onClick={() => setVisible(true)}
+          />
+          <Button
+            size="middle"
+            textSize="xs"
+            text="Download report"
+            textClassName="mr-2"
+            className="ml-3"
+            icon="FileExcelOutlined"
+            iconPosition="right"
+            onClick={() => setVisible(true)}
+          />
+          <Button
+            size="middle"
+            textSize="xs"
+            text="Export results to Excel"
+            textClassName="mr-2"
+            className="ml-3"
+            icon="FileExcelOutlined"
+            iconPosition="right"
+            onClick={() => setVisible(true)}
+          />
+          <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
         </div>
-      </div>
+      ) : (
+        <div className="flex justify-between items-center">
+          <Tabs defaultActiveKey={selectedTab} onChange={tabChangeCallback} className="relative contents">
+            <TabPane tab="Individual Report" key="1" />
+            <TabPane tab="Group Report" key="2" />
+          </Tabs>
+          <div className="flex flex-row ">
+            <SearchBox className="text-xs" placeholder="SEARCH" loading={loading} />
+            <Button
+              size="middle"
+              textSize="xs"
+              text="Add Data"
+              textClassName="mr-2"
+              className="ml-3"
+              type="gray"
+              onClick={() => setVisible(true)}
+            />
+          </div>
+        </div>
+      )
     );
   }, [loading, selectedRows.length]);
 
-  const columns = React.useMemo(() => [
+  const individualColumns = React.useMemo(() => [
     {
       key: 'id',
       title: 'ID',
@@ -170,11 +172,57 @@ const RatersStatusRaterEmail = ({ loading }) => {
       ),
     },
   ]);
+  const groupColumns = React.useMemo(() => [
+    {
+      key: 'groupReport',
+      title: 'Group Report',
+      width: 200,
+      sorter: true,
+    },
+    {
+      key: 'reportAvailable',
+      title: 'Report Available',
+      width: 200,
+      render: (status) => (
+        <div className="w-16 flex-inline items-center justify-start">
+          <span className={status === 'No' && 'text-red'}>{status}</span>
+        </div>
+      ),
+    },
+  ]);
 
-  const dataSource = [
+  const groupDataSource = [
     {
-      key: '1',
-      id: '1000001',
+      key: '111',
+      groupReport: 'Top Leadership',
+      reportAvailable: 'No',
+    },
+    {
+      key: '112',
+      groupReport: 'Top Leadership',
+      reportAvailable: 'Yes',
+    },
+    {
+      key: '113',
+      groupReport: 'Top Leadership',
+      reportAvailable: 'No',
+    },
+    {
+      key: '114',
+      groupReport: 'Top Leadership',
+      reportAvailable: 'Yes',
+    },
+    {
+      key: '115',
+      groupReport: 'Top Leadership',
+      reportAvailable: 'No',
+    },
+  ];
+
+  const IndividualDataSource = [
+    {
+      key: '221',
+      id: '1002520001',
       ratee: 'Katherine Kan',
       status: 100,
       responsesSubmitted: '2/10',
@@ -184,8 +232,8 @@ const RatersStatusRaterEmail = ({ loading }) => {
       reportAvailable: 'No',
     },
     {
-      key: '2',
-      id: '1000001',
+      key: '222',
+      id: '1002420001',
       ratee: 'Katherine Kan',
       status: 100,
       responsesSubmitted: '2/10',
@@ -195,8 +243,8 @@ const RatersStatusRaterEmail = ({ loading }) => {
       reportAvailable: 'No',
     },
     {
-      key: '3',
-      id: '1000001',
+      key: '223',
+      id: '1002230001',
       ratee: 'Katherine Kan',
       status: 100,
       responsesSubmitted: '2/10',
@@ -206,8 +254,8 @@ const RatersStatusRaterEmail = ({ loading }) => {
       reportAvailable: 'No',
     },
     {
-      key: '4',
-      id: '1000001',
+      key: '224',
+      id: '1002200201',
       ratee: 'Katherine Kan',
       status: 100,
       responsesSubmitted: '2/10',
@@ -217,8 +265,8 @@ const RatersStatusRaterEmail = ({ loading }) => {
       reportAvailable: 'No',
     },
     {
-      key: '5',
-      id: '1000001',
+      key: '225',
+      id: '1002200011',
       ratee: 'Katherine Kan',
       status: 100,
       responsesSubmitted: '2/10',
@@ -230,7 +278,7 @@ const RatersStatusRaterEmail = ({ loading }) => {
   ];
 
   return (
-    <MainLayout contentClass="pl-21 pr-6 py-4" title="Super User" titleClass="my-2" hasBreadCrumb>
+    <>
       <Modal
         okText="Discard These Settings"
         cancelText="Cancel"
@@ -278,25 +326,13 @@ const RatersStatusRaterEmail = ({ loading }) => {
           </div>
         </div>
       </Modal>
-      <div className="grid grid-cols-7 mt-3 mb-10">
-        <h2 className="col-start-1 my-6 pt-6 pl-3 font-medium text-base">Survey Group</h2>
-        <Dropdown
-          className="c-autocomplete col-start-1 w-full"
-          showSearch
-          value={1}
-          type="gray"
-          options={dropDownOptions}
-        />
-      </div>
-      <div>
-        <Tabs className="c-tabs-class" defaultActiveKey={4} tabOptions={primaryTabOptions} />
-      </div>
+
       <Table
         size="middle"
         className="p-6 mt-5 bg-white rounded-lg shadow"
         loading={loading}
-        columns={columns}
-        dataSource={dataSource}
+        columns={selectedTab === '1' ? individualColumns : groupColumns}
+        dataSource={selectedTab === '1' ? IndividualDataSource : groupDataSource}
         pageSize={pageSize * 1}
         pageNumber={1}
         renderHeader={renderHeader}
@@ -305,14 +341,14 @@ const RatersStatusRaterEmail = ({ loading }) => {
           setSelectedRows(rows);
         }}
       />
-    </MainLayout>
+    </>
   );
 };
 
-RatersStatusRaterEmail.propTypes = {
+ResultRates.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
-RatersStatusRaterEmail.defaultProps = {};
+ResultRates.defaultProps = {};
 
-export default RatersStatusRaterEmail;
+export default ResultRates;
