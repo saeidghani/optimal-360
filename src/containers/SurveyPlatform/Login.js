@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
+import { parse } from '../../hooks/useQuery';
+
 import Layout from '../../components/SurveyPlatform/Login';
 
 class _Login extends Component {
@@ -10,14 +12,13 @@ class _Login extends Component {
   login = async ({ email, password, rememberMe }) => {
     const { login } = this.props;
 
+    const { prevPath } = parse(window.location.search);
+
+    const newPath = prevPath || '/super-user/projects?status=active&page_size=10&page_number=1';
+
     await login({ username: email, password, rememberMe });
 
-    // TODO : replace 4000 with a constatnt from config file
-    setTimeout(
-      () =>
-        window.location.replace('/super-user/projects?status=active&page_size=10&page_number=1'),
-      4000,
-    );
+    setTimeout(() => window.location.replace(newPath), 4000);
   };
 
   render() {

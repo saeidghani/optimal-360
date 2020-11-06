@@ -9,7 +9,7 @@ import Tabs from '../Common/Tabs';
 import Progress from '../Common/Progress';
 import Table from '../Common/Table';
 
-const Individual = ({ loading }) => {
+const RateeGroup = ({ loading }) => {
   const [pageSize] = React.useState(10);
 
   const dropdownOptions = [
@@ -20,15 +20,15 @@ const Individual = ({ loading }) => {
 
   const secondaryTabOptions = [
     { title: 'Individual', key: '1' },
-    { title: 'Group', key: '2' },
+    { title: 'RateeGroup', key: '2' },
     { title: 'All', key: '3' },
   ];
 
   const renderHeader = React.useCallback((size) => {
     return (
       <div className={`${size !== 'sm' ? 'hidden md:flex justify-between items-center' : ''}`}>
-        <div className="md:w-3/2">
-          <Tabs className="md:c-tabs-class" defaultActiveKey="1" tabOptions={secondaryTabOptions} />
+        <div className="md:w-1/2">
+          <Tabs className="md:c-tabs-class" defaultActiveKey="2" tabOptions={secondaryTabOptions} />
         </div>
         <div className="flex">
           <span className="text-xs md:text-sm">Survey Ends on 28 Sep</span>
@@ -120,7 +120,7 @@ const Individual = ({ loading }) => {
         <div className="col-start-1 col-span-6 text-base text-body mb-3">Select Project</div>
         <Dropdown
           className="c-autocomplete col-start-1 col-span-12 md:col-start-1 md:col-span-4 lg:col-start-1
-          lg:col-span-3 w-full"
+           lg:col-span-3 w-full"
           showSearch
           value={1}
           type="gray"
@@ -164,7 +164,7 @@ const Individual = ({ loading }) => {
       <div className="block md:ml-auto mt-5 md:mb-24">
         <Button
           className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none
-           w-full md:w-auto md:border-none"
+          w-full md:w-auto md:border-none"
           text="Submit All"
         />
       </div>
@@ -172,10 +172,10 @@ const Individual = ({ loading }) => {
   );
 };
 
-Individual.propTypes = {
+RateeGroup.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
-Individual.defaultProps = {};
+RateeGroup.defaultProps = {};
 
-export default Individual;
+export default RateeGroup;

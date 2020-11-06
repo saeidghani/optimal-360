@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 
 import Layout from './Helper/Layout';
 
@@ -13,6 +15,8 @@ import graphIcon from '../../assets/images/graph-icon.svg';
 const AllRatees = ({ loading }) => {
   const [pageSize] = React.useState(10);
 
+  const history = useHistory();
+
   const dropdownOptions = [
     { title: 'Top Leadership', value: 1 },
     { title: 'Top Leadership2', value: 2 },
@@ -24,6 +28,16 @@ const AllRatees = ({ loading }) => {
     { title: 'Group', key: '2' },
     { title: 'All', key: '3' },
   ];
+
+  const renderHeader = React.useCallback((size) => {
+    return (
+      <div className={`${size !== 'sm' ? 'hidden md:flex' : ''}`}>
+        <div className="md:w-3/4">
+          <Tabs className="md:c-tabs-class" defaultActiveKey="1" tabOptions={secondaryTabOptions} />
+        </div>
+      </div>
+    );
+  }, []);
 
   const columns = React.useMemo(() => [
     {
@@ -87,8 +101,18 @@ const AllRatees = ({ loading }) => {
   ];
 
   const ExtraDetails = () => (
-    <div className="flex flex-col items-center mt-10">
-      <div className="flex items-center">
+    <div className="flex flex-col items-center mt-6">
+      <div className="flex">
+        <span className="text-xs md:text-sm">Survey Ends on 28 Sep</span>
+        <span className="mx-1 md:mx-3">|</span>
+        <div className="text-xs md:text-sm">
+          <span className="mr-1 text-purple-500">29d</span>
+          <span>and</span>
+          <span className="mx-1 text-purple-500">2h</span>
+          <span>left</span>
+        </div>
+      </div>
+      <div className="flex items-center mt-10 md:mt-20">
         <span className="relative w-10 h-10 rounded-full bg-primary-500">
           <img src={graphIcon} className="absolute bottom-0 pb-3 pl-2 w-3/4" alt="" />
         </span>
@@ -100,97 +124,87 @@ const AllRatees = ({ loading }) => {
     </div>
   );
 
+  const handleContinue = () => {
+    history.push('/survey-platform/managers/individual');
+  };
+
   return (
     <Layout>
       <div className="grid grid-cols-12 mb-10 mt-8">
         <div className="col-start-1 col-span-6 text-base text-body mb-3">Select Project</div>
         <Dropdown
-          className="c-autocomplete col-start-1 col-span-12 md:col-start-1 md:col-span-4 lg:col-start-1 lg:col-span-3 w-full"
+          className="c-autocomplete col-start-1 col-span-12 md:col-start-1 md:col-span-4 lg:col-start-1
+          lg:col-span-3 w-full"
           showSearch
           value={1}
           type="gray"
           options={dropdownOptions}
         />
       </div>
-      <div className="flex flex-col items-center md:flex-row">
+      <div className="flex items-center overflow-auto">
         <Button
-          className="mr-1 bg-white border-list-border shadow-none"
+          className="mr-1 bg-white border-list-border shadow-none px-2 md:px-4"
           textClassName="text-heading"
           textSize="sm"
           text="Top Leadership"
         />
         <Button
-          className="mr-1 bg-white border-list-border shadow-none px-8 md:px-1"
+          className="mr-1 bg-white border-list-border shadow-none px-6 md:px-4"
           textClassName="text-heading text-primary-500"
           textSize="sm"
           text="Managers"
         />
         <Button
-          className="mr-1 bg-white border-list-border shadow-none"
+          className="mr-1 bg-white border-list-border shadow-none px-2 md:px-4"
           textClassName="text-heading"
           textSize="sm"
           text="High Potentials"
         />
       </div>
-      <div className="p-4 md:p-6 bg-white rounded-lg shadow">
-        <div className="flex flex-col justify-between items-center md:flex-row">
-          <div className="md:w-1/2">
-            <Tabs
-              className="md:c-tabs-class"
-              defaultActiveKey="3"
-              tabOptions={secondaryTabOptions}
-            />
-          </div>
-          <div className="flex">
-            <span className="text-xs md:text-sm">Survey Ends on 28 Sep</span>
-            <span className="mx-1 md:mx-3">|</span>
-            <div className="text-xs md:text-sm">
-              <span className="mr-1 text-purple-500">29d</span>
-              <span>and</span>
-              <span className="mx-1 text-purple-500">2h</span>
-              <span>left</span>
-            </div>
-          </div>
-        </div>
-        <div className="md:hidden">
-          <ExtraDetails />
-        </div>
-        <Table
-          size="middle"
-          className="hidden md:grid grid-cols-6"
-          tableClassName="col-span-4"
-          loading={loading}
-          columns={columns}
-          dataSource={dataSource}
-          pageSize={pageSize * 1}
-          pageNumber={1}
-          rowSelection={false}
-          extraDetails={<ExtraDetails />}
-          extraDetailsClassName="row-start-1 col-start-5 col-span-2"
-          paginationClassName="row-start-2 col-start-1 col-span-6"
-        />
+      <div className="bg-white rounded-lg shadow p-4 mt-6 md:hidden">
+        {renderHeader('sm')}
+        <ExtraDetails />
       </div>
       <Table
         size="middle"
-        className="md:hidden mt-5"
+        className="p-4 mt-8 bg-white rounded-lg shadow md:grid grid-cols-8 md:mt-0 md:p-6"
+        tableClassName="col-span-5 overflow-auto"
         loading={loading}
         columns={columns}
         dataSource={dataSource}
         pageSize={pageSize * 1}
         pageNumber={1}
         rowSelection={false}
-        paginationClassName="flex flex-col justify-between h-24"
+        title={renderHeader}
+        extraDetails={
+          <div className="hidden md:block">
+            <ExtraDetails />
+          </div>
+        }
+        extraDetailsClassName="row-start-1 col-start-6 col-span-3"
+        paginationClassName="row-start-2 col-start-1 col-span-8 flex flex-col h-24 justify-between
+         md:flex-row"
       />
-
-      <div className="md:flex justify-end mb-40 md:mb-24">
-        <Button className="mt-6 mr-3 w-full md:w-auto" text="Continue Rating" />
+      <div className="md:flex justify-end">
         <Button
-          className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
+          onClick={handleContinue}
+          className="mt-6 mr-3 w-full md:w-auto"
+          text="Continue Rating"
+        />
+        <Button
+          className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none
+          w-full md:w-auto md:border-none"
           text="Submit All"
         />
       </div>
     </Layout>
   );
 };
+
+AllRatees.propTypes = {
+  loading: PropTypes.bool.isRequired,
+};
+
+AllRatees.defaultProps = {};
 
 export default AllRatees;

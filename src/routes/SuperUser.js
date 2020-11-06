@@ -118,7 +118,7 @@ const Routes = ({ match }) => (
       component={GroupReports}
     />
 
-    <PrivateRoute path={`${match.path}/projects/survey-groups`} exact component={Organizations} />
+    <CustomRoute path={`${match.path}/projects/survey-groups`} exact component={Organizations} />
     <PrivateRoute path={`${match.path}/organizations/users`} exact component={OrganizationsUsers} />
     <PrivateRoute
       path={`${match.path}/organizations/new-staff`}
