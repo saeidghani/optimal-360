@@ -27,6 +27,10 @@ const OrganizationsStaff = (
 
   const pageNumber = parsedQuery?.page_number;
 
+  const handleEdit = (staffId) => {
+    history.push(`/super-user/organizations/${organizationId}/staff/${staffId}/update`);
+  };
+
   useEffect(() => {
     const newQuery = query || '?page_size=10&page_number=1';
     fetchOrganizationsStaff({ organizationId, query: newQuery });
@@ -104,13 +108,16 @@ const OrganizationsStaff = (
       {
         key: 'edit',
         title: '',
-        render: () => (
+        render: (_, { id }) => (
           <Button
             size="middle"
             className="text-primary-500"
             type="link"
             icon="EditOutlined"
             iconPosition="right"
+            onClick={() => {
+              handleEdit(id);
+            }}
           />
 
         ),
