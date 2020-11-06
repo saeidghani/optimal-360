@@ -10,9 +10,9 @@ import StatusDetailsRates from './StatusDetailsRates';
 import EmailRates from './EmailRates';
 import ResultRates from './ResultRates';
 
-const RatersStatusOverview = ({ loading }) => {
+const Rates = ({ loading, fetchStatusDetails, statusDetails }) => {
   const { TabPane } = Tabs;
-  const [selectedTab, setSelectedTab] = useState('4');
+  const [selectedTab, setSelectedTab] = useState('2');
   const dropDownOptions = [
     { title: 'Top Leadership', value: 1 },
     { title: 'Top Leadership2', value: 2 },
@@ -28,7 +28,13 @@ const RatersStatusOverview = ({ loading }) => {
     {
       title: 'Status Details',
       key: '2',
-      component: <StatusDetailsRates loading={loading} />,
+      component: (
+        <StatusDetailsRates
+          fetchStatusDetails={fetchStatusDetails}
+          statusDetails={statusDetails}
+          loading={loading}
+        />
+      ),
     },
     {
       title: 'Rates Email',
@@ -69,10 +75,14 @@ const RatersStatusOverview = ({ loading }) => {
   );
 };
 
-RatersStatusOverview.propTypes = {
+Rates.propTypes = {
   loading: PropTypes.bool.isRequired,
+  statusDetails: PropTypes.shape({}),
+  fetchStatusDetails: PropTypes.func.isRequired,
 };
 
-RatersStatusOverview.defaultProps = {};
+Rates.defaultProps = {
+  statusDetails: {},
+};
 
-export default RatersStatusOverview;
+export default Rates;

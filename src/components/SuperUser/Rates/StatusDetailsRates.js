@@ -1,18 +1,22 @@
-import React from 'react';
-// import PropTypes from 'prop-types';
-
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import MainLayout from '../../Common/Layout';
-import Dropdown from '../../Common/Dropdown';
-import Tabs from '../../Common/Tabs';
+import { useQuery } from '../../../hooks';
+
 import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
 import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
 
-const StatusDetailsRates = ({ loading }) => {
-  const [pageSize] = React.useState(10);
+const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
+  const [parsedQuery, query, setQuery] = useQuery();
+  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const pageNumber = parsedQuery?.page_number;
+
+  useEffect(() => {
+    const newQuery = query || '?page_size=10&page_number=1';
+    fetchStatusDetails(newQuery);
+  }, [fetchStatusDetails, query]);
 
   const renderHeader = React.useCallback(() => {
     return selectedRows && selectedRows?.length > 0 ? (
@@ -90,101 +94,73 @@ const StatusDetailsRates = ({ loading }) => {
     );
   }, [loading, selectedRows.length]);
 
+  const getSortOrder = (key) => {
+    return parsedQuery?.sort?.includes(key)
+      ? parsedQuery?.sort?.[0] === '+'
+        ? 'ascend'
+        : 'descend'
+      : '';
+  };
+
   const columns = React.useMemo(() => [
     {
       key: 'raterName',
       title: 'Rates Name',
       width: 100,
       sorter: true,
+      sortOrder: getSortOrder('raterName'),
     },
     {
       key: 'raterEmail',
       title: 'Rates Email',
       width: 100,
       sorter: true,
+      sortOrder: getSortOrder('raterEmail'),
     },
     {
       key: 'rateeName',
       title: 'Ratee Name',
       width: 100,
       sorter: true,
+      sortOrder: getSortOrder('rateeName'),
       render: (num) => <span className="text-12px">{num}</span>,
     },
     {
-      key: 'raterGroup',
+      key: 'raterGroupName',
       title: 'Rates Group',
       width: 100,
+
     },
     {
       key: 'questionsAnswered',
       title: 'Questions Answered',
       width: 100,
+      render: (_, { totalAnswered, totalQuestions }) => (
+        <span>{`${totalAnswered}/${totalQuestions}`}</span>
+      ),
     },
     {
       key: 'status',
       title: <span className="text-center ml-2">Status</span>,
       width: 50,
-      render: () => (
+      render: (_, { totalAnswered, totalQuestions, raterSubmited }) => (
         <div className="w-16 flex-inline items-center justify-start">
           <Progress
             className="-mb-12 ml-auto"
-            subClassName="mb-12 pb-2"
-            status="sub"
-            percentage={100}
+            subClassName={`mb-12 pb-2 ${!raterSubmited && 'text-gray-800'}`}
+            status={raterSubmited && 'sub'}
+            percentage={parseInt((totalAnswered / totalQuestions) * 100, 10)}
           />
         </div>
       ),
     },
   ]);
 
-  const dataSource = [
-    {
-      key: '1',
-      raterName: 'Jean Luc Picard',
-      raterEmail: 'jtkirk@ufp.com',
-      rateeName: 'Katherine Janeway',
-      raterGroup: 'Manager',
-      questionsAnswered: '100/100',
-      status: '100%',
-    },
-    {
-      key: '2',
-      raterName: 'Jean Luc Picard',
-      raterEmail: 'jtkirk@ufp.com',
-      rateeName: 'Katherine Janeway',
-      raterGroup: 'Manager',
-      questionsAnswered: '100/100',
-      status: '100%',
-    },
-    {
-      key: '3',
-      raterName: 'Jean Luc Picard',
-      raterEmail: 'jtkirk@ufp.com',
-      rateeName: 'Katherine Janeway',
-      raterGroup: 'Manager',
-      questionsAnswered: '100/100',
-      status: '100%',
-    },
-    {
-      key: '4',
-      raterName: 'Jean Luc Picard',
-      raterEmail: 'jtkirk@ufp.com',
-      rateeName: 'Katherine Janeway',
-      raterGroup: 'Manager',
-      questionsAnswered: '100/100',
-      status: '100%',
-    },
-    {
-      key: '5',
-      raterName: 'Jean Luc Picard',
-      raterEmail: 'jtkirk@ufp.com',
-      rateeName: 'Katherine Janeway',
-      raterGroup: 'Manager',
-      questionsAnswered: '100/100',
-      status: '100%',
-    },
-  ];
-
+  const dataSource = React.useMemo(
+    () => (statusDetails?.data || []).map((item) => ({ ...item, key: `${item.id}` })),
+    // eslint-disable-next-line
+    [statusDetails.timeStamp],
+  );
   return (
     <Table
       size="middle"
@@ -192,21 +168,48 @@ const StatusDetailsRates = ({ loading }) => {
       loading={loading}
       columns={columns}
       dataSource={dataSource}
-      pageSize={pageSize * 1}
-      pageNumber={1}
       renderHeader={renderHeader}
+      onPageSizeChange={(size) => {
+        setPageSize(size);
+        setQuery({ page_size: size, page_number: 1 });
+      }}
+      pageSize={pageSize * 1}
+      pageNumber={pageNumber * 1}
+      // eslint-disable-next-line camelcase
+      onPaginationChange={(page_number, page_size) => {
+        setSelectedRows([]);
+        setQuery({
+          page_size,
+          page_number,
+        });
+      }}
       selectedRowKeys={selectedRows?.map((el) => el.key)}
       onRowSelectionChange={(_, rows) => {
         setSelectedRows(rows);
       }}
+      totalRecordSize={statusDetails?.metaData?.pagination?.totalRecords * 1}
     />
   );
 };
 
 StatusDetailsRates.propTypes = {
   loading: PropTypes.bool.isRequired,
+  fetchStatusDetails: PropTypes.func.isRequired,
+  statusDetails: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.object),
+    metaData: PropTypes.shape({
+      pagination: PropTypes.shape({
+        pageNumber: PropTypes.string,
+        pageSize: PropTypes.string,
+        totalRecords: PropTypes.string,
+      }),
+    }),
+    timeStamp: PropTypes.number,
+  }),
 };
 
-StatusDetailsRates.defaultProps = {};
+StatusDetailsRates.defaultProps = {
+  statusDetails: {},
+};
 
 export default StatusDetailsRates;
