@@ -4,6 +4,8 @@ import { useParams, useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import PropTypes from 'prop-types';
 
+import { generateNewPassword } from '../../../lib/utils';
+
 import MainLayout from '../../Common/Layout';
 import RadioGroup from '../../Common/RadioGroup';
 import Input from '../../Common/Input';
@@ -78,9 +80,12 @@ const SetAdmin = ({ loading, setAdmin, fetchAdmin, clientAdmin }) => {
                 extrainfoLink="#"
                 errorMessage={touched.password && errors.password}
                 wrapperClassName="c-min-w-form-input mb-6"
-                onExtraInfoLinkClick={() => {
-                  const randomPassword = Math.random().toString(36).slice(-8);
-                  setFieldValue('password', randomPassword);
+                onExtraInfoLinkClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+
+                  const newPassword = generateNewPassword();
+                  setFieldValue('password', newPassword);
                 }}
               />
 

@@ -8,19 +8,29 @@ const _BreadCrumb = ({ className }) => {
 
   const paths = pathname.split('/').slice(1) || [];
 
+  // const links = paths.map((el, i, arr) => {
+  //   if (i === 0) return '#';
+
+  //   if (Number.isInteger(el * 1)) return '#';
+
+  //   const link = `/${arr.slice(0, i + 1).join('/')}`;
+
+  //   return link;
+  // });
+
+  // console.log({ links, paths });
+
   return (
     <Breadcrumb separator="\" className={`capitalize ${className}`}>
       {/* eslint-disable-next-line no-unused-vars */}
       {paths.map((el, i, arr) => {
-        // const to = `/${arr.slice(0, i + 1).join('/')}`;
         const name = el.replace(/-/g, ' ');
 
         return (
           <Breadcrumb.Item key={i}>
             <Link
-              // TODO
-              // to={to}
               to="#"
+              // to={to}
             >
               {name}
             </Link>

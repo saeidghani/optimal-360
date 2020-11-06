@@ -101,12 +101,12 @@ const Models = ({ loading }) => {
             <div className="flex justify-end">
               <Button
                 className="flex items-center mr-3.5"
-                text="Add Cluster"
-                icon="PlusCircleOutlined"
-                textClassName="mr-2"
+                text="Edit Project"
+                // icon="PlusCircleOutlined"
+                // textClassName="mr-2"
                 size="middle"
                 textSize="md"
-                iconPosition="right"
+                // iconPosition="right"
                 type="gray"
               />
               <Button

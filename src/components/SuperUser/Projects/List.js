@@ -123,7 +123,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
               text="New Organization"
               type="gray"
               className="mx-3 px-3"
-              onClick={() => history.push('/super-user/organizations/users/new')}
+              onClick={() => history.push('/super-user/organizations/new')}
             />
             <Button
               onClick={() => history.push('/super-user/new-project/project-info')}

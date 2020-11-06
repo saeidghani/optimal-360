@@ -6,7 +6,7 @@ const { Step } = Steps;
 
 const _Steps = ({ className, currentPosition, size }) => (
   <Steps current={currentPosition} className={`c-step w-full ${className}`} size={size}>
-    {['Survey Setting', 'Email Sttings', 'Survay Intro', 'Survey Questions', 'Reports'].map(
+    {['Survey Setting', 'Email Sttings', 'Survey Intro', 'Survey Questions', 'Reports'].map(
       (el, i) => (
         <Step key={i} icon={<span>{i + 1}</span>} title={el} />
       ),

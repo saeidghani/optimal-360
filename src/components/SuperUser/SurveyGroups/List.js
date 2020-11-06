@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -10,9 +10,10 @@ import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import Tag from '../../Common/Tag';
 
-import { useQuery } from '../../../hooks/useQuery';
+import { useQuery, stringify } from '../../../hooks/useQuery';
 
 const SurveyGroups = ({ loading }) => {
+  const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
 
   // const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
@@ -84,6 +85,7 @@ const SurveyGroups = ({ loading }) => {
 
           <div className="flex flex-row items-center">
             <Button
+              onClick={() => history.push('/super-user/organizations/new')}
               size="middle"
               textSize="xs"
               text="New Organization"
@@ -91,7 +93,17 @@ const SurveyGroups = ({ loading }) => {
               className="ml-3"
             />
 
-            <Button size="middle" textSize="xs" text="Add Project" type="gray" className="ml-3" />
+            <Button
+              // onClick={() => history.push('/super-user/organizations/new')}
+              // icon="PlusCircleOutlined"
+              // iconPosition="right"
+              size="middle"
+              textSize="xs"
+              text="Edit Project"
+              // textClassName="mr-2"
+              type="gray"
+              className="ml-3"
+            />
           </div>
         </div>
       );
@@ -113,11 +125,11 @@ const SurveyGroups = ({ loading }) => {
       { key: 'id', title: 'ID', sorter: true, sortOrder: getSortOrder('id') },
       {
         key: 'name',
-        title: 'Survay RateeGroup',
+        title: 'Survey Group',
         render: (name) => (
           <Button
             className="pl-0"
-            // onClick={() => console.log(id)}
+            onClick={() => history.push('/super-user/participants/rates')}
             type="link"
             textSize="sm"
             text={name}
@@ -150,9 +162,12 @@ const SurveyGroups = ({ loading }) => {
       {
         key: 'id',
         width: 50,
-        render: (id) => (
+        render: (surveyGroupId, { project }) => (
           <Button
-            // onClick={ () => {}}
+            onClick={() => {
+              const params = stringify({ surveyGroupId, projectId: project.id });
+              history.push(`/super-user/new-project/survey-settings${params}`);
+            }}
             icon="EditOutlined"
             type="link"
             className="text-lg mr-7"

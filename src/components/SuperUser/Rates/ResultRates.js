@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-// import PropTypes from 'prop-types';
-
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
+
+import { useHistory } from 'react-router-dom';
+
 import Table from '../../Common/Table';
 import Progress from '../../Common/Progress';
 import Button from '../../Common/Button';
@@ -21,60 +22,64 @@ const ResultRates = ({ loading }) => {
     setSelectedTab(key);
   }
 
+  const history = useHistory();
+
   const renderHeader = React.useCallback(() => {
-    return (
-      (selectedRows && selectedRows?.length > 0) ? (
-        <div className="flex flex-row items-center">
+    return selectedRows && selectedRows?.length > 0 ? (
+      <div className="flex flex-row items-center">
+        <Button
+          size="middle"
+          textSize="xs"
+          text="Force generate report"
+          textClassName="mr-2"
+          className="ml-3"
+          onClick={() => setVisible(true)}
+        />
+        <Button
+          size="middle"
+          textSize="xs"
+          text="Download report"
+          textClassName="mr-2"
+          className="ml-3"
+          icon="FileExcelOutlined"
+          iconPosition="right"
+          onClick={() => setVisible(true)}
+        />
+        <Button
+          size="middle"
+          textSize="xs"
+          text="Export results to Excel"
+          textClassName="mr-2"
+          className="ml-3"
+          icon="FileExcelOutlined"
+          iconPosition="right"
+          onClick={() => setVisible(true)}
+        />
+        <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
+      </div>
+    ) : (
+      <div className="flex justify-between items-center">
+        <Tabs
+          defaultActiveKey={selectedTab}
+          onChange={tabChangeCallback}
+          className="relative contents"
+        >
+          <TabPane tab="Individual Report" key="1" />
+          <TabPane tab="Group Report" key="2" />
+        </Tabs>
+        <div className="flex flex-row ">
+          <SearchBox className="text-xs" placeholder="SEARCH" loading={loading} />
           <Button
             size="middle"
             textSize="xs"
-            text="Force generate report"
+            text="Add Data"
             textClassName="mr-2"
             className="ml-3"
-            onClick={() => setVisible(true)}
+            type="gray"
+            onClick={() => history.push('/super-user/new-project/reports/group-reports')}
           />
-          <Button
-            size="middle"
-            textSize="xs"
-            text="Download report"
-            textClassName="mr-2"
-            className="ml-3"
-            icon="FileExcelOutlined"
-            iconPosition="right"
-            onClick={() => setVisible(true)}
-          />
-          <Button
-            size="middle"
-            textSize="xs"
-            text="Export results to Excel"
-            textClassName="mr-2"
-            className="ml-3"
-            icon="FileExcelOutlined"
-            iconPosition="right"
-            onClick={() => setVisible(true)}
-          />
-          <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
         </div>
-      ) : (
-        <div className="flex justify-between items-center">
-          <Tabs defaultActiveKey={selectedTab} onChange={tabChangeCallback} className="relative contents">
-            <TabPane tab="Individual Report" key="1" />
-            <TabPane tab="Group Report" key="2" />
-          </Tabs>
-          <div className="flex flex-row ">
-            <SearchBox className="text-xs" placeholder="SEARCH" loading={loading} />
-            <Button
-              size="middle"
-              textSize="xs"
-              text="Add Data"
-              textClassName="mr-2"
-              className="ml-3"
-              type="gray"
-              onClick={() => setVisible(true)}
-            />
-          </div>
-        </div>
-      )
+      </div>
     );
   }, [loading, selectedRows.length]);
 
