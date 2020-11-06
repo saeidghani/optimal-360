@@ -125,7 +125,7 @@ const RatersStatusDetails = ({ loading }) => {
     },
     {
       key: 'raterGroup',
-      title: 'Rater Group',
+      title: 'Rater RateeGroup',
       width: 100,
     },
     {

@@ -31,7 +31,7 @@ const RatersStatusRaterEmail = ({ loading }) => {
 
   const secondaryTabOptions = [
     { title: 'Individual Report', key: 1 },
-    { title: 'Group Report', key: 2 },
+    { title: 'RateeGroup Report', key: 2 },
   ];
 
   const renderHeader = React.useCallback(() => {

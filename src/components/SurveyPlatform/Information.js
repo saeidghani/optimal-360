@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Formik, Form } from 'formik';
 import { useHistory } from 'react-router-dom';
 import * as yup from 'yup';
@@ -10,7 +11,7 @@ import Button from '../Common/Button';
 import RadioGroup from '../Common/RadioGroup';
 import Input from '../Common/Input';
 
-const Information = () => {
+const Information = ({ loading }) => {
   const schema = yup.object({
     lengthOfService: yup.string().required('Length Of Service Cannot Be Empty'),
   });
@@ -71,7 +72,7 @@ const Information = () => {
   return (
     <Layout title="Information">
       <div className="text-left text-heading hidden md:block">Information</div>
-      <h1 className="text-xl text-heading font-medium text-lg mt-1 md:mt-12">
+      <h1 className="text-xl text-heading font-medium mt-1 md:mt-12">
         Tell us more about yourself!
       </h1>
       <p className="text-body tex-base mt-4">
@@ -124,5 +125,11 @@ const Information = () => {
     </Layout>
   );
 };
+
+Information.propTypes = {
+  loading: PropTypes.bool.isRequired,
+};
+
+Information.defaultProps = {};
 
 export default Information;

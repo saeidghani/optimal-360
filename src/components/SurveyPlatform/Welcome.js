@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 
 import comma from '../../assets/images/comma.svg';
@@ -8,8 +9,11 @@ import Layout from './Helper/Layout';
 
 import Dropdown from '../Common/Dropdown';
 import Button from '../Common/Button';
+import Modal from '../Common/Modal';
 
-const Welcome = () => {
+const Welcome = ({ loading }) => {
+  const [visible, setVisible] = React.useState(false);
+
   const history = useHistory();
 
   const dropdownOptions = [
@@ -24,11 +28,24 @@ const Welcome = () => {
 
   return (
     <Layout title="Welcome">
+      <Modal
+        visible={visible}
+        handleCancel={() => setVisible(false)}
+        handleOk={handleNextClick}
+        width={580}
+        closable
+        okText="Next"
+        className="relative"
+        footerClassName="absolute top-0 right-0 pt-32"
+      >
+        OK, let’s enter your information. By hitting this button you will get to introduction form.
+      </Modal>
       <div className="text-left text-heading">Welcome</div>
       <div className="grid grid-cols-12 mb-10 mt-8">
         <div className="col-start-1 col-span-6 text-base text-body mb-3">Select Project</div>
         <Dropdown
-          className="c-autocomplete col-start-1 col-span-12 md:col-start-1 md:col-span-4 lg:col-start-1 lg:col-span-3 w-full"
+          className="c-autocomplete col-start-1 col-span-12
+          md:col-start-1 md:col-span-4 lg:col-start-1 lg:col-span-3 w-full"
           showSearch
           value={1}
           type="gray"
@@ -67,9 +84,15 @@ const Welcome = () => {
           <span className="text-antgray-100">CHRO Sime Darby Group</span>
         </div>
       </div>
-      <Button className="ml-auto mt-6" text="Next" onClick={handleNextClick} />
+      <Button className="ml-auto mt-6" text="Next" onClick={() => setVisible(true)} />
     </Layout>
   );
 };
+
+Welcome.propTypes = {
+  loading: PropTypes.bool.isRequired,
+};
+
+Welcome.defaultProps = {};
 
 export default Welcome;

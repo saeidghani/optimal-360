@@ -113,7 +113,7 @@ const SurveyGroups = ({ loading }) => {
       { key: 'id', title: 'ID', sorter: true, sortOrder: getSortOrder('id') },
       {
         key: 'name',
-        title: 'Survay Group',
+        title: 'Survay RateeGroup',
         render: (name) => (
           <Button
             className="pl-0"

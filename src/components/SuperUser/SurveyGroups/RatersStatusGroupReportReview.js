@@ -30,7 +30,7 @@ const RatersStatusGroupReportReview = ({ loading }) => {
 
   const secondaryTabOptions = [
     { title: 'Individual Report', key: 1 },
-    { title: 'Group Report', key: 2 },
+    { title: 'RateeGroup Report', key: 2 },
   ];
 
   const renderHeader = React.useCallback(() => {
@@ -87,7 +87,7 @@ const RatersStatusGroupReportReview = ({ loading }) => {
   const columns = React.useMemo(() => [
     {
       key: 'groupReport',
-      title: 'Group Report',
+      title: 'RateeGroup Report',
       width: 200,
       sorter: true,
     },
