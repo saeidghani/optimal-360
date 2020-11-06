@@ -23,6 +23,7 @@ export default {
 
   // API
   apiBaseUrl: 'http://165.227.34.172:3010/api/v1',
+  mediaBaseUrl: 'http://165.227.34.172:3010/api/v1/downloads',
 
   // Google Analytics - uses a 'dev' account while we're testing
   gaTrackingId: env === 'production' ? 'UA-84284256-2' : 'UA-84284256-1',

@@ -29,7 +29,7 @@ _Checkbox.propTypes = {
   children: PropTypes.string,
   className: PropTypes.string,
   labelClass: PropTypes.string,
-  textNode: PropTypes.string,
+  textNode: PropTypes.node,
 };
 
 _Checkbox.defaultProps = {

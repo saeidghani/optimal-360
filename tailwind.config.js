@@ -58,6 +58,7 @@ module.exports = {
           600: '#FAFAFA', // menu background color
           700: '#F3F3F3',
           800: '#595959',
+          900: '#F0F0F0',
         },
       },
       spacing: {
@@ -101,6 +102,7 @@ module.exports = {
       opacity: {
         8: '0.08',
         10: '0.1',
+        30: '0.3',
         45: '0.45',
       },
       fontSize: {
@@ -112,6 +114,9 @@ module.exports = {
         '20px': '1.25rem',
         '22px': '1.375rem',
         '24px': '1.5rem',
+      },
+      backgroundOpacity: {
+        10: '0.1',
       },
       borderRadius: {
         '2px': '2px',

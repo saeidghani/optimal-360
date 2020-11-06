@@ -29,7 +29,7 @@ const _Button = ({
   }
 
   let styles = {
-    opacity: light ? '65%' : '100%',
+    opacity: light ? '50%' : '100%',
   };
   if (type === 'gray') {
     styles = {

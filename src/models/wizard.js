@@ -7,9 +7,10 @@ export default {
   state: {
     surveySettings: '',
     emailSettings: '',
-    selectedTemplate: '',
+    selectedTemplates: '',
     surveyIntro: '',
     surveyQuestions: '',
+    reports: '',
   },
 
   effects: (dispatch) => ({
@@ -73,9 +74,9 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
-    async setSelectedEmailTemplate(template) {
+    async setSelectedEmailTemplates(template) {
       return actionWapper(async () => {
-        this.setSelectedEmailTemplate_reducer(template);
+        this.setSelectedEmailTemplates_reducer(template);
       }, dispatch.util.errorHandler);
     },
 
@@ -91,12 +92,14 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
-    async setSurveyIntro({ surveyGroupId, ...payload }) {
+    async setSurveyIntro({ surveyGroupId, clientPicture, ...payload }) {
       return actionWapper(async () => {
+        const path = await dispatch.util.uploadImage(clientPicture);
+
         const res = await axios({
           method: 'post',
           url: `super-user/wizard/survey-groups/${surveyGroupId}/survey-intro`,
-          data: payload,
+          data: { ...payload, clientPicture: path },
         });
 
         return res;
@@ -126,6 +129,30 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+
+    async fetchReports(surveyGroupId) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `super-user/wizard/survey-groups/${surveyGroupId}/reports`,
+        });
+
+        await this.fetchReports_reducer(res?.data?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async setReports({ surveyGroupId, ...payload }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: `super-user/wizard/survey-groups/${surveyGroupId}/reports`,
+          data: payload,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
   }),
 
   reducers: {
@@ -139,9 +166,9 @@ export default {
       emailSettings: payload,
     }),
 
-    setSelectedEmailTemplate_reducer: (state, payload) => ({
+    setSelectedEmailTemplates_reducer: (state, payload) => ({
       ...state,
-      selectedTemplate: payload,
+      selectedTemplates: payload,
     }),
 
     fetchSurveyIntro_reducer: (state, payload) => ({
@@ -152,6 +179,11 @@ export default {
     fetchSurveyQuestions_reducer: (state, payload) => ({
       ...state,
       surveyQuestions: payload,
+    }),
+
+    fetchReports_reducer: (state, payload) => ({
+      ...state,
+      reports: payload,
     }),
   },
 };

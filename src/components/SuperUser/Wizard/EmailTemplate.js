@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
-// import { useHistory, useParams } from 'react-router-dom';
-import { useQuery } from '../../../hooks/useQuery';
+import { useHistory, useParams } from 'react-router-dom';
+import { notification } from 'antd';
 
+import { useQuery } from '../../../hooks/useQuery';
 import * as TEMPLATES from './Helper/EmailTemplates';
 
 import pascalize from '../../../lib/pascalize';
@@ -13,12 +13,14 @@ import Button from '../../Common/Button';
 import Loading from '../../Common/Loading';
 import TextEditor from '../../Common/TextEditor';
 
-const EmailTemplate = ({ loading, fetchSingleProject, singleProject, selectedTemplate }) => {
+const EmailTemplate = ({ loading }) => {
   const [parsedQuery] = useQuery();
   const { projectId, surveyGroupId } = parsedQuery;
-  const { data: projectData = {} } = singleProject || {};
-
   const { template } = useParams();
+  const history = useHistory();
+  const { search } = history?.location;
+
+  const [error, setError] = React.useState(false);
 
   const chosenTemplate = pascalize(template, { splitBy: '-' });
 
@@ -26,13 +28,65 @@ const EmailTemplate = ({ loading, fetchSingleProject, singleProject, selectedTem
     console.warn(`Template ${template} does not exist`);
   }
 
-  React.useEffect(() => {
-    fetchSingleProject(projectId);
-  }, [projectId, fetchSingleProject]);
+  const [emailTemplate, setEmailTemplate] = React.useState();
 
-  const [emailTemplate, setEmailTemplate] = React.useState(selectedTemplate);
+  const templateKey = `${chosenTemplate}-${projectId}-${surveyGroupId}`;
+
+  React.useEffect(() => {
+    const val = localStorage.getItem(templateKey);
+
+    setEmailTemplate(val || TEMPLATES[chosenTemplate]);
+  }, [chosenTemplate]);
 
   const pageTitle = (template.charAt(0).toUpperCase() + template.slice(1)).replaceAll('-', ' ');
+
+  const addTag = (title) => {
+    let temp = emailTemplate;
+
+    temp = `${temp} <% ${title} %>`;
+
+    setEmailTemplate(temp);
+  };
+
+  const validateTableData = () => {
+    const table = document.querySelector('.text-editor-table');
+    const cells = table.querySelectorAll('td');
+
+    const notify = (description) => {
+      notification.error({
+        message: 'Invalid table data',
+        description,
+      });
+    };
+
+    const errors = [];
+
+    cells.forEach((cell) => {
+      if (
+        !cell.innerText ||
+        typeof cell.innerText !== 'string' ||
+        cell.innerText.trim().length < 1
+      ) {
+        return errors.push('table cell cannot be empty');
+      }
+
+      ['John Doe', 'Your Peer', 'DD / MM / YYYY', 'DD / MM / YYYY'].forEach((val) => {
+        if (cell.innerText === val) {
+          return errors.push(`${val} is not valid for table cell data`);
+        }
+      });
+    });
+
+    if (errors.length > 0) {
+      setError(true);
+
+      errors.forEach((description) => notify(description));
+      return true;
+    }
+
+    setError(false);
+    return false;
+  };
 
   return (
     <MainLayout
@@ -50,13 +104,26 @@ const EmailTemplate = ({ loading, fetchSingleProject, singleProject, selectedTem
 
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row">
-            <Button size="middle" text="Project Name" textSize="base" className="px-3  mr-3" />
-            <Button size="middle" text="Rater" textSize="base" className=" mr-3" />
-            <Button size="middle" text="Sender" textSize="base" className="" />
+            <Button
+              onClick={() => addTag('PROJECT_NAME')}
+              size="middle"
+              text="Project Name"
+              textSize="base"
+              className="px-3  mr-3"
+            />
+            <Button
+              onClick={() => addTag('RATER')}
+              size="middle"
+              text="Rater"
+              textSize="base"
+              className="mr-3"
+            />
+            <Button onClick={() => addTag('SENDER')} size="middle" text="Sender" textSize="base" />
           </div>
 
           <div className="flex flex-row">
             <Button
+              onClick={() => history.replace(`/super-user/new-project/email-settings${search}`)}
               className="w-24.5 h-9.5"
               size="middle"
               type="link"
@@ -64,15 +131,16 @@ const EmailTemplate = ({ loading, fetchSingleProject, singleProject, selectedTem
               text="Cancel"
             />
             <Button
+              disabled={!!error}
               className="w-24.5 h-9.5"
               size="middle"
               text="Save"
               onClick={() => {
-                const templateKey = `${projectId}-${surveyGroupId}`;
-                localStorage.setItem(
-                  templateKey,
-                  JSON.stringify({ [chosenTemplate]: emailTemplate }),
-                );
+                // validateTableData returns true if there aren't any errors
+                if (!validateTableData(emailTemplate)) {
+                  localStorage.setItem(templateKey, emailTemplate);
+                  history.replace(`/super-user/new-project/email-settings${search}`);
+                }
               }}
               textSize="base"
             />
@@ -82,18 +150,10 @@ const EmailTemplate = ({ loading, fetchSingleProject, singleProject, selectedTem
         <TextEditor
           wrapperClassName="my-12"
           value={emailTemplate}
-          onChange={setEmailTemplate}
-          data={{
-            PROJECT_NAME: projectData.name,
-            SENDER: 'guy 1',
-            RATER: 'guy 2',
-            table: {
-              header: ['Name', 'Relationship', 'Start Date', 'End Date'],
-              body: [
-                ['X1', 'Y1', '12', '34'],
-                ['X2', 'Y2', '56', '78'],
-              ],
-            },
+          onChange={(val) => {
+            setError(false);
+
+            setEmailTemplate(val);
           }}
           options={{ minHeight: '500px' }}
         />
@@ -104,16 +164,6 @@ const EmailTemplate = ({ loading, fetchSingleProject, singleProject, selectedTem
 
 EmailTemplate.propTypes = {
   loading: PropTypes.bool.isRequired,
-  fetchSingleProject: PropTypes.func.isRequired,
-  singleProject: PropTypes.shape({
-    data: PropTypes.shape({}),
-  }),
-};
-
-EmailTemplate.defaultProps = {
-  singleProject: {
-    data: {},
-  },
 };
 
 export default EmailTemplate;

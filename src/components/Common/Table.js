@@ -77,7 +77,7 @@ const _Table = ({
           rowSelection && {
             type: 'checkbox',
             onChange: onRowSelectionChange,
-            selectedRowKeys,
+            selectedRowKeys: selectedRowKeys.map((el) => el * 1),
           }
         }
         pagination={false}

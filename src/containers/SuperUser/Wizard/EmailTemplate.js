@@ -7,46 +7,23 @@ import Layout from '../../../components/SuperUser/Wizard/EmailTemplate';
 class ProjectInfo extends Component {
   state = {};
 
-  fetchSingleProject = async (projectId) => {
-    const { fetchSingleProject } = this.props;
-
-    await fetchSingleProject(projectId);
-  };
-
   render() {
-    const { loading, singleProject, selectedTemplate } = this.props;
+    const { loading } = this.props;
 
-    return (
-      <Layout
-        loading={loading}
-        fetchSingleProject={this.fetchSingleProject}
-        singleProject={singleProject}
-        selectedTemplate={selectedTemplate}
-      />
-    );
+    return <Layout loading={loading} />;
   }
 }
 
 ProjectInfo.propTypes = {
   loading: PropTypes.bool.isRequired,
-  selectedTemplate: PropTypes.string,
-  fetchSingleProject: PropTypes.func.isRequired,
-  singleProject: PropTypes.shape({}),
 };
 
-ProjectInfo.defaultProps = {
-  singleProject: {},
-  selectedTemplate: '',
-};
+ProjectInfo.defaultProps = {};
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
-  singleProject: state.projects?.project || {},
-  selectedTemplate: state.wizard?.selectedTemplate || '',
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  fetchSingleProject: dispatch.projects.fetchSingleProject,
-});
+const mapDispatchToProps = () => ({});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProjectInfo);

@@ -1,4 +1,6 @@
 import Cookies from 'js-cookie';
+import axios from '../lib/api';
+import actionWapper from '../lib/actionWapper';
 
 export default {
   namespace: 'util',
@@ -8,9 +10,29 @@ export default {
     lastChange: '',
   },
 
-  effects: () => ({
+  effects: (dispatch) => ({
     async alert(payload) {
       this.alert_reducer(payload);
+    },
+
+    async uploadImage(photo) {
+      // eslint-disable-next-line no-undef
+      const data = new FormData();
+      data.append('photo', photo);
+
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: '/uploads',
+            data,
+          });
+
+          return res?.data?.data?.filePath;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
     },
 
     async errorHandler(error) {
