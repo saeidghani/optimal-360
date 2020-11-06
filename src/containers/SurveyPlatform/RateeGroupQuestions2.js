@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-// import { PropTypes } from 'prop-types';
+import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
-import Layout from '../../../components/SuperUser/SurveyGroups/RatersStatusDetails';
-import { PropTypes } from 'prop-types';
+import Layout from '../../components/SurveyPlatform/RateeGroupQuestions2';
 
-class RatersStatusDetails extends Component {
+class RateeGroupQuestions2 extends Component {
   state = {};
 
   render() {
@@ -15,7 +14,7 @@ class RatersStatusDetails extends Component {
   }
 }
 
-RatersStatusDetails.propTypes = {
+RateeGroupQuestions2.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
@@ -25,4 +24,4 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(RatersStatusDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(RateeGroupQuestions2);

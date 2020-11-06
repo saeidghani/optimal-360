@@ -23,7 +23,7 @@ const LABELS = {
   clientCompetencyModel: 'Client Competency Model',
   averageScoreByCompetency: 'Average Score by Competency',
   behaviorResults: 'Behavior Results',
-  ratersInformation: 'Raters Information',
+  ratersInformation: 'Rates Information',
   developmentFeedbackComment: 'Feedback/Comments (Development Areas)',
   missionCriticalCompetencies: 'Mission Critical Competencies',
   generalFeedbackComment: 'Feedback/Comments (General)',
@@ -178,7 +178,7 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
                 await setReports({ surveyGroupId, ...values });
                 const params = stringify({ projectId, surveyGroupId });
 
-                history.push(`/super-user/participants/status-overview${params}`);
+                history.push(`/super-user/participants/rates${params}`);
               } catch (error) {}
             }}
           >

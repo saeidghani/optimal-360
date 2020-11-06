@@ -21,6 +21,7 @@ const _Button = ({
   textClassName,
   textSize,
   disabled,
+  danger,
 }) => {
   const RICON = ICONS[icon];
   if (icon && typeof icon !== 'object' && typeof RICON === 'undefined' && !RICON) {
@@ -59,6 +60,7 @@ const _Button = ({
       loading={loading}
       style={styles}
       shape={shape}
+      danger={danger}
     >
       {iconPosition === 'left' ? (
         icon && typeof icon === 'object' ? (
@@ -104,6 +106,7 @@ _Button.propTypes = {
   textClassName: PropTypes.string,
   textSize: PropTypes.string,
   disabled: PropTypes.bool,
+  danger: PropTypes.bool,
 };
 
 _Button.defaultProps = {
@@ -122,6 +125,7 @@ _Button.defaultProps = {
   children: '',
   href: undefined,
   disabled: false,
+  danger: false,
   // eslint-disable-next-line no-alert
   onClick: () => alert('Coming soon'),
 };
