@@ -95,12 +95,12 @@ const SurveyGroups = ({ loading }) => {
 
             <Button
               // onClick={() => history.push('/super-user/organizations/new')}
-              icon="PlusCircleOutlined"
-              iconPosition="right"
+              // icon="PlusCircleOutlined"
+              // iconPosition="right"
               size="middle"
               textSize="xs"
-              text="New Survey Group"
-              textClassName="mr-2"
+              text="Edit Project"
+              // textClassName="mr-2"
               type="gray"
               className="ml-3"
             />
