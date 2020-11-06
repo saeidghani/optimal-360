@@ -17,6 +17,7 @@ import OrganizationsNewStaff from '../containers/SuperUser/Organizations/Organiz
 import NewOrganizations from '../containers/SuperUser/Organizations/NewOrganizations';
 import GroupReports from '../containers/SuperUser/SurveyGroups/GroupReports';
 import Rates from '../containers/SuperUser/Rates/Rates';
+import OrganizationsUpdateStaff from '../containers/SuperUser/Organizations/UpdateStaff';
 
 import ProjectInfo from '../containers/SuperUser/Wizard/ProjectInfo';
 import SurveySetting from '../containers/SuperUser/Wizard/SurveySetting';
@@ -108,7 +109,11 @@ const Routes = ({ match }) => (
       exact
       component={OrganizationsStaff}
     />
-
+    <PrivateRoute
+      path={`${match.path}/organizations/:organizationId/staff/:staffId/update`}
+      exact
+      component={OrganizationsUpdateStaff}
+    />
     {/* other */}
     <PrivateRoute path={`${match.path}/bank/models`} exact component={BankModels} />
     <Route component={NotFound} />
