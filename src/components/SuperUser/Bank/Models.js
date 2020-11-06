@@ -101,7 +101,7 @@ const Models = ({ loading }) => {
             <div className="flex justify-end">
               <Button
                 className="flex items-center mr-3.5"
-                text="Add Cluster"
+                text="New Survey Group"
                 icon="PlusCircleOutlined"
                 textClassName="mr-2"
                 size="middle"

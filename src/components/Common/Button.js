@@ -123,7 +123,7 @@ _Button.defaultProps = {
   href: undefined,
   disabled: false,
   // eslint-disable-next-line no-alert
-  onClick: () => alert('comig soon'),
+  onClick: () => alert('Coming soon'),
 };
 
 export default _Button;

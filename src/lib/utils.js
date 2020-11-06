@@ -6,5 +6,9 @@ const fetchFullURL = (path) => {
   return `${CONSTANTS.mediaBaseUrl}${path}`;
 };
 
+const generateNewPassword = () => {
+  return Math.random().toString(36).slice(-8);
+};
+
 // eslint-disable-next-line import/prefer-default-export
-export { fetchFullURL };
+export { fetchFullURL, generateNewPassword };

@@ -69,13 +69,13 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
     },
     {
       id: '4',
-      name: 'Reminder email (1)',
+      name: 'Reset password email',
       date: '',
       copyToAdmin: false,
     },
     {
       id: '5',
-      name: 'Reminder email (2)',
+      name: 'Reminder email (1)',
       date: '',
       copyToAdmin: false,
     },
@@ -347,7 +347,7 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
                       const newVal = {
                         key: newKey,
                         id: newKey,
-                        name: `Reminder email (${values.emailSettings.length - 2})`,
+                        name: `Reminder email (${values.emailSettings.length - 3})`,
                         date: '',
                         copyToAdmin: false,
                         template: '',
