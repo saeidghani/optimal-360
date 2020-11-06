@@ -2,21 +2,26 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
-import Layout from '../../../components/SuperUser/SurveyGroups/RatersStatusIndividualReport';
+import { Tabs } from 'antd';
+import Layout from '../../../components/SuperUser/Rates/Rates';
 
-class RatersStatusIndividualReport extends Component {
+class Rates extends Component {
   state = {};
 
   render() {
     const { loading } = this.props;
 
-    return <Layout loading={loading} />;
+    return (
+      <Layout loading={loading} />
+    );
   }
 }
 
-RatersStatusIndividualReport.propTypes = {
+Rates.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
+
+Rates.defaultProps = {};
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
@@ -24,4 +29,4 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = () => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(RatersStatusIndividualReport);
+export default connect(mapStateToProps, mapDispatchToProps)(Rates);

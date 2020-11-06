@@ -10,22 +10,9 @@ import Table from '../../Common/Table';
 import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
 
-const RatersStatusDetails = ({ loading }) => {
+const StatusDetailsRates = ({ loading }) => {
   const [pageSize] = React.useState(10);
   const [selectedRows, setSelectedRows] = React.useState([]);
-
-  const dropDownOptions = [
-    { title: 'Top Leadership', value: 1 },
-    { title: 'Top Leadership2', value: 2 },
-    { title: 'Top Leadership3', value: 3 },
-  ];
-
-  const primaryTabOptions = [
-    { title: 'Status Overview', key: 1 },
-    { title: 'Status Details', key: 2 },
-    { title: 'Rater Email', key: 3 },
-    { title: 'Results', key: 4 },
-  ];
 
   const renderHeader = React.useCallback(() => {
     return selectedRows && selectedRows?.length > 0 ? (
@@ -106,13 +93,13 @@ const RatersStatusDetails = ({ loading }) => {
   const columns = React.useMemo(() => [
     {
       key: 'raterName',
-      title: 'Rater Name',
+      title: 'Rates Name',
       width: 100,
       sorter: true,
     },
     {
       key: 'raterEmail',
-      title: 'Rater Email',
+      title: 'Rates Email',
       width: 100,
       sorter: true,
     },
@@ -125,7 +112,7 @@ const RatersStatusDetails = ({ loading }) => {
     },
     {
       key: 'raterGroup',
-      title: 'Rater Group',
+      title: 'Rates Group',
       width: 100,
     },
     {
@@ -199,42 +186,27 @@ const RatersStatusDetails = ({ loading }) => {
   ];
 
   return (
-    <MainLayout contentClass="pl-21 pr-6 py-4" title="Super User" titleClass="my-2" hasBreadCrumb>
-      <div className="lg:w-2/12 w-4/12 mt-3 mb-10">
-        <h2 className="my-6 pt-6 pl-3 font-medium text-16px">Survey Group</h2>
-        <Dropdown
-          className="c-autocomplete w-full"
-          showSearch
-          value={1}
-          type="gray"
-          options={dropDownOptions}
-        />
-      </div>
-      <div>
-        <Tabs className="c-tabs-class" defaultActiveKey="2" tabOptions={primaryTabOptions} />
-      </div>
-      <Table
-        size="middle"
-        className="c-table-white-head p-6 mt-5 bg-white rounded-lg shadow"
-        loading={loading}
-        columns={columns}
-        dataSource={dataSource}
-        pageSize={pageSize * 1}
-        pageNumber={1}
-        renderHeader={renderHeader}
-        selectedRowKeys={selectedRows?.map((el) => el.key)}
-        onRowSelectionChange={(_, rows) => {
-          setSelectedRows(rows);
-        }}
-      />
-    </MainLayout>
+    <Table
+      size="middle"
+      className="c-table-white-head p-6 mt-5 bg-white rounded-lg shadow"
+      loading={loading}
+      columns={columns}
+      dataSource={dataSource}
+      pageSize={pageSize * 1}
+      pageNumber={1}
+      renderHeader={renderHeader}
+      selectedRowKeys={selectedRows?.map((el) => el.key)}
+      onRowSelectionChange={(_, rows) => {
+        setSelectedRows(rows);
+      }}
+    />
   );
 };
 
-RatersStatusDetails.propTypes = {
+StatusDetailsRates.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
-RatersStatusDetails.defaultProps = {};
+StatusDetailsRates.defaultProps = {};
 
-export default RatersStatusDetails;
+export default StatusDetailsRates;

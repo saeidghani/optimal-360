@@ -28,12 +28,12 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
       raterInvalidation: yup
         .number()
         .nullable()
-        .moreThan(0, 'Rater Invalidation Must Be Greater Than 0')
-        .required('Rater Invalidation Cannot Be Empty'),
+        .moreThan(0, 'Rates Invalidation Must Be Greater Than 0')
+        .required('Rates Invalidation Cannot Be Empty'),
       itemInvalidation: yup
         .number()
         .nullable()
-        .moreThan(0, 'Rater Invalidation Must Be Greater Than 0')
+        .moreThan(0, 'Rates Invalidation Must Be Greater Than 0')
         .required('Item Invalidation Cannot Be Empty'),
     }),
     raterGroups: yup.array(
@@ -41,8 +41,8 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
         abbr: yup.string().required('Abbr Cannot Be Empty'),
         name: yup.string().required('Group Name Cannot Be Empty'),
         minRater: yup
-          .number('Min. Raters must be a number')
-          .min(1, 'Min. Raters must be greater than 0'),
+          .number('Min. Rates must be a number')
+          .min(1, 'Min. Rates must be greater than 0'),
       }),
     ),
     surveyModeInUserDashboard: yup
@@ -229,7 +229,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
       ),
     },
     {
-      title: 'Min.Raters',
+      title: 'Min.Rates',
       key: 'minRater',
       render: (value, { id, disabled, index }) => (
         <Input
@@ -398,7 +398,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                         size="large"
                         wrapperClassName="mr-12"
                         className="w-full"
-                        label="Rater Invalidation"
+                        label="Rates Invalidation"
                         value={values.surveySetting.raterInvalidation}
                         onChange={(raterInvalidation) =>
                           setFieldValue('surveySetting', {
@@ -433,7 +433,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                 </div>
 
                 <div className="flex flex-col xl:pr-24 md:pr-12">
-                  <h1 className="text-xl text-secondary mb-8">Rater Settings</h1>
+                  <h1 className="text-xl text-secondary mb-8">Rates Settings</h1>
 
                   <Table
                     rowSelection={false}
@@ -447,7 +447,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                           disabled={!!(values.raterGroups?.length > 4)}
                           onClick={addTableRow}
                           textSize="12px"
-                          text="Add Rater Group"
+                          text="Add Rates Group"
                           type="gray"
                         />
                       </div>
@@ -469,7 +469,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                       }
                       className="ml-0 mb-6"
                     >
-                      Individual Rater
+                      Individual Rates
                     </Checkbox>
 
                     <Checkbox

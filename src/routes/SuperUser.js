@@ -11,16 +11,12 @@ import ProjectsList from '../containers/SuperUser/Projects/List';
 import SetAdmin from '../containers/SuperUser/Projects/SetAdmin';
 
 import SurveyGroupList from '../containers/SuperUser/SurveyGroups/List';
-import RatersStatusOverview from '../containers/SuperUser/SurveyGroups/RatersStatusOverview';
-import RatersStatusDetails from '../containers/SuperUser/SurveyGroups/RatersStatusDetails';
-import RatersStatusRaterEmail from '../containers/SuperUser/SurveyGroups/RatersStatusRaterEmail';
 import Organizations from '../containers/SuperUser/Organizations/Organizations';
 import OrganizationsStaff from '../containers/SuperUser/Organizations/OrganizationsStaff';
 import OrganizationsNewStaff from '../containers/SuperUser/Organizations/OrganizationsNewStaff';
 import NewOrganizations from '../containers/SuperUser/Organizations/NewOrganizations';
-import RatersStatusIndividualReport from '../containers/SuperUser/SurveyGroups/RatersStatusIndividualReport';
-import RatersStatusGroupReportReview from '../containers/SuperUser/SurveyGroups/RatersStatusGroupReportReview';
 import GroupReports from '../containers/SuperUser/SurveyGroups/GroupReports';
+import Rates from '../containers/SuperUser/Rates/Rates';
 
 import ProjectInfo from '../containers/SuperUser/Wizard/ProjectInfo';
 import SurveySetting from '../containers/SuperUser/Wizard/SurveySetting';
@@ -94,29 +90,9 @@ const Routes = ({ match }) => (
 
     {/* participants */}
     <PrivateRoute
-      path={`${match.path}/participants/status-overview`}
+      path={`${match.path}/participants/rates`}
       exact
-      component={RatersStatusOverview}
-    />
-    <PrivateRoute
-      path={`${match.path}/participants/status-details`}
-      exact
-      component={RatersStatusDetails}
-    />
-    <PrivateRoute
-      path={`${match.path}/participants/rater-email`}
-      exact
-      component={RatersStatusRaterEmail}
-    />
-    <PrivateRoute
-      path={`${match.path}/participants/individual-report`}
-      exact
-      component={RatersStatusIndividualReport}
-    />
-    <PrivateRoute
-      path={`${match.path}/participants/group-report-review`}
-      exact
-      component={RatersStatusGroupReportReview}
+      component={Rates}
     />
 
     {/* organizations */}

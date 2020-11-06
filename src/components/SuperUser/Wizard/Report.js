@@ -23,7 +23,7 @@ const LABELS = {
   clientCompetencyModel: 'Client Competency Model',
   averageScoreByCompetency: 'Average Score by Competency',
   behaviorResults: 'Behavior Results',
-  ratersInformation: 'Raters Information',
+  ratersInformation: 'Rates Information',
   developmentFeedbackComment: 'Feedback/Comments (Development Areas)',
   missionCriticalCompetencies: 'Mission Critical Competencies',
   generalFeedbackComment: 'Feedback/Comments (General)',

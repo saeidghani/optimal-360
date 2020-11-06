@@ -51,7 +51,7 @@ const EmailTemplate = ({ loading, fetchSingleProject, singleProject, selectedTem
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row">
             <Button size="middle" text="Project Name" textSize="base" className="px-3  mr-3" />
-            <Button size="middle" text="Rater" textSize="base" className=" mr-3" />
+            <Button size="middle" text="Rates" textSize="base" className=" mr-3" />
             <Button size="middle" text="Sender" textSize="base" className="" />
           </div>
 
