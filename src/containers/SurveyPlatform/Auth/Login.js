@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
-import { parse } from '../../hooks/useQuery';
+import { parse } from '../../../hooks/useQuery';
 
-import Layout from '../../components/SurveyPlatform/Login';
+import Layout from '../../../components/SurveyPlatform/Auth/Login';
 
 class _Login extends Component {
   state = {};

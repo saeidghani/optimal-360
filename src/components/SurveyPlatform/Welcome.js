@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 
 import comma from '../../assets/images/comma.svg';
-import person from '../../assets/images/surveyPlatformWelcome.svg';
+import person from '../../assets/images/surveyPlatformWelcome.png';
 
 import Layout from './Helper/Layout';
 
