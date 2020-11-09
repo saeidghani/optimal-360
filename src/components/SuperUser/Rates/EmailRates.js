@@ -77,9 +77,6 @@ const EmailRates = ({ loading, fetchRaters, raters }) => {
             type="gray"
             icon="FileExcelOutlined"
             iconPosition="right"
-            onClick={() => {
-              console.log(raters);
-            }}
           />
         </div>
       </div>
