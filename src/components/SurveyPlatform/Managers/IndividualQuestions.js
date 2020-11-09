@@ -2,15 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { QuestionOutlined } from '@ant-design/icons';
 
-import Layout from './Helper/Layout';
+import { useHistory } from 'react-router-dom';
+import Layout from '../Helper/Layout';
 
-import Button from '../Common/Button';
-import Progress from '../Common/Progress';
-import Table from '../Common/Table';
-import Radio from '../Common/RadioGroup';
+import Button from '../../Common/Button';
+import Progress from '../../Common/Progress';
+import Table from '../../Common/Table';
+import Radio from '../../Common/RadioGroup';
 
 const IndividualQuestions = ({ loading }) => {
   const [pageSize] = React.useState(10);
+  const [items, setItems] = React.useState({});
+
+  const history = useHistory();
 
   const renderHeader = React.useCallback((size) => {
     return (
@@ -64,7 +68,14 @@ const IndividualQuestions = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: (items) => <Radio onChange={() => {}} items={items} value="a" className="pl-5" />,
+      render: (itm) => (
+        <Radio
+          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
+          items={itm.options}
+          value={items[itm.id]}
+          className="pl-5"
+        />
+      ),
     },
     {
       key: 'notMuch',
@@ -78,7 +89,14 @@ const IndividualQuestions = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: (items) => <Radio onChange={() => {}} items={items} value="b" className="pl-5" />,
+      render: (itm) => (
+        <Radio
+          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
+          items={itm.options}
+          value={items[itm.id]}
+          className="pl-5"
+        />
+      ),
     },
     {
       key: 'somewhat',
@@ -92,7 +110,14 @@ const IndividualQuestions = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: (items) => <Radio onChange={() => {}} items={items} value="c" className="pl-5" />,
+      render: (itm) => (
+        <Radio
+          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
+          items={itm.options}
+          value={items[itm.id]}
+          className="pl-5"
+        />
+      ),
     },
     {
       key: 'most',
@@ -106,7 +131,14 @@ const IndividualQuestions = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: (items) => <Radio onChange={() => {}} items={items} value="d" className="pl-5" />,
+      render: (itm) => (
+        <Radio
+          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
+          items={itm.options}
+          value={items[itm.id]}
+          className="pl-5"
+        />
+      ),
     },
     {
       key: 'notClear',
@@ -120,7 +152,14 @@ const IndividualQuestions = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: (items) => <Radio onChange={() => {}} items={items} value="e" className="pl-5" />,
+      render: (itm) => (
+        <Radio
+          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
+          items={itm.options}
+          value={items[itm.id]}
+          className="pl-5"
+        />
+      ),
     },
   ]);
 
@@ -128,13 +167,21 @@ const IndividualQuestions = ({ loading }) => {
     {
       key: '1',
       describesThisPerson: 'Katherine Kan',
-      notAtAll: [{ title: '', value: 'a' }],
-      notMuch: [{ title: '', value: 'b2' }],
-      somewhat: [{ title: '', value: 'c' }],
-      most: [{ title: '', value: 'd' }],
-      notClear: [{ title: '', value: 'e' }],
+      notAtAll: { id: '101', options: [{ title: '', value: '1' }] },
+      notMuch: { id: '101', options: [{ title: '', value: '2' }] },
+      somewhat: { id: '101', options: [{ title: '', value: '3' }] },
+      most: { id: '101', options: [{ title: '', value: '4' }] },
+      notClear: { id: '101', options: [{ title: '', value: '5' }] },
     },
   ];
+
+  const handleNext = () => {
+    history.push('/survey-platform/managers/ratee-group/questions');
+  };
+
+  const handleBack = () => {
+    history.push('/survey-platform/managers/all-ratees/questions');
+  };
 
   return (
     <Layout hasBreadCrumb>
@@ -156,12 +203,14 @@ const IndividualQuestions = ({ loading }) => {
       />
       <div className="flex flex-col mt-5 mb-16 md:mb-10 md:flex-row-reverse md:ml-auto">
         <Button
+          onClick={handleNext}
           className="mt-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
           text="Next"
         />
         <Button
+          onClick={handleBack}
           className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none
-          w-full md:w-auto md:border-none"
+          w-full md:mr-4 md:w-auto md:border-none"
           text="Back"
         />
       </div>

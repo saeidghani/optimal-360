@@ -1,9 +1,9 @@
 import React from 'react';
 
-import SuccessIcon from '../../assets/images/success-purple.svg';
+import SuccessIcon from '../../../assets/images/success-purple.svg';
 
-import Button from '../Common/Button';
-import AuthLayout from './Helper/AuthLayout';
+import Button from '../../Common/Button';
+import AuthLayout from '../Helper/AuthLayout';
 
 const Success = () => (
   <AuthLayout className="grid grid-cols-12 items-center justify-center my-auto pb-8 lg:pb-16">

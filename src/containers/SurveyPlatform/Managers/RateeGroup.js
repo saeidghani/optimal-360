@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
-import Layout from '../../components/SurveyPlatform/IndividualQuestions';
+import Layout from '../../../components/SurveyPlatform/Managers/RateeGroup';
 
-class IndividualQuestions extends Component {
+class RateeGroup extends Component {
   state = {};
 
   render() {
@@ -14,7 +14,7 @@ class IndividualQuestions extends Component {
   }
 }
 
-IndividualQuestions.propTypes = {
+RateeGroup.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
@@ -24,4 +24,4 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(IndividualQuestions);
+export default connect(mapStateToProps, mapDispatchToProps)(RateeGroup);

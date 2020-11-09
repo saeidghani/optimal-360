@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
-import Layout from '../../components/SurveyPlatform/RateeGroupQuestions2';
+import Layout from '../../../components/SurveyPlatform/Managers/RateeGroupQuestions2';
 
 class RateeGroupQuestions2 extends Component {
   state = {};
