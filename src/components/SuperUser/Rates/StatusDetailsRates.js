@@ -189,7 +189,7 @@ const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
           page_number,
         });
       }}
-      selectedRowKeys={selectedRows?.map((el) => el.key)}
+      selectedRowKeys={selectedRows?.map((el) => el.relationId)}
       onRowSelectionChange={(_, rows) => {
         setSelectedRows(rows);
       }}
