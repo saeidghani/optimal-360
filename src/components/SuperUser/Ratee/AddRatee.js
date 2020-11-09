@@ -1,12 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-
-import { useQuery } from '../../../hooks/useQuery';
-import { useSurveyGroup } from '../../../hooks';
-
-import ChangeSurveyGroupModal from '../Wizard/Helper/ChangeSurveyGroupModal';
-
 import MainLayout from '../../Common/Layout';
 import Loading from '../../Common/Loading';
 import Steps from '../../Common/Steps';
