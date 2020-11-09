@@ -48,7 +48,6 @@ const UpdateStaff = ({ fetchStaffDetails, staffDetails, setStaffDetails, loading
             onSubmit={
               async (values) => {
                 try {
-                  console.log(staffDetails);
                   await setStaffDetails({ ...values, organizationId, staffId });
                   history.push(`/super-user/organizations/${organizationId}/`);
                 } catch (error) {

@@ -169,8 +169,6 @@ const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
 
     setQuery({ sort: newItem });
   };
-  console.log('selectedRows ', selectedRows);
-
   return (
     <Table
       size="middle"
