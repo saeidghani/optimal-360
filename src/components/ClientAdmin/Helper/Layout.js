@@ -37,18 +37,18 @@ const Layout = ({
       itemClassName: 'md:hidden',
       href: '',
     },
-    { key: 2, title: 'Home', icon: <HomeOutlined />, href: 'survey-platform/welcome' },
+    { key: 2, title: 'Home', icon: <HomeOutlined />, href: '/client-admin/dashboard' },
     {
       key: 3,
       title: 'Customer Support',
       icon: <MailOutlined />,
-      href: 'survey-platform/customer-support',
+      href: '/client-admin/customer-support',
     },
     {
       key: 4,
       title: 'Guides',
       icon: <QuestionCircleOutlined />,
-      href: 'survey-platform/reference-guide',
+      href: '/client-admin/reference-guide',
     },
   ];
 
@@ -65,7 +65,7 @@ const Layout = ({
         <div className="lg:ml-16">
           <img src={budgetLogo} className="w-24 lg:w-32" alt="" />
         </div>
-        <Link to="#">
+        <Link to="/client-admin/dashboard">
           <div className="flex justify-between items-center text-base">
             <HomeOutlined />
             <span className="ml-2 text-xs lg:text-base">Home</span>
@@ -77,7 +77,7 @@ const Layout = ({
             <span className="ml-2 text-xs lg:text-base">Customer Support</span>
           </div>
         </Link>
-        <Link to="#">
+        <Link to="/client-admin/reference-guide">
           <div className="flex justify-between items-center text-gray-500 text-base">
             <QuestionCircleOutlined />
             <span className="ml-2 text-xs lg:text-base">Guides</span>
