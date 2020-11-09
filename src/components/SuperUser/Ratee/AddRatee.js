@@ -7,31 +7,43 @@ import Steps from '../../Common/Steps';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import SearchBox from '../../Common/SearchBox';
+import { Typography } from 'antd';
 
-const AddRatee = ({ loading }) => {
+const AddRatee = ({ loading, isEditing }) => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = React.useState([]);
-
+  const buttonLinks = isEditing ? {
+    next: '/super-user/participants/ratee/add/step2/edit',
+    cancel: '/super-user/new-project/report',
+  } : {
+    next: '/super-user/participants/ratee/add/step2',
+    cancel: '/super-user/new-project/report',
+  };
   const renderHeader = React.useCallback(
     () => {
       return (
         <div className="flex flex-row justify-start items-center">
-          <div className="flex flex-row">
-            <SearchBox
-              className="text-xs"
-              placeholder="SEARCH"
-              loading={loading}
-              // onSearch={(val) => setQuery({ q: val })}
-              // onPressEnter={(e) => setQuery({ q: e.target.value })}
-            />
-            <Button
-              size="middle"
-              textSize="xs"
-              text="Add a New Staff"
-              textClassName="mr-2"
-              className="ml-3"
-            />
-          </div>
+          {isEditing ? (
+            <Typography>Team Player</Typography>
+          ) : (
+            <div className="flex flex-row">
+              <SearchBox
+                className="text-xs"
+                placeholder="SEARCH"
+                loading={loading}
+                // onSearch={(val) => setQuery({ q: val })}
+                // onPressEnter={(e) => setQuery({ q: e.target.value })}
+              />
+              <Button
+                size="middle"
+                textSize="xs"
+                text="Add a New Staff"
+                textClassName="mr-2"
+                className="ml-3"
+              />
+            </div>
+          )}
+
         </div>
       );
     },
@@ -65,6 +77,22 @@ const AddRatee = ({ loading }) => {
     },
     {
       id: 5,
+      staff: 'Team Player5',
+    },
+    {
+      id: 6,
+      staff: 'Team Player5',
+    },
+    {
+      id: 7,
+      staff: 'Team Player5',
+    },
+    {
+      id: 8,
+      staff: 'Team Player5',
+    },
+    {
+      id: 9,
       staff: 'Team Player5',
     },
   ];
@@ -102,14 +130,14 @@ const AddRatee = ({ loading }) => {
               type="link"
               text="Cancel"
               onClick={() => {
-                history.push('/super-user/participants/ratee/status-details');
+                history.push(buttonLinks.cancel);
               }}
             />
             <Button
               className="w-24.5 h-9.5"
               text="Next"
               onClick={() => {
-                history.push('/super-user/participants/ratee/add/step2');
+                history.push(buttonLinks.next);
               }}
             />
           </div>
@@ -121,6 +149,7 @@ const AddRatee = ({ loading }) => {
 
 AddRatee.propTypes = {
   loading: PropTypes.bool.isRequired,
+  isEditing: PropTypes.bool.isRequired,
 };
 
 AddRatee.defaultProps = {};

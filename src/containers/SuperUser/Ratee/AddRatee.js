@@ -9,9 +9,10 @@ class AddRatee extends Component {
 
   render() {
     const { loading } = this.props;
-
+    const path = this.props.location.pathname;
+    const isEditing = path.includes('ratee/add/edit');
     return (
-      <Layout loading={loading} />
+      <Layout loading={loading} isEditing={isEditing} />
     );
   }
 }
