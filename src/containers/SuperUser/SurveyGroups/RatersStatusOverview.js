@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { PropTypes } from 'prop-types';
-import Layout from '../../../components/SuperUser/Rates/StatusOverviewRates';
+import Layout from '../../../components/SuperUser/Ratee/StatusOverview';
 
 class RatersStatusOverview extends Component {
   state = {};
