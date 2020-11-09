@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 // import PropTypes from 'prop-types';
 
 import PropTypes from 'prop-types';
 import Table from '../../Common/Table';
 import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
-import StatusDetailsRates from "./StatusDetailsRates";
+import { useQuery } from "../../../hooks";
 
 const EmailRates = ({ loading, fetchRaters, raters }) => {
-  const [pageSize] = React.useState(10);
+  const [parsedQuery, query, setQuery] = useQuery();
+  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const pageNumber = parsedQuery?.page_number;
 
-
+  useEffect(() => {
+    const newQuery = query || '?page_size=10&page_number=1';
+    fetchRaters(newQuery);
+  }, [fetchRaters, query]);
   const renderHeader = React.useCallback(() => {
     return selectedRows && selectedRows?.length > 0 ? (
       <div className="flex flex-row items-center">
@@ -56,7 +61,13 @@ const EmailRates = ({ loading, fetchRaters, raters }) => {
     ) : (
       <div className="flex flex-row justify-end items-center">
         <div className="flex flex-row">
-          <SearchBox className="text-xs" placeholder="SEARCH" loading={loading} />
+          <SearchBox
+            className="text-xs"
+            placeholder="SEARCH"
+            loading={loading}
+            onSearch={(val) => setQuery({ q: val })}
+            onPressEnter={(e) => setQuery({ q: e.target.value })}
+          />
           <Button
             size="middle"
             textSize="xs"
@@ -66,6 +77,9 @@ const EmailRates = ({ loading, fetchRaters, raters }) => {
             type="gray"
             icon="FileExcelOutlined"
             iconPosition="right"
+            onClick={() => {
+              console.log(raters);
+            }}
           />
         </div>
       </div>
@@ -74,72 +88,61 @@ const EmailRates = ({ loading, fetchRaters, raters }) => {
 
   const columns = React.useMemo(() => [
     {
-      key: 'raterName',
+      key: 'name',
       title: 'Rates Name',
       width: 100,
       sorter: true,
     },
     {
-      key: 'raterEmail',
+      key: 'email',
       title: 'Rates Email',
       width: 100,
       sorter: true,
     },
     {
-      key: 'raterPassword',
+      key: 'password',
       title: 'Rates Password',
       width: 100,
       sorter: true,
     },
   ]);
+  const sort = (sorter) => {
+    // eslint-disable-next-line operator-linebreak
+    const order = parsedQuery?.sort?.[0] === '+' ? '-' : '+';
+    const newItem = `${order}${sorter.columnKey}`;
 
-  const dataSource = [
-    {
-      key: '1',
-      raterName: 'Jean Luc Picard',
-      raterEmail: 'jtkirk@ufp.com',
-      raterPassword: 'Katherine Janeway',
-    },
-    {
-      key: '2',
-      raterName: 'Jean Luc Picard',
-      raterEmail: 'jtkirk@ufp.com',
-      raterPassword: 'Katherine Janeway',
-    },
-    {
-      key: '3',
-      raterName: 'Jean Luc Picard',
-      raterEmail: 'jtkirk@ufp.com',
-      raterPassword: 'Katherine Janeway',
-    },
-    {
-      key: '4',
-      raterName: 'Jean Luc Picard',
-      raterEmail: 'jtkirk@ufp.com',
-      raterPassword: 'Katherine Janeway',
-    },
-    {
-      key: '5',
-      raterName: 'Jean Luc Picard',
-      raterEmail: 'jtkirk@ufp.com',
-      raterPassword: 'Katherine Janeway',
-    },
-  ];
+    setQuery({ sort: newItem });
+  };
 
   return (
     <Table
       size="middle"
-      className="p-6 mt-5 bg-white rounded-lg shadow"
+      className="c-table-white-head p-6 mt-5 bg-white rounded-lg shadow"
+      onTableChange={({ sorter }) => sort(sorter)}
       loading={loading}
       columns={columns}
-      dataSource={dataSource}
-      pageSize={pageSize * 1}
-      pageNumber={1}
+      dataSource={raters?.data || []}
+      rowKey="raterId"
       renderHeader={renderHeader}
-      selectedRowKeys={selectedRows?.map((el) => el.key)}
+      onPageSizeChange={(size) => {
+        setPageSize(size);
+        setQuery({ page_size: size, page_number: 1 });
+      }}
+      pageSize={pageSize * 1}
+      pageNumber={pageNumber * 1}
+      // eslint-disable-next-line camelcase
+      onPaginationChange={(page_number, page_size) => {
+        setSelectedRows([]);
+        setQuery({
+          page_size,
+          page_number,
+        });
+      }}
+      selectedRowKeys={selectedRows?.map((el) => el.raterId)}
       onRowSelectionChange={(_, rows) => {
         setSelectedRows(rows);
       }}
+      totalRecordSize={raters?.metaData?.pagination?.totalRecords * 1}
     />
   );
 };

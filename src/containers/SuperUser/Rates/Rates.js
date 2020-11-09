@@ -52,7 +52,7 @@ Rates.defaultProps = {
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
   statusDetails: state.rates?.statusDetails || {},
-  raters: state.rates?.statusDetails || {},
+  raters: state.rates?.raters || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
