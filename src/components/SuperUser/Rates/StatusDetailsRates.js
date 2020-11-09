@@ -58,7 +58,13 @@ const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
           />
         </div>
         <div className="flex flex-row">
-          <SearchBox className="text-xs" placeholder="SEARCH" loading={loading} />
+          <SearchBox
+            className="text-xs"
+            placeholder="SEARCH"
+            loading={loading}
+            onSearch={(val) => setQuery({ q: val })}
+            onPressEnter={(e) => setQuery({ q: e.target.value })}
+          />
           <Button
             size="middle"
             textSize="xs"
@@ -156,18 +162,22 @@ const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
     },
   ]);
 
-  const dataSource = React.useMemo(
-    () => (statusDetails?.data || []).map((item) => ({ ...item, key: `${item.id}` })),
-    // eslint-disable-next-line
-    [statusDetails.timeStamp],
-  );
+  const sort = (sorter) => {
+    // eslint-disable-next-line operator-linebreak
+    const order = parsedQuery?.sort?.[0] === '+' ? '-' : '+';
+    const newItem = `${order}${sorter.columnKey}`;
+
+    setQuery({ sort: newItem });
+  };
   return (
     <Table
       size="middle"
       className="c-table-white-head p-6 mt-5 bg-white rounded-lg shadow"
+      onTableChange={({ sorter }) => sort(sorter)}
       loading={loading}
       columns={columns}
-      dataSource={dataSource}
+      dataSource={statusDetails?.data || []}
+      rowKey="relationId"
       renderHeader={renderHeader}
       onPageSizeChange={(size) => {
         setPageSize(size);
@@ -183,7 +193,7 @@ const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
           page_number,
         });
       }}
-      selectedRowKeys={selectedRows?.map((el) => el.key)}
+      selectedRowKeys={selectedRows?.map((el) => el.relationId)}
       onRowSelectionChange={(_, rows) => {
         setSelectedRows(rows);
       }}
