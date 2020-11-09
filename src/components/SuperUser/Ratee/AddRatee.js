@@ -14,7 +14,7 @@ const AddRatee = ({ loading, isEditing }) => {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const buttonLinks = isEditing ? {
     next: '/super-user/participants/ratee/add/step2/edit',
-    cancel: '/super-user/new-project/report',
+    cancel: '/super-user/participants/ratee/status-details',
   } : {
     next: '/super-user/participants/ratee/add/step2',
     cancel: '/super-user/new-project/report',
