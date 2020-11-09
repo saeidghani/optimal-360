@@ -9,13 +9,15 @@ import {
   TwitterOutlined,
   InstagramOutlined,
   FacebookOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 
-import Logo from '../../Common/Logo';
+import { Avatar } from 'antd';
 import ProfileDropdown from '../../Common/ProfileDropdown';
+import BreadCrumb from '../../Common/BreadCrumb';
 
 import budgetLogo from '../../../assets/images/budgetLogo.png';
-import BreadCrumb from '../../Common/BreadCrumb';
+import optimal360Logo from '../../../assets/images/optimal360Logo.png';
 
 const Layout = ({
   children,
@@ -24,10 +26,30 @@ const Layout = ({
   title,
   hasBreadCrumb,
   headerClassName,
+  heading,
 }) => {
   const dropdownOptions = [
-    { key: 1, title: 'a', href: '' },
-    { key: 2, title: 'b', href: '' },
+    {
+      key: 1,
+      title: 'Anthony Hardy',
+      titleClassName: 'md:hidden',
+      icon: <Avatar className="bg-primary-500" icon={<UserOutlined />} />,
+      itemClassName: 'md:hidden',
+      href: '',
+    },
+    { key: 2, title: 'Home', icon: <HomeOutlined />, href: 'survey-platform/welcome' },
+    {
+      key: 3,
+      title: 'Customer Support',
+      icon: <MailOutlined />,
+      href: 'survey-platform/customer-support',
+    },
+    {
+      key: 4,
+      title: 'Guides',
+      icon: <QuestionCircleOutlined />,
+      href: 'survey-platform/reference-guide',
+    },
   ];
 
   return (
@@ -39,7 +61,7 @@ const Layout = ({
         className="bg-white w-full hidden md:flex justify-between items-center
       px-4 py-6 lg:px-20 lg:py-10"
       >
-        <Logo />
+        <img src={optimal360Logo} alt="" />
         <div className="lg:ml-16">
           <img src={budgetLogo} className="w-24 lg:w-32" alt="" />
         </div>
@@ -61,7 +83,7 @@ const Layout = ({
             <span className="ml-2 text-xs lg:text-base">Guides</span>
           </div>
         </Link>
-        <ProfileDropdown title="Anthony Hardy" options={dropdownOptions} />
+        <ProfileDropdown title="Anthony Hardy" options={dropdownOptions} iconClassName="pb-1" />
       </div>
       <div className="flex items-center md:hidden px-6 pt-6">
         <div className="flex items-center">
@@ -78,13 +100,14 @@ const Layout = ({
         {hasBreadCrumb ? (
           <BreadCrumb className={`mt-2 hidden md:block ${headerClassName}`} />
         ) : null}
+        <div className="text-left text-heading">{heading}</div>
         {children}
       </div>
       <div
         className="absolute bottom-0 bg-antgray-100 bg-opacity-25 grid grid-cols-12 items-center
       gap-y-3 px-8 py-6 lg:px-32 lg:py-10"
       >
-        <Logo />
+        <img src={optimal360Logo} alt="" />
         <p
           className="text-antgray-100 text-sm text-center row-start-2 col-start-1 col-span-12 md:row-start-1
          md:col-start-3 md:col-span-8 md:px-6"
@@ -109,6 +132,7 @@ Layout.propTypes = {
   title: PropTypes.string,
   hasBreadCrumb: PropTypes.bool,
   headerClassName: PropTypes.string,
+  heading: PropTypes.string,
 };
 
 Layout.defaultProps = {
@@ -117,6 +141,7 @@ Layout.defaultProps = {
   title: '',
   hasBreadCrumb: false,
   headerClassName: '',
+  heading: 'Dashboard',
 };
 
 export default Layout;
