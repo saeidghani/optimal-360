@@ -10,7 +10,6 @@ import SearchBox from '../../Common/SearchBox';
 
 const AddRatee = ({ loading }) => {
   const history = useHistory();
-  const [pageSize] = React.useState(10);
   const [selectedRows, setSelectedRows] = React.useState([]);
 
   const renderHeader = React.useCallback(
@@ -49,24 +48,24 @@ const AddRatee = ({ loading }) => {
 
   const dataSource = [
     {
-      key: '1',
-      staff: 'Team Player',
+      id: 1,
+      staff: 'Team Player1',
     },
     {
-      key: '2',
-      staff: 'Team Player',
+      id: 2,
+      staff: 'Team Player2',
     },
     {
-      key: '3',
-      staff: 'Team Player',
+      id: 3,
+      staff: 'Team Player3',
     },
     {
-      key: '4',
-      staff: 'Team Player',
+      id: 4,
+      staff: 'Team Player4',
     },
     {
-      key: '5',
-      staff: 'Team Player',
+      id: 5,
+      staff: 'Team Player5',
     },
   ];
 
@@ -82,7 +81,6 @@ const AddRatee = ({ loading }) => {
       <Loading visible={loading} />
 
       <div className="bg-white p-6 grid grid-cols-12  min-h-full">
-
         <div className="px-6 py-5 col-start-2 col-span-10">
           <Steps className="block" steps={['Ratee Details', 'Rater Selection']} currentPosition={0} />
           <Table
@@ -91,10 +89,8 @@ const AddRatee = ({ loading }) => {
             className="p-6 mt-5 bg-white rounded-lg"
             loading={loading}
             columns={columns}
-            dataSource={dataSource || []}
-            pageSize={pageSize * 1}
-            pageNumber={1}
-            selectedRowKeys={selectedRows?.map((el) => el.key)}
+            dataSource={dataSource}
+            selectedRowKeys={selectedRows?.map((el) => el.id)}
             onRowSelectionChange={(_, rows) => {
               setSelectedRows(rows);
             }}

@@ -33,31 +33,26 @@ const AddRateeStep2 = ({ loading }) => {
       id: 20200604221,
       name: 'James Kirk',
       email: 'jtkirk@ufp.com',
-      key: '1',
     },
     {
       id: 20200604222,
       name: 'James Kirk',
       email: 'jtkirk@ufp.com',
-      key: '2',
     },
     {
       id: 20200604223,
       name: 'James Kirk',
       email: 'jtkirk@ufp.com',
-      key: '3',
     },
     {
       id: 20200604224,
       name: 'James Kirk',
       email: 'jtkirk@ufp.com',
-      key: '4',
     },
     {
       id: 20200604225,
       name: 'James Kirk',
       email: 'jtkirk@ufp.com',
-      key: '5',
     },
   ];
 
@@ -89,7 +84,7 @@ const AddRateeStep2 = ({ loading }) => {
             loading={loading}
             columns={columns}
             dataSource={dataSource || []}
-            selectedRowKeys={selectedRows?.map((el) => el.key)}
+            selectedRowKeys={selectedRows?.map((el) => el.id)}
             onRowSelectionChange={(_, rows) => {
               setSelectedRows(rows);
             }}
