@@ -22,7 +22,62 @@ class SurveyQuestions extends React.Component {
   setSurveyQuestions = async (data) => {
     const { setSurveyQuestions } = this.props;
 
-    return setSurveyQuestions(data);
+    // removeing fake ids that are created in front-end
+    const newClusters = [...data.clusters].map((cluster) => {
+      const newCluster = { ...cluster };
+
+      if (newCluster.newAddedItem) {
+        delete newCluster.newAddedItem;
+        delete newCluster.id;
+      }
+
+      delete newCluster.index;
+
+      newCluster.competencies = newCluster.competencies.map((competency) => {
+        const newCompetency = { ...competency };
+
+        if (newCompetency.newAddedItem) {
+          delete newCompetency.newAddedItem;
+          delete newCompetency.id;
+        }
+
+        delete newCompetency.index;
+
+        newCompetency.questions = newCompetency.questions.map((question) => {
+          const newQuestion = { ...question };
+
+          if (newQuestion.newAddedItem) {
+            delete newQuestion.newAddedItem;
+            delete newQuestion.id;
+          }
+
+          delete newQuestion.index;
+
+          return newQuestion;
+        });
+
+        return newCompetency;
+      });
+
+      return newCluster;
+    });
+
+    const newFeedbacks = [...data.feedbacks].map((feedback) => {
+      const newFeedback = { ...feedback };
+
+      if (newFeedback.newAddedItem) {
+        delete newFeedback.newAddedItem;
+        delete newFeedback.id;
+      }
+
+      delete newFeedback.index;
+
+      return newFeedback;
+    });
+
+    const newData = { ...data, clusters: newClusters, feedbacks: newFeedbacks };
+
+    return setSurveyQuestions(newData);
   };
 
   render() {

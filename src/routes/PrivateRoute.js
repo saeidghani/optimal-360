@@ -14,7 +14,7 @@ const PrivateRoute = ({ scrollToTop, ...props }) => {
   // set page scroll to top of the page in specified pages
   React.useEffect(() => {
     if (scrollToTop) window.scrollTo(0, 0);
-  }, [window.top.scrollY]);
+  }, [pathname]);
 
   // Not logged in - redirect to (/super-user/login) with previous path (/prevPath)
   if (!token) {
