@@ -3,18 +3,24 @@ import PropTypes from 'prop-types';
 import { FileTextOutlined, CheckOutlined } from '@ant-design/icons';
 
 import { useHistory } from 'react-router-dom';
-import Layout from './Helper/Layout';
+import Layout from '../Helper/Layout';
 
-import Button from '../Common/Button';
-import Progress from '../Common/Progress';
-import TextArea from '../Common/TextArea';
-import Modal from '../Common/Modal';
+import Button from '../../Common/Button';
+import Progress from '../../Common/Progress';
+import TextArea from '../../Common/TextArea';
+import Modal from '../../Common/Modal';
 
 const RateeGroupQuestions2 = ({ loading }) => {
   const [submitModalVisible, setSubmitModalVisible] = React.useState(false);
   const [thankYouModalVisible, setThankYouModalVisible] = React.useState(false);
+  const [items, setItems] = React.useState({});
 
   const history = useHistory();
+
+  const persons = [
+    { id: 1, title: 'Katherine Kan', name: 'person1' },
+    { id: 2, title: 'Katherine Kan', name: 'person2' },
+  ];
 
   const handleNext = () => {
     setSubmitModalVisible(true);
@@ -38,6 +44,7 @@ const RateeGroupQuestions2 = ({ loading }) => {
       <Modal
         visible={submitModalVisible}
         handleOk={handleSubmitModalOk}
+        handleCancel={() => {}}
         width={588}
         okText="Yes"
         cancelText=""
@@ -51,6 +58,7 @@ const RateeGroupQuestions2 = ({ loading }) => {
       <Modal
         visible={thankYouModalVisible}
         handleOk={handleThankYouModalOk}
+        handleCancel={() => {}}
         width={588}
         okText="Ok"
         cancelText=""
@@ -82,32 +90,23 @@ const RateeGroupQuestions2 = ({ loading }) => {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-12 w-full">
-          <span className="col-start-1 col-span-12 md:col-span-2 md:ml-3 lg:ml-5">
-            Katherine Kan
-          </span>
-          <div className="w-full col-start-1 col-span-12 md:col-start-3 md:col-span-10">
-            <TextArea
-              wrapperClassName="-mt-2"
-              className="border border-solid border-gray-500 rounded-md bg-white  md:bg-transparent"
-              placeholder="(The verbatim can be left empty by clicking skip)"
-              rows={2}
-            />
+        {persons.map((person) => (
+          <div className="grid grid-cols-12 w-full" key={person.id}>
+            <span className="col-start-1 col-span-12 md:col-span-2 md:ml-3 lg:ml-5">
+              {person.title}
+            </span>
+            <div className="w-full col-start-1 col-span-12 md:col-start-3 md:col-span-10">
+              <TextArea
+                wrapperClassName="-mt-2"
+                className="border border-solid border-gray-500 rounded-md bg-white  md:bg-transparent"
+                placeholder="(The verbatim can be left empty by clicking skip)"
+                rows={2}
+                value={items[person.name]}
+                onChange={(e) => setItems({ ...items, [person.name]: e.target.value })}
+              />
+            </div>
           </div>
-        </div>
-        <div className="grid grid-cols-12 w-full">
-          <span className="col-start-1 col-span-12 md:col-span-2 md:ml-3 lg:ml-5">
-            Katherine Kan
-          </span>
-          <div className="w-full col-start-1 col-span-12 md:col-start-3 md:col-span-10">
-            <TextArea
-              wrapperClassName="-mt-2"
-              className="border border-solid border-gray-500 rounded-md bg-white  md:bg-transparent"
-              placeholder="(The verbatim can be left empty by clicking skip)"
-              rows={2}
-            />
-          </div>
-        </div>
+        ))}
       </div>
       <div className="flex flex-col mt-4 mb-16 md:mb-10 md:flex-row-reverse md:ml-auto">
         <Button
@@ -119,7 +118,8 @@ const RateeGroupQuestions2 = ({ loading }) => {
         <Button
           onClick={handleBack}
           text="Back"
-          className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none w-full md:mr-6 md:w-auto md:border-none"
+          className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none w-full
+          md:mr-6 md:w-auto md:border-none"
           textSize="base"
         />
       </div>

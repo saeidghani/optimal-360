@@ -2,25 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 
-import Layout from './Helper/Layout';
+import Layout from '../Helper/Layout';
 
-import Dropdown from '../Common/Dropdown';
-import Button from '../Common/Button';
-import Tabs from '../Common/Tabs';
-import Progress from '../Common/Progress';
-import Table from '../Common/Table';
+import Dropdown from '../../Common/Dropdown';
+import Button from '../../Common/Button';
+import Tabs from '../../Common/Tabs';
+import Progress from '../../Common/Progress';
+import Table from '../../Common/Table';
 
-import graphIcon from '../../assets/images/graph-icon.svg';
+import graphIcon from '../../../assets/images/graph-icon.svg';
 
 const AllRatees = ({ loading }) => {
   const [pageSize] = React.useState(10);
+  const [project, setProject] = React.useState('');
 
   const history = useHistory();
 
   const dropdownOptions = [
-    { title: 'Top Leadership', value: 1 },
-    { title: 'Top Leadership2', value: 2 },
-    { title: 'Top Leadership3', value: 3 },
+    { title: 'Top Leadership', value: '1' },
+    { title: 'Top Leadership2', value: '2' },
+    { title: 'Top Leadership3', value: '3' },
   ];
 
   const secondaryTabOptions = [
@@ -128,6 +129,10 @@ const AllRatees = ({ loading }) => {
     history.push('/survey-platform/managers/individual');
   };
 
+  const handleSubmit = () => {
+    history.push('/survey-platform/managers/individual');
+  };
+
   return (
     <Layout>
       <div className="grid grid-cols-12 mb-10 mt-8">
@@ -136,8 +141,9 @@ const AllRatees = ({ loading }) => {
           className="c-autocomplete col-start-1 col-span-12 md:col-start-1 md:col-span-4 lg:col-start-1
           lg:col-span-3 w-full"
           showSearch
-          value={1}
           type="gray"
+          value={project}
+          handleChange={(val) => setProject(val)}
           options={dropdownOptions}
         />
       </div>
@@ -192,6 +198,7 @@ const AllRatees = ({ loading }) => {
           text="Continue Rating"
         />
         <Button
+          onClick={handleSubmit}
           className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none
           w-full md:w-auto md:border-none"
           text="Submit All"
