@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 
-import { useQuery, stringify } from '../../../hooks/useQuery';
+import { useQuery } from '../../../hooks/useQuery';
 import { useSurveyGroup } from '../../../hooks';
 
 import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
@@ -165,13 +165,12 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
             onSubmit={async (values) => {
               try {
                 await setReports({ surveyGroupId, ...values });
-                const params = stringify({ projectId, surveyGroupId });
 
-                history.push(`/super-user/participants/rates${params}`);
+                history.push('/super-user/participants/rates');
               } catch (error) {}
             }}
           >
-            {({ values, errors, touched, handleSubmit }) => (
+            {({ values, handleSubmit }) => (
               <Form onSubmit={handleSubmit}>
                 <div className="flex mt-12 mb-3">
                   <Button
