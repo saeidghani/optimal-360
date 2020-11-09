@@ -3,13 +3,10 @@ import React from 'react';
 import { TeamOutlined } from '@ant-design/icons';
 
 import PropTypes from 'prop-types';
-import MainLayout from '../../Common/Layout';
-import Dropdown from '../../Common/Dropdown';
-import Tabs from '../../Common/Tabs';
 import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
 
-const StatusOverviewRates = ({ loading }) => {
+const StatusOverview = ({ loading }) => {
   const [pageSize] = React.useState(10);
 
   const columns = React.useMemo(() => [
@@ -339,10 +336,10 @@ const StatusOverviewRates = ({ loading }) => {
   );
 };
 
-StatusOverviewRates.propTypes = {
+StatusOverview.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
-StatusOverviewRates.defaultProps = {};
+StatusOverview.defaultProps = {};
 
-export default StatusOverviewRates;
+export default StatusOverview;

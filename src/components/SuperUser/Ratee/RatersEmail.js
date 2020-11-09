@@ -7,7 +7,7 @@ import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
 import { useQuery } from "../../../hooks";
 
-const EmailRates = ({ loading, fetchRaters, raters }) => {
+const RatersEmail = ({ loading, fetchRaters, raters }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
@@ -144,7 +144,7 @@ const EmailRates = ({ loading, fetchRaters, raters }) => {
   );
 };
 
-EmailRates.propTypes = {
+RatersEmail.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchRaters: PropTypes.func.isRequired,
   raters: PropTypes.shape({
@@ -160,8 +160,8 @@ EmailRates.propTypes = {
   }),
 };
 
-EmailRates.defaultProps = {
+RatersEmail.defaultProps = {
   raters: {},
 };
 
-export default EmailRates;
+export default RatersEmail;

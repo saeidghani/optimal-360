@@ -2,7 +2,7 @@ import axios from '../lib/api';
 import actionWapper from '../lib/actionWapper';
 
 export default {
-  namespace: 'rates',
+  namespace: 'ratee',
 
   state: {
     statusDetails: '',

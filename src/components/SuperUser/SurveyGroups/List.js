@@ -127,7 +127,7 @@ const SurveyGroups = ({ loading }) => {
         render: (name) => (
           <Button
             className="pl-0"
-            onClick={() => history.push('/super-user/participants/rates')}
+            onClick={() => history.push('/super-user/participants/ratee')}
             type="link"
             textSize="sm"
             text={name}

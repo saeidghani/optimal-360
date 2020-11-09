@@ -7,7 +7,7 @@ import Table from '../../Common/Table';
 import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
 
-const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
+const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
@@ -111,14 +111,14 @@ const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
   const columns = React.useMemo(() => [
     {
       key: 'raterName',
-      title: 'Rates Name',
+      title: 'Rater Name',
       width: 100,
       sorter: true,
       sortOrder: getSortOrder('raterName'),
     },
     {
       key: 'raterEmail',
-      title: 'Rates Email',
+      title: 'Rater Email',
       width: 100,
       sorter: true,
       sortOrder: getSortOrder('raterEmail'),
@@ -133,7 +133,7 @@ const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
     },
     {
       key: 'raterGroupName',
-      title: 'Rates Group',
+      title: 'Rater Group',
       width: 100,
 
     },
@@ -202,7 +202,7 @@ const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
   );
 };
 
-StatusDetailsRates.propTypes = {
+StatusDetails.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchStatusDetails: PropTypes.func.isRequired,
   statusDetails: PropTypes.shape({
@@ -218,8 +218,8 @@ StatusDetailsRates.propTypes = {
   }),
 };
 
-StatusDetailsRates.defaultProps = {
+StatusDetails.defaultProps = {
   statusDetails: {},
 };
 
-export default StatusDetailsRates;
+export default StatusDetails;

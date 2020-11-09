@@ -11,7 +11,7 @@ import Modal from '../../Common/Modal';
 import Checkbox from '../../Common/Checkbox';
 import SearchBox from '../../Common/SearchBox';
 
-const ResultRates = ({ loading }) => {
+const Result = ({ loading }) => {
   const [pageSize] = React.useState(10);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [visible, setVisible] = React.useState(false);
@@ -350,10 +350,10 @@ const ResultRates = ({ loading }) => {
   );
 };
 
-ResultRates.propTypes = {
+Result.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
-ResultRates.defaultProps = {};
+Result.defaultProps = {};
 
-export default ResultRates;
+export default Result;

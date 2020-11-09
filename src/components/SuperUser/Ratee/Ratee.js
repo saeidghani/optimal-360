@@ -5,15 +5,15 @@ import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 import MainLayout from '../../Common/Layout';
 import Dropdown from '../../Common/Dropdown';
-import StatusOverviewRates from './StatusOverviewRates';
-import StatusDetailsRates from './StatusDetailsRates';
-import EmailRates from './EmailRates';
-import ResultRates from './ResultRates';
+import StatusOverview from './StatusOverview';
+import StatusDetails from './StatusDetails';
+import RatersEmail from './RatersEmail';
+import Result from './Result';
 import { useParams, useHistory } from 'react-router-dom';
 
-const Rates = ({ loading, fetchStatusDetails, statusDetails, raters, fetchRaters }) => {
+const Ratee = ({ loading, fetchStatusDetails, statusDetails, raters, fetchRaters }) => {
   const history = useHistory();
-  const { tab } = useParams();
+const { tab = 'status-overview' } = useParams() || {} ;
   const { TabPane } = Tabs;
   const dropDownOptions = [
     { title: 'Top Leadership', value: 1 },
@@ -24,13 +24,13 @@ const Rates = ({ loading, fetchStatusDetails, statusDetails, raters, fetchRaters
     {
       title: 'Status Overview',
       key: 'status-overview',
-      component: <StatusOverviewRates loading={loading} />,
+      component: <StatusOverview loading={loading} />,
     },
     {
       title: 'Status Details',
       key: 'status-details',
       component: (
-        <StatusDetailsRates
+        <StatusDetails
           fetchStatusDetails={fetchStatusDetails}
           statusDetails={statusDetails}
           loading={loading}
@@ -41,7 +41,7 @@ const Rates = ({ loading, fetchStatusDetails, statusDetails, raters, fetchRaters
       title: 'Rates Email',
       key: 'raters-email',
       component: (
-        <EmailRates
+        <RatersEmail
           loading={loading}
           raters={raters}
           fetchRaters={fetchRaters}
@@ -51,12 +51,12 @@ const Rates = ({ loading, fetchStatusDetails, statusDetails, raters, fetchRaters
     {
       title: 'Results',
       key: 'result',
-      component: <ResultRates loading={loading} />,
+      component: <Result loading={loading} />,
     },
   ];
 
   function tabChangeCallback(key) {
-    history.push(`/super-user/participants/rates/${key}`);
+    history.push(`/super-user/participants/ratee/${key}`);
   }
 
   return (
@@ -82,7 +82,7 @@ const Rates = ({ loading, fetchStatusDetails, statusDetails, raters, fetchRaters
   );
 };
 
-Rates.propTypes = {
+Ratee.propTypes = {
   loading: PropTypes.bool.isRequired,
   statusDetails: PropTypes.shape({}),
   raters: PropTypes.shape({}),
@@ -90,9 +90,9 @@ Rates.propTypes = {
   fetchRaters: PropTypes.func.isRequired,
 };
 
-Rates.defaultProps = {
+Ratee.defaultProps = {
   statusDetails: {},
   raters: {},
 };
 
-export default Rates;
+export default Ratee;

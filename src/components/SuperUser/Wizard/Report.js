@@ -166,7 +166,7 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
               try {
                 await setReports({ surveyGroupId, ...values });
 
-                history.push('/super-user/participants/rates');
+                history.push('/super-user/participants/ratee');
               } catch (error) {}
             }}
           >
