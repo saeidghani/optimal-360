@@ -156,18 +156,24 @@ const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
     },
   ]);
 
-  const dataSource = React.useMemo(
-    () => (statusDetails?.data || []).map((item) => ({ ...item, key: `${item.id}` })),
-    // eslint-disable-next-line
-    [statusDetails.timeStamp],
-  );
+  const sort = (sorter) => {
+    // eslint-disable-next-line operator-linebreak
+    const order = parsedQuery?.sort?.[0] === '+' ? '-' : '+';
+    const newItem = `${order}${sorter.columnKey}`;
+
+    setQuery({ sort: newItem });
+  };
+  console.log('selectedRows ', selectedRows);
+
   return (
     <Table
       size="middle"
       className="c-table-white-head p-6 mt-5 bg-white rounded-lg shadow"
+      onTableChange={({ sorter }) => sort(sorter)}
       loading={loading}
       columns={columns}
-      dataSource={dataSource}
+      dataSource={statusDetails?.data || []}
+      rowKey="relationId"
       renderHeader={renderHeader}
       onPageSizeChange={(size) => {
         setPageSize(size);
