@@ -14,13 +14,22 @@ class Rates extends Component {
     return fetchStatusDetails(query);
   };
 
+// raters email
+  fetchRaters = async (query) => {
+    const { fetchRaters } = this.props;
+
+    return fetchRaters(query);
+  };
+
   render() {
-    const { loading, statusDetails } = this.props;
+    const { loading, statusDetails, raters } = this.props;
 
     return (
       <Layout
         loading={loading}
         statusDetails={statusDetails}
+        raters={raters}
+        fetchRaters={this.fetchRaters}
         fetchStatusDetails={this.fetchStatusDetails}
       />
     );
@@ -29,21 +38,26 @@ class Rates extends Component {
 
 Rates.propTypes = {
   fetchStatusDetails: PropTypes.func.isRequired,
+  fetchRaters: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   statusDetails: PropTypes.shape({}),
+  raters: PropTypes.shape({}),
 };
 
 Rates.defaultProps = {
   statusDetails: {},
+  raters: {},
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
   statusDetails: state.rates?.statusDetails || {},
+  raters: state.rates?.statusDetails || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchStatusDetails: dispatch.rates.fetchStatusDetails,
+  fetchRaters: dispatch.rates.fetchRaters,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Rates);

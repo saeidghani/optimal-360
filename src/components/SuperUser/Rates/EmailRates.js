@@ -5,10 +5,12 @@ import PropTypes from 'prop-types';
 import Table from '../../Common/Table';
 import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
+import StatusDetailsRates from "./StatusDetailsRates";
 
-const EmailRates = ({ loading }) => {
+const EmailRates = ({ loading, fetchRaters, raters }) => {
   const [pageSize] = React.useState(10);
   const [selectedRows, setSelectedRows] = React.useState([]);
+
 
   const renderHeader = React.useCallback(() => {
     return selectedRows && selectedRows?.length > 0 ? (
@@ -144,8 +146,22 @@ const EmailRates = ({ loading }) => {
 
 EmailRates.propTypes = {
   loading: PropTypes.bool.isRequired,
+  fetchRaters: PropTypes.func.isRequired,
+  raters: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.object),
+    metaData: PropTypes.shape({
+      pagination: PropTypes.shape({
+        pageNumber: PropTypes.string,
+        pageSize: PropTypes.string,
+        totalRecords: PropTypes.string,
+      }),
+    }),
+    timeStamp: PropTypes.number,
+  }),
 };
 
-EmailRates.defaultProps = {};
+EmailRates.defaultProps = {
+  raters: {},
+};
 
 export default EmailRates;

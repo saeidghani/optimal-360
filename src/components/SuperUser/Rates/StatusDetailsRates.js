@@ -161,6 +161,7 @@ const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
     // eslint-disable-next-line
     [statusDetails.timeStamp],
   );
+  console.log()
   return (
     <Table
       size="middle"
