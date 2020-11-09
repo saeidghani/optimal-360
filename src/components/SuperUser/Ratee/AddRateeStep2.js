@@ -2,11 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 
-import { useQuery } from '../../../hooks/useQuery';
-import { useSurveyGroup } from '../../../hooks';
-
-import ChangeSurveyGroupModal from '../Wizard/Helper/ChangeSurveyGroupModal';
-
 import MainLayout from '../../Common/Layout';
 import Loading from '../../Common/Loading';
 import Menu from '../Wizard/Helper/Menu';
@@ -16,13 +11,7 @@ import Button from '../../Common/Button';
 
 const AddRateeStep2 = ({ loading }) => {
   const history = useHistory();
-  const [pageSize] = React.useState(10);
   const [selectedRows, setSelectedRows] = React.useState([]);
-
-  const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
-
-  const [isFormDone, setIsFormDone] = React.useState(false);
-  const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
 
   const columns = React.useMemo(() => [
     {
@@ -85,8 +74,8 @@ const AddRateeStep2 = ({ loading }) => {
 
       <div className="bg-white grid grid-cols-12 pl-15">
         <Menu
-          onClick={(key) => setSelectedSurveyGroupKey(key)}
-          isFormDone={isFormDone}
+          onClick={() => {
+          }}
           title="Rater Group"
           items={[{ id: 1, name: 'Managers' }, { id: 2, name: 'peers' }]}
           className="col-span-2"
@@ -126,8 +115,7 @@ const AddRateeStep2 = ({ loading }) => {
         </div>
       </div>
     </MainLayout>
-  )
-    ;
+  );
 };
 
 AddRateeStep2.propTypes = {

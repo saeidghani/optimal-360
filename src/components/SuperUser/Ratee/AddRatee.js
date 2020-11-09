@@ -9,22 +9,15 @@ import ChangeSurveyGroupModal from '../Wizard/Helper/ChangeSurveyGroupModal';
 
 import MainLayout from '../../Common/Layout';
 import Loading from '../../Common/Loading';
-import Menu from '../Wizard/Helper/Menu';
 import Steps from '../../Common/Steps';
-import Table from "../../Common/Table";
-import Button from "../../Common/Button";
-import { fetchFullURL } from "../../../lib/utils";
-import SearchBox from "../../Common/SearchBox";
+import Table from '../../Common/Table';
+import Button from '../../Common/Button';
+import SearchBox from '../../Common/SearchBox';
 
 const AddRatee = ({ loading }) => {
   const history = useHistory();
   const [pageSize] = React.useState(10);
   const [selectedRows, setSelectedRows] = React.useState([]);
-
-  const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
-
-  const [isFormDone, setIsFormDone] = React.useState(false);
-  const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
 
   const renderHeader = React.useCallback(
     () => {
