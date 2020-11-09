@@ -94,9 +94,7 @@ const SurveyGroups = ({ loading }) => {
             />
 
             <Button
-              // onClick={() => history.push('/super-user/organizations/new')}
-              // icon="PlusCircleOutlined"
-              // iconPosition="right"
+              onClick={() => history.push('/super-user/new-project/project-info')}
               size="middle"
               textSize="xs"
               text="Edit Project"
