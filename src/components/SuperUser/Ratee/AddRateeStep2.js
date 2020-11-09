@@ -8,10 +8,39 @@ import Menu from '../Wizard/Helper/Menu';
 import Steps from '../../Common/Steps';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
+import SearchBox from '../../Common/SearchBox';
 
-const AddRateeStep2 = ({ loading }) => {
+const AddRateeStep2 = ({ loading, isEditing }) => {
   const history = useHistory();
   const [selectedRows, setSelectedRows] = React.useState([]);
+
+  const buttonLinks = isEditing ? {
+    Submit: '/super-user/participants/ratee/status-details',
+    Prev: '/super-user/participants/ratee/add/edit',
+  } : {
+    Submit: '/super-user/participants/ratee/status-details',
+    Prev: '/super-user/participants/ratee/add',
+  };
+
+  const renderHeader = React.useCallback(
+    () => {
+      return (
+        <div className="flex flex-row justify-start items-center">
+          <div className="flex flex-row">
+            <SearchBox
+              className="text-xs"
+              placeholder="SEARCH"
+              loading={loading}
+              // onSearch={(val) => setQuery({ q: val })}
+              // onPressEnter={(e) => setQuery({ q: e.target.value })}
+            />
+          </div>
+        </div>
+      );
+    },
+    // eslint-disable-next-line
+    [loading],
+  );
 
   const columns = React.useMemo(() => [
     {
@@ -30,34 +59,54 @@ const AddRateeStep2 = ({ loading }) => {
 
   const dataSource = [
     {
-      id: 20200604221,
-      name: 'James Kirk',
+      id: 202006042211,
+      name: 'Jean Luc Picard',
       email: 'jtkirk@ufp.com',
-      key: '1',
     },
     {
-      id: 20200604222,
-      name: 'James Kirk',
+      id: 202006042212,
+      name: 'William Riker',
       email: 'jtkirk@ufp.com',
-      key: '2',
     },
     {
-      id: 20200604223,
-      name: 'James Kirk',
+      id: 202006042213,
+      name: 'Jean Luc Picard',
       email: 'jtkirk@ufp.com',
-      key: '3',
     },
     {
-      id: 20200604224,
+      id: 202006042214,
       name: 'James Kirk',
       email: 'jtkirk@ufp.com',
-      key: '4',
     },
     {
-      id: 20200604225,
+      id: 202006042215,
       name: 'James Kirk',
       email: 'jtkirk@ufp.com',
-      key: '5',
+    },
+    {
+      id: 202006042216,
+      name: 'James Kirk',
+      email: 'jtkirk@ufp.com',
+    },
+    {
+      id: 202006042217,
+      name: 'Jean Luc Picard',
+      email: 'jtkirk@ufp.com',
+    },
+    {
+      id: 202006042218,
+      name: 'Benjamin Sisko',
+      email: 'jtkirk@ufp.com',
+    },
+    {
+      id: 202006042219,
+      name: 'William Riker',
+      email: 'jtkirk@ufp.com',
+    },
+    {
+      id: 20200604271,
+      name: 'Tom Paris',
+      email: 'jtkirk@ufp.com',
     },
   ];
 
@@ -86,10 +135,11 @@ const AddRateeStep2 = ({ loading }) => {
           <Table
             size="middle"
             className="p-6 mt-5 bg-white rounded-lg"
+            renderHeader={renderHeader}
             loading={loading}
             columns={columns}
             dataSource={dataSource || []}
-            selectedRowKeys={selectedRows?.map((el) => el.key)}
+            selectedRowKeys={selectedRows?.map((el) => el.id)}
             onRowSelectionChange={(_, rows) => {
               setSelectedRows(rows);
             }}
@@ -99,16 +149,16 @@ const AddRateeStep2 = ({ loading }) => {
             <Button
               className="w-24.5 h-9.5"
               type="link"
-              text="Cancel"
+              text="Prev"
               onClick={() => {
-                history.push('/super-user/participants/ratee/status-details');
+                history.push(buttonLinks.Prev);
               }}
             />
             <Button
               className="w-24.5 h-9.5"
-              text="Next"
+              text="Submit"
               onClick={() => {
-                history.push('/super-user/participants/ratee/status-details');
+                history.push(buttonLinks.Submit);
               }}
             />
           </div>
@@ -120,6 +170,7 @@ const AddRateeStep2 = ({ loading }) => {
 
 AddRateeStep2.propTypes = {
   loading: PropTypes.bool.isRequired,
+  isEditing: PropTypes.bool.isRequired,
 };
 
 AddRateeStep2.defaultProps = {};

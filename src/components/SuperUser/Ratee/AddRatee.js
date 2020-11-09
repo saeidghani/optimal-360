@@ -7,32 +7,43 @@ import Steps from '../../Common/Steps';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import SearchBox from '../../Common/SearchBox';
+import { Typography } from 'antd';
 
-const AddRatee = ({ loading }) => {
+const AddRatee = ({ loading, isEditing }) => {
   const history = useHistory();
-  const [pageSize] = React.useState(10);
   const [selectedRows, setSelectedRows] = React.useState([]);
-
+  const buttonLinks = isEditing ? {
+    next: '/super-user/participants/ratee/add/step2/edit',
+    cancel: '/super-user/new-project/report',
+  } : {
+    next: '/super-user/participants/ratee/add/step2',
+    cancel: '/super-user/new-project/report',
+  };
   const renderHeader = React.useCallback(
     () => {
       return (
         <div className="flex flex-row justify-start items-center">
-          <div className="flex flex-row">
-            <SearchBox
-              className="text-xs"
-              placeholder="SEARCH"
-              loading={loading}
-              // onSearch={(val) => setQuery({ q: val })}
-              // onPressEnter={(e) => setQuery({ q: e.target.value })}
-            />
-            <Button
-              size="middle"
-              textSize="xs"
-              text="Add a New Staff"
-              textClassName="mr-2"
-              className="ml-3"
-            />
-          </div>
+          {isEditing ? (
+            <Typography>Team Player</Typography>
+          ) : (
+            <div className="flex flex-row">
+              <SearchBox
+                className="text-xs"
+                placeholder="SEARCH"
+                loading={loading}
+                // onSearch={(val) => setQuery({ q: val })}
+                // onPressEnter={(e) => setQuery({ q: e.target.value })}
+              />
+              <Button
+                size="middle"
+                textSize="xs"
+                text="Add a New Staff"
+                textClassName="mr-2"
+                className="ml-3"
+              />
+            </div>
+          )}
+
         </div>
       );
     },
@@ -49,24 +60,40 @@ const AddRatee = ({ loading }) => {
 
   const dataSource = [
     {
-      key: '1',
-      staff: 'Team Player',
+      id: 1,
+      staff: 'Team Player1',
     },
     {
-      key: '2',
-      staff: 'Team Player',
+      id: 2,
+      staff: 'Team Player2',
     },
     {
-      key: '3',
-      staff: 'Team Player',
+      id: 3,
+      staff: 'Team Player3',
     },
     {
-      key: '4',
-      staff: 'Team Player',
+      id: 4,
+      staff: 'Team Player4',
     },
     {
-      key: '5',
-      staff: 'Team Player',
+      id: 5,
+      staff: 'Team Player5',
+    },
+    {
+      id: 6,
+      staff: 'Team Player5',
+    },
+    {
+      id: 7,
+      staff: 'Team Player5',
+    },
+    {
+      id: 8,
+      staff: 'Team Player5',
+    },
+    {
+      id: 9,
+      staff: 'Team Player5',
     },
   ];
 
@@ -82,7 +109,6 @@ const AddRatee = ({ loading }) => {
       <Loading visible={loading} />
 
       <div className="bg-white p-6 grid grid-cols-12  min-h-full">
-
         <div className="px-6 py-5 col-start-2 col-span-10">
           <Steps className="block" steps={['Ratee Details', 'Rater Selection']} currentPosition={0} />
           <Table
@@ -91,10 +117,8 @@ const AddRatee = ({ loading }) => {
             className="p-6 mt-5 bg-white rounded-lg"
             loading={loading}
             columns={columns}
-            dataSource={dataSource || []}
-            pageSize={pageSize * 1}
-            pageNumber={1}
-            selectedRowKeys={selectedRows?.map((el) => el.key)}
+            dataSource={dataSource}
+            selectedRowKeys={selectedRows?.map((el) => el.id)}
             onRowSelectionChange={(_, rows) => {
               setSelectedRows(rows);
             }}
@@ -106,14 +130,14 @@ const AddRatee = ({ loading }) => {
               type="link"
               text="Cancel"
               onClick={() => {
-                history.push('/super-user/participants/ratee/status-details');
+                history.push(buttonLinks.cancel);
               }}
             />
             <Button
               className="w-24.5 h-9.5"
               text="Next"
               onClick={() => {
-                history.push('/super-user/participants/ratee/add/step2');
+                history.push(buttonLinks.next);
               }}
             />
           </div>
@@ -125,6 +149,7 @@ const AddRatee = ({ loading }) => {
 
 AddRatee.propTypes = {
   loading: PropTypes.bool.isRequired,
+  isEditing: PropTypes.bool.isRequired,
 };
 
 AddRatee.defaultProps = {};
