@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from "react-router-dom";
 import PropTypes from 'prop-types';
 
 import { EditOutlined } from '@ant-design/icons';
@@ -9,6 +10,14 @@ import Loading from '../../Common/Loading';
 import Table from '../../Common/Table';
 
 const Models = ({ loading }) => {
+
+  const history = useHistory();
+
+  const handleClick = () => {
+    history.push("/super-user/bank/new-group")
+  };
+
+
   const data = [
     {
       id: 2020060422,
@@ -108,6 +117,7 @@ const Models = ({ loading }) => {
                 textSize="md"
                 iconPosition="right"
                 type="gray"
+                onClick={handleClick}
               />
               <Button
                 className="flex items-center mr-3.5"

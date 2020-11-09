@@ -393,7 +393,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                 await setSurveyQuestions({ ...values, surveyGroupId });
                 setPersistData('');
 
-                history.push(`/super-user/new-project/report${params}`);
+                history.push(`/super-user/bank/models`);
               } catch (error) {}
             }}
           >
@@ -523,7 +523,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                         surveyGroupId: parsedQuery?.surveyGroupId,
                       });
 
-                      history.push(`/super-user/new-project/survey-intro${params}`);
+                      history.push(`/super-user/bank/models`);
                     }}
                   />
 
