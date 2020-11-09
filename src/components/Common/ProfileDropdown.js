@@ -4,14 +4,22 @@ import PropTypes from 'prop-types';
 import { Menu, Dropdown, Avatar } from 'antd';
 import { DownOutlined, UserOutlined, MoreOutlined } from '@ant-design/icons';
 
-const ProfileDropdown = ({ title, options, src }) => {
+const ProfileDropdown = ({ title, options, src, iconClassName }) => {
   const _Menu = (
     <Menu>
       {options?.length > 0
         ? options.map((option) => (
             // eslint-disable-next-line react/jsx-indent
-            <Menu.Item key={option.key}>
-              <Link to={option.href}>{option.title}</Link>
+            <Menu.Item
+              key={option.key}
+              className={`flex items-center ${option.itemClassName ? option.itemClassName : ''}`}
+            >
+              {option.icon && <div className={`mr-2 ${iconClassName}`}>{option.icon}</div>}
+              <Link to={option.href}>
+                <span className={`${option.titleClassName ? option.titleClassName : ''}`}>
+                  {option.title}
+                </span>
+              </Link>
             </Menu.Item>
           ))
         : null}
@@ -36,17 +44,21 @@ ProfileDropdown.propTypes = {
   title: PropTypes.string,
   options: PropTypes.arrayOf(
     PropTypes.shape({
-      title: PropTypes.string,
+      key: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+      icon: PropTypes.node,
+      itemClassName: PropTypes.string,
       href: PropTypes.string,
-      key: PropTypes.number,
     }),
   ).isRequired,
   src: PropTypes.string,
+  iconClassName: PropTypes.string,
 };
 
 ProfileDropdown.defaultProps = {
   title: '',
   src: '',
+  iconClassName: '',
 };
 
 export default ProfileDropdown;
