@@ -7,7 +7,7 @@ import Table from '../../Common/Table';
 import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
 
-const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
+const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
@@ -58,7 +58,13 @@ const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
           />
         </div>
         <div className="flex flex-row">
-          <SearchBox className="text-xs" placeholder="SEARCH" loading={loading} />
+          <SearchBox
+            className="text-xs"
+            placeholder="SEARCH"
+            loading={loading}
+            onSearch={(val) => setQuery({ q: val })}
+            onPressEnter={(e) => setQuery({ q: e.target.value })}
+          />
           <Button
             size="middle"
             textSize="xs"
@@ -105,14 +111,14 @@ const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
   const columns = React.useMemo(() => [
     {
       key: 'raterName',
-      title: 'Rates Name',
+      title: 'Rater Name',
       width: 100,
       sorter: true,
       sortOrder: getSortOrder('raterName'),
     },
     {
       key: 'raterEmail',
-      title: 'Rates Email',
+      title: 'Rater Email',
       width: 100,
       sorter: true,
       sortOrder: getSortOrder('raterEmail'),
@@ -127,7 +133,7 @@ const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
     },
     {
       key: 'raterGroupName',
-      title: 'Rates Group',
+      title: 'Rater Group',
       width: 100,
 
     },
@@ -156,18 +162,22 @@ const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
     },
   ]);
 
-  const dataSource = React.useMemo(
-    () => (statusDetails?.data || []).map((item) => ({ ...item, key: `${item.id}` })),
-    // eslint-disable-next-line
-    [statusDetails.timeStamp],
-  );
+  const sort = (sorter) => {
+    // eslint-disable-next-line operator-linebreak
+    const order = parsedQuery?.sort?.[0] === '+' ? '-' : '+';
+    const newItem = `${order}${sorter.columnKey}`;
+
+    setQuery({ sort: newItem });
+  };
   return (
     <Table
       size="middle"
       className="c-table-white-head p-6 mt-5 bg-white rounded-lg shadow"
+      onTableChange={({ sorter }) => sort(sorter)}
       loading={loading}
       columns={columns}
-      dataSource={dataSource}
+      dataSource={statusDetails?.data || []}
+      rowKey="relationId"
       renderHeader={renderHeader}
       onPageSizeChange={(size) => {
         setPageSize(size);
@@ -183,7 +193,7 @@ const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
           page_number,
         });
       }}
-      selectedRowKeys={selectedRows?.map((el) => el.key)}
+      selectedRowKeys={selectedRows?.map((el) => el.relationId)}
       onRowSelectionChange={(_, rows) => {
         setSelectedRows(rows);
       }}
@@ -192,7 +202,7 @@ const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
   );
 };
 
-StatusDetailsRates.propTypes = {
+StatusDetails.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchStatusDetails: PropTypes.func.isRequired,
   statusDetails: PropTypes.shape({
@@ -208,8 +218,8 @@ StatusDetailsRates.propTypes = {
   }),
 };
 
-StatusDetailsRates.defaultProps = {
+StatusDetails.defaultProps = {
   statusDetails: {},
 };
 
-export default StatusDetailsRates;
+export default StatusDetails;

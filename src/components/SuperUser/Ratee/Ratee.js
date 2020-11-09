@@ -1,35 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 // import PropTypes from 'prop-types';
 
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 import MainLayout from '../../Common/Layout';
 import Dropdown from '../../Common/Dropdown';
-import StatusOverviewRates from './StatusOverviewRates';
-import StatusDetailsRates from './StatusDetailsRates';
-import EmailRates from './EmailRates';
-import ResultRates from './ResultRates';
+import StatusOverview from './StatusOverview';
+import StatusDetails from './StatusDetails';
+import RatersEmail from './RatersEmail';
+import Result from './Result';
+import { useParams, useHistory } from 'react-router-dom';
 
-const Rates = ({ loading, fetchStatusDetails, statusDetails }) => {
+const Ratee = ({ loading, fetchStatusDetails, statusDetails, raters, fetchRaters }) => {
+  const history = useHistory();
+const { tab = 'status-overview' } = useParams() || {} ;
   const { TabPane } = Tabs;
-  const [selectedTab, setSelectedTab] = useState('2');
   const dropDownOptions = [
     { title: 'Top Leadership', value: 1 },
     { title: 'Top Leadership2', value: 2 },
     { title: 'Top Leadership3', value: 3 },
   ];
-
   const tabs = [
     {
       title: 'Status Overview',
-      key: '1',
-      component: <StatusOverviewRates loading={loading} />,
+      key: 'status-overview',
+      component: <StatusOverview loading={loading} />,
     },
     {
       title: 'Status Details',
-      key: '2',
+      key: 'status-details',
       component: (
-        <StatusDetailsRates
+        <StatusDetails
           fetchStatusDetails={fetchStatusDetails}
           statusDetails={statusDetails}
           loading={loading}
@@ -38,18 +39,24 @@ const Rates = ({ loading, fetchStatusDetails, statusDetails }) => {
     },
     {
       title: 'Rates Email',
-      key: '3',
-      component: <EmailRates loading={loading} />,
+      key: 'raters-email',
+      component: (
+        <RatersEmail
+          loading={loading}
+          raters={raters}
+          fetchRaters={fetchRaters}
+        />
+      ),
     },
     {
       title: 'Results',
-      key: '4',
-      component: <ResultRates loading={loading} />,
+      key: 'result',
+      component: <Result loading={loading} />,
     },
   ];
 
   function tabChangeCallback(key) {
-    setSelectedTab(key);
+    history.push(`/super-user/participants/ratee/${key}`);
   }
 
   return (
@@ -64,10 +71,10 @@ const Rates = ({ loading, fetchStatusDetails, statusDetails }) => {
           options={dropDownOptions}
         />
       </div>
-      <Tabs defaultActiveKey={selectedTab} onChange={tabChangeCallback}>
+      <Tabs defaultActiveKey={tab} onChange={tabChangeCallback}>
         {tabs.map(({ title, key, component }) => (
           <TabPane tab={title} key={key}>
-            {selectedTab === key && component}
+            {component}
           </TabPane>
         ))}
       </Tabs>
@@ -75,14 +82,17 @@ const Rates = ({ loading, fetchStatusDetails, statusDetails }) => {
   );
 };
 
-Rates.propTypes = {
+Ratee.propTypes = {
   loading: PropTypes.bool.isRequired,
   statusDetails: PropTypes.shape({}),
+  raters: PropTypes.shape({}),
   fetchStatusDetails: PropTypes.func.isRequired,
+  fetchRaters: PropTypes.func.isRequired,
 };
 
-Rates.defaultProps = {
+Ratee.defaultProps = {
   statusDetails: {},
+  raters: {},
 };
 
-export default Rates;
+export default Ratee;

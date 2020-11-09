@@ -18,8 +18,19 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
   const pageNumber = parsedQuery?.page_number;
 
   React.useEffect(() => {
-    const newQuery = query || '?page_size=10&page_number=1';
-    fetchOrganizations(newQuery);
+    if (!parsedQuery?.page_number || !parsedQuery?.page_size || !parsedQuery?.status) {
+      setQuery({
+        page_number: 1,
+        page_size: 10,
+      });
+    }
+
+    // eslint-disable-next-line
+  }, [history?.location?.pathname]);
+
+  React.useEffect(() => {
+    // const newQuery = query || '?page_size=10&page_number=1';
+    fetchOrganizations(query);
   }, [fetchOrganizations, query]);
 
   const renderHeader = React.useCallback(() => {

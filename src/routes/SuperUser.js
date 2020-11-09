@@ -16,7 +16,7 @@ import OrganizationsStaff from '../containers/SuperUser/Organizations/Organizati
 import OrganizationsNewStaff from '../containers/SuperUser/Organizations/OrganizationsNewStaff';
 import NewOrganizations from '../containers/SuperUser/Organizations/NewOrganizations';
 import GroupReports from '../containers/SuperUser/SurveyGroups/GroupReports';
-import Rates from '../containers/SuperUser/Rates/Rates';
+import Rates from '../containers/SuperUser/Ratee/Ratee';
 import OrganizationsUpdateStaff from '../containers/SuperUser/Organizations/UpdateStaff';
 
 import ProjectInfo from '../containers/SuperUser/Wizard/ProjectInfo';
@@ -91,12 +91,11 @@ const Routes = ({ match }) => (
 
     {/* participants */}
     <PrivateRoute
-      path={`${match.path}/participants/rates`}
+      path={`${match.path}/participants/ratee/:tab?`}
+      // tab: 'status-overview'||'status-details'||'raters-email'||'result'
       exact
       component={Rates}
     />
-
-    {/* organizations */}
     <PrivateRoute path={`${match.path}/organizations`} exact component={Organizations} />
     <PrivateRoute
       path={`${match.path}/organizations/:organizationId/new-staff`}
