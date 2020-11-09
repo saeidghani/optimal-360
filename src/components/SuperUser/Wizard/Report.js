@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
-import * as yup from 'yup';
 
 import { useQuery, stringify } from '../../../hooks/useQuery';
 import { useSurveyGroup } from '../../../hooks';
@@ -42,15 +41,6 @@ const LABELS = {
 };
 
 const Report = ({ reports, fetchReports, setReports, loading }) => {
-  const schema = yup.object({
-    individualReport: yup.object({
-      competencyModelTemplate: yup.string().required('Client competency model is required'),
-    }),
-    groupReport: yup.object({
-      competencyModelTemplate: yup.string().required('Client competency model is required'),
-    }),
-  });
-
   const formRef = React.useRef();
   const history = useHistory();
 
@@ -172,7 +162,6 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
             innerRef={formRef}
             enableReinitialize
             initialValues={reports}
-            validationSchema={schema}
             onSubmit={async (values) => {
               try {
                 await setReports({ surveyGroupId, ...values });
@@ -266,7 +255,7 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
                     wrapperClassName="w-full mt-16"
                     value={values[reportType]?.competencyModelTemplate}
                     onChange={(val) => {
-                      const newValues = { ...values };
+                      const newValues = { ...(formRef.current?.values || {}) };
 
                       if (newValues[reportType] && formRef?.current) {
                         newValues[reportType].competencyModelTemplate = val;
@@ -277,9 +266,6 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
                     placeholder="Client Competency Model"
                     label="Client Competency Model :"
                   />
-                  <p className="text-red-500 h-5">
-                    {touched.competencyModelTemplate && errors.competencyModelTemplate}
-                  </p>
 
                   <p className="w-full mt-12 text-base font-medium">Additional Report Setting:</p>
 
