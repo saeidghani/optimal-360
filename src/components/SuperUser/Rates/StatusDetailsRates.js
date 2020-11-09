@@ -58,7 +58,13 @@ const StatusDetailsRates = ({ loading, fetchStatusDetails, statusDetails }) => {
           />
         </div>
         <div className="flex flex-row">
-          <SearchBox className="text-xs" placeholder="SEARCH" loading={loading} />
+          <SearchBox
+            className="text-xs"
+            placeholder="SEARCH"
+            loading={loading}
+            onSearch={(val) => setQuery({ q: val })}
+            onPressEnter={(e) => setQuery({ q: e.target.value })}
+          />
           <Button
             size="middle"
             textSize="xs"
