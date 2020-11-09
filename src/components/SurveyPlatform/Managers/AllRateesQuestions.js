@@ -3,17 +3,18 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { QuestionOutlined } from '@ant-design/icons';
 
-import Layout from './Helper/Layout';
+import Layout from '../Helper/Layout';
 
-import Button from '../Common/Button';
-import Progress from '../Common/Progress';
-import Table from '../Common/Table';
-import Radio from '../Common/RadioGroup';
-import Modal from '../Common/Modal';
+import Button from '../../Common/Button';
+import Progress from '../../Common/Progress';
+import Table from '../../Common/Table';
+import Radio from '../../Common/RadioGroup';
+import Modal from '../../Common/Modal';
 
-const Individual = ({ loading }) => {
+const AllRateesQuestions = ({ loading }) => {
   const [pageSize] = React.useState(10);
   const [visible, setVisible] = React.useState(false);
+  const [items, setItems] = React.useState({});
 
   const history = useHistory();
 
@@ -69,7 +70,14 @@ const Individual = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: (items) => <Radio onChange={() => {}} items={items} value="a" className="pl-5" />,
+      render: (itm) => (
+        <Radio
+          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
+          items={itm.options}
+          value={items[itm.id]}
+          className="pl-5"
+        />
+      ),
     },
     {
       key: 'notMuch',
@@ -83,7 +91,14 @@ const Individual = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: (items) => <Radio onChange={() => {}} items={items} value="b" className="pl-5" />,
+      render: (itm) => (
+        <Radio
+          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
+          items={itm.options}
+          value={items[itm.id]}
+          className="pl-5"
+        />
+      ),
     },
     {
       key: 'somewhat',
@@ -97,7 +112,14 @@ const Individual = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: (items) => <Radio onChange={() => {}} items={items} value="c" className="pl-5" />,
+      render: (itm) => (
+        <Radio
+          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
+          items={itm.options}
+          value={items[itm.id]}
+          className="pl-5"
+        />
+      ),
     },
     {
       key: 'most',
@@ -111,7 +133,14 @@ const Individual = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: (items) => <Radio onChange={() => {}} items={items} value="d" className="pl-5" />,
+      render: (itm) => (
+        <Radio
+          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
+          items={itm.options}
+          value={items[itm.id]}
+          className="pl-5"
+        />
+      ),
     },
     {
       key: 'notClear',
@@ -125,7 +154,14 @@ const Individual = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: (items) => <Radio onChange={() => {}} items={items} value="e" className="pl-5" />,
+      render: (itm) => (
+        <Radio
+          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
+          items={itm.options}
+          value={items[itm.id]}
+          className="pl-5"
+        />
+      ),
     },
   ]);
 
@@ -133,52 +169,52 @@ const Individual = ({ loading }) => {
     {
       key: '1',
       describesThisPerson: 'Katherine Kan',
-      notAtAll: [{ title: '', value: 'a' }],
-      notMuch: [{ title: '', value: 'b2' }],
-      somewhat: [{ title: '', value: 'c' }],
-      most: [{ title: '', value: 'd' }],
-      notClear: [{ title: '', value: 'e' }],
+      notAtAll: { id: '101', options: [{ title: '', value: '1' }] },
+      notMuch: { id: '101', options: [{ title: '', value: '2' }] },
+      somewhat: { id: '101', options: [{ title: '', value: '3' }] },
+      most: { id: '101', options: [{ title: '', value: '4' }] },
+      notClear: { id: '101', options: [{ title: '', value: '5' }] },
     },
     {
       key: '2',
       describesThisPerson: 'Katherine Kan',
-      notAtAll: [{ title: '', value: 'a2' }],
-      notMuch: [{ title: '', value: 'b' }],
-      somewhat: [{ title: '', value: 'c2' }],
-      most: [{ title: '', value: 'd' }],
-      notClear: [{ title: '', value: 'e2' }],
+      notAtAll: { id: '102', options: [{ title: '', value: '1' }] },
+      notMuch: { id: '102', options: [{ title: '', value: '2' }] },
+      somewhat: { id: '102', options: [{ title: '', value: '3' }] },
+      most: { id: '102', options: [{ title: '', value: '4' }] },
+      notClear: { id: '102', options: [{ title: '', value: '5' }] },
     },
     {
       key: '3',
       describesThisPerson: 'Katherine Kan',
-      notAtAll: [{ title: '', value: 'a' }],
-      notMuch: [{ title: '', value: 'b2' }],
-      somewhat: [{ title: '', value: 'c' }],
-      most: [{ title: '', value: 'd' }],
-      notClear: [{ title: '', value: 'e' }],
+      notAtAll: { id: '103', options: [{ title: '', value: '1' }] },
+      notMuch: { id: '103', options: [{ title: '', value: '2' }] },
+      somewhat: { id: '103', options: [{ title: '', value: '3' }] },
+      most: { id: '103', options: [{ title: '', value: '4' }] },
+      notClear: { id: '103', options: [{ title: '', value: '5' }] },
     },
     {
       key: '4',
       describesThisPerson: 'Katherine Kan',
-      notAtAll: [{ title: '', value: 'a' }],
-      notMuch: [{ title: '', value: 'b' }],
-      somewhat: [{ title: '', value: 'c2' }],
-      most: [{ title: '', value: 'd' }],
-      notClear: [{ title: '', value: 'e2' }],
+      notAtAll: { id: '104', options: [{ title: '', value: '1' }] },
+      notMuch: { id: '104', options: [{ title: '', value: '2' }] },
+      somewhat: { id: '104', options: [{ title: '', value: '3' }] },
+      most: { id: '104', options: [{ title: '', value: '4' }] },
+      notClear: { id: '104', options: [{ title: '', value: '5' }] },
     },
     {
       key: '5',
       describesThisPerson: 'Katherine Kan',
-      notAtAll: [{ title: '', value: 'a2' }],
-      notMuch: [{ title: '', value: 'b2' }],
-      somewhat: [{ title: '', value: 'c' }],
-      most: [{ title: '', value: 'd2' }],
-      notClear: [{ title: '', value: 'e' }],
+      notAtAll: { id: '105', options: [{ title: '', value: '1' }] },
+      notMuch: { id: '105', options: [{ title: '', value: '2' }] },
+      somewhat: { id: '105', options: [{ title: '', value: '3' }] },
+      most: { id: '105', options: [{ title: '', value: '4' }] },
+      notClear: { id: '105', options: [{ title: '', value: '5' }] },
     },
   ];
 
   const handleNext = () => {
-    history.push('/survey-platform/managers/individual');
+    history.push('/survey-platform/managers/individual/questions');
   };
 
   const handleBack = () => {
@@ -192,7 +228,7 @@ const Individual = ({ loading }) => {
 
   const handleCancel = () => {
     setVisible(false);
-    history.push('/survey-platform/managers/individual');
+    history.push('/survey-platform/managers/individual/questions');
   };
 
   return (
@@ -245,10 +281,10 @@ const Individual = ({ loading }) => {
   );
 };
 
-Individual.propTypes = {
+AllRateesQuestions.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
-Individual.defaultProps = {};
+AllRateesQuestions.defaultProps = {};
 
-export default Individual;
+export default AllRateesQuestions;
