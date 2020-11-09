@@ -6,9 +6,12 @@ import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
 import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
+import AwardIcon from '../../../assets/images/award.svg';
+import { useHistory } from "react-router-dom";
 
 const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
   const [parsedQuery, query, setQuery] = useQuery();
+  const history = useHistory();
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const pageNumber = parsedQuery?.page_number;
@@ -129,7 +132,23 @@ const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
       width: 100,
       sorter: true,
       sortOrder: getSortOrder('rateeName'),
-      render: (num) => <span className="text-12px">{num}</span>,
+      render: (num) => (
+        <div className="flex items-center">
+          <div className="text-12px inline-block">{num}</div>
+          <div className="inline-block">
+            <Button
+              onClick={() => {
+                history.push('/super-user/participants/ratee/add/edit');
+              }}
+              size="middle"
+              textSize="xs"
+              type="link"
+              className="ml-2 p-0 h-6 w-6"
+              icon={<img src={AwardIcon} alt="Ratee Name" className="purple-check h-6 w-6 inline-block" />}
+            />
+          </div>
+        </div>
+      ),
     },
     {
       key: 'raterGroupName',

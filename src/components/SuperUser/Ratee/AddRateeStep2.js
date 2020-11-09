@@ -59,52 +59,52 @@ const AddRateeStep2 = ({ loading, isEditing }) => {
 
   const dataSource = [
     {
-      id: 20200604221,
+      id: 202006042211,
       name: 'Jean Luc Picard',
       email: 'jtkirk@ufp.com',
     },
     {
-      id: 202002222,
+      id: 202006042212,
       name: 'William Riker',
       email: 'jtkirk@ufp.com',
     },
     {
-      id: 20200604223,
+      id: 202006042213,
       name: 'Jean Luc Picard',
       email: 'jtkirk@ufp.com',
     },
     {
-      id: 202003224,
+      id: 202006042214,
       name: 'James Kirk',
       email: 'jtkirk@ufp.com',
     },
     {
-      id: 20200604225,
+      id: 202006042215,
       name: 'James Kirk',
       email: 'jtkirk@ufp.com',
     },
     {
-      id: 202006055,
+      id: 202006042216,
       name: 'James Kirk',
       email: 'jtkirk@ufp.com',
     },
     {
-      id: 10200604225,
+      id: 202006042217,
       name: 'Jean Luc Picard',
       email: 'jtkirk@ufp.com',
     },
     {
-      id: 30200604225,
+      id: 202006042218,
       name: 'Benjamin Sisko',
       email: 'jtkirk@ufp.com',
     },
     {
-      id: 402006425,
+      id: 202006042219,
       name: 'William Riker',
       email: 'jtkirk@ufp.com',
     },
     {
-      id: 50200604225,
+      id: 20200604271,
       name: 'Tom Paris',
       email: 'jtkirk@ufp.com',
     },
