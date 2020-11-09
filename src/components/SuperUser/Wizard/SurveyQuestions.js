@@ -31,11 +31,11 @@ import DraggableTable from '../../Common/DataTable';
 import Loading from '../../Common/Loading';
 
 const _ratingScales = [
-  { id: '1', score: 0, description: '', label: '' },
-  { id: '2', score: 0, description: '', label: '' },
-  { id: '3', score: 0, description: '', label: '' },
-  { id: '4', score: 0, description: '', label: '' },
-  { id: '5', score: 0, description: '', label: '' },
+  { score: 0, description: '', label: '' },
+  { score: 1, description: '', label: '' },
+  { score: 2, description: '', label: '' },
+  { score: 3, description: '', label: '' },
+  { score: 4, description: '', label: '' },
 ];
 
 const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading }) => {
@@ -212,17 +212,23 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
 
   const addFeedback = (oldFeedbacks) => {
     const feedbacks = [...oldFeedbacks];
-    const lastFeedback = feedbacks[feedbacks.length - 1];
-    const newIndex = lastFeedback.showOrder + 1;
-    const newId = lastFeedback.id + 100;
+
+    // creating a unique id
+    const feedbackIds = feedbacks?.length > 0 ? feedbacks.map((el) => el.id * 1) : [1];
+    const id = feedbackIds.reduce((prevValue, currentValue) => prevValue + currentValue);
+
+    const index = feedbacks.length;
+    const showOrder =
+      feedbacks?.length > 0 ? Math.max(...feedbacks.map((el) => el.showOrder * 1)) + 1 : 1;
 
     const newClusters = {
       label: '',
       statement: '',
       required: false,
-      showOrder: newIndex,
-      index: newIndex,
-      id: newId,
+      showOrder,
+      index,
+      id,
+      newAddedItem: true,
     };
 
     feedbacks.push(newClusters);
@@ -411,8 +417,8 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                 <h4 className="text-secondary text-lg mb-8 mt-17">Rating Scale</h4>
 
                 {values.ratingScales.map((row, i) => (
-                  <div key={row.id || i} className="grid grid-cols-12">
-                    <p className="col-span-12 text-heading mb-3">{i + 1}</p>
+                  <div key={i} className="grid grid-cols-12">
+                    <p className="col-span-12 text-heading mb-3">{i}</p>
 
                     <Input
                       placeholder="Label"
