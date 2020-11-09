@@ -30,6 +30,8 @@ import Report from '../containers/SuperUser/Wizard/Report';
 import BankModels from '../containers/SuperUser/Bank/Models';
 
 import NotFound from '../components/404';
+import AddRatee from "../containers/SuperUser/Ratee/AddRatee";
+import AddRateeStep2 from "../containers/SuperUser/Ratee/AddRateeStep2";
 
 const Routes = ({ match }) => (
   <Switch>
@@ -90,6 +92,16 @@ const Routes = ({ match }) => (
     />
 
     {/* participants */}
+    <PrivateRoute
+      path={`${match.path}/participants/ratee/add`}
+      exact
+      component={AddRatee}
+    />
+    <PrivateRoute
+      path={`${match.path}/participants/ratee/add/step2`}
+      exact
+      component={AddRateeStep2}
+    />
     <PrivateRoute
       path={`${match.path}/participants/ratee/:tab?`}
       // tab: 'status-overview'||'status-details'||'raters-email'||'result'
