@@ -26,6 +26,7 @@ const Layout = ({
   title,
   hasBreadCrumb,
   headerClassName,
+  heading,
 }) => {
   const dropdownOptions = [
     {
@@ -99,6 +100,7 @@ const Layout = ({
         {hasBreadCrumb ? (
           <BreadCrumb className={`mt-2 hidden md:block ${headerClassName}`} />
         ) : null}
+        <div className="text-left text-heading">{heading}</div>
         {children}
       </div>
       <div
@@ -130,6 +132,7 @@ Layout.propTypes = {
   title: PropTypes.string,
   hasBreadCrumb: PropTypes.bool,
   headerClassName: PropTypes.string,
+  heading: PropTypes.string,
 };
 
 Layout.defaultProps = {
@@ -138,6 +141,7 @@ Layout.defaultProps = {
   title: '',
   hasBreadCrumb: false,
   headerClassName: '',
+  heading: 'Dashboard',
 };
 
 export default Layout;
