@@ -13,7 +13,7 @@ import { useParams, useHistory } from 'react-router-dom';
 
 const Ratee = ({ loading, fetchStatusDetails, statusDetails, raters, fetchRaters }) => {
   const history = useHistory();
-  const { tab } = useParams() || 'status-overview';
+const { tab = 'status-overview' } = useParams() || {} ;
   const { TabPane } = Tabs;
   const dropDownOptions = [
     { title: 'Top Leadership', value: 1 },
