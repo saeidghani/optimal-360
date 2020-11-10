@@ -36,11 +36,18 @@ const ClusterEditSection = ({ selectedCluster, onCancel, onSave }) => {
 
             <div className="flex flex-row items-center">
               <Button onClick={onCancel} text="Cancel" type="link" size="small" textSize="base" />
-              <Button onClick={handleSubmit} text="Save" ghost size="small" textSize="base" />
+              <Button
+                onClick={handleSubmit}
+                text="Save"
+                ghost
+                size="small"
+                textSize="base"
+                className="p-4 ml-4"
+              />
             </div>
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col mt-6">
             <Input
               name="clusterName"
               labelText="Cluster"
