@@ -1,83 +1,83 @@
 import React from 'react';
-// import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import PropTypes from 'prop-types';
 
-import { useQuery } from '../../../hooks';
+import { EditOutlined } from '@ant-design/icons';
 
 import Button from '../../Common/Button';
 import MainLayout from '../../Common/Layout';
+import Loading from '../../Common/Loading';
 import Table from '../../Common/Table';
 
-const Models = ({ loading, surveyGroups, fetchSurveyGroups, exportSurveyGroup }) => {
-  const [parsedQuery, query, setQuery] = useQuery();
+const Models = ({ loading }) => {
 
-  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
-  const pageNumber = parsedQuery?.page_number;
+  const history = useHistory();
 
-  React.useEffect(() => {
-    fetchSurveyGroups(query);
-  }, [query, fetchSurveyGroups]);
-
-  const getSortOrder = (key) => {
-    return parsedQuery?.sort?.includes(key)
-      ? parsedQuery?.sort?.[0] === '+'
-        ? 'ascend'
-        : 'descend'
-      : '';
+  const handleClick = () => {
+    history.push("/super-user/bank/new-group")
   };
 
-  const sort = (sorter) => {
-    // eslint-disable-next-line operator-linebreak
-    const order = parsedQuery?.sort?.[0] === '+' ? '-' : '+';
-    const newItem = `${order}${sorter.columnKey}`;
 
-    setQuery({ sort: newItem });
-  };
+  const data = [
+    {
+      id: 2020060422,
+      SurveyGroup: 'Top Leadership',
+    },
+    {
+      id: 2020060421,
+      SurveyGroup: 'Managers',
+    },
+    {
+      id: 2020060424,
+      SurveyGroup: 'High Potentials',
+    },
+    {
+      id: 2020060423,
+      SurveyGroup: 'Setting Direction',
+    },
+    {
+      id: 2020060425,
+      SurveyGroup: 'Delivering Results',
+    },
+    {
+      id: 2020060428,
+      SurveyGroup: 'Improving & Innovating',
+    },
+    {
+      id: 2020060428,
+      SurveyGroup: 'Managers',
+    },
+    {
+      id: 2020060428,
+      SurveyGroup: 'High Potentials',
+    },
+    {
+      id: 2020060428,
+      SurveyGroup: 'Setting Direction',
+    },
+    {
+      id: 2020060428,
+      SurveyGroup: 'Delivering Results',
+    },
+  ];
 
   const columns = [
     {
       key: 'id',
       title: 'ID',
       dataIndex: 'id',
-      sorter: true,
-      sortOrder: getSortOrder('id'),
     },
     {
-      key: 'name',
+      key: 'SurveyGroup',
       title: 'Survey Group',
-      dataIndex: 'name',
-      sorter: true,
-      sortOrder: getSortOrder('name'),
+      dataIndex: 'SurveyGroup',
     },
     {
-      key: 'action',
+      // key: 'action',
       width: 100,
       render: () => (
         <div className="flex items-center">
           <Button
-            // onClick={async () => {
-            //   const { data } = await exportSurveyGroup(id);
-
-            //   const blob = new Blob([data], {
-            //     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            //   });
-            //   // const csvURL = window.URL.createObjectURL(blob);
-
-            //   const reader = new FileReader();
-
-            //   reader.onload = (res) => {
-            //     console.log('onload', res);
-
-            //     setDownload(res.target.result);
-
-            //     // const tempLink = document.createElement('a');
-            //     // tempLink.href = res.target.result;
-            //     // tempLink.setAttribute('download', 'filename.csv');
-            //     // tempLink.click();
-            //   };
-
-            //   reader.readAsDataURL(blob);
-            // }}
             className="flex items-center mr-3.5"
             text="Export Exel File"
             icon="FileExcelOutlined"
@@ -87,98 +87,67 @@ const Models = ({ loading, surveyGroups, fetchSurveyGroups, exportSurveyGroup })
             iconPosition="right"
             type="gray"
           />
-          <Button
-            // onClick={async () => {
-            //   await duplicateProject(projectId);
-            //   fetch();
-            // }}
-            icon="EditOutlined"
-            type="link"
-            className="text-xl text-primary-500 cursor-pointer"
-            size="middle"
-          />
+          <EditOutlined className="text-xl text-primary-500 cursor-pointer" />
         </div>
       ),
     },
   ];
 
-  const renderHeader = () => (
-    <div className="flex justify-end">
-      <Button
-        className="flex items-center mr-3.5"
-        text="New Survey Group"
-        icon="PlusCircleOutlined"
-        textClassName="mr-2"
-        size="middle"
-        textSize="md"
-        iconPosition="right"
-        type="gray"
-      />
-      <Button
-        className="flex items-center mr-3.5"
-        text="Export Exel File"
-        icon="FileExcelOutlined"
-        textClassName="mr-2"
-        size="middle"
-        textSize="md"
-        iconPosition="right"
-        type="gray"
-      />
-    </div>
-  );
-
   return (
     <MainLayout
       hasBreadCrumb
       title="Pre Defined Data"
-      contentClass="py-6 pl-21 pr-6"
-      titleClass="mb-6 mt-3"
+      titleClass="mb-2"
+      contentClass="py-4"
+      headerClassName="pl-21"
+      childrenPadding={false}
     >
-      {/* <a target="_blank" rel="noreferrer" href={download} download={download}>
-        CSV FILE
-      </a> */}
+      <Loading visible={loading} />
 
-      <Table
-        className="p-6 bg-white rounded-lg shadow"
-        showSorterTooltip={false}
-        size="middle"
-        onTableChange={({ sorter }) => sort(sorter)}
-        renderHeader={renderHeader}
-        loading={loading}
-        columns={columns}
-        dataSource={surveyGroups?.data?.length > 0 ? surveyGroups.data : []}
-        rowSelection={false}
-        onPageSizeChange={(size) => {
-          setPageSize(size);
-          setQuery({ page_size: size, page_number: 1 });
-        }}
-        pageSize={pageSize * 1}
-        pageNumber={pageNumber * 1}
-        // eslint-disable-next-line camelcase
-        onPaginationChange={(page_number, page_size) => {
-          setQuery({
-            page_size,
-            page_number,
-          });
-        }}
-        totalRecordSize={surveyGroups?.metaData?.pagination?.totalRecords * 1}
-      />
+      <div className="pl-15 mt-8">
+        <div className="px-6">
+          <div className="bg-white px-6 py-5">
+            <div className="flex justify-end">
+              <Button
+                className="flex items-center mr-3.5"
+                text="New Survey Group"
+                icon="PlusCircleOutlined"
+                textClassName="mr-2"
+                size="middle"
+                textSize="md"
+                iconPosition="right"
+                type="gray"
+                onClick={handleClick}
+              />
+              <Button
+                className="flex items-center mr-3.5"
+                text="Export Exel File"
+                icon="FileExcelOutlined"
+                textClassName="mr-2"
+                size="middle"
+                textSize="md"
+                iconPosition="right"
+                type="gray"
+              />
+            </div>
+            <div>
+              <Table
+                size="middle"
+                loading={loading}
+                columns={columns}
+                dataSource={data}
+                rowSelection={false}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </MainLayout>
   );
 };
 
 Models.propTypes = {
   loading: PropTypes.bool.isRequired,
-  surveyGroups: PropTypes.shape({
-    data: PropTypes.arrayOf(PropTypes.object),
-    metaData: PropTypes.shape({
-      pagination: PropTypes.shape({
-        totalRecords: PropTypes.string,
-      }),
-    }),
-  }).isRequired,
-  fetchSurveyGroups: PropTypes.func.isRequired,
-  exportSurveyGroup: PropTypes.func.isRequired,
 };
 
 Models.defaultProps = {};

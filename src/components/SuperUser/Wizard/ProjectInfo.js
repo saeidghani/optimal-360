@@ -134,8 +134,8 @@ const ProjectInfo = ({
                 extrainfoLink="#"
                 placeholder="Search"
                 options={
-                  surveyGroups?.data?.length > 0
-                    ? surveyGroups.data.map(({ name, id }) => ({
+                  surveyGroups?.length > 0
+                    ? surveyGroups.map(({ name, id }) => ({
                         label: name,
                         value: name,
                         id,
@@ -192,16 +192,11 @@ ProjectInfo.propTypes = {
   organizations: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
   }),
-  surveyGroups: PropTypes.shape({
-    data: PropTypes.arrayOf(PropTypes.object),
-  }),
+  surveyGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 ProjectInfo.defaultProps = {
   organizations: {
-    data: [],
-  },
-  surveyGroups: {
     data: [],
   },
 };
