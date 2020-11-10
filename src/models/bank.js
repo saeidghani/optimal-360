@@ -16,7 +16,7 @@ export default {
           url: `/super-user/bank/survey-groups${query}`,
         });
 
-        await this.fetchSurveyGroups_reducer(res?.data?.data);
+        await this.fetchSurveyGroups_reducer(res?.data);
         return res;
       }, dispatch.util.errorHandler);
     },

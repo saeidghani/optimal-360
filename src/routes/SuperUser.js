@@ -133,7 +133,8 @@ const Routes = ({ match }) => (
       component={OrganizationsUpdateStaff}
     />
     {/* other */}
-    <PrivateRoute path={`${match.path}/bank/models`} exact component={BankModels} />
+    <PrivateRoute path={`${match.path}/pre-defined-data`} exact component={BankModels} />
+    {/* <PrivateRoute path={`${match.path}/bank/models`} exact component={BankModels} /> */}
     {/* <PrivateRoute path={`${match.path}/bank/new-group`} exact component={BankNewGroup} /> */}
 
     <Route component={NotFound} />
