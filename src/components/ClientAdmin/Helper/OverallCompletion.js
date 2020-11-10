@@ -15,7 +15,7 @@ const OverallCompletion = () => {
           <span className="text-xs text-antgray-100 ">Total Ratee(s)</span>
         </div>
       </div>
-      <Progress type="line" percentage="38" />
+      <Progress type="line" subClassName="text-black" percentage="38" />
     </div>
   );
 };

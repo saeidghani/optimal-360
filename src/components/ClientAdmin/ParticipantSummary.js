@@ -50,7 +50,7 @@ const ParticipantSummary = ({ loading }) => {
       key: 'totalCompletionRate',
       title: (
         <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100">Total CompletionRate</span>
+          <span className="text-antgray-100">Total Completion Rate</span>
         </div>
       ),
       width: 100,
@@ -75,13 +75,15 @@ const ParticipantSummary = ({ loading }) => {
       width: 100,
       render: (item) => (
         <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
+          {item.percentage &&
           <Progress
             className="h-8"
             subClassName="mb-10 pb-4"
             status={item.status}
             percentage={item.status === 'sub' ? 100 : item.percentage}
           />
-          <div className="text-center">{item.percentage}</div>
+          }
+          {item.count && <div className="text-center">{item.count}</div> }
         </div>
       ),
     },
@@ -96,13 +98,15 @@ const ParticipantSummary = ({ loading }) => {
       width: 100,
       render: (item) => (
         <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
+          {item.percentage &&
           <Progress
             className="h-8"
             subClassName="mb-10 pb-4"
             status={item.status}
             percentage={item.status === 'sub' ? 100 : item.percentage}
           />
-          <div className="text-center">{item.percentage}</div>
+          }
+          {item.count && <div className="text-center">{item.count}</div> }
         </div>
       ),
     },
@@ -117,13 +121,15 @@ const ParticipantSummary = ({ loading }) => {
       width: 100,
       render: (item) => (
         <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
+          {item.percentage &&
           <Progress
             className="h-8"
             subClassName="mb-10 pb-4"
             status={item.status}
             percentage={item.status === 'sub' ? 100 : item.percentage}
           />
-          <div className="text-center">{item.percentage}</div>
+          }
+          {item.count && <div className="text-center">{item.count}</div> }
         </div>
       ),
     },
@@ -131,20 +137,22 @@ const ParticipantSummary = ({ loading }) => {
       key: 'directReports',
       title: (
         <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100">Direct Reports</span>
+          <span className="text-antgray-100">By Direct Reports</span>
           <span className="text-body text-opacity-75 text-xs">Min. 3</span>
         </div>
       ),
       width: 100,
       render: (item) => (
         <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
+          {item.percentage &&
           <Progress
             className="h-8"
             subClassName="mb-10 pb-4"
             status={item.status}
             percentage={item.status === 'sub' ? 100 : item.percentage}
           />
-          <div className="text-center">{item.percentage}</div>
+          }
+          {item.count && <div className="text-center">{item.count}</div> }
         </div>
       ),
     },
@@ -152,20 +160,22 @@ const ParticipantSummary = ({ loading }) => {
       key: 'others',
       title: (
         <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100">Others</span>
+          <span className="text-antgray-100">By Others</span>
           <span className="text-body text-opacity-75 text-xs">Min. 2</span>
         </div>
       ),
       width: 50,
       render: (item) => (
         <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
+          {item.percentage &&
           <Progress
             className="h-8"
             subClassName="mb-10 pb-4"
             status={item.status}
             percentage={item.status === 'sub' ? 100 : item.percentage}
           />
-          <div className="text-center">{item.percentage}</div>
+          }
+          {item.count && <div className="text-center">{item.count}</div> }
         </div>
       ),
     },
@@ -194,59 +204,47 @@ const ParticipantSummary = ({ loading }) => {
       dueDate: '26/2/2020',
       noSubmission: '9/9',
       totalCompletionRate: { percentage: 60, status: 'sub' },
-      bySelf: { percentage: 40, status: '' },
-      byManager: { percentage: 30, status: 'sub' },
-      byPeers: { percentage: 70, status: '' },
-      directReports: { percentage: 80, status: 'sub' },
-      others: { percentage: 30, status: '' },
+      bySelf: { percentage: 40, status: '', count: '3/3' },
+      byManager: { percentage: 30, status: 'sub', count: '3/3' },
+      byPeers: { percentage: 70, status: '', count: '1/1' },
+      directReports: { percentage: 80, status: 'sub', count: '4/4' },
+      others: { percentage: 30, status: '', count: '3/3' },
       status: 'Met Min Req',
     },
     {
       ratee: 'Katherine Kan',
       dueDate: '26/2/2020',
-      noSubmission: '9/9',
-      totalCompletionRate: { percentage: 60, status: 'sub' },
-      bySelf: { percentage: 50, status: '' },
-      byManager: { percentage: 70, status: 'sub' },
-      byPeers: { percentage: 30, status: '' },
-      directReports: { percentage: 90, status: '' },
-      others: { percentage: 50, status: 'sub' },
-      status: 'Met Min Req',
-    },
-    {
-      ratee: 'Katherine Kan',
-      dueDate: '26/2/2020',
-      noSubmission: '9/9',
+      noSubmission: '3/10',
       totalCompletionRate: { percentage: 60, status: '' },
-      bySelf: { percentage: 70, status: '' },
-      byManager: { percentage: 60, status: 'sub' },
-      byPeers: { percentage: 80, status: 'sub' },
-      directReports: { percentage: 100, status: '' },
-      others: { percentage: 90, status: 'sub' },
+      bySelf: { percentage: '0', status: '', count: '0/1' },
+      byManager: { percentage: 100, status: 'sub' , count: '3/3' },
+      byPeers: { percentage: 100, status: 'sub' , count: '2/4' },
+      directReports: { percentage: 100, status: 'sub', count: '2/4' },
+      others: '',
       status: 'Met Min Req',
     },
     {
       ratee: 'Katherine Kan',
       dueDate: '26/2/2020',
-      noSubmission: '9/9',
-      totalCompletionRate: { percentage: 80, status: 'sub' },
-      bySelf: { percentage: 20, status: 'sub' },
-      byManager: { percentage: 70, status: '' },
-      byPeers: { percentage: 60, status: 'sub' },
-      directReports: { percentage: 70, status: '' },
-      others: { percentage: 30, status: '' },
+      noSubmission: '1/10',
+      totalCompletionRate: { percentage: 70, status: '' },
+      bySelf: { percentage: '0', status: '', count: '0/1' },
+      byManager: { percentage: 50, status: '', count: '1/1' },
+      byPeers: { percentage: 100, status: '', count: '0/1' },
+      directReports: { percentage: 50, status: '', count: '2/4' },
+      others: { percentage: 100, status: 'sub', count: '1/1' },
       status: 'Met Min Req',
     },
     {
       ratee: 'Katherine Kan',
       dueDate: '26/2/2020',
-      noSubmission: '9/9',
-      totalCompletionRate: { percentage: 60, status: 'sub' },
-      bySelf: { percentage: 20, status: 'sub' },
-      byManager: { percentage: 60, status: '' },
-      byPeers: { percentage: 70, status: 'sub' },
-      directReports: { percentage: 60, status: '' },
-      others: { percentage: 10, status: '' },
+      noSubmission: '0/12',
+      totalCompletionRate: { percentage: 30, status: '' },
+      bySelf: { percentage: 100, status: '', count: '1/1' },
+      byManager: { percentage: '0', status: '', count: '0/1' },
+      byPeers: { percentage: '0', status: '', count: '0/1' },
+      directReports: { percentage: '0', status: '', count: '0/1' },
+      others: '',
       status: 'Met Min Req',
     },
   ];
@@ -285,7 +283,7 @@ const ParticipantSummary = ({ loading }) => {
       <Table
         size="middle"
         className="p-6 bg-white rounded-lg shadow"
-        tableClassName="overflow-auto"
+        tableClassName="overflow-auto header-bg-white"
         loading={loading}
         columns={columns}
         dataSource={dataSource}

@@ -2,7 +2,7 @@ import React from 'react';
 import { TeamOutlined } from '@ant-design/icons';
 
 import Progress from '../Common/Progress';
-import ButtonsTab from './Helper/ButtonsTab';
+import ButtonsGroup from './Helper/ButtonsGroup';
 import Button from '../Common/Button';
 
 import Layout from './Helper/Layout';
@@ -142,10 +142,11 @@ const ReferenceGuide = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-6 mt-10 gap-10">
         <div className="md:col-span-2 bg-white py-6 px-16  rounded-md">
-          <ButtonsTab
+          <ButtonsGroup
             activeButtonKey="3"
             wrapperClassName="flex-col justify-between"
             buttonClassName="mb-4"
+            disable="true"
           />
           <p className="mt-4 text-center md:text-left">
             Go to the Main Dashboard (Overview) Also to move between Competency sets using these
@@ -172,7 +173,7 @@ const ReferenceGuide = () => {
         </div>
       </div>
       <div className="flex justify-center mt-8 md:mt-16">
-        <Button textSize="sm" text="Ok, Got it!" />
+        <Button textSize="sm" text="Ok, Got it!" href="/client-admin/dashboard" />
       </div>
     </Layout>
   );

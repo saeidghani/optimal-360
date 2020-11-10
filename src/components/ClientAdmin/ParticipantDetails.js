@@ -24,17 +24,7 @@ const ParticipantDetails = ({ loading }) => {
           <span className="text-antgray-100">Ratee</span>
         </div>
       ),
-      width: 50,
-    },
-    {
-      key: 'dueDate',
-      title: (
-        <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100">Due date</span>
-        </div>
-      ),
-      width: 50,
-      render: (date) => <span className="text-xs">{date}</span>,
+      width: 150,
     },
     {
       key: 'noSubmission',
@@ -56,7 +46,7 @@ const ParticipantDetails = ({ loading }) => {
       width: 50,
       render: (item) => (
         <div className="w-full mt-5 flex-inline flex-col items-center justify-center">
-          <div className="w-20">
+          <div className="w-20 mx-auto">
             <Progress
               subClassName="mb-10"
               status={item.status}
@@ -76,8 +66,8 @@ const ParticipantDetails = ({ loading }) => {
       ),
       width: 100,
       render: (item) => (
-        <div className="absolute top-0 w-full mt-16 pt-3 w-16 mt-5 flex-inline flex-col items-center justify-center">
-          <div className="w-16">
+        <div className="absolute top-0 w-full mt-16 pt-3 mt-5 flex-inline flex-col items-center justify-center">
+          <div className="w-16 mx-auto">
             <Progress
               className="h-8"
               subClassName="mb-10 pb-4"
@@ -85,7 +75,7 @@ const ParticipantDetails = ({ loading }) => {
               percentage={item.status === 'sub' ? 100 : item.percentage}
             />
           </div>
-          <div className="text-center">{item.percentage}</div>
+          <div className="text-center">{item.name}</div>
         </div>
       ),
     },
@@ -100,7 +90,7 @@ const ParticipantDetails = ({ loading }) => {
       width: 100,
       render: (item) => (
         <div className="absolute top-0 w-full mt-16 pt-3 w-16 mt-5 flex-inline flex-col items-center justify-center">
-          <div className="w-16">
+          <div className="w-16 mx-auto">
             <Progress
               className="h-8"
               subClassName="mb-10 pb-4"
@@ -108,7 +98,7 @@ const ParticipantDetails = ({ loading }) => {
               percentage={item.status === 'sub' ? 100 : item.percentage}
             />
           </div>
-          <div className="text-center">{item.percentage}</div>
+          <div className="text-center">{item.name}</div>
         </div>
       ),
     },
@@ -128,7 +118,7 @@ const ParticipantDetails = ({ loading }) => {
               key={item.key}
               className="mt-16 h-full flex-inline flex-col items-center justify-center"
             >
-              <div className="w-16">
+              <div className="w-16 mx-auto">
                 <Progress
                   className="h-8"
                   subClassName="mb-10 pb-4"
@@ -136,7 +126,7 @@ const ParticipantDetails = ({ loading }) => {
                   percentage={item.status === 'sub' ? 100 : item.percentage}
                 />
               </div>
-              <div className="text-sm">{item.name}</div>
+              <div className="text-center">{item.name}</div>
             </div>
           ))}
         </div>
@@ -155,7 +145,7 @@ const ParticipantDetails = ({ loading }) => {
         <div className="mb-auto w-full flex flex-col items-center">
           {items?.map((item) => (
             <div key={item.key} className="mt-16 flex-inline flex-col items-center justify-center">
-              <div className="w-16">
+              <div className="w-16 mx-auto">
                 <Progress
                   className="h-8"
                   subClassName="mb-10 pb-4"
@@ -163,7 +153,7 @@ const ParticipantDetails = ({ loading }) => {
                   percentage={item.status === 'sub' ? 100 : item.percentage}
                 />
               </div>
-              <div className="text-sm">{item.name}</div>
+              <div className="text-center">{item.name}</div>
             </div>
           ))}
         </div>
@@ -179,16 +169,21 @@ const ParticipantDetails = ({ loading }) => {
       ),
       width: 50,
       render: (item) => (
+
         <div className="absolute top-0 mt-16 pt-3 w-16 mt-5 flex-inline flex-col items-center justify-center">
-          <div className="w-16">
-            <Progress
-              className="h-8"
-              subClassName="mb-10 pb-4"
-              status={item.status}
-              percentage={item.status === 'sub' ? 100 : item.percentage}
-            />
-          </div>
-          <div className="text-center">{item.percentage}</div>
+          { item.percentage &&
+            <div className="w-16 mx-auto">
+              <Progress
+                className="h-8"
+                subClassName="mb-10 pb-4"
+                status={item.status}
+                percentage={item.status === 'sub' ? 100 : item.percentage}
+              />
+            </div>
+          }
+          { item.name &&
+            <div className="text-center">{item.name}</div>
+          }
         </div>
       ),
     },
@@ -214,29 +209,28 @@ const ParticipantDetails = ({ loading }) => {
   const dataSource = [
     {
       ratee: 'Katherine Kan',
-      dueDate: '26/2/2020',
       noSubmission: '9/9',
       totalCompletionRate: { percentage: 60, status: 'sub' },
-      bySelf: { percentage: 40, status: '' },
-      byManager: { percentage: 30, status: 'sub' },
+      bySelf: { percentage: 40, status: 'sub', name: 'Karyn Chow' },
+      byManager: { percentage: 30, status: 'sub', name: 'Premala Jagana' },
       byPeers: [
-        { percentage: 70, status: '', name: 'Karyn Chow' },
-        { percentage: 70, status: '', name: 'Karyn Chow' },
-        { percentage: 70, status: '', name: 'Karyn Chow' },
+        { percentage: 100, status: 'sub', name: 'Karyn Chow' },
+        { percentage: 100, status: 'sub', name: 'Karyn Chow' },
+        { percentage: 100, status: 'sub', name: 'Karyn Chow' },
       ],
       directReports: [
-        { percentage: 80, status: 'sub', name: 'Premala Jagana' },
-        { percentage: 80, status: 'sub', name: 'Premala Jagana' },
-        { percentage: 80, status: 'sub', name: 'Premala Jagana' },
+        { percentage: 100, status: 'sub', name: 'Premala Jagana' },
+        { percentage: 100, status: 'sub', name: 'Premala Jagana' },
+        { percentage: 100, status: 'sub', name: 'Premala Jagana' },
+        { percentage: 100, status: 'sub', name: 'Premala Jagana' },
       ],
-      others: { percentage: 30, status: '' },
+      others: { percentage: 100, status: '', name: 'Premala Jagana' },
       status: 'Met Min Req',
     },
     {
       ratee: 'Katherine Kan',
-      dueDate: '26/2/2020',
-      noSubmission: '9/9',
-      totalCompletionRate: { percentage: 60, status: 'sub' },
+      noSubmission: '3/10',
+      totalCompletionRate: { percentage: 60, status: '' },
       bySelf: { percentage: 50, status: '' },
       byManager: { percentage: 70, status: 'sub' },
       byPeers: [
@@ -248,15 +242,15 @@ const ParticipantDetails = ({ loading }) => {
         { percentage: 80, status: 'sub', name: 'Premala Jagana' },
         { percentage: 80, status: 'sub', name: 'Premala Jagana' },
         { percentage: 80, status: 'sub', name: 'Premala Jagana' },
+        { percentage: 80, status: 'sub', name: 'Premala Jagana' },
       ],
-      others: { percentage: 50, status: 'sub' },
+      others: '',
       status: 'Met Min Req',
     },
     {
       ratee: 'Katherine Kan',
-      dueDate: '26/2/2020',
-      noSubmission: '9/9',
-      totalCompletionRate: { percentage: 60, status: '' },
+      noSubmission: '1/10',
+      totalCompletionRate: { percentage: 70, status: '' },
       bySelf: { percentage: 70, status: '' },
       byManager: { percentage: 60, status: 'sub' },
       byPeers: [
@@ -268,37 +262,17 @@ const ParticipantDetails = ({ loading }) => {
         { percentage: 80, status: 'sub', name: 'Premala Jagana' },
         { percentage: 80, status: 'sub', name: 'Premala Jagana' },
         { percentage: 80, status: 'sub', name: 'Premala Jagana' },
+        { percentage: 80, status: 'sub', name: 'Premala Jagana' },
       ],
       others: { percentage: 90, status: 'sub' },
       status: 'Met Min Req',
     },
     {
       ratee: 'Katherine Kan',
-      dueDate: '26/2/2020',
-      noSubmission: '9/9',
-      totalCompletionRate: { percentage: 80, status: 'sub' },
-      bySelf: { percentage: 20, status: 'sub' },
-      byManager: { percentage: 70, status: '' },
-      byPeers: [
-        { percentage: 60, status: 'sub', name: 'Karyn Chow' },
-        { percentage: 70, status: '', name: 'Karyn Chow' },
-        { percentage: 70, status: '', name: 'Karyn Chow' },
-      ],
-      directReports: [
-        { percentage: 80, status: 'sub', name: 'Premala Jagana' },
-        { percentage: 80, status: 'sub', name: 'Premala Jagana' },
-        { percentage: 80, status: 'sub', name: 'Premala Jagana' },
-      ],
-      others: { percentage: 30, status: '' },
-      status: 'Met Min Req',
-    },
-    {
-      ratee: 'Katherine Kan',
-      dueDate: '26/2/2020',
-      noSubmission: '9/9',
-      totalCompletionRate: { percentage: 60, status: 'sub' },
-      bySelf: { percentage: 20, status: 'sub' },
-      byManager: { percentage: 60, status: '' },
+      noSubmission: '1/10',
+      totalCompletionRate: { percentage: 70, status: 'sub' },
+      bySelf: { percentage: 20, status: '' },
+      byManager: { percentage: 50, status: '' },
       byPeers: [{ percentage: 70, status: 'sub', name: 'Karyn Chow' }],
       directReports: [{ percentage: 80, status: 'sub', name: 'Premala Jagana' }],
       others: { percentage: 10, status: '' },
@@ -340,7 +314,7 @@ const ParticipantDetails = ({ loading }) => {
       <Table
         size="middle"
         className="p-6 bg-white rounded-lg shadow"
-        tableClassName="overflow-auto"
+        tableClassName="overflow-auto ant-table-thead align-top"
         loading={loading}
         columns={columns}
         dataSource={dataSource}
