@@ -24,6 +24,18 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
 
   const pageNumber = parsedQuery?.page_number;
 
+  React.useEffect(() => {
+    if (!parsedQuery?.page_number || !parsedQuery?.page_size || !parsedQuery?.status) {
+      setQuery({
+        page_number: 1,
+        page_size: 10,
+        status: 'active',
+      });
+    }
+
+    // eslint-disable-next-line
+  }, [history?.location?.pathname]);
+
   const dispatch = useDispatch();
   const { projects = {} } = useSelector((state) => state.projects);
 
@@ -123,7 +135,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
               text="New Organization"
               type="gray"
               className="mx-3 px-3"
-              onClick={() => history.push('/super-user/organizations/users/new')}
+              onClick={() => history.push('/super-user/organizations/new')}
             />
             <Button
               onClick={() => history.push('/super-user/new-project/project-info')}
@@ -210,10 +222,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
               text="Set Client Admin"
             />
             <Button
-              // onClick={async () => {
-              //   await duplicateProject(projectId);
-              //   fetch();
-              // }}
+              onClick={() => history.push('/super-user/new-project/project-info')}
               icon="CopyOutlined"
               type="link"
               className="text-lg mr-7"

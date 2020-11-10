@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useHistory, useParams } from 'react-router-dom';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
-import MainLayout from '../../Common/Layout';
 
+import { generateNewPassword } from '../../../lib/utils';
+
+import MainLayout from '../../Common/Layout';
 import Input from '../../Common/Input';
 import Button from '../../Common/Button';
-import { useHistory, useParams } from 'react-router-dom';
 
 const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
   const history = useHistory();
@@ -41,19 +43,14 @@ const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
               password: '',
             }}
             validationSchema={schema}
-            onSubmit={
-
-              async (values) => {
-                try {
-                  await addNewOrganizationStaff({ ...values, organizationId });
-                  history.push(`/super-user/organizations/${organizationId}/`);
-                } catch (error) {
-                }
-              }
-            }
+            onSubmit={async (values) => {
+              try {
+                await addNewOrganizationStaff({ ...values, organizationId });
+                history.push(`/super-user/organizations/${organizationId}/`);
+              } catch (error) {}
+            }}
           >
             {({ values, errors, touched, handleChange, handleSubmit, setFieldValue }) => (
-
               <Form onSubmit={handleSubmit} className="w-full">
                 <Input
                   disabled={loading}
@@ -84,7 +81,14 @@ const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
                   placeholder="Password"
                   wrapperClassName="mb-2"
                   extrainfoText="Generate Password"
-                  extrainfoLink="/"
+                  extrainfoLink="#"
+                  onExtraInfoLinkClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const newPassword = generateNewPassword();
+                    setFieldValue('password', newPassword);
+                  }}
                   errorMessage={touched.password && errors.password}
                 />
                 <Button

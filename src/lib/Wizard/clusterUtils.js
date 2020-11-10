@@ -149,9 +149,9 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
   const clusters = [...oldClusters];
 
   const generateNewItemProperties = (refArr) => {
-    const lastItem = refArr?.length > 0 ? refArr[refArr.length - 1] : { index: -1 };
-    const index = lastItem.index + 1;
-    const showOrder = index + 1;
+    const index = refArr.length;
+    const showOrder =
+      refArr?.length > 0 ? Math.max(...refArr.map((el) => el.showOrder * 1)) + 1 : 1;
 
     // creating a unique id
     const refArrIds = refArr?.length > 0 ? refArr.map((el) => el.id * 1) : [1];
@@ -161,20 +161,22 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
       index,
       id,
       showOrder,
+      newAddedItem: true,
     };
   };
 
   if (!newItem && !ids.clusterId) {
     // means that we're adding a cluster
 
-    const { id, index, showOrder } = generateNewItemProperties(clusters);
+    const { id, index, showOrder, newAddedItem } = generateNewItemProperties(clusters);
 
     const newClusters = {
-      name: `Cluster ${index}`,
+      name: `Cluster ${index + 1}`,
       competencies: [],
       showOrder,
       index,
       id,
+      newAddedItem,
     };
 
     clusters.push(newClusters);
@@ -187,13 +189,16 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
   if (isIndexValid(clusterIndex) && !isIndexValid(competencyIndex)) {
     // means that we're adding a competency
 
-    const { id, index, showOrder } = generateNewItemProperties(clusters[clusterIndex].competencies);
+    const { id, index, showOrder, newAddedItem } = generateNewItemProperties(
+      clusters[clusterIndex].competencies,
+    );
     const newCompetency = {
       ...newItem,
       questions: [],
       id,
       index,
       showOrder,
+      newAddedItem,
     };
 
     clusters[clusterIndex].competencies.push(newCompetency);
@@ -204,11 +209,11 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
   if (isIndexValid(competencyIndex) && isIndexValid(clusterIndex)) {
     // means that we're adding a question
 
-    const { id, index, showOrder } = generateNewItemProperties(
+    const { id, index, showOrder, newAddedItem } = generateNewItemProperties(
       clusters[clusterIndex].competencies[competencyIndex].questions,
     );
 
-    const newQuestion = { ...newItem, id, index, showOrder };
+    const newQuestion = { ...newItem, id, index, showOrder, newAddedItem };
     clusters[clusterIndex].competencies[competencyIndex].questions.push(newQuestion);
 
     return clusters;

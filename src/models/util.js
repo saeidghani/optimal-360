@@ -16,6 +16,8 @@ export default {
     },
 
     async uploadImage(photo) {
+      if (photo && typeof photo === 'string') return photo;
+
       // eslint-disable-next-line no-undef
       const data = new FormData();
       data.append('photo', photo);

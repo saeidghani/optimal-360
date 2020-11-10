@@ -35,7 +35,7 @@ const Sidebar = () => {
           hover:text-primary-500 ${
             pathname === '/super-user/organizations' ? activeClassNames : 'text-antgray-100'
           } `}
-          to="/super-user/organizations"
+          to="/super-user/organizations?page_size=10&page_number=1"
         >
           <HomeOutlined />
         </Link>

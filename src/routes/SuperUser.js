@@ -11,16 +11,13 @@ import ProjectsList from '../containers/SuperUser/Projects/List';
 import SetAdmin from '../containers/SuperUser/Projects/SetAdmin';
 
 import SurveyGroupList from '../containers/SuperUser/SurveyGroups/List';
-import RatersStatusOverview from '../containers/SuperUser/SurveyGroups/RatersStatusOverview';
-import RatersStatusDetails from '../containers/SuperUser/SurveyGroups/RatersStatusDetails';
-import RatersStatusRaterEmail from '../containers/SuperUser/SurveyGroups/RatersStatusRaterEmail';
 import Organizations from '../containers/SuperUser/Organizations/Organizations';
 import OrganizationsStaff from '../containers/SuperUser/Organizations/OrganizationsStaff';
 import OrganizationsNewStaff from '../containers/SuperUser/Organizations/OrganizationsNewStaff';
 import NewOrganizations from '../containers/SuperUser/Organizations/NewOrganizations';
-import RatersStatusIndividualReport from '../containers/SuperUser/SurveyGroups/RatersStatusIndividualReport';
-import RatersStatusGroupReportReview from '../containers/SuperUser/SurveyGroups/RatersStatusGroupReportReview';
 import GroupReports from '../containers/SuperUser/SurveyGroups/GroupReports';
+import Rates from '../containers/SuperUser/Ratee/Ratee';
+import OrganizationsUpdateStaff from '../containers/SuperUser/Organizations/UpdateStaff';
 
 import ProjectInfo from '../containers/SuperUser/Wizard/ProjectInfo';
 import SurveySetting from '../containers/SuperUser/Wizard/SurveySetting';
@@ -31,8 +28,11 @@ import SurveyQuestions from '../containers/SuperUser/Wizard/SurveyQuestions';
 import Report from '../containers/SuperUser/Wizard/Report';
 
 import BankModels from '../containers/SuperUser/Bank/Models';
+// import BankNewGroup from '../containers/SuperUser/Bank/NewGroup';
 
 import NotFound from '../components/404';
+import AddRatee from '../containers/SuperUser/Ratee/AddRatee';
+import AddRateeStep2 from '../containers/SuperUser/Ratee/AddRateeStep2';
 
 const Routes = ({ match }) => (
   <Switch>
@@ -93,33 +93,28 @@ const Routes = ({ match }) => (
     />
 
     {/* participants */}
+    <PrivateRoute path={`${match.path}/participants/ratee/add/`} exact component={AddRatee} />
+    {/* TODO: change routes below to better routes */}
+    <PrivateRoute path={`${match.path}/participants/ratee/add/edit`} exact component={AddRatee} />
+    {/* TODO: change url */}
     <PrivateRoute
-      path={`${match.path}/participants/status-overview`}
+      path={`${match.path}/participants/ratee/add/step2`}
       exact
-      component={RatersStatusOverview}
+      component={AddRateeStep2}
     />
+    {/* TODO: change url */}
     <PrivateRoute
-      path={`${match.path}/participants/status-details`}
+      path={`${match.path}/participants/ratee/add/step2/edit`}
       exact
-      component={RatersStatusDetails}
+      component={AddRateeStep2}
     />
+    {/* TODO: change url */}
     <PrivateRoute
-      path={`${match.path}/participants/rater-email`}
+      path={`${match.path}/participants/ratee/:tab?`}
+      // tab: 'status-overview'||'status-details'||'raters-email'||'result'
       exact
-      component={RatersStatusRaterEmail}
+      component={Rates}
     />
-    <PrivateRoute
-      path={`${match.path}/participants/individual-report`}
-      exact
-      component={RatersStatusIndividualReport}
-    />
-    <PrivateRoute
-      path={`${match.path}/participants/group-report-review`}
-      exact
-      component={RatersStatusGroupReportReview}
-    />
-
-    {/* organizations */}
     <PrivateRoute path={`${match.path}/organizations`} exact component={Organizations} />
     <PrivateRoute
       path={`${match.path}/organizations/:organizationId/new-staff`}
@@ -135,6 +130,14 @@ const Routes = ({ match }) => (
 
     {/* bank */}
     <PrivateRoute path={`${match.path}/pre-defined-data`} exact component={BankModels} />
+    <PrivateRoute
+      path={`${match.path}/organizations/:organizationId/staff/:staffId/update`}
+      exact
+      component={OrganizationsUpdateStaff}
+    />
+    {/* other */}
+    {/* <PrivateRoute path={`${match.path}/bank/models`} exact component={BankModels} /> */}
+    {/* <PrivateRoute path={`${match.path}/bank/new-group`} exact component={BankNewGroup} /> */}
     <Route component={NotFound} />
   </Switch>
 );

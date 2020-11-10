@@ -1,6 +1,6 @@
 import React from 'react';
-import Cookies from 'js-cookie';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 import SuperUserRoutes from './SuperUser';
 import SurveyPlatformRoutes from './SurveyPlatform';

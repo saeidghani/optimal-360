@@ -8,6 +8,7 @@ export default {
     organizations: '',
     staff: '',
     organizationsInfo: '',
+    staffDetails: '',
   },
 
   effects: (dispatch) => ({
@@ -61,6 +62,32 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+    async fetchStaffDetails({ organizationId, staffId }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/organizations/${organizationId}/staffs/${staffId}`,
+        });
+
+        await this.fetchStaffDetails_reducer(res?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+    async setStaffDetails({ organizationId, staffId, name, email, password }) {
+      return actionWapper(async () => {
+          const res = await axios({
+            method: 'put',
+            url: `/super-user/organizations/${organizationId}/staffs/${staffId}`,
+            data: { name, email, password }
+          });
+
+          await this.fetchStaffDetails_reducer(res?.data);
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
+    },
     async addNewOrganizationStaff({ organizationId, name, email, password }) {
       return actionWapper(async () => {
           const res = await axios({
@@ -89,6 +116,10 @@ export default {
     fetchOrganizationsInfo_reducer: (state, payload) => ({
       ...state,
       organizationsInfo: payload,
+    }),
+    fetchStaffDetails_reducer: (state, payload) => ({
+      ...state,
+      staffDetails: payload,
     }),
   },
 };

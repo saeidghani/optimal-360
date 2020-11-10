@@ -24,10 +24,6 @@ const EmailTemplate = ({ loading }) => {
 
   const chosenTemplate = pascalize(template, { splitBy: '-' });
 
-  if (!TEMPLATES[chosenTemplate]) {
-    console.warn(`Template ${template} does not exist`);
-  }
-
   const [emailTemplate, setEmailTemplate] = React.useState();
 
   const templateKey = `${chosenTemplate}-${projectId}-${surveyGroupId}`;
@@ -35,7 +31,7 @@ const EmailTemplate = ({ loading }) => {
   React.useEffect(() => {
     const val = localStorage.getItem(templateKey);
 
-    setEmailTemplate(val || TEMPLATES[chosenTemplate]);
+    setEmailTemplate(val || TEMPLATES[chosenTemplate] || TEMPLATES.reminderEmails);
   }, [chosenTemplate]);
 
   const pageTitle = (template.charAt(0).toUpperCase() + template.slice(1)).replaceAll('-', ' ');
