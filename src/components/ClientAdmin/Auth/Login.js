@@ -3,12 +3,12 @@ import { PropTypes } from 'prop-types';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
 
-import Input from '../Common/Input';
-import Checkbox from '../Common/Checkbox';
-import Button from '../Common/Button';
+import Input from '../../Common/Input';
+import Checkbox from '../../Common/Checkbox';
+import Button from '../../Common/Button';
 
-import Shape from './Helper/AnimatedShape';
-import AuthLayout from './Helper/AuthLayout';
+import Shape from '../Helper/AnimatedShape';
+import AuthLayout from '../Helper/AuthLayout';
 
 const Login = ({ login, loading }) => {
   const schema = yup.object({
