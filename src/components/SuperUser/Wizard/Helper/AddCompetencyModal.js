@@ -65,6 +65,7 @@ const AddQuestion = ({ visible, onSave, onCancel }) => {
                 label="Definition"
                 placeholder="Definition"
                 errorMessage={touched.definition && errors.definition}
+                className="bg-gray-200 hover:bg-gray-200"
               />
 
               <h3 className="text-base text-body">Low Scores Tend to</h3>

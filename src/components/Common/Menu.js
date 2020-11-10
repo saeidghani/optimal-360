@@ -40,13 +40,16 @@ const _Menu = ({
       openKeys={activeKeys}
       defaultSelectedKeys={[`cluster_${defaultClusterId}`]}
       // onClick={onMenuClick}
-      className={`bg-antgray-600 ${className}`}
+      className={`c-secondary-menu bg-antgray-600 ${className}`}
       mode="inline"
     >
-      {title && <Menu.Item className={titleClassName}>{title}</Menu.Item>}
+      {title && <Menu.Item className={`c-secondary-menu ${titleClassName}`}>{title}</Menu.Item>}
 
       {items.map((cluster) => (
         <SubMenu
+          className={`c-secondary-menu pl-6 ${
+            cluster.id * 1 === clusterId * 1 ? 'cluster-selected' : ''
+          }`}
           key={`cluster_${cluster.id}`}
           onTitleClick={() => onClusterClick(cluster.id)}
           title={cluster.name}
@@ -55,13 +58,20 @@ const _Menu = ({
             ? cluster.competencies.map((competency) => (
                 <SubMenu
                   key={`cluster_${cluster.id}_competency_${competency.id}`}
-                  className="inner-sub-menu"
+                  className={`c-secondary-menu inner-sub-menu ${
+                    competency.id * 1 === competencyId * 1 ? 'competency-selected' : 'competency'
+                  }`}
                   onTitleClick={() => onCompetencyClick(competency.id)}
                   title={competency.name}
                 >
                   {competency?.questions?.length > 0
                     ? competency.questions.map((question) => (
                         <Menu.Item
+                          className={`c-secondary-menu ${
+                            competency.id * 1 === competencyId * 1
+                              ? 'competency-selected'
+                              : 'competency'
+                          }`}
                           key={`cluster_${cluster.id}_competency_${competency.id}_question_${question.id}`}
                           onClick={() => onQuestionClick(question.id)}
                         >
