@@ -1,5 +1,4 @@
 import React from 'react';
-import { TeamOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
 import Dropdown from '../Common/Dropdown';
@@ -7,7 +6,6 @@ import Tabs from '../Common/Tabs';
 import Progress from '../Common/Progress';
 
 import Layout from './Helper/Layout';
-import Button from '../Common/Button';
 import Table from '../Common/Table';
 import ButtonsTab from './Helper/ButtonsTab';
 import OverallCompletion from './Helper/OverallCompletion';
@@ -305,7 +303,7 @@ const RaterDetails = ({ loading }) => {
       <div className="md:w-full">
         <Tabs className="md:c-tabs-class" defaultActiveKey="1" tabOptions={tabOptions} />
       </div>
-      <ButtonsTab activeButtonKey="2" />
+      <ButtonsTab activeButtonKey="3" />
       <OverallCompletion />
       <RateCards />
       <Table

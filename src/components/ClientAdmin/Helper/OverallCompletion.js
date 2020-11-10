@@ -6,7 +6,7 @@ import Progress from '../../Common/Progress';
 
 const OverallCompletion = () => {
   return (
-    <div className="flex flex-col bg-white p-6 rounded-md my-6">
+    <div className="flex flex-col bg-white p-6 rounded-md mt-12">
       <div className="flex flex-col md:flex-row justify-between items-start mb-5">
         <h1 className="font-medium text-base md:text-2xl mb-3 md:mb-0">Overall Completion Rate</h1>
         <div className="flex justify-between items-center">

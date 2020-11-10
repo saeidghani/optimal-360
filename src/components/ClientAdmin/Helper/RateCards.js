@@ -11,7 +11,7 @@ const RateCards = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 mt-10">
       {rateOptions.map((rate) => (
         <div className="bg-white rounded-md flex flex-col py-8 px-4 lg:px-6 xl:px-10">
           <div className="mb-3">

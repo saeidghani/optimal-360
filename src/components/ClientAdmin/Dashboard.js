@@ -38,7 +38,7 @@ const Dashboard = ({ loading }) => {
       <div className="md:w-full">
         <Tabs className="md:c-tabs-class" defaultActiveKey="1" tabOptions={tabOptions} />
       </div>
-      <ButtonsTab activeButtonKey="1" />
+      <ButtonsTab activeButtonKey="" />
       <OverallCompletion />
       <RateCards />
     </Layout>
