@@ -118,7 +118,7 @@ const Information = ({ loading }) => {
             <div className="text-sm text-body mb-3">{item.title}</div>
             <Dropdown
               className="c-autocomplete w-full"
-              showSearch
+              showSearch={false}
               options={item.dropdownOptions}
               placeholder="Select"
               value={selectItems[item.name]}
