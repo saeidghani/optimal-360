@@ -11,9 +11,19 @@ import RatersEmail from './RatersEmail';
 import Result from './Result';
 import { useParams, useHistory } from 'react-router-dom';
 
-const Ratee = ({ loading, fetchStatusDetails, statusDetails, raters, fetchRaters }) => {
+const Ratee = ({
+                 loading,
+                 summary,
+                 completionRate,
+                 fetchSummary,
+                 fetchCompletionRate,
+                 fetchStatusDetails,
+                 statusDetails,
+                 raters,
+                 fetchRaters,
+               }) => {
   const history = useHistory();
-const { tab = 'status-overview' } = useParams() || {} ;
+  const { tab = 'status-overview' } = useParams() || {};
   const { TabPane } = Tabs;
   const dropDownOptions = [
     { title: 'Top Leadership', value: 1 },
@@ -24,7 +34,15 @@ const { tab = 'status-overview' } = useParams() || {} ;
     {
       title: 'Status Overview',
       key: 'status-overview',
-      component: <StatusOverview loading={loading} />,
+      component: (
+        <StatusOverview
+          summary={summary}
+          completionRate={completionRate}
+          fetchSummary={fetchSummary}
+          fetchCompletionRate={fetchCompletionRate}
+          loading={loading}
+        />
+      ),
     },
     {
       title: 'Status Details',
@@ -84,13 +102,19 @@ const { tab = 'status-overview' } = useParams() || {} ;
 
 Ratee.propTypes = {
   loading: PropTypes.bool.isRequired,
+  summary: PropTypes.shape({}),
+  completionRate: PropTypes.shape({}),
   statusDetails: PropTypes.shape({}),
   raters: PropTypes.shape({}),
+  fetchSummary: PropTypes.func.isRequired,
+  fetchCompletionRate: PropTypes.func.isRequired,
   fetchStatusDetails: PropTypes.func.isRequired,
   fetchRaters: PropTypes.func.isRequired,
 };
 
 Ratee.defaultProps = {
+  summary: {},
+  completionRate: {},
   statusDetails: {},
   raters: {},
 };
