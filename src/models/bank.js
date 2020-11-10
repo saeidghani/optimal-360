@@ -6,6 +6,7 @@ export default {
 
   state: {
     surveyGroups: '',
+    surveyGroupInfo: '',
   },
 
   effects: (dispatch) => ({
@@ -16,7 +17,31 @@ export default {
           url: `/super-user/bank/survey-groups${query}`,
         });
 
-        await this.fetchSurveyGroups_reducer(res?.data?.data);
+        await this.fetchSurveyGroups_reducer(res?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async fetchSurveyGroupInfo(surveyGroupId) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/bank/survey-groups/${surveyGroupId}`,
+        });
+
+        await this.fetchSurveyGroupInfo_reducer(res?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async setSurveyGroupInfo({ surveyGroupId, ...data }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'put',
+          url: `/super-user/bank/survey-groups/${surveyGroupId}`,
+          data,
+        });
+
         return res;
       }, dispatch.util.errorHandler);
     },
@@ -26,6 +51,11 @@ export default {
     fetchSurveyGroups_reducer: (state, payload) => ({
       ...state,
       surveyGroups: payload,
+    }),
+
+    fetchSurveyGroupInfo_reducer: (state, payload) => ({
+      ...state,
+      surveyGroupInfo: payload,
     }),
   },
 };
