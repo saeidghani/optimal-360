@@ -7,20 +7,14 @@ import Layout from '../../../components/SuperUser/Wizard/SurveyQuestions';
 class SurveyQuestions extends React.Component {
   state = {};
 
-  fetchSurveyQuestions = async (surveyGroupId) => {
-    const { fetchSurveyQuestions } = this.props;
+  fetchSurveyGroupInfo = async (surveyGroupId) => {
+    const { fetchSurveyGroupInfo } = this.props;
 
-    await fetchSurveyQuestions(surveyGroupId);
+    await fetchSurveyGroupInfo(surveyGroupId);
   };
 
-  fetchSurveyGroups = async (projectId) => {
-    const { fetchSurveyGroups } = this.props;
-
-    await fetchSurveyGroups({ projectId });
-  };
-
-  setSurveyQuestions = async (data) => {
-    const { setSurveyQuestions } = this.props;
+  setSurveyGroupInfo = async (data) => {
+    const { setSurveyGroupInfo } = this.props;
 
     // removeing fake ids that are created in front-end
     const newClusters = [...data.clusters].map((cluster) => {
@@ -77,19 +71,17 @@ class SurveyQuestions extends React.Component {
 
     const newData = { ...data, clusters: newClusters, feedbacks: newFeedbacks };
 
-    return setSurveyQuestions(newData);
+    return setSurveyGroupInfo(newData);
   };
 
   render() {
-    const { loading, surveyQuestions, surveyGroups } = this.props;
+    const { loading, surveyQuestions } = this.props;
 
     return (
       <Layout
         surveyQuestions={surveyQuestions}
-        surveyGroups={surveyGroups}
-        fetchSurveyQuestions={this.fetchSurveyQuestions}
-        fetchSurveyGroups={this.fetchSurveyGroups}
-        setSurveyQuestions={this.setSurveyQuestions}
+        fetchSurveyGroupInfo={this.fetchSurveyGroupInfo}
+        setSurveyGroupInfo={this.setSurveyGroupInfo}
         loading={loading}
       />
     );
@@ -97,29 +89,24 @@ class SurveyQuestions extends React.Component {
 }
 
 SurveyQuestions.propTypes = {
-  fetchSurveyQuestions: PropTypes.func.isRequired,
-  fetchSurveyGroups: PropTypes.func.isRequired,
-  setSurveyQuestions: PropTypes.func.isRequired,
+  fetchSurveyGroupInfo: PropTypes.func.isRequired,
+  setSurveyGroupInfo: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   surveyQuestions: PropTypes.shape({}),
-  surveyGroups: PropTypes.shape({}),
 };
 
 SurveyQuestions.defaultProps = {
   surveyQuestions: {},
-  surveyGroups: {},
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
   surveyQuestions: state.wizard?.surveyQuestions || {},
-  surveyGroups: state.projects?.surveyGroups || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchSurveyQuestions: dispatch.wizard.fetchSurveyQuestions,
-  setSurveyQuestions: dispatch.wizard.setSurveyQuestions,
-  fetchSurveyGroups: dispatch.projects.fetchSurveyGroups,
+  fetchSurveyGroupInfo: dispatch.wizard.fetchSurveyGroupInfo,
+  setSurveyGroupInfo: dispatch.wizard.setSurveyGroupInfo,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyQuestions);

@@ -77,7 +77,7 @@ const Models = ({ loading, surveyGroups, fetchSurveyGroups }) => {
             type="gray"
           />
           <Button
-            onClick={() => history.push('/super-user/new-project/project-info')}
+            onClick={() => history.push('/super-user/pre-defined-data/add')}
             icon="EditOutlined"
             type="link"
             className="text-lg"
@@ -100,7 +100,7 @@ const Models = ({ loading, surveyGroups, fetchSurveyGroups }) => {
           textSize="md"
           iconPosition="right"
           type="gray"
-          // onClick={handleClick}
+          onClick={() => history.push('/super-user/pre-defined-data/add')}
         />
         <Button
           className="flex items-center"
