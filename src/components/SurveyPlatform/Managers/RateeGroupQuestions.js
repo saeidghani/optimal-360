@@ -204,7 +204,7 @@ const RateeGroupQuestions = ({ loading }) => {
       <div className="flex flex-col mt-5 mb-16 md:mb-10 md:flex-row-reverse md:ml-auto">
         <Button
           onClick={handleNext}
-          className="mt-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
+          className="mt-6 px-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
           text="Next"
         />
         <Button

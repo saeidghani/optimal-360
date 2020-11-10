@@ -10,12 +10,16 @@ import Radio from '../Common/RadioGroup';
 import TextArea from '../Common/TextArea';
 
 const ReferenceGuide = ({ loading }) => {
+  const [comment, setComment] = React.useState('');
+  const [isClear, setIsClear] = React.useState(1);
+  const [items, setItems] = React.useState({});
+
   const columns = React.useMemo(() => [
     {
       key: 'notAtAll',
       title: (
-        <div className="inline-flex justify-between items-center">
-          <span className="mr-2 text-xs md:text-sm">Not at all</span>
+        <div className="inline-flex flex-col justify-between items-center md:flex-row">
+          <span className="mr-0 text-xs md:mr-2 mb-2 md:mb-0 md:text-sm">Not at all</span>
           <QuestionOutlined
             className="text-white bg-gray-400 w-5 h-5 rounded-full"
             style={{ paddingTop: 3 }}
@@ -23,13 +27,20 @@ const ReferenceGuide = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: (items) => <Radio onChange={() => {}} items={items} value="a" className="pl-5" />,
+      render: (itm) => (
+        <Radio
+          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
+          items={itm.options}
+          value={items[itm.id]}
+          className="pl-5"
+        />
+      ),
     },
     {
       key: 'notMuch',
       title: (
-        <div className="inline-flex justify-between items-center">
-          <span className="mr-2 text-xs md:text-sm">Not much</span>
+        <div className="inline-flex flex-col justify-between items-center md:flex-row">
+          <span className="mr-0 text-xs md:mr-2 mb-2 md:mb-0 md:text-sm">Not much</span>
           <QuestionOutlined
             className="text-white bg-gray-400 w-5 h-5 rounded-full"
             style={{ paddingTop: 3 }}
@@ -37,13 +48,20 @@ const ReferenceGuide = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: (items) => <Radio onChange={() => {}} items={items} value="b" className="pl-5" />,
+      render: (itm) => (
+        <Radio
+          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
+          items={itm.options}
+          value={items[itm.id]}
+          className="pl-5"
+        />
+      ),
     },
     {
       key: 'somewhat',
       title: (
-        <div className="inline-flex justify-between items-center">
-          <span className="mr-2 text-xs md:text-sm">Somewhat</span>
+        <div className="inline-flex flex-col justify-between items-center md:flex-row">
+          <span className="mr-0 text-xs md:mr-2 mb-2 md:mb-0 md:text-sm">Somewhat</span>
           <QuestionOutlined
             className="text-white bg-gray-400 w-5 h-5 rounded-full"
             style={{ paddingTop: 3 }}
@@ -51,13 +69,20 @@ const ReferenceGuide = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: (items) => <Radio onChange={() => {}} items={items} value="c" className="pl-5" />,
+      render: (itm) => (
+        <Radio
+          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
+          items={itm.options}
+          value={items[itm.id]}
+          className="pl-5"
+        />
+      ),
     },
     {
       key: 'most',
       title: (
-        <div className="inline-flex justify-between items-center">
-          <span className="mr-2 text-xs md:text-sm">Most</span>
+        <div className="inline-flex flex-col justify-between items-center md:flex-row">
+          <span className="mr-0 text-xs md:mr-2 mb-2 md:mb-0 md:text-sm">Most</span>
           <QuestionOutlined
             className="text-white bg-gray-400 w-5 h-5 rounded-full"
             style={{ paddingTop: 3 }}
@@ -65,45 +90,45 @@ const ReferenceGuide = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: (items) => <Radio onChange={() => {}} items={items} value="d" className="pl-5" />,
+      render: (itm) => (
+        <Radio
+          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
+          items={itm.options}
+          value={items[itm.id]}
+          className="pl-5"
+        />
+      ),
     },
   ]);
 
   const dataSource = [
     {
       key: '1',
-      notAtAll: [{ title: '', value: 'a' }],
-      notMuch: [{ title: '', value: 'b2' }],
-      somewhat: [{ title: '', value: 'c' }],
-      most: [{ title: '', value: 'd' }],
+      notAtAll: { id: '101', options: [{ title: '', value: '1' }] },
+      notMuch: { id: '101', options: [{ title: '', value: '2' }] },
+      somewhat: { id: '101', options: [{ title: '', value: '3' }] },
+      most: { id: '101', options: [{ title: '', value: '4' }] },
     },
     {
       key: '2',
-      notAtAll: [{ title: '', value: 'a2' }],
-      notMuch: [{ title: '', value: 'b' }],
-      somewhat: [{ title: '', value: 'c2' }],
-      most: [{ title: '', value: 'd' }],
+      notAtAll: { id: '102', options: [{ title: '', value: '1' }] },
+      notMuch: { id: '102', options: [{ title: '', value: '2' }] },
+      somewhat: { id: '102', options: [{ title: '', value: '3' }] },
+      most: { id: '102', options: [{ title: '', value: '4' }] },
     },
     {
       key: '3',
-      notAtAll: [{ title: '', value: 'a' }],
-      notMuch: [{ title: '', value: 'b2' }],
-      somewhat: [{ title: '', value: 'c' }],
-      most: [{ title: '', value: 'd' }],
+      notAtAll: { id: '103', options: [{ title: '', value: '1' }] },
+      notMuch: { id: '103', options: [{ title: '', value: '2' }] },
+      somewhat: { id: '103', options: [{ title: '', value: '3' }] },
+      most: { id: '103', options: [{ title: '', value: '4' }] },
     },
     {
       key: '4',
-      notAtAll: [{ title: '', value: 'a' }],
-      notMuch: [{ title: '', value: 'b' }],
-      somewhat: [{ title: '', value: 'c2' }],
-      most: [{ title: '', value: 'd' }],
-    },
-    {
-      key: '5',
-      notAtAll: [{ title: '', value: 'a2' }],
-      notMuch: [{ title: '', value: 'b2' }],
-      somewhat: [{ title: '', value: 'c' }],
-      most: [{ title: '', value: 'd2' }],
+      notAtAll: { id: '104', options: [{ title: '', value: '1' }] },
+      notMuch: { id: '104', options: [{ title: '', value: '2' }] },
+      somewhat: { id: '104', options: [{ title: '', value: '3' }] },
+      most: { id: '104', options: [{ title: '', value: '4' }] },
     },
   ];
 
@@ -113,18 +138,19 @@ const ReferenceGuide = ({ loading }) => {
       <h1 className="hidden text-base text-primary-500 font-medium mt-1 md:mt-12 md:block">
         Reference Guide
       </h1>
-      <p className="text-base md:hidden">
+      <p className="text-heading font-semibold md:hidden">
         You will read a behavioral statement where you have to rate how well it describes the person
         you are rating:
       </p>
       <div className="rounded-lg mt-8 grid grid-cols-12 col-gap-12 md:bg-white md:shadow md:p-10">
-        <p className="text-base hidden md:block col-start-1 col-span-12 md:row-start-1 md:mb-10">
+        <p className="text-heading font-semibold hidden md:block col-start-1 col-span-12 md:row-start-1 md:mb-10">
           You will read a behavioral statement where you have to rate how well it describes the
           person you are rating:
         </p>
         <Table
           size="middle"
           className="p-0 col-start-1 col-span-12 md:col-start-6 md:row-start-2 md:col-span-7"
+          tableClassName="overflow-auto"
           loading={loading}
           columns={columns}
           dataSource={dataSource}
@@ -137,23 +163,27 @@ const ReferenceGuide = ({ loading }) => {
         md:col-start-1 md:row-start-2 md:col-span-5 md:pr-6"
         >
           <div>
-            <span className="text-heading font-medium">Describes this person most:</span>
-            <p>
+            <span className="text-heading font-semibold">Describes this person most:</span>
+            <p className="mt-2">
               If the behavior is shown almost always (90% of the time); it may describe the person
               exactly.
             </p>
           </div>
-          <div className="mt-4">
-            <span className="text-heading font-medium">Describes this person somewhat:</span>
-            <p>If the behavior is shown over half the time, but not always.</p>
+          <div className="mt-5">
+            <span className="text-heading font-semibold">Describes this person somewhat:</span>
+            <p className="mt-2">If the behavior is shown over half the time, but not always.</p>
           </div>
-          <div className="mt-4">
-            <span className="text-heading font-medium">Does not describe this person much:</span>
-            <p>If the behavior is shown rarely, maybe under very specific circumstances</p>
+          <div className="mt-5">
+            <span className="text-heading font-semibold">Does not describe this person much:</span>
+            <p className="mt-2">
+              If the behavior is shown rarely, maybe under very specific circumstances
+            </p>
           </div>
-          <div className="mt-4">
-            <span className="text-heading font-medium">Does not describe this person at all:</span>
-            <p>
+          <div className="mt-5">
+            <span className="text-heading font-semibold">
+              Does not describe this person at all:
+            </span>
+            <p className="mt-2">
               If the behavior is not shown by the person at all, or you have never observed the
               behavior by this person.
             </p>
@@ -161,14 +191,17 @@ const ReferenceGuide = ({ loading }) => {
         </div>
         <div
           className="mt-4 row-start-3 col-start-1 col-span-12 mt-10
-        md:mt-2 md:row-start-3 md:col-start-6 md:col-span-7"
+        md:mt-4 md:row-start-3 md:col-start-6 md:col-span-7"
         >
           <span className="md:hidden">Katherine Kan</span>
-          <TextArea
-            placeholder="(The verbatim can be left empty by clicking skip)"
-            className="border border-solid border-gray-600 mb-auto"
-            rows={2}
-          />
+          <div className="border border-solid border-antgray-100 rounded-md h-24">
+            <TextArea
+              placeholder="(The verbatim can be left empty by clicking skip)"
+              rows={2}
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+          </div>
         </div>
         <p
           className="mt-8 row-start-4 col-start-1 col-span-12
@@ -194,7 +227,8 @@ const ReferenceGuide = ({ loading }) => {
               { title: '', value: 1 },
               { title: '', value: 2 },
             ]}
-            value={1}
+            value={isClear}
+            onChange={(e) => setIsClear(e.target.value)}
           />
         </div>
         <p
@@ -209,11 +243,14 @@ const ReferenceGuide = ({ loading }) => {
         md:row-start-5 md:col-start-6 md:col-span-7 md:w-full md:mb-10 md:flex-row md:my-auto md:mr-auto"
         >
           <Button
-            className="mt-6 bg-transparent text-primary-500 outline-none border-none shadow-none w-full pl-0
-            md:pl-auto md:w-auto md:border-none"
+            className="mt-6 text-primary-500 w-full mr-2 md:pl-auto md:w-auto md:border-none"
             text="Skip for now"
+            type="link"
           />
-          <Button className="mt-6 shadow-none w-full md:w-auto md:border-none" text="Submit All" />
+          <Button
+            className="mt-6 shadow-none w-full py-6 px-5 md:w-auto md:border-none"
+            text="Submit All"
+          />
         </div>
         <p
           className="mt-8 row-start-8 col-start-1 col-span-12
@@ -250,7 +287,10 @@ const ReferenceGuide = ({ loading }) => {
         </div>
       </div>
       <div className="hidden md:flex justify-center">
-        <Button className="mt-6 shadow-none w-full md:w-auto md:border-none" text="Ok, Got it!" />
+        <Button
+          className="mt-16 shadow-none w-full py-6 px-5 md:w-auto md:border-none"
+          text="Ok, Got it!"
+        />
       </div>
     </Layout>
   );

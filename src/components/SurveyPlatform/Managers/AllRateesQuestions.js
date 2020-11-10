@@ -266,7 +266,7 @@ const AllRateesQuestions = ({ loading }) => {
       />
       <div className="flex flex-col items-center md:flex-row-reverse">
         <Button
-          className="mt-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
+          className="mt-6 px-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
           text="Next"
           onClick={handleNext}
         />

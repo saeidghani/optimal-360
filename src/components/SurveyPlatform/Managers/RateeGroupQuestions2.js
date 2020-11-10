@@ -112,7 +112,7 @@ const RateeGroupQuestions2 = ({ loading }) => {
         <Button
           onClick={handleNext}
           text="Next"
-          className="mt-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
+          className="mt-6 px-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
           textSize="base"
         />
         <Button

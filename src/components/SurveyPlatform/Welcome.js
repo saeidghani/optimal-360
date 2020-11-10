@@ -37,6 +37,7 @@ const Welcome = ({ loading }) => {
         okText="Next"
         className="relative"
         footerClassName="absolute top-0 right-0 pt-32"
+        okButtonProps={{ className: 'px-6' }}
       >
         OK, let’s enter your information. By hitting this button you will get to introduction form.
       </Modal>
@@ -84,7 +85,7 @@ const Welcome = ({ loading }) => {
           <span className="text-antgray-100">CHRO Sime Darby Group</span>
         </div>
       </div>
-      <Button className="ml-auto mt-6" text="Next" onClick={() => setVisible(true)} />
+      <Button className="ml-auto mt-6 px-6" text="Next" onClick={() => setVisible(true)} />
     </Layout>
   );
 };
