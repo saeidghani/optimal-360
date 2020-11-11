@@ -23,7 +23,7 @@ const RateCards = () => {
             <span className="text-base text-heading">{rate.submission}</span>
           </div>
           <div className="mb-6 flex justify-center">
-            <Progress percentage={rate.progress} />
+            <Progress subClassName="text-black text-xl" percentage={rate.progress} />
           </div>
           <div>
             <h2 className="text-center">{rate.title}</h2>

@@ -2,10 +2,11 @@ import React from 'react';
 import { TeamOutlined } from '@ant-design/icons';
 
 import Progress from '../Common/Progress';
-import ButtonsTab from './Helper/ButtonsTab';
+import ButtonsGroup from './Helper/ButtonsGroup';
 import Button from '../Common/Button';
 
 import Layout from './Helper/Layout';
+import './Helper/bubble.css';
 
 // import peopleIcon from '../../assets/images/people-outline.svg';
 
@@ -94,7 +95,10 @@ const ReferenceGuide = () => {
       </p>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 mt-10">
         {ReferenceGuideCards.map((rate) => (
-          <div className="bg-white rounded-md flex flex-col items-center md:items-start py-8 px-4 lg:px-6 xl:px-10">
+          <div
+            className="bg-white rounded-md flex flex-col items-center
+          md:items-start py-8 px-4 lg:px-6 xl:px-10"
+          >
             <div className="text-base mb-3">{rate.title}</div>
             <div className="text-sm mb-14 text-antgray-100">{rate.description}</div>
             <div className="mb-6 flex justify-center self-center">
@@ -108,8 +112,11 @@ const ReferenceGuide = () => {
       </div>
 
       <div className="flex flex-col bg-white p-6 rounded-md mt-12">
-        {rateInformation.map((item, index) => (
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-x-20 border-b border-solid border-gray-400 py-4 md:flex-row justify-between items-start">
+        {rateInformation.map((item) => (
+          <div
+            className="grid grid-cols-1 md:grid-cols-12 gap-x-20 border-b border-solid border-gray-400
+          py-4 md:flex-row justify-between items-start"
+          >
             <div className="col-span-1 md:col-span-2 flex md:justify-between items-center">
               <TeamOutlined className="bg-primary-100 p-2 text-primary-500 mr-5 rounded-sm" />
               <span className="font-medium text-2xl mr-5">{item.RateCount}</span>
@@ -141,22 +148,33 @@ const ReferenceGuide = () => {
         ))}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-6 mt-10 gap-10">
-        <div className="md:col-span-2 bg-white py-6 px-16  rounded-md">
-          <ButtonsTab
-            activeButtonKey="3"
-            wrapperClassName="flex-col justify-between"
-            buttonClassName="mb-4"
+        <div className="md:col-span-2 bg-white py-6 px-12 rounded-md">
+          <ButtonsGroup
+            activeButtonKey=""
+            wrapperClassName="flex-col justify-between px-10"
+            buttonClassName="mb-4 sm:mr-0"
+            disabled
           />
           <p className="mt-4 text-center md:text-left">
             Go to the Main Dashboard (Overview) Also to move between Competency sets using these
             tabs
           </p>
         </div>
-        <div className="md:col-span-4 bg-white p-8 rounded-md">
-          <span className="text-base">Participant’s raters’ group</span>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-x-10 mt-8">
-            {rateOptions.map((option) => (
-              <div className="inline-flex flex-col justify-between items-center">
+        <div className="md:col-span-4 bg-white p-4 md:p-8 rounded-md">
+          <span className="text-base pl-4">Participant’s raters’ group</span>
+          <div className="grid md:grid-cols-5 gap-x-6 md:gap-x-10 mt-8">
+            <div
+              className="hidden bubble bubble-top w-4/5 mb-6 ml-10
+             col-start-3 col-span-3 md:block"
+            >
+              Minimum number of submissions required by the rater group for report production where
+              applicable
+            </div>
+            {rateOptions.map((option, index) => (
+              <div
+                className={`row-start-${index + 1} md:row-start-2 md:col-span-1
+              inline-flex flex-col justify-between items-center`}
+              >
                 <span className="text-antgray-100">{option.title}</span>
                 <div className="w-16 h-16 mt-8">
                   <Progress
@@ -168,11 +186,28 @@ const ReferenceGuide = () => {
                 <p className="mt-6">{option.description}</p>
               </div>
             ))}
+            <div
+              className="hidden w-4/5 md:block bubble bubble-bottom col-start-1 col-span-2 mt-6"
+              style={{ transform: 'rotate(180deg)' }}
+            >
+              <p style={{ transform: 'rotate(180deg)' }}>Names of participants raters</p>
+            </div>
+
+            <div className="block bubble bubble-right row-start-2 h-20 md:mb-6 md:hidden">
+              Names of participants raters
+            </div>
+            <div
+              className="block bubble bubble-right row-start-5
+            md:hidden md:col-start-4 md:col-span-2 md:mb-6"
+            >
+              Minimum number of submissions required by the rater group for report production where
+              applicable
+            </div>
           </div>
         </div>
       </div>
       <div className="flex justify-center mt-8 md:mt-16">
-        <Button textSize="sm" text="Ok, Got it!" />
+        <Button textSize="sm" text="Ok, Got it!" href="/client-admin/dashboard" />
       </div>
     </Layout>
   );
