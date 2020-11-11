@@ -19,6 +19,7 @@ const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
 
   useEffect(() => {
     fetchStatusDetails({ query, surveyGroupId });
+    setSelectedRows([]);
   }, [
     fetchStatusDetails,
     surveyGroupId,

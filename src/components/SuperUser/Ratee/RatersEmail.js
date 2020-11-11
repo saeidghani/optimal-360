@@ -16,6 +16,7 @@ const RatersEmail = ({ loading, fetchRaters, raters, fetchEmailOptions, emailOpt
 
   useEffect(() => {
     fetchRaters({ query, surveyGroupId });
+    setSelectedRows([]);
   }, [
     fetchRaters,
     surveyGroupId,
