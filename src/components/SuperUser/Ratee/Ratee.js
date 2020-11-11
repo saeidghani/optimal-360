@@ -83,7 +83,7 @@ const Ratee = (
             loading={loading}
           />
         </TabPane>
-        <TabPane tab="Rates Email" key="raters-email">
+        <TabPane tab="Raters Email" key="raters-email">
           <RatersEmail
             loading={loading}
             raters={raters}
