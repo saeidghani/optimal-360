@@ -47,7 +47,7 @@ const Welcome = ({ loading }) => {
         <Dropdown
           className="c-autocomplete col-start-1 col-span-12
           md:col-start-1 md:col-span-4 lg:col-start-1 lg:col-span-3 w-full"
-          showSearch
+          showSearch={false}
           value={1}
           type="gray"
           options={dropdownOptions}

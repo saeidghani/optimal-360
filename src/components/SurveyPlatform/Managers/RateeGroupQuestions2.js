@@ -78,7 +78,7 @@ const RateeGroupQuestions2 = ({ loading }) => {
           <div className="flex justify-between md:border-b md:border-solid md:border-gray-200 mb-8 md:pb-4">
             <div className="inline-flex flex-col md:flex-row mt-5">
               <div className="w-40 -ml-12">
-                <Progress showPercent={false} type="line" percentage={60} />
+                <Progress showPercent={false} type="line" percentage={20} />
               </div>
               <div className="text-antgray-100 text-sm md:ml-4">Question 1 of 5</div>
             </div>

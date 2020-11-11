@@ -119,7 +119,7 @@ const Information = ({ loading }) => {
             <div className="cursor-pointer">
               <Dropdown
                 className="c-autocomplete w-full"
-                showSearch
+                showSearch={false}
                 options={item.dropdownOptions}
                 placeholder="Select"
                 value={selectItems[item.name]}

@@ -12,7 +12,6 @@ import Radio from '../../Common/RadioGroup';
 import Modal from '../../Common/Modal';
 
 const AllRateesQuestions = ({ loading }) => {
-  const [pageSize] = React.useState(10);
   const [visible, setVisible] = React.useState(false);
   const [items, setItems] = React.useState({});
 
@@ -29,7 +28,7 @@ const AllRateesQuestions = ({ loading }) => {
           <div className="flex justify-between">
             <div className="inline-flex flex-col md:flex-row mt-5">
               <div className="w-40 -ml-12">
-                <Progress showPercent={false} type="line" percentage={60} />
+                <Progress showPercent={false} type="line" percentage={20} />
               </div>
               <div className="text-antgray-100 text-sm md:ml-4">Question 1 of 5</div>
             </div>
@@ -258,11 +257,10 @@ const AllRateesQuestions = ({ loading }) => {
         loading={loading}
         columns={columns}
         dataSource={dataSource}
-        pageSize={pageSize * 1}
         pageNumber={1}
         rowSelection={false}
+        pagination={false}
         title={renderHeader}
-        paginationClassName="flex flex-col md:flex-row justify-between h-24"
       />
       <div className="flex flex-col items-center md:flex-row-reverse">
         <Button
