@@ -40,6 +40,12 @@ class Ratee extends Component {
     return changeAssessmentsStatus(query);
   };
 
+  exportSurveyGroupRaters = async (query) => {
+    const { exportSurveyGroupRaters } = this.props;
+
+    return exportSurveyGroupRaters(query);
+  };
+
 // raters email
   fetchRaters = async (query) => {
     const { fetchRaters } = this.props;
@@ -71,6 +77,7 @@ class Ratee extends Component {
         fetchStatusDetails={this.fetchStatusDetails}
         removeRateeRaters={this.removeRateeRaters}
         changeAssessmentsStatus={this.changeAssessmentsStatus}
+        exportSurveyGroupRaters={this.exportSurveyGroupRaters}
       />
     );
   }
@@ -115,6 +122,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchStatusDetails: dispatch.ratee.fetchStatusDetails,
   removeRateeRaters: dispatch.ratee.removeRateeRaters,
   changeAssessmentsStatus: dispatch.ratee.changeAssessmentsStatus,
+  exportSurveyGroupRaters: dispatch.ratee.exportSurveyGroupRaters,
   fetchRaters: dispatch.ratee.fetchRaters,
   fetchEmailOptions: dispatch.ratee.fetchEmailOptions,
 });

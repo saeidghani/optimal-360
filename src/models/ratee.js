@@ -76,7 +76,19 @@ export default {
             data: { relationIds: selectedRowsIds },
           });
 
-          await this.fetchEmailOptions_reducer(res?.data);
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
+    },
+    async exportSurveyGroupRaters({ surveyGroupId }) {
+      return actionWapper(async () => {
+          const res = await axios({
+            method: 'get',
+            url: `/super-user/survey-groups/${surveyGroupId}/raters/export`,
+          });
+
           return res;
         },
         dispatch.util.errorHandler,
@@ -91,7 +103,6 @@ export default {
             data: { relationIds: selectedRowsIds, status },
           });
 
-          await this.fetchEmailOptions_reducer(res?.data);
           return res;
         },
         dispatch.util.errorHandler,

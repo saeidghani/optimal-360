@@ -15,6 +15,7 @@ const StatusDetails = (
     fetchStatusDetails,
     removeRateeRaters,
     changeAssessmentsStatus,
+    exportSurveyGroupRaters,
     statusDetails,
   },
 ) => {
@@ -129,6 +130,9 @@ const StatusDetails = (
             type="gray"
             icon="FileExcelOutlined"
             iconPosition="right"
+            onClick={() => {
+              exportSurveyGroupRaters({surveyGroupId});
+            }}
           />
           <Button
             size="middle"
@@ -268,6 +272,7 @@ StatusDetails.propTypes = {
   fetchStatusDetails: PropTypes.func.isRequired,
   removeRateeRaters: PropTypes.func.isRequired,
   changeAssessmentsStatus: PropTypes.func.isRequired,
+  exportSurveyGroupRaters: PropTypes.func.isRequired,
   statusDetails: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
     metaData: PropTypes.shape({

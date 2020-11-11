@@ -22,6 +22,7 @@ const Ratee = (
     fetchStatusDetails,
     removeRateeRaters,
     changeAssessmentsStatus,
+    exportSurveyGroupRaters,
     statusDetails,
     raters,
     emailOptions,
@@ -77,6 +78,7 @@ const Ratee = (
             fetchStatusDetails={fetchStatusDetails}
             removeRateeRaters={removeRateeRaters}
             changeAssessmentsStatus={changeAssessmentsStatus}
+            exportSurveyGroupRaters={exportSurveyGroupRaters}
             statusDetails={statusDetails}
             loading={loading}
           />
@@ -111,6 +113,7 @@ Ratee.propTypes = {
   fetchStatusDetails: PropTypes.func.isRequired,
   changeAssessmentsStatus: PropTypes.func.isRequired,
   removeRateeRaters: PropTypes.func.isRequired,
+  exportSurveyGroupRaters: PropTypes.func.isRequired,
   fetchRaters: PropTypes.func.isRequired,
   fetchEmailOptions: PropTypes.func.isRequired,
 };
