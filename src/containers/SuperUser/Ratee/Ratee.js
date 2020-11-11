@@ -8,10 +8,11 @@ class Ratee extends Component {
   state = {};
 
   // Status overview
-  fetchCompletionRate = async () => {
+
+  fetchCompletionRate = async (query) => {
     const { fetchCompletionRate } = this.props;
 
-    return fetchCompletionRate();
+    return fetchCompletionRate(query);
   };
 
   fetchSummary = async (query) => {

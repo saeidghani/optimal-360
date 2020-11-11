@@ -7,9 +7,9 @@ import Table from '../../Common/Table';
 import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
 import AwardIcon from '../../../assets/images/award.svg';
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 
-const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
+const StatusDetails = ({ surveyGroupId, loading, fetchStatusDetails, statusDetails }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
@@ -18,8 +18,8 @@ const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
 
   useEffect(() => {
     const newQuery = query || '?page_size=10&page_number=1';
-    fetchStatusDetails(newQuery);
-  }, [fetchStatusDetails, query]);
+    fetchStatusDetails({ query: newQuery, surveyGroupId });
+  }, [fetchStatusDetails, query, surveyGroupId]);
 
   const renderHeader = React.useCallback(() => {
     return selectedRows && selectedRows?.length > 0 ? (
@@ -223,6 +223,7 @@ const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
 
 StatusDetails.propTypes = {
   loading: PropTypes.bool.isRequired,
+  surveyGroupId: PropTypes.string.isRequired,
   fetchStatusDetails: PropTypes.func.isRequired,
   statusDetails: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),

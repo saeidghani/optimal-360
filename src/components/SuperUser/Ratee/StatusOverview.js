@@ -7,18 +7,27 @@ import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
 import { useQuery } from '../../../hooks';
 
-const StatusOverview = ({ summary, completionRate, fetchSummary, fetchCompletionRate, loading }) => {
+const StatusOverview = (
+  {
+    surveyGroupId,
+    summary,
+    completionRate,
+    fetchSummary,
+    fetchCompletionRate,
+    loading,
+  },
+) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const pageNumber = parsedQuery?.page_number;
 
   useEffect(() => {
-    fetchCompletionRate();
-  }, [fetchCompletionRate]);
+    fetchCompletionRate({ query, surveyGroupId });
+  }, [fetchCompletionRate, surveyGroupId]);
+
   useEffect(() => {
-    const newQuery = query || '?page_size=10&page_number=1';
-    fetchSummary(newQuery);
-  }, [fetchSummary, query]);
+    fetchSummary({ query, surveyGroupId });
+  }, [fetchSummary, query, surveyGroupId]);
 
   const columns = React.useMemo(() => [
     {
@@ -307,6 +316,7 @@ const StatusOverview = ({ summary, completionRate, fetchSummary, fetchCompletion
 
 StatusOverview.propTypes = {
   loading: PropTypes.bool.isRequired,
+  surveyGroupId: PropTypes.string.isRequired,
   fetchSummary: PropTypes.func.isRequired,
   fetchCompletionRate: PropTypes.func.isRequired,
 

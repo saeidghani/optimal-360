@@ -11,25 +11,33 @@ import RatersEmail from './RatersEmail';
 import Result from './Result';
 import { useParams, useHistory } from 'react-router-dom';
 
-const Ratee = ({
-                 loading,
-                 summary,
-                 completionRate,
-                 fetchSummary,
-                 fetchCompletionRate,
-                 fetchStatusDetails,
-                 statusDetails,
-                 raters,
-                 fetchRaters,
-               }) => {
+import { useSurveyGroup, useQuery } from '../../../hooks';
+
+const Ratee = (
+  {
+    loading,
+    summary,
+    completionRate,
+    fetchSummary,
+    fetchCompletionRate,
+    fetchStatusDetails,
+    statusDetails,
+    raters,
+    fetchRaters,
+  },
+) => {
+  const [parsedQuery, query, setQuery] = useQuery();
+  const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
   const history = useHistory();
   const { tab = 'status-overview' } = useParams() || {};
   const { TabPane } = Tabs;
-  const dropDownOptions = [
-    { title: 'Top Leadership', value: 1 },
-    { title: 'Top Leadership2', value: 2 },
-    { title: 'Top Leadership3', value: 3 },
-  ];
+
+  const dropDownOptions = React.useMemo(
+    () => (surveyGroups?.data || []).map((elm) => ({ title: elm.name, value: elm.id, label: elm.name })),
+    // eslint-disable-next-line
+    [surveyGroups.timeStamp],
+  );
+
   const tabs = [
     {
       title: 'Status Overview',
@@ -40,6 +48,7 @@ const Ratee = ({
           completionRate={completionRate}
           fetchSummary={fetchSummary}
           fetchCompletionRate={fetchCompletionRate}
+          surveyGroupId={surveyGroupId}
           loading={loading}
         />
       ),
@@ -51,6 +60,7 @@ const Ratee = ({
         <StatusDetails
           fetchStatusDetails={fetchStatusDetails}
           statusDetails={statusDetails}
+          surveyGroupId={surveyGroupId}
           loading={loading}
         />
       ),
@@ -60,6 +70,7 @@ const Ratee = ({
       key: 'raters-email',
       component: (
         <RatersEmail
+          surveyGroupId={surveyGroupId}
           loading={loading}
           raters={raters}
           fetchRaters={fetchRaters}
@@ -74,7 +85,7 @@ const Ratee = ({
   ];
 
   function tabChangeCallback(key) {
-    history.push(`/super-user/participants/ratee/${key}`);
+    history.push(`/super-user/participants/ratee/${key}?projectId=${parsedQuery?.projectId}&surveyGroupId=${surveyGroupId}`);
   }
 
   return (
@@ -83,10 +94,15 @@ const Ratee = ({
         <h2 className="col-start-1 my-6 pt-6 pl-3 font-medium text-base">Survey Group</h2>
         <Dropdown
           className="c-autocomplete col-start-1 w-full"
-          showSearch
-          value={1}
+          showSearch={false}
+          labelInValue
+          value={{ value: surveyGroupId, label: currentSurveyGroupName }}
+          handleChange={({ value }) => {
+            setQuery({ surveyGroupId: value });
+          }}
           type="gray"
           options={dropDownOptions}
+          loading={loading}
         />
       </div>
       <Tabs defaultActiveKey={tab} onChange={tabChangeCallback}>

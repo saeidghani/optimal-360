@@ -1,8 +1,6 @@
 import axios from '../lib/api';
 import actionWapper from '../lib/actionWapper';
 
-const surveyGroupId = 1; // TODO: change GroupId dynamically
-
 export default {
   namespace: 'ratee',
 
@@ -14,7 +12,7 @@ export default {
   },
 
   effects: (dispatch) => ({
-    async fetchSummary(query = '') {
+    async fetchSummary({ query, surveyGroupId }) {
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
@@ -25,7 +23,7 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
-    async fetchCompletionRate() {
+    async fetchCompletionRate({ surveyGroupId }) {
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
@@ -36,7 +34,7 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
-    async fetchStatusDetails(query) {
+    async fetchStatusDetails({ query, surveyGroupId }) {
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
@@ -47,7 +45,7 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
-    async fetchRaters(query) {
+    async fetchRaters({ query, surveyGroupId }) {
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
