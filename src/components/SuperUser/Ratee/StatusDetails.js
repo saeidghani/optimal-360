@@ -14,6 +14,7 @@ const StatusDetails = (
     loading,
     fetchStatusDetails,
     removeRateeRaters,
+    changeAssessmentsStatus,
     statusDetails,
   },
 ) => {
@@ -62,6 +63,11 @@ const StatusDetails = (
           text="Open Assessment"
           textClassName="mr-2"
           className="ml-3"
+          onClick={async () => {
+            await changeAssessmentsStatus({ selectedRowsIds, surveyGroupId, status: true });
+            fetch();
+            setSelectedRows([]);
+          }}
         />
         <Button
           size="middle"
@@ -69,6 +75,11 @@ const StatusDetails = (
           text="Close Assessment"
           textClassName="mr-2"
           className="ml-3"
+          onClick={async () => {
+            await changeAssessmentsStatus({ selectedRowsIds, surveyGroupId, status: false });
+            fetch();
+            setSelectedRows([]);
+          }}
         />
         <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
       </div>
@@ -256,6 +267,7 @@ StatusDetails.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchStatusDetails: PropTypes.func.isRequired,
   removeRateeRaters: PropTypes.func.isRequired,
+  changeAssessmentsStatus: PropTypes.func.isRequired,
   statusDetails: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
     metaData: PropTypes.shape({

@@ -70,15 +70,33 @@ export default {
     },
     async removeRateeRaters({ surveyGroupId, selectedRowsIds }) {
       return actionWapper(async () => {
-        const res = await axios({
-          method: 'patch',
-          url: `/super-user/survey-groups/${surveyGroupId}/relations/remove`,
-          data: { relationIds: selectedRowsIds },
-        });
+          const res = await axios({
+            method: 'patch',
+            url: `/super-user/survey-groups/${surveyGroupId}/relations/remove`,
+            data: { relationIds: selectedRowsIds },
+          });
 
-        await this.fetchEmailOptions_reducer(res?.data);
-        return res;
-      }, dispatch.util.errorHandler);
+          await this.fetchEmailOptions_reducer(res?.data);
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
+    },
+    async changeAssessmentsStatus({ surveyGroupId, status, selectedRowsIds }) {
+      return actionWapper(async () => {
+          const res = await axios({
+            method: 'patch',
+            url: `/super-user/survey-groups/${surveyGroupId}/assessments`,
+            data: { relationIds: selectedRowsIds, status },
+          });
+
+          await this.fetchEmailOptions_reducer(res?.data);
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
     },
   }),
 

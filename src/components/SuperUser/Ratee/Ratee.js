@@ -21,6 +21,7 @@ const Ratee = (
     fetchCompletionRate,
     fetchStatusDetails,
     removeRateeRaters,
+    changeAssessmentsStatus,
     statusDetails,
     raters,
     emailOptions,
@@ -75,6 +76,7 @@ const Ratee = (
           <StatusDetails
             fetchStatusDetails={fetchStatusDetails}
             removeRateeRaters={removeRateeRaters}
+            changeAssessmentsStatus={changeAssessmentsStatus}
             statusDetails={statusDetails}
             loading={loading}
           />
@@ -107,6 +109,7 @@ Ratee.propTypes = {
   fetchSummary: PropTypes.func.isRequired,
   fetchCompletionRate: PropTypes.func.isRequired,
   fetchStatusDetails: PropTypes.func.isRequired,
+  changeAssessmentsStatus: PropTypes.func.isRequired,
   removeRateeRaters: PropTypes.func.isRequired,
   fetchRaters: PropTypes.func.isRequired,
   fetchEmailOptions: PropTypes.func.isRequired,
