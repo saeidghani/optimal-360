@@ -165,13 +165,16 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
     };
   };
 
-  if (!newItem && !ids.clusterId) {
+  const [clusterIndex, competencyIndex] = fetchIndex(parsedQuery, oldClusters, ids);
+
+  if (!ids.clusterId && !isIndexValid(competencyIndex) && !isIndexValid(clusterIndex)) {
     // means that we're adding a cluster
 
     const { id, index, showOrder, newAddedItem } = generateNewItemProperties(clusters);
 
     const newClusters = {
-      name: `Cluster ${index + 1}`,
+      // name: `Cluster ${index + 1}`,
+      ...newItem,
       competencies: [],
       showOrder,
       index,
@@ -183,8 +186,6 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
 
     return clusters;
   }
-
-  const [clusterIndex, competencyIndex] = fetchIndex(parsedQuery, oldClusters, ids);
 
   if (isIndexValid(clusterIndex) && !isIndexValid(competencyIndex)) {
     // means that we're adding a competency
@@ -206,7 +207,7 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
     return clusters;
   }
 
-  if (isIndexValid(competencyIndex) && isIndexValid(clusterIndex)) {
+  if (isIndexValid(clusterIndex) && isIndexValid(competencyIndex)) {
     // means that we're adding a question
 
     const { id, index, showOrder, newAddedItem } = generateNewItemProperties(

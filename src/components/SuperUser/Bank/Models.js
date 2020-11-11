@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import { useQuery } from '../../../hooks/useQuery';
+import { useQuery, stringify } from '../../../hooks/useQuery';
 
 import Button from '../../Common/Button';
 import MainLayout from '../../Common/Layout';
@@ -64,7 +64,7 @@ const Models = ({ loading, surveyGroups, fetchSurveyGroups }) => {
     {
       key: 'action',
       width: 100,
-      render: () => (
+      render: (_, { id }) => (
         <div className="flex items-center">
           <Button
             className="flex items-center mr-3.5"
@@ -77,7 +77,11 @@ const Models = ({ loading, surveyGroups, fetchSurveyGroups }) => {
             type="gray"
           />
           <Button
-            onClick={() => history.push('/super-user/pre-defined-data/add')}
+            onClick={() => {
+              const params = stringify({ surveyGroupId: id });
+
+              history.push(`/super-user/pre-defined-data/add${params}`);
+            }}
             icon="EditOutlined"
             type="link"
             className="text-lg"
