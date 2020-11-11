@@ -11,7 +11,6 @@ import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
 
 const Individual = ({ loading }) => {
-  const [pageSize] = React.useState(10);
   const [project, setProject] = React.useState('');
 
   const history = useHistory();
@@ -27,26 +26,6 @@ const Individual = ({ loading }) => {
     { title: 'Group', key: '2' },
     { title: 'All', key: '3' },
   ];
-
-  const renderHeader = React.useCallback((size) => {
-    return (
-      <div className={`${size !== 'sm' ? 'hidden md:flex justify-between items-center' : ''}`}>
-        <div className="md:w-3/2">
-          <Tabs className="md:c-tabs-class" defaultActiveKey="1" tabOptions={secondaryTabOptions} />
-        </div>
-        <div className="flex">
-          <span className="text-xs md:text-sm">Survey Ends on 28 Sep</span>
-          <span className="mx-1 md:mx-3">|</span>
-          <div className="text-xs md:text-sm">
-            <span className="mr-1 text-purple-500">29d</span>
-            <span>and</span>
-            <span className="mx-1 text-purple-500">2h</span>
-            <span>left</span>
-          </div>
-        </div>
-      </div>
-    );
-  }, []);
 
   const columns = React.useMemo(() => [
     {
@@ -122,6 +101,19 @@ const Individual = ({ loading }) => {
     history.push('/survey-platform/managers/ratee-group');
   };
 
+  const DeadlineInfo = () => (
+    <div className="flex">
+      <span className="text-xs md:text-sm">Survey Ends on 28 Sep</span>
+      <span className="mx-1 md:mx-3">|</span>
+      <div className="text-xs md:text-sm">
+        <span className="mr-1 text-purple-500">29d</span>
+        <span>and</span>
+        <span className="mx-1 text-purple-500">2h</span>
+        <span>left</span>
+      </div>
+    </div>
+  );
+
   return (
     <Layout hasBreadCrumb>
       <div className="grid grid-cols-12 mb-10 mt-10">
@@ -129,7 +121,7 @@ const Individual = ({ loading }) => {
         <Dropdown
           className="c-autocomplete col-start-1 col-span-12 md:col-start-1 md:col-span-4 lg:col-start-1
           lg:col-span-3 w-full"
-          showSearch
+          showSearch={false}
           type="gray"
           options={dropdownOptions}
           value={project}
@@ -142,34 +134,57 @@ const Individual = ({ loading }) => {
           textClassName="text-heading"
           textSize="sm"
           text="Top Leadership"
+          onClick={() => {}}
         />
         <Button
           className="mr-1 bg-white border-list-border shadow-none px-6 md:px-4"
           textClassName="text-heading text-primary-500"
           textSize="sm"
           text="Managers"
+          onClick={() => {}}
         />
         <Button
           className="mr-1 bg-white border-list-border shadow-none px-2 md:px-4"
           textClassName="text-heading"
           textSize="sm"
           text="High Potentials"
+          onClick={() => {}}
         />
       </div>
-      <div className="bg-white rounded-lg shadow p-4 mt-6 md:hidden">{renderHeader('sm')}</div>
-      <Table
-        size="middle"
-        className="p-4 mt-8 md:mt-0 md:p-6 bg-white rounded-lg shadow"
-        tableClassName="overflow-auto"
-        loading={loading}
-        columns={columns}
-        dataSource={dataSource}
-        pageSize={pageSize * 1}
-        pageNumber={1}
-        rowSelection={false}
-        title={renderHeader}
-        paginationClassName="flex flex-col md:flex-row justify-between h-24"
-      />
+      <div className="flex flex-col p-4 bg-white rounded-lg shadow mt-8 md:hidden">
+        <div className="md:w-3/4">
+          <Tabs className="md:c-tabs-class" defaultActiveKey="1" tabOptions={secondaryTabOptions} />
+        </div>
+        <DeadlineInfo />
+      </div>
+      <div
+        className="p-0 bg-transparent rounded-none shadow-none mt-2
+      md:mt-0 md:p-8 md:bg-white md:rounded-lg md:shadow"
+      >
+        <div className="hidden md:flex justify-between w-full">
+          <div className="md:w-1/2">
+            <Tabs
+              className="md:c-tabs-class"
+              defaultActiveKey="1"
+              tabOptions={secondaryTabOptions}
+            />
+          </div>
+          <div className="my-auto">
+            <DeadlineInfo />
+          </div>
+        </div>
+        <Table
+          size="middle"
+          className="p-4 mt-8 md:mt-0 md:p-6 bg-white rounded-lg shadow"
+          tableClassName="overflow-auto"
+          loading={loading}
+          columns={columns}
+          dataSource={dataSource}
+          rowSelection={false}
+          pagination={false}
+          title={null}
+        />
+      </div>
       <div className="block md:ml-auto mt-5 md:mb-24">
         <Button
           onClick={handleSubmit}

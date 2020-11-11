@@ -116,14 +116,16 @@ const Information = ({ loading }) => {
         {selects.map((item) => (
           <div key={item.id} className="mt-8 ">
             <div className="text-sm text-body mb-3">{item.title}</div>
-            <Dropdown
-              className="c-autocomplete w-full"
-              showSearch={false}
-              options={item.dropdownOptions}
-              placeholder="Select"
-              value={selectItems[item.name]}
-              handleChange={(val) => handleChange(item.name, val)}
-            />
+            <div className="cursor-pointer">
+              <Dropdown
+                className="c-autocomplete w-full"
+                showSearch={false}
+                options={item.dropdownOptions}
+                placeholder="Select"
+                value={selectItems[item.name]}
+                handleChange={(val) => handleChange(item.name, val)}
+              />
+            </div>
           </div>
         ))}
         <div className="mt-8">
@@ -136,7 +138,11 @@ const Information = ({ loading }) => {
           />
         </div>
       </div>
-      <Button onClick={handleSubmit} className="w-full mt-12 md:w-auto md:ml-auto" text="Next" />
+      <Button
+        onClick={handleSubmit}
+        className="w-full mt-12 px-6 md:w-auto md:ml-auto"
+        text="Next"
+      />
     </Layout>
   );
 };

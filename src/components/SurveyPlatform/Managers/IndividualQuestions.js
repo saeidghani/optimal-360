@@ -11,7 +11,6 @@ import Table from '../../Common/Table';
 import Radio from '../../Common/RadioGroup';
 
 const IndividualQuestions = ({ loading }) => {
-  const [pageSize] = React.useState(10);
   const [items, setItems] = React.useState({});
 
   const history = useHistory();
@@ -34,7 +33,7 @@ const IndividualQuestions = ({ loading }) => {
             <div className="flex items-center justify-end md:my-auto">
               <span className="mr-3">60%</span>
               <div className="w-12 h-12">
-                <Progress showPercent={false} percentage={60} />
+                <Progress showPercent={false} percentage={20} />
               </div>
             </div>
           </div>
@@ -195,16 +194,14 @@ const IndividualQuestions = ({ loading }) => {
         loading={loading}
         columns={columns}
         dataSource={dataSource}
-        pageSize={pageSize * 1}
-        pageNumber={1}
         rowSelection={false}
+        pagination={false}
         title={renderHeader}
-        paginationClassName="flex flex-col md:flex-row justify-between h-24"
       />
       <div className="flex flex-col mt-5 mb-16 md:mb-10 md:flex-row-reverse md:ml-auto">
         <Button
           onClick={handleNext}
-          className="mt-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
+          className="mt-6 px-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
           text="Next"
         />
         <Button
