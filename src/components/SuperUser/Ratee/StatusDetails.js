@@ -144,7 +144,7 @@ const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
           <div className="inline-block">
             <Button
               onClick={() => {
-                history.push('/super-user/participants/ratee/add/edit');
+                history.push(`/super-user/participants/ratee/add/edit?surveyGroupId=${parsedQuery.surveyGroupId}${parsedQuery.projectId ? `&projectId=${parsedQuery.projectId}` : ''}`);
               }}
               size="middle"
               textSize="xs"
