@@ -8,9 +8,9 @@ const useTabs = (tabArray) => {
 
   const setTab = (tab) => {
     if (allTabs.includes(tab)) {
-      setQuery({ tab, page_size: '10', sort: '', page_number: '1' });
+      setQuery({ tab, page_size: '10', sort: '', page_number: '1', q: '' });
     } else {
-      setQuery({ tab: allTabs[0], page_size: '10', sort: '', page_number: '1' });
+      setQuery({ tab: allTabs[0], page_size: '10', sort: '', page_number: '1', q: '' });
     }
   };
   useEffect(() => {
