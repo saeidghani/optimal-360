@@ -7,14 +7,14 @@ import Layout from '../../../components/SuperUser/Wizard/SurveyQuestions';
 class SurveyQuestions extends React.Component {
   state = {};
 
-  fetchSurveyGroupInfo = async (surveyGroupId) => {
-    const { fetchSurveyGroupInfo } = this.props;
+  fetchSurveyQuestions = async (surveyGroupId) => {
+    const { fetchSurveyQuestions } = this.props;
 
-    await fetchSurveyGroupInfo(surveyGroupId);
+    await fetchSurveyQuestions(surveyGroupId);
   };
 
-  setSurveyGroupInfo = async (data) => {
-    const { setSurveyGroupInfo } = this.props;
+  setSurveyQuestions = async (data) => {
+    const { setSurveyQuestions } = this.props;
 
     // removeing fake ids that are created in front-end
     const newClusters = [...data.clusters].map((cluster) => {
@@ -71,7 +71,7 @@ class SurveyQuestions extends React.Component {
 
     const newData = { ...data, clusters: newClusters, feedbacks: newFeedbacks };
 
-    return setSurveyGroupInfo(newData);
+    return setSurveyQuestions(newData);
   };
 
   render() {
@@ -80,8 +80,8 @@ class SurveyQuestions extends React.Component {
     return (
       <Layout
         surveyQuestions={surveyQuestions}
-        fetchSurveyGroupInfo={this.fetchSurveyGroupInfo}
-        setSurveyGroupInfo={this.setSurveyGroupInfo}
+        fetchSurveyQuestions={this.fetchSurveyQuestions}
+        setSurveyQuestions={this.setSurveyQuestions}
         loading={loading}
       />
     );
@@ -89,8 +89,8 @@ class SurveyQuestions extends React.Component {
 }
 
 SurveyQuestions.propTypes = {
-  fetchSurveyGroupInfo: PropTypes.func.isRequired,
-  setSurveyGroupInfo: PropTypes.func.isRequired,
+  fetchSurveyQuestions: PropTypes.func.isRequired,
+  setSurveyQuestions: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   surveyQuestions: PropTypes.shape({}),
 };
@@ -105,8 +105,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchSurveyGroupInfo: dispatch.wizard.fetchSurveyGroupInfo,
-  setSurveyGroupInfo: dispatch.wizard.setSurveyGroupInfo,
+  fetchSurveyQuestions: dispatch.wizard.fetchSurveyQuestions,
+  setSurveyQuestions: dispatch.wizard.setSurveyQuestions,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyQuestions);

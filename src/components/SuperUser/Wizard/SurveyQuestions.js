@@ -19,8 +19,9 @@ import CompetencyEditSection from './Helper/CompetencyEditSection';
 import QuestionEditSection from './Helper/QuestionEditSection';
 import SortableFeedbacks from './Helper/SortableFeedbacks';
 
-import AddQuestionModal from './Helper/AddQuestionModal';
+import AddClusterModal from './Helper/AddClusterModal';
 import AddCompetencyModal from './Helper/AddCompetencyModal';
+import AddQuestionModal from './Helper/AddQuestionModal';
 
 import MainLayout from '../../Common/Layout';
 import Steps from '../../Common/Steps';
@@ -49,6 +50,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
         label: yup.string().required('label is required'),
       }),
     ),
+    clusters: yup.array(yup.object({})).min(1, 'You must specify at least one cluster item'),
     feedbacks: yup
       .array(
         yup.object({
@@ -68,6 +70,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
   const [parsedQuery, query, setQuery] = useQuery();
 
   const [surveyGroupModal, setSurveyGroupModal] = React.useState(false);
+  const [addClusterModal, setAddClusterModal] = React.useState(false);
   const [addCompetencyModal, setAddCompetencyModal] = React.useState(false);
   const [addQuestionModal, setAddQuestionModal] = React.useState(false);
 
@@ -321,7 +324,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
             } else if (parsedQuery?.clusterId) {
               setAddCompetencyModal(true);
             } else {
-              addItemToClusters();
+              setAddClusterModal(true);
             }
           }}
           icon="PlusCircleOutlined"
@@ -364,6 +367,15 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
         }}
         currentSurveyGroup={currentSurveyGroupName}
         visible={surveyGroupModal}
+      />
+
+      <AddClusterModal
+        visible={addClusterModal}
+        onCancel={() => setAddClusterModal(false)}
+        onSave={(vals) => {
+          addItemToClusters(vals);
+          setAddClusterModal(false);
+        }}
       />
 
       <AddQuestionModal
@@ -524,6 +536,12 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                       />
                     )}
                   </div>
+
+                  <div className="col-span-8">
+                    <p className="text-red-500 h-5">
+                      {touched.clusters && typeof errors.clusters === 'string' && errors.clusters}
+                    </p>
+                  </div>
                 </div>
 
                 <div className="bg-antgray-600 rounded-lg p-6 mt-12">
@@ -551,6 +569,10 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                     deleteFeedback={(feedback) => deleteFeedback(values.feedbacks, feedback)}
                   />
                 </div>
+
+                <p className="text-red-500 h-5">
+                  {touched.feedbacks && typeof errors.feedbacks === 'string' && errors.feedbacks}
+                </p>
 
                 <div className="mt-16 pb-22 flex justify-end">
                   <Button

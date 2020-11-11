@@ -23,13 +23,15 @@ export default {
     },
 
     async fetchSurveyGroupInfo(surveyGroupId) {
+      if (!surveyGroupId) return this.fetchSurveyGroupInfo_reducer('');
+
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
           url: `/super-user/bank/survey-groups/${surveyGroupId}`,
         });
 
-        await this.fetchSurveyGroupInfo_reducer(res?.data);
+        this.fetchSurveyGroupInfo_reducer(res?.data?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
@@ -39,6 +41,18 @@ export default {
         const res = await axios({
           method: 'put',
           url: `/super-user/bank/survey-groups/${surveyGroupId}`,
+          data,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async addSurveyGroup(data) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: '/super-user/bank/survey-groups',
           data,
         });
 
