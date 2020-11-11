@@ -35,7 +35,7 @@ const Sidebar = () => {
           hover:text-primary-500 ${
             pathname === '/super-user/organizations' ? activeClassNames : 'text-antgray-100'
           } `}
-          to="/super-user/organizations"
+          to="/super-user/organizations?page_size=10&page_number=1"
         >
           <HomeOutlined />
         </Link>
@@ -43,9 +43,9 @@ const Sidebar = () => {
         <Link
           className={`py-5 w-full flex flex-row justify-center items-center text-center text-xl
           hover:text-primary-500 ${
-            pathname === '/super-user/bank/models' ? activeClassNames : 'text-antgray-100'
+            pathname === '/super-user/pre-defined-data' ? activeClassNames : 'text-antgray-100'
           } `}
-          to="/super-user/bank/models"
+          to="/super-user/pre-defined-data?page_size=10&page_number=1"
         >
           <DatabaseOutlined />
         </Link>

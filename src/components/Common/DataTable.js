@@ -96,6 +96,7 @@ const SortableTable = ({
 
   return (
     <Table
+      className="c-table-blue-bg"
       pagination={false}
       showHeader={false}
       dataSource={data}

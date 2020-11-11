@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
-import Layout from '../../components/ClientAdmin/ForgotPassword';
-import Success from '../../components/ClientAdmin/Success';
+import Layout from '../../../components/ClientAdmin/Auth/ForgotPassword';
+import Success from '../../../components/ClientAdmin/Success';
 
 class ForgotPassword extends Component {
   state = {

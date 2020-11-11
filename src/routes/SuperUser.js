@@ -28,7 +28,7 @@ import SurveyQuestions from '../containers/SuperUser/Wizard/SurveyQuestions';
 import Report from '../containers/SuperUser/Wizard/Report';
 
 import BankModels from '../containers/SuperUser/Bank/Models';
-import BankNewGroup from '../containers/SuperUser/Bank/NewGroup';
+import BankSurveyGroups from '../containers/SuperUser/Bank/SurveyGroups';
 
 import NotFound from '../components/404';
 import AddRatee from '../containers/SuperUser/Ratee/AddRatee';
@@ -93,17 +93,9 @@ const Routes = ({ match }) => (
     />
 
     {/* participants */}
-    <PrivateRoute
-      path={`${match.path}/participants/ratee/add/`}
-      exact
-      component={AddRatee}
-    />
+    <PrivateRoute path={`${match.path}/participants/ratee/add/`} exact component={AddRatee} />
     {/* TODO: change routes below to better routes */}
-    <PrivateRoute
-      path={`${match.path}/participants/ratee/add/edit`}
-      exact
-      component={AddRatee}
-    />
+    <PrivateRoute path={`${match.path}/participants/ratee/add/edit`} exact component={AddRatee} />
     {/* TODO: change url */}
     <PrivateRoute
       path={`${match.path}/participants/ratee/add/step2`}
@@ -140,9 +132,11 @@ const Routes = ({ match }) => (
       exact
       component={OrganizationsUpdateStaff}
     />
+
     {/* other */}
-    <PrivateRoute path={`${match.path}/bank/models`} exact component={BankModels} />
-    <PrivateRoute path={`${match.path}/bank/new-group`} exact component={BankNewGroup} />
+    <PrivateRoute path={`${match.path}/pre-defined-data`} exact component={BankModels} />
+    <PrivateRoute path={`${match.path}/pre-defined-data/add`} exact component={BankSurveyGroups} />
+
     <Route component={NotFound} />
   </Switch>
 );

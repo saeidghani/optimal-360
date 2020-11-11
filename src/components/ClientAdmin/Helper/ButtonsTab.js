@@ -17,7 +17,7 @@ const ButtonsTab = ({ activeButtonKey, wrapperClassName, buttonClassName }) => {
           key={button.key}
           className={`mr-4 border-list-border shadow-none px-2 md:px-4
             ${button.key === activeButtonKey ? 'bg-primary' : 'bg-white'} ${buttonClassName}`}
-          textClassName={`${button.key === activeButtonKey ? 'text-white' : 'text-heading'}`}
+          textClassName={`pt-2 ${button.key === activeButtonKey ? 'text-white' : 'text-heading'}`}
           textSize="sm"
           text={button.title}
           href={button.href}

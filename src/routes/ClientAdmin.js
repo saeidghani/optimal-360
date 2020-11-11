@@ -4,8 +4,8 @@ import { Switch, Route } from 'react-router-dom';
 import CustomRoute from './Route';
 import PrivateRoute from './PrivateRoute';
 
-import Login from '../containers/ClientAdmin/Login';
-import ForgotPassword from '../containers/ClientAdmin/ForgotPassword';
+import Login from '../containers/ClientAdmin/Auth/Login';
+import ForgotPassword from '../containers/ClientAdmin/Auth/ForgotPassword';
 import Dashboard from '../containers/ClientAdmin/Dashboard';
 import ParticipantSummary from '../containers/ClientAdmin/ParticipantSummary';
 import ParticipantDetails from '../containers/ClientAdmin/ParticipantDetails';
