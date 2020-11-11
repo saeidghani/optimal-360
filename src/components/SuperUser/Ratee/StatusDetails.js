@@ -178,13 +178,13 @@ const StatusDetails = (
       width: 100,
       sorter: true,
       sortOrder: getSortOrder('rateeName'),
-      render: (num) => (
+      render: (num,{rateeId}) => (
         <div className="flex items-center">
           <div className="text-12px inline-block">{num}</div>
           <div className="inline-block">
             <Button
               onClick={() => {
-                history.push(`/super-user/participants/ratee/add/edit?surveyGroupId=${parsedQuery.surveyGroupId}${parsedQuery.projectId ? `&projectId=${parsedQuery.projectId}` : ''}`);
+                history.push(`/super-user/participants/ratee/add/edit?rateeId=${rateeId}&surveyGroupId=${parsedQuery.surveyGroupId}${parsedQuery.projectId ? `&projectId=${parsedQuery.projectId}` : ''}`);
               }}
               size="middle"
               textSize="xs"
