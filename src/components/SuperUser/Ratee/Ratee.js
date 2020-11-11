@@ -22,7 +22,9 @@ const Ratee = (
     fetchStatusDetails,
     statusDetails,
     raters,
+    emailOptions,
     fetchRaters,
+    fetchEmailOptions,
   },
 ) => {
   const [parsedQuery, query, setQuery] = useQuery();
@@ -80,6 +82,8 @@ const Ratee = (
             loading={loading}
             raters={raters}
             fetchRaters={fetchRaters}
+            emailOptions={emailOptions}
+            fetchEmailOptions={fetchEmailOptions}
           />
         </TabPane>
         <TabPane tab="Results" key="result">
@@ -97,10 +101,12 @@ Ratee.propTypes = {
   completionRate: PropTypes.shape({}),
   statusDetails: PropTypes.shape({}),
   raters: PropTypes.shape({}),
+  emailOptions: PropTypes.shape({}),
   fetchSummary: PropTypes.func.isRequired,
   fetchCompletionRate: PropTypes.func.isRequired,
   fetchStatusDetails: PropTypes.func.isRequired,
   fetchRaters: PropTypes.func.isRequired,
+  fetchEmailOptions: PropTypes.func.isRequired,
 };
 
 Ratee.defaultProps = {
@@ -108,6 +114,7 @@ Ratee.defaultProps = {
   completionRate: {},
   statusDetails: {},
   raters: {},
+  emailOptions: {},
 };
 
 export default Ratee;

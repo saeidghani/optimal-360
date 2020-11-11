@@ -9,6 +9,7 @@ export default {
     completionRate: '',
     statusDetails: '',
     raters: '',
+    emailOptions: '',
   },
 
   effects: (dispatch) => ({
@@ -56,6 +57,17 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+    async fetchEmailOptions({ surveyGroupId }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/survey-groups/${surveyGroupId}/email-options`,
+        });
+
+        await this.fetchEmailOptions_reducer(res?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
   }),
 
   reducers: {
@@ -74,6 +86,10 @@ export default {
     fetchRaters_reducer: (state, payload) => ({
       ...state,
       raters: payload,
+    }),
+    fetchEmailOptions_reducer: (state, payload) => ({
+      ...state,
+      emailOptions: payload,
     }),
   },
 };

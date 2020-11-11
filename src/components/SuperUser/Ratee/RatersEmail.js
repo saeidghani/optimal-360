@@ -7,7 +7,7 @@ import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
 import { useQuery } from '../../../hooks';
 
-const RatersEmail = ({ loading, fetchRaters, raters }) => {
+const RatersEmail = ({ loading, fetchRaters, raters, fetchEmailOptions, emailOptions }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
@@ -24,46 +24,25 @@ const RatersEmail = ({ loading, fetchRaters, raters }) => {
     pageNumber,
     parsedQuery.sort,
   ]);
+  useEffect(() => {
+    fetchEmailOptions({ surveyGroupId });
+  }, [fetchEmailOptions, surveyGroupId]);
 
   const renderHeader = React.useCallback(() => {
     return selectedRows && selectedRows?.length > 0 ? (
       <div className="flex flex-row items-center">
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Send reminder email"
-          textClassName="mr-2"
-          className="ml-3"
-          icon="FileExcelOutlined"
-          iconPosition="right"
-        />
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Send reset password email"
-          textClassName="mr-2"
-          className="ml-3"
-          icon="FileExcelOutlined"
-          iconPosition="right"
-        />
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Send verification email"
-          textClassName="mr-2"
-          className="ml-3"
-          icon="FileExcelOutlined"
-          iconPosition="right"
-        />
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Send login email"
-          textClassName="mr-2"
-          className="ml-3"
-          icon="FileExcelOutlined"
-          iconPosition="right"
-        />
+        {(emailOptions?.data || []).map(({ id, name }) => (
+          <Button
+            size="middle"
+            textSize="xs"
+            text={name}
+            textClassName="mr-2"
+            className="ml-3"
+            icon="FileExcelOutlined"
+            iconPosition="right"
+          />
+        ))
+        }
         <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
       </div>
     ) : (
@@ -166,10 +145,19 @@ RatersEmail.propTypes = {
     }),
     timeStamp: PropTypes.number,
   }),
+  fetchEmailOptions: PropTypes.func.isRequired,
+  emailOptions: PropTypes.shape({
+    data: PropTypes.arrayOf({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
+  }),
+
 };
 
 RatersEmail.defaultProps = {
   raters: {},
+  emailOptions: {},
 };
 
 export default RatersEmail;

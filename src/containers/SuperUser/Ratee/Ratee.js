@@ -35,8 +35,14 @@ class Ratee extends Component {
     return fetchRaters(query);
   };
 
+  fetchEmailOptions = async (query) => {
+    const { fetchEmailOptions } = this.props;
+
+    return fetchEmailOptions(query);
+  };
+
   render() {
-    const { loading, summary, completionRate, statusDetails, raters } = this.props;
+    const { loading, summary, completionRate, statusDetails, raters, emailOptions } = this.props;
 
     return (
       <Layout
@@ -45,9 +51,11 @@ class Ratee extends Component {
         completionRate={completionRate}
         statusDetails={statusDetails}
         raters={raters}
+        emailOptions={emailOptions}
         fetchSummary={this.fetchSummary}
         fetchCompletionRate={this.fetchCompletionRate}
         fetchRaters={this.fetchRaters}
+        fetchEmailOptions={this.fetchEmailOptions}
         fetchStatusDetails={this.fetchStatusDetails}
       />
     );
@@ -59,11 +67,13 @@ Ratee.propTypes = {
   fetchCompletionRate: PropTypes.func.isRequired,
   fetchStatusDetails: PropTypes.func.isRequired,
   fetchRaters: PropTypes.func.isRequired,
+  fetchEmailOptions: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   summary: PropTypes.shape({}),
   completionRate: PropTypes.shape({}),
   statusDetails: PropTypes.shape({}),
   raters: PropTypes.shape({}),
+  emailOptions: PropTypes.shape({}),
 };
 
 Ratee.defaultProps = {
@@ -71,6 +81,7 @@ Ratee.defaultProps = {
   completionRate: {},
   statusDetails: {},
   raters: {},
+  emailOptions: {},
 };
 
 const mapStateToProps = (state) => ({
@@ -79,6 +90,7 @@ const mapStateToProps = (state) => ({
   completionRate: state.ratee?.completionRate || {},
   statusDetails: state.ratee?.statusDetails || {},
   raters: state.ratee?.raters || {},
+  emailOptions: state.ratee?.emailOptions || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -86,6 +98,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchCompletionRate: dispatch.ratee.fetchCompletionRate,
   fetchStatusDetails: dispatch.ratee.fetchStatusDetails,
   fetchRaters: dispatch.ratee.fetchRaters,
+  fetchEmailOptions: dispatch.ratee.fetchEmailOptions,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Ratee);
