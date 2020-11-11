@@ -68,6 +68,18 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+    async removeRateeRaters({ surveyGroupId, selectedRowsIds }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'patch',
+          url: `/super-user/survey-groups/${surveyGroupId}/relations/remove`,
+          data: { relationIds: selectedRowsIds },
+        });
+
+        await this.fetchEmailOptions_reducer(res?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
   }),
 
   reducers: {

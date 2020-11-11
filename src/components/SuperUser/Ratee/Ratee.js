@@ -20,6 +20,7 @@ const Ratee = (
     fetchSummary,
     fetchCompletionRate,
     fetchStatusDetails,
+    removeRateeRaters,
     statusDetails,
     raters,
     emailOptions,
@@ -73,6 +74,7 @@ const Ratee = (
         <TabPane tab="Status Details" key="status-details">
           <StatusDetails
             fetchStatusDetails={fetchStatusDetails}
+            removeRateeRaters={removeRateeRaters}
             statusDetails={statusDetails}
             loading={loading}
           />
@@ -105,6 +107,7 @@ Ratee.propTypes = {
   fetchSummary: PropTypes.func.isRequired,
   fetchCompletionRate: PropTypes.func.isRequired,
   fetchStatusDetails: PropTypes.func.isRequired,
+  removeRateeRaters: PropTypes.func.isRequired,
   fetchRaters: PropTypes.func.isRequired,
   fetchEmailOptions: PropTypes.func.isRequired,
 };

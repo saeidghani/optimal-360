@@ -28,6 +28,12 @@ class Ratee extends Component {
     return fetchStatusDetails(query);
   };
 
+  removeRateeRaters = async (query) => {
+    const { removeRateeRaters } = this.props;
+
+    return removeRateeRaters(query);
+  };
+
 // raters email
   fetchRaters = async (query) => {
     const { fetchRaters } = this.props;
@@ -57,6 +63,7 @@ class Ratee extends Component {
         fetchRaters={this.fetchRaters}
         fetchEmailOptions={this.fetchEmailOptions}
         fetchStatusDetails={this.fetchStatusDetails}
+        removeRateeRaters={this.removeRateeRaters}
       />
     );
   }
@@ -66,6 +73,7 @@ Ratee.propTypes = {
   fetchSummary: PropTypes.func.isRequired,
   fetchCompletionRate: PropTypes.func.isRequired,
   fetchStatusDetails: PropTypes.func.isRequired,
+  removeRateeRaters: PropTypes.func.isRequired,
   fetchRaters: PropTypes.func.isRequired,
   fetchEmailOptions: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
@@ -97,6 +105,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchSummary: dispatch.ratee.fetchSummary,
   fetchCompletionRate: dispatch.ratee.fetchCompletionRate,
   fetchStatusDetails: dispatch.ratee.fetchStatusDetails,
+  removeRateeRaters: dispatch.ratee.removeRateeRaters,
   fetchRaters: dispatch.ratee.fetchRaters,
   fetchEmailOptions: dispatch.ratee.fetchEmailOptions,
 });

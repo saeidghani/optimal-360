@@ -9,7 +9,14 @@ import Button from '../../Common/Button';
 import AwardIcon from '../../../assets/images/award.svg';
 import { useHistory } from 'react-router-dom';
 
-const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
+const StatusDetails = (
+  {
+    loading,
+    fetchStatusDetails,
+    removeRateeRaters,
+    statusDetails,
+  },
+) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
@@ -17,8 +24,12 @@ const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
   const pageNumber = parsedQuery?.page_number;
   const surveyGroupId = parsedQuery?.surveyGroupId;
 
-  useEffect(() => {
+  const fetch = () => {
     fetchStatusDetails({ query, surveyGroupId });
+  };
+
+  useEffect(() => {
+    fetch();
     setSelectedRows([]);
   }, [
     fetchStatusDetails,
@@ -28,10 +39,23 @@ const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
     parsedQuery.page_number,
     parsedQuery.sort,
   ]);
+
   const renderHeader = React.useCallback(() => {
+    const selectedRowsIds = selectedRows?.length > 0 ? selectedRows.map((el) => el.relationId) : [];
+
     return selectedRows && selectedRows?.length > 0 ? (
       <div className="flex flex-row items-center">
-        <Button size="middle" textSize="xs" text="Remove" textClassName="mr-2" className="ml-3" />
+        <Button
+          size="middle"
+          textSize="xs"
+          text="Remove"
+          textClassName="mr-2"
+          className="ml-3"
+          onClick={async () => {
+            await removeRateeRaters({ selectedRowsIds, surveyGroupId });
+            fetch();
+          }}
+        />
         <Button
           size="middle"
           textSize="xs"
@@ -231,6 +255,7 @@ const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
 StatusDetails.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchStatusDetails: PropTypes.func.isRequired,
+  removeRateeRaters: PropTypes.func.isRequired,
   statusDetails: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
     metaData: PropTypes.shape({
