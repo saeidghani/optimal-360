@@ -13,6 +13,7 @@ import RateCards from './Helper/RateCards';
 
 const RaterDetails = ({ loading }) => {
   const [pageSize] = React.useState(10);
+  const [project, setProject] = React.useState('');
 
   const columns = React.useMemo(() => [
     {
@@ -38,17 +39,17 @@ const RaterDetails = ({ loading }) => {
       key: 'totalCompletionRate',
       title: (
         <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100">Total CompletionRate</span>
+          <span className="text-antgray-100">Total Completion Rate</span>
         </div>
       ),
       width: 100,
       render: (item) => (
         <div className="w-20 mt-5 flex-inline flex-col items-center justify-center">
-            <Progress
-              subClassName="mb-10"
-              status={item.status}
-              percentage={item.status === 'sub' ? 100 : item.percentage}
-            />
+          <Progress
+            subClassName="mb-10"
+            status={item.status}
+            percentage={item.status === 'sub' ? 100 : item.percentage}
+          />
         </div>
       ),
     },
@@ -267,9 +268,10 @@ const RaterDetails = ({ loading }) => {
         <Dropdown
           className="c-autocomplete col-start-1 col-span-12
           md:col-start-1 md:col-span-4 lg:col-start-1 lg:col-span-3 w-full"
-          showSearch
-          value={1}
+          showSearch={false}
           type="gray"
+          value={project}
+          handleChange={(val) => setProject(val)}
           options={dropdownOptions}
         />
       </div>

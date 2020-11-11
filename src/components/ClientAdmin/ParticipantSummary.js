@@ -1,5 +1,4 @@
 import React from 'react';
-import { TeamOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
 import Dropdown from '../Common/Dropdown';
@@ -7,7 +6,6 @@ import Tabs from '../Common/Tabs';
 import Progress from '../Common/Progress';
 
 import Layout from './Helper/Layout';
-import Button from '../Common/Button';
 import Table from '../Common/Table';
 import ButtonsTab from './Helper/ButtonsTab';
 import OverallCompletion from './Helper/OverallCompletion';
@@ -15,6 +13,7 @@ import RateCards from './Helper/RateCards';
 
 const ParticipantSummary = ({ loading }) => {
   const [pageSize] = React.useState(10);
+  const [project, setProject] = React.useState('');
 
   const columns = React.useMemo(() => [
     {
@@ -75,15 +74,15 @@ const ParticipantSummary = ({ loading }) => {
       width: 100,
       render: (item) => (
         <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
-          {item.percentage &&
-          <Progress
-            className="h-8"
-            subClassName="mb-10 pb-4"
-            status={item.status}
-            percentage={item.status === 'sub' ? 100 : item.percentage}
-          />
-          }
-          {item.count && <div className="text-center">{item.count}</div> }
+          {item.percentage && (
+            <Progress
+              className="h-8"
+              subClassName="mb-10 pb-4"
+              status={item.status}
+              percentage={item.status === 'sub' ? 100 : item.percentage}
+            />
+          )}
+          {item.count && <div className="text-center">{item.count}</div>}
         </div>
       ),
     },
@@ -98,15 +97,15 @@ const ParticipantSummary = ({ loading }) => {
       width: 100,
       render: (item) => (
         <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
-          {item.percentage &&
-          <Progress
-            className="h-8"
-            subClassName="mb-10 pb-4"
-            status={item.status}
-            percentage={item.status === 'sub' ? 100 : item.percentage}
-          />
-          }
-          {item.count && <div className="text-center">{item.count}</div> }
+          {item.percentage && (
+            <Progress
+              className="h-8"
+              subClassName="mb-10 pb-4"
+              status={item.status}
+              percentage={item.status === 'sub' ? 100 : item.percentage}
+            />
+          )}
+          {item.count && <div className="text-center">{item.count}</div>}
         </div>
       ),
     },
@@ -121,15 +120,15 @@ const ParticipantSummary = ({ loading }) => {
       width: 100,
       render: (item) => (
         <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
-          {item.percentage &&
-          <Progress
-            className="h-8"
-            subClassName="mb-10 pb-4"
-            status={item.status}
-            percentage={item.status === 'sub' ? 100 : item.percentage}
-          />
-          }
-          {item.count && <div className="text-center">{item.count}</div> }
+          {item.percentage && (
+            <Progress
+              className="h-8"
+              subClassName="mb-10 pb-4"
+              status={item.status}
+              percentage={item.status === 'sub' ? 100 : item.percentage}
+            />
+          )}
+          {item.count && <div className="text-center">{item.count}</div>}
         </div>
       ),
     },
@@ -144,15 +143,15 @@ const ParticipantSummary = ({ loading }) => {
       width: 100,
       render: (item) => (
         <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
-          {item.percentage &&
-          <Progress
-            className="h-8"
-            subClassName="mb-10 pb-4"
-            status={item.status}
-            percentage={item.status === 'sub' ? 100 : item.percentage}
-          />
-          }
-          {item.count && <div className="text-center">{item.count}</div> }
+          {item.percentage && (
+            <Progress
+              className="h-8"
+              subClassName="mb-10 pb-4"
+              status={item.status}
+              percentage={item.status === 'sub' ? 100 : item.percentage}
+            />
+          )}
+          {item.count && <div className="text-center">{item.count}</div>}
         </div>
       ),
     },
@@ -167,15 +166,15 @@ const ParticipantSummary = ({ loading }) => {
       width: 50,
       render: (item) => (
         <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
-          {item.percentage &&
-          <Progress
-            className="h-8"
-            subClassName="mb-10 pb-4"
-            status={item.status}
-            percentage={item.status === 'sub' ? 100 : item.percentage}
-          />
-          }
-          {item.count && <div className="text-center">{item.count}</div> }
+          {item.percentage && (
+            <Progress
+              className="h-8"
+              subClassName="mb-10 pb-4"
+              status={item.status}
+              percentage={item.status === 'sub' ? 100 : item.percentage}
+            />
+          )}
+          {item.count && <div className="text-center">{item.count}</div>}
         </div>
       ),
     },
@@ -217,8 +216,8 @@ const ParticipantSummary = ({ loading }) => {
       noSubmission: '3/10',
       totalCompletionRate: { percentage: 60, status: '' },
       bySelf: { percentage: '0', status: '', count: '0/1' },
-      byManager: { percentage: 100, status: 'sub' , count: '3/3' },
-      byPeers: { percentage: 100, status: 'sub' , count: '2/4' },
+      byManager: { percentage: 100, status: 'sub', count: '3/3' },
+      byPeers: { percentage: 100, status: 'sub', count: '2/4' },
       directReports: { percentage: 100, status: 'sub', count: '2/4' },
       others: '',
       status: 'Met Min Req',
@@ -268,9 +267,10 @@ const ParticipantSummary = ({ loading }) => {
         <Dropdown
           className="c-autocomplete col-start-1 col-span-12
           md:col-start-1 md:col-span-4 lg:col-start-1 lg:col-span-3 w-full"
-          showSearch
-          value={1}
+          showSearch={false}
           type="gray"
+          value={project}
+          handleChange={(val) => setProject(val)}
           options={dropdownOptions}
         />
       </div>

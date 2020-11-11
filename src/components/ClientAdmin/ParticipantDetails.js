@@ -1,5 +1,4 @@
 import React from 'react';
-import { TeamOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
 import Dropdown from '../Common/Dropdown';
@@ -7,7 +6,6 @@ import Tabs from '../Common/Tabs';
 import Progress from '../Common/Progress';
 
 import Layout from './Helper/Layout';
-import Button from '../Common/Button';
 import Table from '../Common/Table';
 import ButtonsTab from './Helper/ButtonsTab';
 import OverallCompletion from './Helper/OverallCompletion';
@@ -15,6 +13,7 @@ import RateCards from './Helper/RateCards';
 
 const ParticipantDetails = ({ loading }) => {
   const [pageSize] = React.useState(10);
+  const [project, setProject] = React.useState('');
 
   const columns = React.useMemo(() => [
     {
@@ -89,7 +88,10 @@ const ParticipantDetails = ({ loading }) => {
       ),
       width: 100,
       render: (item) => (
-        <div className="absolute top-0 w-full mt-16 pt-3 w-16 mt-5 flex-inline flex-col items-center justify-center">
+        <div
+          className="absolute top-0 w-full mt-16 pt-3 w-16 mt-5 flex-inline flex-col
+        items-center justify-center"
+        >
           <div className="w-16 mx-auto">
             <Progress
               className="h-8"
@@ -136,7 +138,7 @@ const ParticipantDetails = ({ loading }) => {
       key: 'directReports',
       title: (
         <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100">Direct Reports</span>
+          <span className="text-antgray-100">By Direct Reports</span>
           <span className="text-body text-opacity-75 text-xs">Min. 3</span>
         </div>
       ),
@@ -163,15 +165,14 @@ const ParticipantDetails = ({ loading }) => {
       key: 'others',
       title: (
         <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100">Others</span>
+          <span className="text-antgray-100">By Others</span>
           <span className="text-body text-opacity-75 text-xs">Min. 2</span>
         </div>
       ),
       width: 50,
       render: (item) => (
-
         <div className="absolute top-0 mt-16 pt-3 w-16 mt-5 flex-inline flex-col items-center justify-center">
-          { item.percentage &&
+          {item.percentage && (
             <div className="w-16 mx-auto">
               <Progress
                 className="h-8"
@@ -180,10 +181,8 @@ const ParticipantDetails = ({ loading }) => {
                 percentage={item.status === 'sub' ? 100 : item.percentage}
               />
             </div>
-          }
-          { item.name &&
-            <div className="text-center">{item.name}</div>
-          }
+          )}
+          {item.name && <div className="text-center">{item.name}</div>}
         </div>
       ),
     },
@@ -299,9 +298,10 @@ const ParticipantDetails = ({ loading }) => {
         <Dropdown
           className="c-autocomplete col-start-1 col-span-12
           md:col-start-1 md:col-span-4 lg:col-start-1 lg:col-span-3 w-full"
-          showSearch
-          value={1}
+          showSearch={false}
           type="gray"
+          value={project}
+          handleChange={(val) => setProject(val)}
           options={dropdownOptions}
         />
       </div>
