@@ -9,7 +9,6 @@ import { useQuery } from '../../../hooks';
 
 const StatusOverview = (
   {
-    surveyGroupId,
     summary,
     completionRate,
     fetchSummary,
@@ -19,15 +18,26 @@ const StatusOverview = (
 ) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
-  const pageNumber = parsedQuery?.page_number;
+  const pageNumber = parsedQuery?.page_number || 1;
+  const surveyGroupId = parsedQuery?.surveyGroupId;
 
-  useEffect(() => {
-    fetchCompletionRate({ query, surveyGroupId });
-  }, [fetchCompletionRate, surveyGroupId]);
+    useEffect(() => {
+      fetchCompletionRate({ query, surveyGroupId });
+    }, [
+      fetchCompletionRate,
+      surveyGroupId,
+      pageSize,
+      pageNumber,
+    ]);
 
   useEffect(() => {
     fetchSummary({ query, surveyGroupId });
-  }, [fetchSummary, query, surveyGroupId]);
+  }, [
+    fetchSummary,
+    surveyGroupId,
+    pageSize,
+    pageNumber,
+  ]);
 
   const columns = React.useMemo(() => [
     {
@@ -316,7 +326,6 @@ const StatusOverview = (
 
 StatusOverview.propTypes = {
   loading: PropTypes.bool.isRequired,
-  surveyGroupId: PropTypes.string.isRequired,
   fetchSummary: PropTypes.func.isRequired,
   fetchCompletionRate: PropTypes.func.isRequired,
 

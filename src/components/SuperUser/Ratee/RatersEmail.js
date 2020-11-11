@@ -7,16 +7,23 @@ import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
 import { useQuery } from '../../../hooks';
 
-const RatersEmail = ({ surveyGroupId, loading, fetchRaters, raters }) => {
+const RatersEmail = ({ loading, fetchRaters, raters }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const pageNumber = parsedQuery?.page_number;
+  const pageNumber = parsedQuery?.page_number || 1;
+  const surveyGroupId = parsedQuery?.surveyGroupId;
 
   useEffect(() => {
-    const newQuery = query || '?page_size=10&page_number=1';
-    fetchRaters({ query: newQuery, surveyGroupId });
-  }, [fetchRaters, query, surveyGroupId]);
+    fetchRaters({ query, surveyGroupId });
+  }, [
+    fetchRaters,
+    surveyGroupId,
+    pageSize,
+    parsedQuery.q,
+    pageNumber,
+    parsedQuery.sort,
+  ]);
 
   const renderHeader = React.useCallback(() => {
     return selectedRows && selectedRows?.length > 0 ? (
@@ -147,7 +154,6 @@ const RatersEmail = ({ surveyGroupId, loading, fetchRaters, raters }) => {
 
 RatersEmail.propTypes = {
   loading: PropTypes.bool.isRequired,
-  surveyGroupId: PropTypes.string.isRequired,
   fetchRaters: PropTypes.func.isRequired,
   raters: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),

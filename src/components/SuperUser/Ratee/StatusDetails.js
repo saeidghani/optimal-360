@@ -9,18 +9,24 @@ import Button from '../../Common/Button';
 import AwardIcon from '../../../assets/images/award.svg';
 import { useHistory } from 'react-router-dom';
 
-const StatusDetails = ({ surveyGroupId, loading, fetchStatusDetails, statusDetails }) => {
+const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const pageNumber = parsedQuery?.page_number;
+  const surveyGroupId = parsedQuery?.surveyGroupId;
 
   useEffect(() => {
-    const newQuery = query || '?page_size=10&page_number=1';
-    fetchStatusDetails({ query: newQuery, surveyGroupId });
-  }, [fetchStatusDetails, query, surveyGroupId]);
-
+    fetchStatusDetails({ query, surveyGroupId });
+  }, [
+    fetchStatusDetails,
+    surveyGroupId,
+    parsedQuery.page_size,
+    parsedQuery.q,
+    parsedQuery.page_number,
+    parsedQuery.sort,
+  ]);
   const renderHeader = React.useCallback(() => {
     return selectedRows && selectedRows?.length > 0 ? (
       <div className="flex flex-row items-center">
@@ -223,7 +229,6 @@ const StatusDetails = ({ surveyGroupId, loading, fetchStatusDetails, statusDetai
 
 StatusDetails.propTypes = {
   loading: PropTypes.bool.isRequired,
-  surveyGroupId: PropTypes.string.isRequired,
   fetchStatusDetails: PropTypes.func.isRequired,
   statusDetails: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),

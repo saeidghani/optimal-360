@@ -9,9 +9,8 @@ import StatusOverview from './StatusOverview';
 import StatusDetails from './StatusDetails';
 import RatersEmail from './RatersEmail';
 import Result from './Result';
-import { useParams, useHistory } from 'react-router-dom';
 
-import { useSurveyGroup, useQuery } from '../../../hooks';
+import { useQuery, useTabs, useSurveyGroup } from '../../../hooks';
 
 const Ratee = (
   {
@@ -28,8 +27,7 @@ const Ratee = (
 ) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
-  const history = useHistory();
-  const { tab = 'status-overview' } = useParams() || {};
+  const [currentTab, setTab] = useTabs(['status-overview', 'status-details', 'raters-email', 'result']);
   const { TabPane } = Tabs;
 
   const dropDownOptions = React.useMemo(
@@ -38,54 +36,8 @@ const Ratee = (
     [surveyGroups.timeStamp],
   );
 
-  const tabs = [
-    {
-      title: 'Status Overview',
-      key: 'status-overview',
-      component: (
-        <StatusOverview
-          summary={summary}
-          completionRate={completionRate}
-          fetchSummary={fetchSummary}
-          fetchCompletionRate={fetchCompletionRate}
-          surveyGroupId={surveyGroupId}
-          loading={loading}
-        />
-      ),
-    },
-    {
-      title: 'Status Details',
-      key: 'status-details',
-      component: (
-        <StatusDetails
-          fetchStatusDetails={fetchStatusDetails}
-          statusDetails={statusDetails}
-          surveyGroupId={surveyGroupId}
-          loading={loading}
-        />
-      ),
-    },
-    {
-      title: 'Rates Email',
-      key: 'raters-email',
-      component: (
-        <RatersEmail
-          surveyGroupId={surveyGroupId}
-          loading={loading}
-          raters={raters}
-          fetchRaters={fetchRaters}
-        />
-      ),
-    },
-    {
-      title: 'Results',
-      key: 'result',
-      component: <Result loading={loading} />,
-    },
-  ];
-
   function tabChangeCallback(key) {
-    history.push(`/super-user/participants/ratee/${key}?projectId=${parsedQuery?.projectId}&surveyGroupId=${surveyGroupId}`);
+    setTab(key);
   }
 
   return (
@@ -105,13 +57,36 @@ const Ratee = (
           loading={loading}
         />
       </div>
-      <Tabs defaultActiveKey={tab} onChange={tabChangeCallback}>
-        {tabs.map(({ title, key, component }) => (
-          <TabPane tab={title} key={key}>
-            {component}
-          </TabPane>
-        ))}
+
+      <Tabs defaultActiveKey={currentTab} onChange={tabChangeCallback}>
+        <TabPane tab="Status Overview" key="status-overview">
+          <StatusOverview
+            summary={summary}
+            completionRate={completionRate}
+            fetchSummary={fetchSummary}
+            fetchCompletionRate={fetchCompletionRate}
+            loading={loading}
+          />
+        </TabPane>
+        <TabPane tab="Status Details" key="status-details">
+          <StatusDetails
+            fetchStatusDetails={fetchStatusDetails}
+            statusDetails={statusDetails}
+            loading={loading}
+          />
+        </TabPane>
+        <TabPane tab="Rates Email" key="raters-email">
+          <RatersEmail
+            loading={loading}
+            raters={raters}
+            fetchRaters={fetchRaters}
+          />
+        </TabPane>
+        <TabPane tab="Results" key="result">
+          <Result loading={loading} />
+        </TabPane>
       </Tabs>
+
     </MainLayout>
   );
 };
