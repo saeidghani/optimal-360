@@ -39,7 +39,6 @@ const StatusOverview = (
     pageNumber,
   ]);
   const isMetMinReq = (groups) => {
-    console.log(1);
     const eachOne = Object.entries(groups);
     let metMinReq = true;
     eachOne.forEach((item) => {
