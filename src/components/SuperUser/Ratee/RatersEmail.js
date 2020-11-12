@@ -20,9 +20,9 @@ const RatersEmail = ({ loading, fetchRaters, raters, fetchEmailOptions, emailOpt
   }, [
     fetchRaters,
     surveyGroupId,
-    pageSize,
+    parsedQuery.page_size,
     parsedQuery.q,
-    pageNumber,
+    parsedQuery.page_number,
     parsedQuery.sort,
   ]);
   useEffect(() => {
@@ -110,6 +110,8 @@ const RatersEmail = ({ loading, fetchRaters, raters, fetchEmailOptions, emailOpt
       rowKey="raterId"
       renderHeader={renderHeader}
       onPageSizeChange={(size) => {
+        console.log('new size', size);
+
         setPageSize(size);
         setQuery({ page_size: size, page_number: 1 });
       }}

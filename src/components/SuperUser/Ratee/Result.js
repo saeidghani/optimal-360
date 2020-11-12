@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 
 import { useHistory } from 'react-router-dom';
+import { useQuery } from '../../../hooks';
 
 import Table from '../../Common/Table';
 import Progress from '../../Common/Progress';
@@ -12,17 +13,28 @@ import Checkbox from '../../Common/Checkbox';
 import SearchBox from '../../Common/SearchBox';
 
 const Result = ({ loading }) => {
-  const [pageSize] = React.useState(10);
+  const [parsedQuery, query, setQuery] = useQuery();
+
+  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [visible, setVisible] = React.useState(false);
   const [selectedTab, setSelectedTab] = useState('1');
   const { TabPane } = Tabs;
+  const pageNumber = parsedQuery?.page_number || 1;
+  const history = useHistory();
 
   function tabChangeCallback(key) {
     setSelectedTab(key);
   }
 
-  const history = useHistory();
+  useEffect(() => {
+    setSelectedRows([]);
+  }, [
+    pageSize,
+    parsedQuery.q,
+    pageNumber,
+    parsedQuery.sort,
+  ]);
 
   const renderHeader = React.useCallback(() => {
     return selectedRows && selectedRows?.length > 0 ? (
@@ -198,27 +210,27 @@ const Result = ({ loading }) => {
 
   const groupDataSource = [
     {
-      key: '111',
+      id: 111,
       groupReport: 'Top Leadership',
       reportAvailable: 'No',
     },
     {
-      key: '112',
+      id: 112,
       groupReport: 'Top Leadership',
       reportAvailable: 'Yes',
     },
     {
-      key: '113',
+      id: 113,
       groupReport: 'Top Leadership',
       reportAvailable: 'No',
     },
     {
-      key: '114',
+      id: 114,
       groupReport: 'Top Leadership',
       reportAvailable: 'Yes',
     },
     {
-      key: '115',
+      id: 115,
       groupReport: 'Top Leadership',
       reportAvailable: 'No',
     },
@@ -226,8 +238,7 @@ const Result = ({ loading }) => {
 
   const IndividualDataSource = [
     {
-      key: '221',
-      id: '1002520001',
+      id: 1002520001,
       ratee: 'Katherine Kan',
       status: 100,
       responsesSubmitted: '2/10',
@@ -237,8 +248,7 @@ const Result = ({ loading }) => {
       reportAvailable: 'No',
     },
     {
-      key: '222',
-      id: '1002420001',
+      id: 1002420001,
       ratee: 'Katherine Kan',
       status: 100,
       responsesSubmitted: '2/10',
@@ -248,8 +258,7 @@ const Result = ({ loading }) => {
       reportAvailable: 'No',
     },
     {
-      key: '223',
-      id: '1002230001',
+      id: 1002230001,
       ratee: 'Katherine Kan',
       status: 100,
       responsesSubmitted: '2/10',
@@ -259,8 +268,7 @@ const Result = ({ loading }) => {
       reportAvailable: 'No',
     },
     {
-      key: '224',
-      id: '1002200201',
+      id: 1002200201,
       ratee: 'Katherine Kan',
       status: 100,
       responsesSubmitted: '2/10',
@@ -270,8 +278,7 @@ const Result = ({ loading }) => {
       reportAvailable: 'No',
     },
     {
-      key: '225',
-      id: '1002200011',
+      id: 10022078011,
       ratee: 'Katherine Kan',
       status: 100,
       responsesSubmitted: '2/10',
@@ -281,6 +288,13 @@ const Result = ({ loading }) => {
       reportAvailable: 'No',
     },
   ];
+  const sort = (sorter) => {
+    // eslint-disable-next-line operator-linebreak
+    const order = parsedQuery?.sort?.[0] === '+' ? '-' : '+';
+    const newItem = `${order}${sorter.columnKey}`;
+
+    setQuery({ sort: newItem });
+  };
 
   return (
     <>
@@ -335,16 +349,31 @@ const Result = ({ loading }) => {
       <Table
         size="middle"
         className="p-6 mt-5 bg-white rounded-lg shadow"
+        onTableChange={({ sorter }) => sort(sorter)}
         loading={loading}
         columns={selectedTab === '1' ? individualColumns : groupColumns}
-        dataSource={selectedTab === '1' ? IndividualDataSource : groupDataSource}
-        pageSize={pageSize * 1}
-        pageNumber={1}
+        dataSource={(selectedTab === '1' ? IndividualDataSource : groupDataSource) || []}
         renderHeader={renderHeader}
-        selectedRowKeys={selectedRows?.map((el) => el.key)}
+        onPageSizeChange={(size) => {
+          setPageSize(size);
+          setQuery({ page_size: size, page_number: 1 });
+        }}
+        pageSize={pageSize * 1}
+        pageNumber={pageNumber * 1}
+        // eslint-disable-next-line camelcase
+        onPaginationChange={(page_number, page_size) => {
+          setSelectedRows([]);
+          setQuery({
+            page_size,
+            page_number,
+          });
+        }}
+        rowKey="id"
+        selectedRowKeys={selectedRows?.map((el) => el.id)}
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
         }}
+        // totalRecordSize={raters?.metaData?.pagination?.totalRecords * 1}
       />
     </>
   );
