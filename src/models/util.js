@@ -37,6 +37,23 @@ export default {
       );
     },
 
+    async saveFile({ blob, filename }) {
+      const reader = new FileReader();
+
+      reader.onload = (res) => {
+        const link = document.createElement('a');
+        link.href = res.target.result;
+        link.download = `${filename}.xlsx`;
+
+        link.click();
+
+        window.URL.revokeObjectURL(link.href);
+        link.remove();
+      };
+
+      reader.readAsDataURL(blob);
+    },
+
     async errorHandler(error) {
       const { status, data } = error?.response || {};
 
