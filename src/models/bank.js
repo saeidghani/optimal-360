@@ -59,6 +59,40 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+
+    async importSurveyGroups(file) {
+      // eslint-disable-next-line no-undef
+      const data = new FormData();
+      data.append('excel', file);
+
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: '/super-user/bank/survey-groups/import',
+            data,
+          });
+
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
+    },
+
+    async exportSurveyGroup(surveyGroupId) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/bank/survey-groups/${surveyGroupId}/export`,
+          responseType: 'blob',
+        });
+
+        dispatch.util.saveFile({ blob: res.data, filename: `survey-group-${surveyGroupId}` });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
   }),
 
   reducers: {

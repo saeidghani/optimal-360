@@ -1,24 +1,23 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '../../../hooks';
 
+import { fetchFullURL } from '../../../lib/utils';
+
 import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
+import ImportExcelButton from '../../Common/ImportExcelButton';
 
-import budgetLogo from '../../../assets/images/budget-logo.jpg';
-import { fetchFullURL } from "../../../lib/utils";
-
-const OrganizationsStaff = (
-  {
-    organizationsInfo,
-    staff,
-    fetchOrganizationsInfo,
-    fetchOrganizationsStaff,
-    loading,
-  },
-) => {
+const OrganizationsStaff = ({
+  importStaff,
+  organizationsInfo,
+  staff,
+  fetchOrganizationsInfo,
+  fetchOrganizationsStaff,
+  loading,
+}) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const { organizationId } = useParams();
@@ -27,16 +26,12 @@ const OrganizationsStaff = (
 
   const pageNumber = parsedQuery?.page_number;
 
-  const handleEdit = (staffId) => {
-    history.push(`/super-user/organizations/${organizationId}/staff/${staffId}/update`);
-  };
-
-  useEffect(() => {
+  React.useEffect(() => {
     const newQuery = query || '?page_size=10&page_number=1';
     fetchOrganizationsStaff({ organizationId, query: newQuery });
   }, [fetchOrganizationsStaff, query]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchOrganizationsInfo(organizationId);
   }, []);
 
@@ -46,20 +41,28 @@ const OrganizationsStaff = (
         <div className="flex flex-row justify-between items-center">
           <div className="inline-flex flex-row items-center justify-between">
             <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
-              <img className="rounded-full w-10 h-10" src={fetchFullURL(organizationsInfo.logo)} alt="logo" />
+              <img
+                className="rounded-full w-10 h-10"
+                src={fetchFullURL(organizationsInfo.logo)}
+                alt="logo"
+              />
             </div>
+
             <p className="text-sm font-normal ml-2">{organizationsInfo.name}</p>
           </div>
+
           <div className="flex flex-row">
             <Button
+              className="flex items-center"
+              text="Import Excel File"
+              textClassName="pr-3"
               size="middle"
               textSize="xs"
-              text="Import Exel File"
-              type="gray"
-              className="mx-3 px-3 flex-row-reverse"
-              textClassName="mr-2"
               icon="FileExcelOutlined"
+              iconPosition="right"
+              type="gray"
             />
+
             <Button
               size="middle"
               textSize="xs"
@@ -115,11 +118,10 @@ const OrganizationsStaff = (
             type="link"
             icon="EditOutlined"
             iconPosition="right"
-            onClick={() => {
-              handleEdit(id);
-            }}
+            onClick={() =>
+              history.push(`/super-user/organizations/${organizationId}/staff/${id}/update`)
+            }
           />
-
         ),
       },
     ],
@@ -140,13 +142,9 @@ const OrganizationsStaff = (
     // eslint-disable-next-line
     [staff.timeStamp],
   );
+
   return (
-    <MainLayout
-      titleClass="mb-6 mt-3"
-      hasBreadCrumb
-      title="Staff"
-      contentClass="py-6 pl-21 pr-6"
-    >
+    <MainLayout titleClass="mb-6 mt-3" hasBreadCrumb title="Staff" contentClass="py-6 pl-21 pr-6">
       <Table
         onTableChange={({ sorter }) => sort(sorter)}
         size="middle"
@@ -176,6 +174,7 @@ const OrganizationsStaff = (
 };
 
 OrganizationsStaff.propTypes = {
+  importStaff: PropTypes.func.isRequired,
   fetchOrganizationsStaff: PropTypes.func.isRequired,
   fetchOrganizationsInfo: PropTypes.func.isRequired,
   staff: PropTypes.shape({

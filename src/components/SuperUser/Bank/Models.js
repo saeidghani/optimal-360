@@ -5,10 +5,17 @@ import PropTypes from 'prop-types';
 import { useQuery, stringify } from '../../../hooks/useQuery';
 
 import Button from '../../Common/Button';
+import ImportExcelButton from '../../Common/ImportExcelButton';
 import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 
-const Models = ({ loading, surveyGroups, fetchSurveyGroups }) => {
+const Models = ({
+  loading,
+  surveyGroups,
+  fetchSurveyGroups,
+  importSurveyGroups,
+  exportSurveyGroup,
+}) => {
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
 
@@ -71,10 +78,11 @@ const Models = ({ loading, surveyGroups, fetchSurveyGroups }) => {
             text="Export Exel File"
             icon="FileExcelOutlined"
             size="middle"
-            textSize="md"
+            textSize="xs"
             textClassName="mr-2"
             iconPosition="right"
             type="gray"
+            onClick={() => exportSurveyGroup(id)}
           />
           <Button
             onClick={() => {
@@ -101,20 +109,18 @@ const Models = ({ loading, surveyGroups, fetchSurveyGroups }) => {
           icon="PlusCircleOutlined"
           textClassName="mr-2"
           size="middle"
-          textSize="md"
+          textSize="xs"
           iconPosition="right"
           type="gray"
           onClick={() => history.push('/super-user/pre-defined-data/add')}
         />
-        <Button
-          className="flex items-center"
-          text="Export Exel File"
-          icon="FileExcelOutlined"
-          textClassName="mr-2"
-          size="middle"
-          textSize="md"
-          iconPosition="right"
-          type="gray"
+
+        <ImportExcelButton
+          beforeUpload={(file) => {
+            importSurveyGroups(file);
+
+            return false;
+          }}
         />
       </div>
     ),
@@ -161,7 +167,9 @@ const Models = ({ loading, surveyGroups, fetchSurveyGroups }) => {
 
 Models.propTypes = {
   loading: PropTypes.bool.isRequired,
+  importSurveyGroups: PropTypes.func.isRequired,
   fetchSurveyGroups: PropTypes.func.isRequired,
+  exportSurveyGroup: PropTypes.func.isRequired,
   surveyGroups: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
     metaData: PropTypes.shape({
