@@ -1,9 +1,5 @@
 .all-ratee-tabs {
   & > .ant-tabs-nav {
-    &:before {
-      border-bottom-color: @process-tail-color;
-    }
-
     .ant-tabs-tab {
       &:not(:first-child) {
         margin-right: 66px;
@@ -16,4 +12,12 @@
       }
     }
   }
+}
+
+.ant-tabs-top > .ant-tabs-nav::before {
+  border-bottom-color: @process-tail-color;
+}
+
+.result-tabs  .ant-tabs-top > .ant-tabs-nav::before{
+  border: unset;
 }

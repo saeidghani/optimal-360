@@ -70,7 +70,7 @@ const Result = ({ loading }) => {
         <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
       </div>
     ) : (
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center result-tabs">
         <Tabs
           defaultActiveKey={selectedTab}
           onChange={tabChangeCallback}
