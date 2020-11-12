@@ -52,8 +52,11 @@ _Dropdown.propTypes = {
   size: PropTypes.string,
   type: PropTypes.string,
   defaultValue: PropTypes.string,
-  value: PropTypes.string,
-  labelInValue: PropTypes.string,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object,
+  ]),
+  labelInValue: PropTypes.bool,
   options: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.number,
