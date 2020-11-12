@@ -206,7 +206,12 @@ const ReferenceGuide = () => {
         </div>
       </div>
       <div className="flex justify-center mt-8 md:mt-16">
-        <Button textSize="sm" text="Ok, Got it!" href="/client-admin/dashboard" />
+        <Button
+          className="c-force-padding-y-px"
+          textSize="sm"
+          text="Ok, Got it!"
+          href="/client-admin/dashboard"
+        />
       </div>
     </Layout>
   );
