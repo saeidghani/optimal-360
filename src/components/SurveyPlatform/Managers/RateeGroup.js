@@ -23,24 +23,68 @@ const RateeGroup = ({ loading }) => {
 
   const columns = React.useMemo(() => [
     {
+      key: 'relationship',
+      title: 'Relationship',
+      width: 100,
+      render: (relationship) => (
+        <div className="text-primary-500 h-full flex flex-col justify-start mb-auto">
+          {relationship}
+        </div>
+      ),
+    },
+    {
       key: 'name',
       title: 'Name',
       width: 100,
       sorter: true,
-    },
-    {
-      key: 'relationship',
-      title: 'Relationship',
-      width: 100,
+      render: (names) => (
+        <div className="flex flex-col justify-between pt-2">
+          {names.map((name, index) => (
+            <span key={name.id} className={`${names.length - 1 === index ? 'mb-1' : 'mb-10'}`}>
+              {name.text}
+            </span>
+          ))}
+        </div>
+      ),
     },
     {
       key: 'statusAction',
       title: 'Status / Action:',
       width: 100,
+      render: (statuses) => (
+        <div className="flex flex-col justify-between pt-2">
+          {statuses.map((status, index) => (
+            <span key={status.id} className={`${statuses.length - 1 === index ? 'mb-2' : 'mb-10'}`}>
+              {status.text}
+            </span>
+          ))}
+        </div>
+      ),
     },
     {
       key: 'rate',
       title: 'Rate',
+      width: 100,
+      render: (percentages) => (
+        <div className="flex flex-col justify-between pt-2">
+          {percentages.map((percentage) => (
+            <div className="flex items-center" key={percentage.id}>
+              <div className="pb-4 mr-1 md:mr-4">{percentage.number}%</div>
+              <div className="w-12 h-full">
+                <Progress
+                  className="-mb-12 ml-auto"
+                  percentage={percentage.number}
+                  showPercent={false}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      ),
+    },
+    {
+      key: 'collectiveCompletionRate',
+      title: 'Collective Completion Rate',
       width: 100,
       render: (percentage) => (
         <div className="w-16 h-16 flex items-center justify-between pt-2">
@@ -56,38 +100,48 @@ const RateeGroup = ({ loading }) => {
   const dataSource = [
     {
       key: '1',
-      name: 'Katherine Kan',
+      name: [{ id: 1, text: 'Katherine Kan' }],
       relationship: 'Self',
-      statusAction: 'To review',
-      rate: 100,
+      statusAction: [{ id: 1, text: 'In progress' }],
+      rate: [{ id: 1, number: 70 }],
+      collectiveCompletionRate: 70,
     },
     {
       key: '2',
-      name: 'Premela Jaganathan',
+      name: [
+        { id: 1, text: 'Premela Jaganathan' },
+        { id: 2, text: 'Karyn Chow' },
+        { id: 3, text: 'Vince Hon' },
+      ],
       relationship: 'Manager',
-      statusAction: 'To start',
-      rate: 0,
+      statusAction: [
+        { id: 1, text: 'To start' },
+        { id: 2, text: 'To review' },
+        { id: 3, text: 'To review' },
+      ],
+      rate: [
+        { id: 1, number: 0 },
+        { id: 2, number: 100 },
+        { id: 3, number: 100 },
+      ],
+      collectiveCompletionRate: 66,
     },
     {
       key: '3',
-      name: 'Karyn Chow',
-      relationship: 'Manager',
-      statusAction: 'To review',
-      rate: 100,
-    },
-    {
-      key: '4',
-      name: 'Vince Hon',
-      relationship: 'Peers',
-      statusAction: 'In progress',
-      rate: 70,
-    },
-    {
-      key: '5',
-      name: 'Tek Ee Lin',
+      name: [
+        { id: 1, text: 'Tek Ee Lin' },
+        { id: 2, text: 'Karyn Chow' },
+      ],
       relationship: 'Direct Report',
-      statusAction: 'To start',
-      rate: 0,
+      statusAction: [
+        { id: 1, text: 'To Start' },
+        { id: 2, text: 'In progress' },
+      ],
+      rate: [
+        { id: 1, number: 0 },
+        { id: 2, number: 90 },
+      ],
+      collectiveCompletionRate: 45,
     },
   ];
 

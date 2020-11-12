@@ -52,7 +52,7 @@ const IndividualQuestions = ({ loading }) => {
       ),
       width: 100,
       render: (text) => (
-        <span className="text-xs flex justify-center xl:pr-8 md:text-sm">{text}</span>
+        <span className="text-xs flex justify-center p-4 xl:pr-8 md:text-sm">{text}</span>
       ),
     },
     {
