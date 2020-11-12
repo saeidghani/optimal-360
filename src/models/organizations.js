@@ -25,7 +25,8 @@ export default {
     },
 
     async addNewOrganization({ name, logo }) {
-      return actionWapper(async () => {
+      return actionWapper(
+        async () => {
           const path = await dispatch.util.uploadImage(logo);
 
           const res = await axios({
@@ -40,6 +41,7 @@ export default {
         dispatch.util.alert,
       );
     },
+
     async fetchOrganizationsInfo(organizationId) {
       return actionWapper(async () => {
         const res = await axios({
@@ -51,6 +53,7 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+
     async fetchOrganizationsStaff({ organizationId, query }) {
       return actionWapper(async () => {
         const res = await axios({
@@ -62,6 +65,7 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+
     async fetchStaffDetails({ organizationId, staffId }) {
       return actionWapper(async () => {
         const res = await axios({
@@ -73,12 +77,14 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+
     async setStaffDetails({ organizationId, staffId, name, email, password }) {
-      return actionWapper(async () => {
+      return actionWapper(
+        async () => {
           const res = await axios({
             method: 'put',
             url: `/super-user/organizations/${organizationId}/staffs/${staffId}`,
-            data: { name, email, password }
+            data: { name, email, password },
           });
 
           await this.fetchStaffDetails_reducer(res?.data);
@@ -88,12 +94,34 @@ export default {
         dispatch.util.alert,
       );
     },
+
     async addNewOrganizationStaff({ organizationId, name, email, password }) {
-      return actionWapper(async () => {
+      return actionWapper(
+        async () => {
           const res = await axios({
             method: 'post',
             url: `/super-user/organizations/${organizationId}/staffs`,
             data: { name, email, password },
+          });
+
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
+    },
+
+    async importStaff({ organizationId, file }) {
+      // eslint-disable-next-line no-undef
+      const data = new FormData();
+      data.append('excel', file);
+
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/organizations/${organizationId}/staffs/import`,
+            data,
           });
 
           return res;
@@ -109,14 +137,17 @@ export default {
       ...state,
       organizations: payload,
     }),
+
     fetchOrganizationsStaff_reducer: (state, payload) => ({
       ...state,
       staff: payload,
     }),
+
     fetchOrganizationsInfo_reducer: (state, payload) => ({
       ...state,
       organizationsInfo: payload,
     }),
+
     fetchStaffDetails_reducer: (state, payload) => ({
       ...state,
       staffDetails: payload,

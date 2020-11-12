@@ -13,6 +13,18 @@ class Models extends React.Component {
     return fetchSurveyGroups(query);
   };
 
+  importSurveyGroups = (file) => {
+    const { importSurveyGroups } = this.props;
+
+    return importSurveyGroups(file);
+  };
+
+  exportSurveyGroup = (surveyGroupId) => {
+    const { exportSurveyGroup } = this.props;
+
+    return exportSurveyGroup(surveyGroupId);
+  };
+
   render() {
     const { loading, surveyGroups } = this.props;
 
@@ -21,6 +33,8 @@ class Models extends React.Component {
         loading={loading}
         surveyGroups={surveyGroups}
         fetchSurveyGroups={this.fetchSurveyGroups}
+        importSurveyGroups={this.importSurveyGroups}
+        exportSurveyGroup={this.exportSurveyGroup}
       />
     );
   }
@@ -29,6 +43,8 @@ class Models extends React.Component {
 Models.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchSurveyGroups: PropTypes.func.isRequired,
+  importSurveyGroups: PropTypes.func.isRequired,
+  exportSurveyGroup: PropTypes.func.isRequired,
   surveyGroups: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
     metaData: PropTypes.shape({
@@ -52,6 +68,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchSurveyGroups: dispatch.bank.fetchSurveyGroups,
+  importSurveyGroups: dispatch.bank.importSurveyGroups,
+  exportSurveyGroup: dispatch.bank.exportSurveyGroup,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Models);

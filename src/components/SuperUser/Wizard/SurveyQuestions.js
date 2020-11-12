@@ -317,7 +317,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
               ? 'Add Competency'
               : 'Add Cluster'
           }
-          className="mr-3 text-base"
+          className="text-base"
           onClick={() => {
             if (parsedQuery?.competencyId) {
               setAddQuestionModal(true);
@@ -329,18 +329,6 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
           }}
           icon="PlusCircleOutlined"
           iconPosition="right"
-        />
-
-        <Button
-          size="middle"
-          type="gray"
-          textSize="xs"
-          textClassName="mr-2"
-          text="Export Exel File"
-          icon="PlusCircleOutlined"
-          iconPosition="right"
-          className="text-base"
-          // onClick={() => setQuery()}
         />
       </div>
     </div>
