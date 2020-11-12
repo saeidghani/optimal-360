@@ -21,14 +21,14 @@ const StatusOverview = (
   const pageNumber = parsedQuery?.page_number || 1;
   const surveyGroupId = parsedQuery?.surveyGroupId;
 
-    useEffect(() => {
-      fetchCompletionRate({ query, surveyGroupId });
-    }, [
-      fetchCompletionRate,
-      surveyGroupId,
-      pageSize,
-      pageNumber,
-    ]);
+  useEffect(() => {
+    fetchCompletionRate({ query, surveyGroupId });
+  }, [
+    fetchCompletionRate,
+    surveyGroupId,
+    pageSize,
+    pageNumber,
+  ]);
 
   useEffect(() => {
     fetchSummary({ query, surveyGroupId });
@@ -38,7 +38,18 @@ const StatusOverview = (
     pageSize,
     pageNumber,
   ]);
-
+  const isMetMinReq = (groups) => {
+    console.log(1);
+    const eachOne = Object.entries(groups);
+    let metMinReq = true;
+    eachOne.forEach((item) => {
+        if (item[1].totalAnswers !== item[1].totalQuestions) {
+          metMinReq = false;
+        }
+      },
+    );
+    return metMinReq;
+  };
   const columns = React.useMemo(() => [
     {
       key: 'rateeName',
@@ -95,7 +106,7 @@ const StatusOverview = (
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status="sub"
+              status={bySelf?.totalAnswers === bySelf?.totalQuestions && 'sub'}
               percentage={parseInt((bySelf?.totalSubmissions / bySelf?.totalRaters) * 100, 10)}
             />
             <div className="text-center">{bySelf?.totalAnswers}/{bySelf?.totalQuestions}</div>
@@ -119,7 +130,7 @@ const StatusOverview = (
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status="sub"
+              status={byManager?.totalAnswers === byManager?.totalQuestions && 'sub'}
               percentage={parseInt((byManager?.totalSubmissions / byManager?.totalRaters) * 100, 10)}
             />
             <div className="text-center">{byManager?.totalAnswers}/{byManager?.totalQuestions}</div>
@@ -143,7 +154,7 @@ const StatusOverview = (
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status="sub"
+              status={byPeers?.totalAnswers === byPeers?.totalQuestions && 'sub'}
               percentage={parseInt((byPeers?.totalSubmissions / byPeers?.totalRaters) * 100, 10)}
             />
             <div className="text-center">{byPeers?.totalAnswers}/{byPeers?.totalQuestions}</div>
@@ -167,7 +178,7 @@ const StatusOverview = (
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status="sub"
+              status={byDirectReport?.totalAnswers === byDirectReport?.totalQuestions && 'sub'}
               percentage={parseInt((byDirectReport?.totalSubmissions / byDirectReport?.totalRaters) * 100, 10)}
             />
             <div className="text-center">{byDirectReport?.totalAnswers}/{byDirectReport?.totalQuestions}</div>
@@ -191,7 +202,7 @@ const StatusOverview = (
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status="sub"
+              status={byOther?.totalAnswers === byOther?.totalQuestions && 'sub'}
               percentage={parseInt((byOther?.totalSubmissions / byOther?.totalRaters) * 100, 10)}
             />
             <div className="text-center">{byOther?.totalAnswers}/{byOther?.totalQuestions}</div>
@@ -203,9 +214,9 @@ const StatusOverview = (
       key: 'status',
       title: '',
       width: 50,
-      render: () => (
+      render: (_, { groups }) => (
         <div
-          className="ml-auto text-xs text-antgray-100"
+          className={`ml-auto text-xs text-antgray-100 ${!isMetMinReq(groups) && 'opacity-30'}`}
           style={{
             writingMode: 'vertical-rl',
             textOrientation: 'mixed',
@@ -252,13 +263,20 @@ const StatusOverview = (
 
   return (
     <>
-      <div className="bg-white p-6 pr-32 rounded-md my-6">
+      <div className="bg-white p-6 pb-8 pr-32 rounded-md my-6">
         <div className="flex justify-between items-center mb-5">
-          <h1 className="font-medium text-2xl">Overall Completion Rate</h1>
+          <h1 className="font-medium text-2xl">Overall Survey Submission Rate</h1>
           <div className="flex justify-between items-center">
-            <TeamOutlined className="bg-primary-100 p-2 text-primary-500 mr-5 rounded-sm" />
-            <span className="font-medium text-2xl mr-5">{completionRate?.data?.totalRaters}</span>
-            <span className="text-xs text-antgray-100 ">Total Ratee(s)</span>
+            <div>
+              <TeamOutlined className="bg-primary-100 p-2 text-primary-500 mr-5 rounded-sm" />
+              <span className="font-medium text-2xl mr-5">{completionRate?.data?.totalRaters}</span>
+              <span className="text-xs text-antgray-100 ">Total Ratee(s)</span>
+            </div>
+            <div className="ml-14">
+              <TeamOutlined className="bg-primary-100 p-2 text-primary-500 mr-5 rounded-sm" />
+              <span className="font-medium text-2xl mr-5">{completionRate?.data?.totalRaters}</span>
+              <span className="text-xs text-antgray-100 ">Total Ratee(s)</span>
+            </div>
           </div>
         </div>
         <Progress
@@ -266,7 +284,16 @@ const StatusOverview = (
           percentage={parseInt((completionRate?.data?.totalSubmissions / completionRate?.data?.totalRaters) * 100, 10) || 0}
         />
       </div>
+      <div className="bg-white p-6 pb-8 pr-32 rounded-md my-6">
+        <div className="flex justify-between items-center mb-5">
+          <h1 className="font-medium text-2xl">Overall Question Answered Rate</h1>
 
+        </div>
+        <Progress
+          type="line"
+          percentage={parseInt((completionRate?.data?.totalSubmissions / completionRate?.data?.totalRaters) * 100, 10) || 0}
+        />
+      </div>
       <div className="grid grid-cols-5 gap-6">
 
         {completionRate?.data?.raterGroups?.map((
