@@ -73,18 +73,24 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
       title: 'ID',
       sorter: true,
       sortOrder: getSortOrder('id'),
+      render: (id, { logo }) => (
+        <div className="flex items-center justify-between">
+          <div>{id}</div>
+          <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
+            <img className="rounded-full w-10 h-10" src={fetchFullURL(logo)} alt="logo" />
+          </div>
+        </div>
+      ),
     },
     {
       key: 'name',
       title: 'Organization',
       sorter: true,
       sortOrder: getSortOrder('name'),
-      render: (organization, { logo }) => {
+      render: (organization) => {
         return (
           <div className="inline-flex flex-row items-center justify-between">
-            <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
-              <img className="rounded-full w-10 h-10" src={fetchFullURL(logo)} alt="logo" />
-            </div>
+
             <p className="text-sm font-normal ml-2">{organization}</p>
           </div>
         );
