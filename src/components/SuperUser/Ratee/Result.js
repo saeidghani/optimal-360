@@ -75,6 +75,7 @@ const Result = ({ loading }) => {
           defaultActiveKey={selectedTab}
           onChange={tabChangeCallback}
           className="relative contents"
+          tabBarStyle={{ color: '#262626' }}
         >
           <TabPane tab="Individual Report" key="1" />
           <TabPane tab="Group Report" key="2" />
