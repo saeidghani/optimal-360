@@ -53,7 +53,7 @@ const OrganizationsStaff = (
             <Button
               size="middle"
               textSize="xs"
-              text="Import Exel File"
+              text="Export Exel File"
               type="gray"
               className="mx-3 px-3 flex-row-reverse"
               textClassName="mr-2"
