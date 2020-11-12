@@ -13,7 +13,7 @@ import Checkbox from '../../Common/Checkbox';
 import SearchBox from '../../Common/SearchBox';
 
 const Result = ({ loading }) => {
-  const [parsedQuery, query, setQuery] = useQuery();
+  const [parsedQuery, , setQuery] = useQuery();
 
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
