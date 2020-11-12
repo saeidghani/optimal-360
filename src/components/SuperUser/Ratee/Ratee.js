@@ -67,7 +67,11 @@ const Ratee = (
 
       </div>
 
-      <Tabs defaultActiveKey={currentTab} onChange={tabChangeCallback} tabBarStyle={{ color: '#131621' }}>
+      <Tabs
+        defaultActiveKey={currentTab}
+        onChange={tabChangeCallback}
+        className="all-ratee-tabs"
+      >
         <TabPane tab="Status Overview" key="status-overview">
           <StatusOverview
             summary={summary}
