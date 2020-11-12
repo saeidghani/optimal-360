@@ -7,8 +7,7 @@ import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 
-import budgetLogo from '../../../assets/images/budget-logo.jpg';
-import { fetchFullURL } from "../../../lib/utils";
+import { fetchFullURL } from '../../../lib/utils';
 
 const OrganizationsStaff = (
   {
@@ -48,7 +47,7 @@ const OrganizationsStaff = (
             <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
               <img className="rounded-full w-10 h-10" src={fetchFullURL(organizationsInfo.logo)} alt="logo" />
             </div>
-            <p className="text-sm font-normal ml-2">{organizationsInfo.name}</p>
+            <p className="text-sm text-base ml-2">{organizationsInfo.name}</p>
           </div>
           <div className="flex flex-row">
             <Button
