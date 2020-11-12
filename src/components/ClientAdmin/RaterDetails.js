@@ -284,7 +284,7 @@ const RaterDetails = ({ loading }) => {
       <Table
         size="middle"
         className="p-6 bg-white rounded-lg shadow"
-        tableClassName="overflow-auto header-bg-white align-top"
+        tableClassName="c-table-thead-white overflow-auto align-top"
         loading={loading}
         columns={columns}
         dataSource={dataSource}

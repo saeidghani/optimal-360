@@ -57,6 +57,7 @@ const ParticipantSummary = ({ loading }) => {
         <div className="w-20 mt-5 flex-inline flex-col items-center justify-center">
           <Progress
             subClassName="mb-10"
+            percentageClassName="mb-10 text-heading2"
             status={item.status}
             percentage={item.status === 'sub' ? 100 : item.percentage}
           />
@@ -283,7 +284,7 @@ const ParticipantSummary = ({ loading }) => {
       <Table
         size="middle"
         className="p-6 bg-white rounded-lg shadow"
-        tableClassName="overflow-auto header-bg-white"
+        tableClassName="c-table-thead-white overflow-auto header-bg-white"
         loading={loading}
         columns={columns}
         dataSource={dataSource}
