@@ -48,7 +48,7 @@ const OrganizationsStaff = ({
               />
             </div>
 
-            <p className="text-sm font-normal ml-2">{organizationsInfo.name}</p>
+            <p className="text-sm text-base font-normal ml-2">{organizationsInfo.name}</p>
           </div>
 
           <div className="flex flex-row">
@@ -58,9 +58,9 @@ const OrganizationsStaff = ({
               textClassName="pr-3"
               size="middle"
               textSize="xs"
+              type="gray"
               icon="FileExcelOutlined"
               iconPosition="right"
-              type="gray"
             />
 
             <Button
