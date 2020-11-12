@@ -172,6 +172,15 @@ const RateeGroupQuestions = ({ loading }) => {
       most: { id: '101', options: [{ title: '', value: '4' }] },
       notClear: { id: '101', options: [{ title: '', value: '5' }] },
     },
+    {
+      key: '2',
+      describesThisPerson: 'Premela Jaganathan',
+      notAtAll: { id: '102', options: [{ title: '', value: '1' }] },
+      notMuch: { id: '102', options: [{ title: '', value: '2' }] },
+      somewhat: { id: '102', options: [{ title: '', value: '3' }] },
+      most: { id: '102', options: [{ title: '', value: '4' }] },
+      notClear: { id: '102', options: [{ title: '', value: '5' }] },
+    },
   ];
 
   const handleNext = () => {

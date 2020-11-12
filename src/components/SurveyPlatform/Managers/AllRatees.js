@@ -55,33 +55,33 @@ const AllRatees = ({ loading }) => {
   const dataSource = [
     {
       key: '1',
-      name: '1000001',
-      relationship: 'Katherine Kan',
+      name: 'Katherine Kan',
+      relationship: 'Self',
       rate: 100,
     },
     {
       key: '2',
-      name: '1000001',
-      relationship: 'Katherine Kan',
-      rate: 50,
+      name: 'Premela Jaganathan',
+      relationship: 'Manager',
+      rate: 0,
     },
     {
       key: '3',
-      name: '1000001',
-      relationship: 'Katherine Kan',
+      name: 'Karyn Chow',
+      relationship: 'Manager',
       rate: 100,
     },
     {
       key: '4',
-      name: '1000001',
-      relationship: 'Katherine Kan',
+      name: 'Vince Hon',
+      relationship: 'Peers',
       rate: 70,
     },
     {
       key: '5',
-      name: '1000001',
-      relationship: 'Katherine Kan',
-      rate: 30,
+      name: 'Tek Ee Lin',
+      relationship: 'Direct Report',
+      rate: 0,
     },
   ];
 

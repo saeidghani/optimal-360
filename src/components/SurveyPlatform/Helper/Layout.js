@@ -102,7 +102,7 @@ const Layout = ({
         {children}
       </div>
       <div
-        className="absolute bottom-0 bg-antgray-100 bg-opacity-25 grid grid-cols-12 items-center
+        className="absolute bottom-0 w-full bg-antgray-100 bg-opacity-25 grid grid-cols-12 items-center
       gap-y-3 px-8 py-4 lg:px-32"
       >
         <img src={logo} alt="" />

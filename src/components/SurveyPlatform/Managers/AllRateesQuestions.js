@@ -177,7 +177,7 @@ const AllRateesQuestions = ({ loading }) => {
     },
     {
       key: '2',
-      describesThisPerson: 'Katherine Kan',
+      describesThisPerson: 'Premela Jaganathan',
       notAtAll: { id: '102', options: [{ title: '', value: '1' }] },
       notMuch: { id: '102', options: [{ title: '', value: '2' }] },
       somewhat: { id: '102', options: [{ title: '', value: '3' }] },
@@ -186,7 +186,7 @@ const AllRateesQuestions = ({ loading }) => {
     },
     {
       key: '3',
-      describesThisPerson: 'Katherine Kan',
+      describesThisPerson: 'Vince Hon',
       notAtAll: { id: '103', options: [{ title: '', value: '1' }] },
       notMuch: { id: '103', options: [{ title: '', value: '2' }] },
       somewhat: { id: '103', options: [{ title: '', value: '3' }] },
@@ -195,7 +195,7 @@ const AllRateesQuestions = ({ loading }) => {
     },
     {
       key: '4',
-      describesThisPerson: 'Katherine Kan',
+      describesThisPerson: 'Tek Ee Lin',
       notAtAll: { id: '104', options: [{ title: '', value: '1' }] },
       notMuch: { id: '104', options: [{ title: '', value: '2' }] },
       somewhat: { id: '104', options: [{ title: '', value: '3' }] },
@@ -204,7 +204,7 @@ const AllRateesQuestions = ({ loading }) => {
     },
     {
       key: '5',
-      describesThisPerson: 'Katherine Kan',
+      describesThisPerson: 'Marina Nizar',
       notAtAll: { id: '105', options: [{ title: '', value: '1' }] },
       notMuch: { id: '105', options: [{ title: '', value: '2' }] },
       somewhat: { id: '105', options: [{ title: '', value: '3' }] },
