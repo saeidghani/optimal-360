@@ -22,6 +22,7 @@ const _Button = ({
   textSize,
   disabled,
   danger,
+  htmlType,
 }) => {
   const RICON = ICONS[icon];
   if (icon && typeof icon !== 'object' && typeof RICON === 'undefined' && !RICON) {
