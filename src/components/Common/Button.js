@@ -61,6 +61,7 @@ const _Button = ({
       style={styles}
       shape={shape}
       danger={danger}
+      htmlType={htmlType}
     >
       {iconPosition === 'left' ? (
         icon && typeof icon === 'object' ? (
@@ -107,6 +108,7 @@ _Button.propTypes = {
   textSize: PropTypes.string,
   disabled: PropTypes.bool,
   danger: PropTypes.bool,
+  htmlType: PropTypes.string,
 };
 
 _Button.defaultProps = {
@@ -126,6 +128,7 @@ _Button.defaultProps = {
   href: undefined,
   disabled: false,
   danger: false,
+  htmlType: 'button',
   // eslint-disable-next-line no-alert
   onClick: () => alert('Coming soon'),
 };
