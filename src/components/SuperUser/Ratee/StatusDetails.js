@@ -131,7 +131,7 @@ const StatusDetails = (
             icon="FileExcelOutlined"
             iconPosition="right"
             onClick={() => {
-              exportSurveyGroupRaters({surveyGroupId});
+              exportSurveyGroupRaters({ surveyGroupId });
             }}
           />
           <Button
@@ -178,7 +178,7 @@ const StatusDetails = (
       width: 100,
       sorter: true,
       sortOrder: getSortOrder('rateeName'),
-      render: (num,{rateeId}) => (
+      render: (num, { rateeId }) => (
         <div className="flex items-center">
           <div className="text-12px inline-block">{num}</div>
           <div className="inline-block">
@@ -219,7 +219,7 @@ const StatusDetails = (
           <Progress
             className="-mb-12 ml-auto"
             subClassName={`mb-12 pb-2 ${!raterSubmited && 'text-gray-800'}`}
-            status={raterSubmited && 'sub'}
+            status={raterSubmited ? 'sub' : ''}
             percentage={parseInt((totalAnswered / totalQuestions) * 100, 10)}
           />
         </div>

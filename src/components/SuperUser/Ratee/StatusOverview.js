@@ -22,7 +22,6 @@ const StatusOverview = (
   const surveyGroupId = parsedQuery?.surveyGroupId;
 
   useEffect(() => {
-    fetchCompletionRate({ query, surveyGroupId });
   }, [
     fetchCompletionRate,
     surveyGroupId,
@@ -31,8 +30,10 @@ const StatusOverview = (
   ]);
 
   useEffect(() => {
+    fetchCompletionRate({ query, surveyGroupId });
     fetchSummary({ query, surveyGroupId });
   }, [
+    fetchCompletionRate,
     fetchSummary,
     surveyGroupId,
     pageSize,
@@ -105,7 +106,7 @@ const StatusOverview = (
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status={bySelf?.totalAnswers === bySelf?.totalQuestions && 'sub'}
+              status={bySelf?.totalAnswers === bySelf?.totalQuestions ? 'sub' : ''}
               percentage={parseInt((bySelf?.totalSubmissions / bySelf?.totalRaters) * 100, 10)}
             />
             <div className="text-center">{bySelf?.totalAnswers}/{bySelf?.totalQuestions}</div>
@@ -129,7 +130,7 @@ const StatusOverview = (
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status={byManager?.totalAnswers === byManager?.totalQuestions && 'sub'}
+              status={byManager?.totalAnswers === byManager?.totalQuestions ? 'sub' : ''}
               percentage={parseInt((byManager?.totalSubmissions / byManager?.totalRaters) * 100, 10)}
             />
             <div className="text-center">{byManager?.totalAnswers}/{byManager?.totalQuestions}</div>
@@ -153,7 +154,7 @@ const StatusOverview = (
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status={byPeers?.totalAnswers === byPeers?.totalQuestions && 'sub'}
+              status={byPeers?.totalAnswers === byPeers?.totalQuestions ? 'sub' : ''}
               percentage={parseInt((byPeers?.totalSubmissions / byPeers?.totalRaters) * 100, 10)}
             />
             <div className="text-center">{byPeers?.totalAnswers}/{byPeers?.totalQuestions}</div>
@@ -177,7 +178,7 @@ const StatusOverview = (
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status={byDirectReport?.totalAnswers === byDirectReport?.totalQuestions && 'sub'}
+              status={byDirectReport?.totalAnswers === byDirectReport?.totalQuestions ? 'sub' : ''}
               percentage={parseInt((byDirectReport?.totalSubmissions / byDirectReport?.totalRaters) * 100, 10)}
             />
             <div className="text-center">{byDirectReport?.totalAnswers}/{byDirectReport?.totalQuestions}</div>
@@ -201,7 +202,7 @@ const StatusOverview = (
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status={byOther?.totalAnswers === byOther?.totalQuestions && 'sub'}
+              status={byOther?.totalAnswers === byOther?.totalQuestions ? 'sub' : ''}
               percentage={parseInt((byOther?.totalSubmissions / byOther?.totalRaters) * 100, 10)}
             />
             <div className="text-center">{byOther?.totalAnswers}/{byOther?.totalQuestions}</div>
@@ -329,6 +330,7 @@ const StatusOverview = (
         loading={loading}
         columns={columns}
         dataSource={dataSource}
+        rowKey="key"
         rowSelection={false}
         onPageSizeChange={(size) => {
           setPageSize(size);
@@ -356,7 +358,6 @@ StatusOverview.propTypes = {
   fetchCompletionRate: PropTypes.func.isRequired,
 
   summary: PropTypes.shape({
-    success: PropTypes.bool.isRequired,
     metaData: PropTypes.shape({
       pagination: PropTypes.shape({
         pageNumber: PropTypes.string,
@@ -364,34 +365,33 @@ StatusOverview.propTypes = {
         totalRecords: PropTypes.string,
       }),
     }),
-    data: {
+    data: PropTypes.arrayOf(PropTypes.shape({
       rateeName: PropTypes.string,
-      totalRaters: PropTypes.number,
-      totalSubmissions: PropTypes.number,
-      raterGroups: PropTypes.arrayOf({
+      totalRaters: PropTypes.string,
+      totalSubmissions: PropTypes.string,
+      raterGroups: PropTypes.arrayOf(PropTypes.shape({
         raterGroupName: PropTypes.string,
         raterGroupMinRater: PropTypes.number,
-        totalQuestions: PropTypes.number,
-        totalAnswers: PropTypes.number,
-        totalRaters: PropTypes.number,
-        totalSubmissions: PropTypes.number,
-      }),
-    },
+        totalQuestions: PropTypes.string,
+        totalAnswers: PropTypes.string,
+        totalRaters: PropTypes.string,
+        totalSubmissions: PropTypes.string,
+      })),
+    })),
     message: PropTypes.string,
   }),
 
   completionRate: PropTypes.shape({
-    success: PropTypes.bool.isRequired,
-    data: {
+    data: PropTypes.shape({
       totalRaters: PropTypes.string,
       totalSubmissions: PropTypes.string,
-      raterGroups: PropTypes.arrayOf({
+      raterGroups: PropTypes.arrayOf(PropTypes.shape({
         raterGroupId: PropTypes.number,
         raterGroupName: PropTypes.string,
         totalRaters: PropTypes.string,
         totalSubmissions: PropTypes.string,
-      }),
-    },
+      })),
+    }),
     message: PropTypes.string,
   }),
 

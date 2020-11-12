@@ -150,10 +150,10 @@ RatersEmail.propTypes = {
   }),
   fetchEmailOptions: PropTypes.func.isRequired,
   emailOptions: PropTypes.shape({
-    data: PropTypes.arrayOf({
+    data: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
-    }),
+    })),
   }),
 
 };
