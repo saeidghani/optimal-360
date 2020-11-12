@@ -87,7 +87,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
       title: 'Organization',
       sorter: true,
       sortOrder: getSortOrder('name'),
-      render: (organization ) => {
+      render: (organization) => {
         return (
           <div className="inline-flex flex-row items-center justify-between">
 
