@@ -7,49 +7,29 @@ import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
 import { useQuery } from '../../../hooks';
 
-const StatusOverview = (
-  {
-    summary,
-    completionRate,
-    fetchSummary,
-    fetchCompletionRate,
-    loading,
-  },
-) => {
+const StatusOverview = ({
+                          summary,
+                          completionRate,
+                          fetchSummary,
+                          fetchCompletionRate,
+                          loading,
+                        }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const pageNumber = parsedQuery?.page_number || 1;
   const surveyGroupId = parsedQuery?.surveyGroupId;
 
   useEffect(() => {
-  }, [
-    fetchCompletionRate,
-    surveyGroupId,
-    pageSize,
-    pageNumber,
-  ]);
+      fetchCompletionRate({ query, surveyGroupId });
+    }, [fetchCompletionRate, surveyGroupId]
+  );
 
   useEffect(() => {
-    fetchCompletionRate({ query, surveyGroupId });
-    fetchSummary({ query, surveyGroupId });
-  }, [
-    fetchCompletionRate,
-    fetchSummary,
-    surveyGroupId,
-    pageSize,
-    pageNumber,
-  ]);
-  const isMetMinReq = (groups) => {
-    const eachOne = Object.entries(groups);
-    let metMinReq = true;
-    eachOne.forEach((item) => {
-        if (item[1].totalAnswers !== item[1].totalQuestions) {
-          metMinReq = false;
-        }
-      },
-    );
-    return metMinReq;
-  };
+      fetchSummary({ query, surveyGroupId });
+    }, [
+      fetchSummary, surveyGroupId, pageSize, pageNumber]
+  );
+
   const columns = React.useMemo(() => [
     {
       key: 'rateeName',
@@ -75,17 +55,17 @@ const StatusOverview = (
     {
       key: 'totalCompletionRate',
       title: (
-        <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100">Total CompletionRate</span>
+        <div className="flex flex-col justify-between h-20 w-32">
+          <span className="text-antgray-100">Total Question Answered Rate</span>
         </div>
       ),
       width: 100,
-      render: (_, { totalRaters, totalSubmissions }) => (
+      render: (_, { totalAnswers, totalQuestions, isTotalQuestionAnsweredRateSub }) => (
         <div className="w-20 mt-5 flex-inline flex-col items-center justify-center">
           <Progress
             subClassName="mb-10"
-            status="sub"
-            percentage={parseInt((totalSubmissions / totalRaters) * 100, 10)}
+            status={isTotalQuestionAnsweredRateSub ? 'sub' : ''}
+            percentage={parseInt((totalAnswers / totalQuestions) * 100, 10)}
           />
         </div>
       ),
@@ -106,10 +86,10 @@ const StatusOverview = (
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status={bySelf?.totalAnswers === bySelf?.totalQuestions ? 'sub' : ''}
-              percentage={parseInt((bySelf?.totalSubmissions / bySelf?.totalRaters) * 100, 10)}
+              status={bySelf?.totalSubmissions === bySelf?.totalRaters ? 'sub' : ''}
+              percentage={parseInt((bySelf?.totalAnswers / bySelf?.totalQuestions) * 100, 10)}
             />
-            <div className="text-center">{bySelf?.totalAnswers}/{bySelf?.totalQuestions}</div>
+            <div className="text-center">{bySelf?.totalSubmissions}/{bySelf?.totalRaters}</div>
           </div>
         );
       },
@@ -130,10 +110,10 @@ const StatusOverview = (
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status={byManager?.totalAnswers === byManager?.totalQuestions ? 'sub' : ''}
-              percentage={parseInt((byManager?.totalSubmissions / byManager?.totalRaters) * 100, 10)}
+              status={byManager?.totalSubmissions === byManager?.totalRaters ? 'sub' : ''}
+              percentage={parseInt((byManager?.totalAnswers / byManager?.totalQuestions) * 100, 10)}
             />
-            <div className="text-center">{byManager?.totalAnswers}/{byManager?.totalQuestions}</div>
+            <div className="text-center">{byManager?.totalSubmissions}/{byManager?.totalRaters}</div>
           </div>
         );
       },
@@ -154,10 +134,10 @@ const StatusOverview = (
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status={byPeers?.totalAnswers === byPeers?.totalQuestions ? 'sub' : ''}
-              percentage={parseInt((byPeers?.totalSubmissions / byPeers?.totalRaters) * 100, 10)}
+              status={byPeers?.totalSubmissions === byPeers?.totalRaters ? 'sub' : ''}
+              percentage={parseInt((byPeers?.totalAnswers / byPeers?.totalQuestions) * 100, 10)}
             />
-            <div className="text-center">{byPeers?.totalAnswers}/{byPeers?.totalQuestions}</div>
+            <div className="text-center">{byPeers?.totalSubmissions}/{byPeers?.totalRaters}</div>
           </div>
         );
       },
@@ -178,10 +158,10 @@ const StatusOverview = (
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status={byDirectReport?.totalAnswers === byDirectReport?.totalQuestions ? 'sub' : ''}
-              percentage={parseInt((byDirectReport?.totalSubmissions / byDirectReport?.totalRaters) * 100, 10)}
+              status={byDirectReport?.totalSubmissions === byDirectReport?.totalRaters ? 'sub' : ''}
+              percentage={parseInt((byDirectReport?.totalAnswers / byDirectReport?.totalQuestions) * 100, 10)}
             />
-            <div className="text-center">{byDirectReport?.totalAnswers}/{byDirectReport?.totalQuestions}</div>
+            <div className="text-center">{byDirectReport?.totalSubmissions}/{byDirectReport?.totalRaters}</div>
           </div>
         );
       },
@@ -202,10 +182,10 @@ const StatusOverview = (
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status={byOther?.totalAnswers === byOther?.totalQuestions ? 'sub' : ''}
-              percentage={parseInt((byOther?.totalSubmissions / byOther?.totalRaters) * 100, 10)}
+              status={byOther?.totalSubmissions === byOther?.totalRaters ? 'sub' : ''}
+              percentage={parseInt((byOther?.totalAnswers / byOther?.totalQuestions) * 100, 10)}
             />
-            <div className="text-center">{byOther?.totalAnswers}/{byOther?.totalQuestions}</div>
+            <div className="text-center">{byOther?.totalSubmissions}/{byOther?.totalRaters}</div>
           </div>
         );
       },
@@ -214,9 +194,9 @@ const StatusOverview = (
       key: 'status',
       title: '',
       width: 50,
-      render: (_, { groups }) => (
+      render: (_, { minMet }) => (
         <div
-          className={`ml-auto text-xs text-antgray-100 ${!isMetMinReq(groups) && 'opacity-30'}`}
+          className={`ml-auto text-xs text-antgray-100 ${!minMet && 'opacity-30'}`}
           style={{
             writingMode: 'vertical-rl',
             textOrientation: 'mixed',
@@ -228,16 +208,23 @@ const StatusOverview = (
       ),
     },
   ]);
-  const dataSource = React.useMemo(
-    () => (summary?.data || []).map((item) => {
+  const dataSource = React.useMemo(() => (summary?.data || []).map((
+    {
+      rateeName, totalRaters, totalSubmissions, totalAnswers, totalQuestions, minMet, raterGroups,
+    },
+    ) => {
       const data = {
-        key: `${item.rateeName}-${item.totalRaters}-${item.totalSubmissions}`,
-        rateeName: item.rateeName,
-        totalRaters: item.totalRaters,
-        totalSubmissions: item.totalSubmissions,
+        key: `${rateeName}-${totalRaters}-${totalSubmissions}`,
+        rateeName,
+        totalRaters,
+        totalSubmissions,
+        totalAnswers,
+        totalQuestions,
+        minMet,
         groups: {},
       };
-      item.raterGroups.forEach((group) => {
+
+      raterGroups.forEach((group) => {
         switch (group.raterGroupName) {
           case 'manager':
             data.groups.byManager = group;
@@ -255,6 +242,8 @@ const StatusOverview = (
             data.groups.byOther = group;
         }
       });
+      data.isTotalQuestionAnsweredRateSub = !((raterGroups.filter((obj) => obj?.totalAnswers !== obj?.totalQuestions)).length);
+
       return (data);
     }),
     // eslint-disable-next-line
@@ -295,33 +284,8 @@ const StatusOverview = (
         />
       </div>
       <div className="grid grid-cols-5 gap-6">
-
-        {completionRate?.data?.raterGroups?.map((
-          {
-            raterGroupId,
-            raterGroupName,
-            totalRaters,
-            totalSubmissions,
-          },
-        ) => (
-          <div className="flex flex-col " key={raterGroupId}>
-            <div className="bg-white p-6 rounded-md">
-              <div className="mb-3">
-                <span className="text-xs">Total Raters: </span>
-                <span className="text-base text-heading">{totalRaters}</span>
-              </div>
-              <div className="mb-14">
-                <span className="text-xs">Total No. Submission: </span>
-                <span className="text-base text-heading">{totalSubmissions}/{totalRaters}</span>
-              </div>
-              <div className="mb-6 flex justify-center">
-                <Progress percentage={parseInt((totalSubmissions / totalRaters) * 100, 10)} />
-              </div>
-              <div>
-                <h2 className="text-center">{raterGroupName}</h2>
-              </div>
-            </div>
-          </div>
+        {(completionRate?.data?.raterGroups || []).map((data) => (
+          <CompletionRate {...data} />
         ))}
       </div>
       <Table
@@ -352,6 +316,43 @@ const StatusOverview = (
   );
 };
 
+const CompletionRate = React.memo(({
+                                     raterGroupId,
+                                     raterGroupName,
+                                     totalRaters,
+                                     totalSubmissions,
+                                     totalAnswered,
+                                     totalQuestions,
+                                   }) => (
+  <div className="flex flex-col " key={raterGroupId}>
+    <div className="bg-white p-6 rounded-md">
+      <div className="mb-3">
+        <span className="text-xs">Total Raters: </span>
+        <span className="text-base text-heading">{totalRaters}</span>
+      </div>
+      <div className="mb-14">
+        <span className="text-xs">Total No. Submission: </span>
+        <span className="text-base text-heading">{totalSubmissions}/{totalRaters}</span>
+      </div>
+      <div className="mb-6 flex justify-center">
+        <Progress percentage={parseInt((totalAnswered / totalQuestions) * 100, 10)} />
+      </div>
+      <div>
+        <h2 className="text-center">{raterGroupName}</h2>
+      </div>
+    </div>
+  </div>
+));
+
+CompletionRate.propTypes = {
+  raterGroupId: PropTypes.string.isRequired,
+  raterGroupName: PropTypes.string.isRequired,
+  totalRaters: PropTypes.string.isRequired,
+  totalSubmissions: PropTypes.string.isRequired,
+  totalAnswered: PropTypes.string.isRequired,
+  totalQuestions: PropTypes.string.isRequired,
+};
+
 StatusOverview.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchSummary: PropTypes.func.isRequired,
@@ -369,6 +370,9 @@ StatusOverview.propTypes = {
       rateeName: PropTypes.string,
       totalRaters: PropTypes.string,
       totalSubmissions: PropTypes.string,
+      totalAnswers: PropTypes.string,
+      totalQuestions: PropTypes.string,
+      minMet: PropTypes.bool,
       raterGroups: PropTypes.arrayOf(PropTypes.shape({
         raterGroupName: PropTypes.string,
         raterGroupMinRater: PropTypes.number,
@@ -388,6 +392,9 @@ StatusOverview.propTypes = {
       raterGroups: PropTypes.arrayOf(PropTypes.shape({
         raterGroupId: PropTypes.number,
         raterGroupName: PropTypes.string,
+        raterGroupMinRater: PropTypes.number,
+        totalQuestions: PropTypes.string,
+        totalAnswered: PropTypes.string,
         totalRaters: PropTypes.string,
         totalSubmissions: PropTypes.string,
       })),
