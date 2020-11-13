@@ -23,7 +23,7 @@ const OrganizationsStaff = ({
   const { organizationId } = useParams();
 
   React.useEffect(() => {
-    if (!parsedQuery?.page_number || !parsedQuery?.page_size || !parsedQuery?.status) {
+    if (!parsedQuery?.page_number || !parsedQuery?.page_size) {
       setQuery({
         page_number: 1,
         page_size: 10,

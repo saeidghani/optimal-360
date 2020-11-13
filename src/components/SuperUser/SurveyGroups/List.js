@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
@@ -12,16 +11,12 @@ import Tag from '../../Common/Tag';
 
 import { useQuery, stringify } from '../../../hooks/useQuery';
 
-const SurveyGroups = ({ loading }) => {
+const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loading }) => {
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
 
-  // const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const { projectId } = useParams();
-  const dispatch = useDispatch();
-
-  const { surveyGroups = {} } = useSelector((state) => state.projects);
 
   const surveyGroupProject = React.useMemo(() => {
     const ref = surveyGroups?.data?.length > 0 ? surveyGroups.data[0].project : {};
@@ -29,28 +24,23 @@ const SurveyGroups = ({ loading }) => {
     // eslint-disable-next-line
   }, [surveyGroups.timeStamp]);
 
-  const fetch = React.useCallback(async () => {
-    const newQuery = query || '';
-    // const newQuery = query || '?page_size=10&page_number=1&status=active';
-    await dispatch.projects.fetchSurveyGroups({ projectId, query: newQuery });
-  }, [dispatch, query, projectId]);
-
   React.useEffect(() => {
-    fetch();
-  }, [query, fetch]);
+    fetchSurveyGroups({ projectId, query });
+  }, [query, projectId, fetchSurveyGroups]);
 
   const renderHeader = React.useCallback(
     () => {
-      // const selectedRowsIds = selectedRows?.length > 0 ? selectedRows.map((el) => el.id) : [];
+      const selectedRowsIds = selectedRows?.length > 0 ? selectedRows.map((el) => el.id) : [];
 
       return selectedRows && selectedRows?.length > 0 ? (
         <div className="flex flex-row items-center">
           <Button
-            // onClick={async () => {
-            //   await removeProjects(selectedRowsIds);
-            //   setSelectedRows([]);
-            //   fetch();
-            // }}
+            onClick={async () => {
+              await removeSurveyGroups({ projectId, surveyGroupIds: selectedRowsIds });
+              setSelectedRows([]);
+
+              fetchSurveyGroups({ projectId, query });
+            }}
             size="middle"
             className="text-base flex flex-row justify-center items-center
             text-primary-500 bg-primary-500 bg-opacity-8 w-8 h-8 mr-3"
@@ -178,12 +168,6 @@ const SurveyGroups = ({ loading }) => {
     [surveyGroups.timeStamp],
   );
 
-  const dataSource = React.useMemo(
-    () => surveyGroups?.data?.map((item) => ({ ...item, key: `${item.id}` })),
-    // eslint-disable-next-line
-    [surveyGroups.timeStamp],
-  );
-
   const sort = (sorter) => {
     // eslint-disable-next-line operator-linebreak
     const order = parsedQuery?.sort?.[0] === '+' ? '-' : '+';
@@ -203,29 +187,20 @@ const SurveyGroups = ({ loading }) => {
         onTableChange={({ sorter }) => sort(sorter)}
         className="p-6 bg-white rounded-lg shadow"
         size="small"
-        selectedRowKeys={selectedRows?.map((el) => el.key)}
+        selectedRowKeys={selectedRows?.map((el) => el.id.toString())}
         loading={loading}
         columns={columns}
-        dataSource={dataSource}
+        dataSource={surveyGroups?.data || []}
         renderHeader={renderHeader}
-        // onPageSizeChange={(size) => {
-        //   setPageSize(size);
-        //   setQuery({ page_size: size, page_number: 1 });
-        // }}
-        // pageSize={pageSize * 1}
-        // // eslint-disable-next-line camelcase
-        // onPaginationChange={(page_number, page_size) => {
-        //   setSelectedRows([]);
-        //   setQuery({
-        //     page_size,
-        //     page_number,
-        //   });
-        // }}
         pagination={false}
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
         }}
-        // totalRecordSize={surveyGroups?.metaData?.pagination?.totalRecords * 1}
+        rowClassName={({ deleted }) => {
+          if (deleted) {
+            return 'bg-antgray-100 bg-opacity-10 td-checkbox-visibility-0';
+          }
+        }}
       />
     </MainLayout>
   );
@@ -233,8 +208,13 @@ const SurveyGroups = ({ loading }) => {
 
 SurveyGroups.propTypes = {
   loading: PropTypes.bool.isRequired,
+  surveyGroups: PropTypes.shape({}),
+  fetchSurveyGroups: PropTypes.func.isRequired,
+  removeSurveyGroups: PropTypes.func.isRequired,
 };
 
-SurveyGroups.defaultProps = {};
+SurveyGroups.defaultProps = {
+  surveyGroups: {},
+};
 
 export default SurveyGroups;
