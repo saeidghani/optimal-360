@@ -143,7 +143,10 @@ const ReferenceGuide = ({ loading }) => {
         you are rating:
       </p>
       <div className="rounded-lg mt-8 grid grid-cols-12 col-gap-12 md:bg-white md:shadow md:p-10">
-        <p className="text-heading font-semibold hidden md:block col-start-1 col-span-12 md:row-start-1 md:mb-10">
+        <p
+          className="text-heading font-semibold hidden md:block col-start-1 col-span-12
+         md:row-start-1 md:mb-10"
+        >
           You will read a behavioral statement where you have to rate how well it describes the
           person you are rating:
         </p>
@@ -246,10 +249,12 @@ const ReferenceGuide = ({ loading }) => {
             className="mt-6 text-primary-500 w-full mr-2 md:pl-auto md:w-auto md:border-none"
             text="Skip for now"
             type="link"
+            disabled
           />
           <Button
             className="mt-6 shadow-none w-full py-6 px-5 md:w-auto md:border-none"
             text="Submit All"
+            disabled
           />
         </div>
         <p
@@ -288,8 +293,9 @@ const ReferenceGuide = ({ loading }) => {
       </div>
       <div className="hidden md:flex justify-center">
         <Button
-          className="mt-16 shadow-none w-full py-6 px-5 md:w-auto md:border-none"
+          className="c-force-padding-y-px mt-16 shadow-none w-full px-5 md:w-auto md:border-none"
           text="Ok, Got it!"
+          href="/survey-platform/managers/ratee-group/questions/2"
         />
       </div>
     </Layout>

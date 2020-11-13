@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 
 import Layout from '../Helper/Layout';
+import SecondaryTabs from '../Helper/SecondaryTabs';
 
 import Dropdown from '../../Common/Dropdown';
 import Button from '../../Common/Button';
-import Tabs from '../../Common/Tabs';
 import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
 
@@ -22,12 +22,6 @@ const AllRatees = ({ loading }) => {
     { title: 'Top Leadership', value: '1' },
     { title: 'Top Leadership2', value: '2' },
     { title: 'Top Leadership3', value: '3' },
-  ];
-
-  const secondaryTabOptions = [
-    { title: 'Individual', key: '1' },
-    { title: 'Group', key: '2' },
-    { title: 'All', key: '3' },
   ];
 
   const columns = React.useMemo(() => [
@@ -49,7 +43,7 @@ const AllRatees = ({ loading }) => {
       width: 100,
       render: (percentage) => (
         <div className="w-16 h-16 flex items-center justify-between pt-2">
-          <div className="pb-2 mr-1 md:mr-4">{percentage}</div>
+          <div className="pb-2 mr-1 md:mr-4">{percentage}%</div>
           <div className="w-12 h-full">
             <Progress className="-mb-12 ml-auto" percentage={percentage} showPercent={false} />
           </div>
@@ -61,33 +55,33 @@ const AllRatees = ({ loading }) => {
   const dataSource = [
     {
       key: '1',
-      name: '1000001',
-      relationship: 'Katherine Kan',
+      name: 'Katherine Kan',
+      relationship: 'Self',
       rate: 100,
     },
     {
       key: '2',
-      name: '1000001',
-      relationship: 'Katherine Kan',
-      rate: 50,
+      name: 'Premela Jaganathan',
+      relationship: 'Manager',
+      rate: 0,
     },
     {
       key: '3',
-      name: '1000001',
-      relationship: 'Katherine Kan',
+      name: 'Karyn Chow',
+      relationship: 'Manager',
       rate: 100,
     },
     {
       key: '4',
-      name: '1000001',
-      relationship: 'Katherine Kan',
+      name: 'Vince Hon',
+      relationship: 'Peers',
       rate: 70,
     },
     {
       key: '5',
-      name: '1000001',
-      relationship: 'Katherine Kan',
-      rate: 30,
+      name: 'Tek Ee Lin',
+      relationship: 'Direct Report',
+      rate: 0,
     },
   ];
 
@@ -116,7 +110,7 @@ const AllRatees = ({ loading }) => {
         <span className="mx-2 text-body text-sm">extraDetails</span>
         <span className="text-heading text-xl">In progress</span>
       </div>
-      <Progress className="mt-10" percentage={20} showPercent />
+      <Progress className="mt-10" percentage={20} subClassName="text-heading" showPercent />
       <div className="mt-10 text-antgray-100">Collective Completion Rate</div>
     </div>
   );
@@ -167,20 +161,12 @@ const AllRatees = ({ loading }) => {
         />
       </div>
       <div className="bg-white rounded-lg shadow p-4 mt-6 md:hidden">
-        <div className="md:w-3/4">
-          <Tabs className="md:c-tabs-class" defaultActiveKey="1" tabOptions={secondaryTabOptions} />
-        </div>
+        <SecondaryTabs defaultActiveKey="all-ratees" />
         <ExtraDetails />
       </div>
       <div className="p-8 bg-white rounded-lg shadow mt-8 md:mt-0">
         <div className="hidden md:flex justify-between w-full">
-          <div className="md:w-1/2">
-            <Tabs
-              className="md:c-tabs-class"
-              defaultActiveKey="1"
-              tabOptions={secondaryTabOptions}
-            />
-          </div>
+          <SecondaryTabs defaultActiveKey="all-ratees" />
           <div className="my-auto">
             <DeadlineInfo />
           </div>

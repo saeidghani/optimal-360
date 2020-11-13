@@ -4,6 +4,39 @@
 //   background-color: @primary-color !important;
 // }
 
+
+.c-modal-sm-padding {
+  .ant-modal-content {
+    padding: 60px 30px 30px 30px !important;
+  }
+}
+
+.c-carousel {
+  .ant-carousel .slick-slide {
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .slick-dots {
+    li {
+      button {
+        width: 10px !important;
+        height: 10px !important;
+        border-radius: 50% !important;
+        background-color: #8d98ba;
+      }
+    }
+
+    li.slick-active {
+      button {
+        width: 10px !important;
+        height: 10px !important;
+        background-color: #9665FF !important;
+      }
+    }
+  }
+}
+
 .c-secondary-menu {
   .ant-menu-submenu-arrow {
     left: 2px;
@@ -18,7 +51,7 @@
   }
 }
 
-.c-secondary-menu .competency{
+.c-secondary-menu .competency {
   .ant-menu-submenu-arrow {
     left: 20px;
     transform: rotate(270deg) !important;
@@ -48,7 +81,8 @@
     background-color: aliceblue;
   }
 }
-.header-bg-white .ant-table-thead > tr > th{
+
+.header-bg-white .ant-table-thead > tr > th {
   background: #fff;
 }
 
@@ -488,6 +522,25 @@
   display: inline-flex !important;
 }
 
+.c-radio-red {
+  .ant-radio-checked .ant-radio-inner {
+    border-color: red !important;
+  }
+
+  .ant-radio-checked .ant-radio-inner:after {
+    background-color: red;
+  }
+
+  .ant-radio:hover .ant-radio-inner {
+    border-color: red;
+  }
+
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: red;
+    border-color: red;
+  }
+}
+
 .ant-radio-checked .ant-radio-inner {
   border-color: #1890ff !important;
 }
@@ -872,6 +925,16 @@
 .ant-table-thead > tr > th,
 .ant-table-tbody > tr > td {
   border-bottom: 1px solid #f0f0f0;
+}
+
+.c-table-last-column-divide {
+  .ant-table-tbody > tr.ant-table-row > *:last-child {
+    border-left: 1px solid #F0F0F0;
+  }
+
+  .ant-table-thead > tr > *:last-child {
+    border-left: 1px solid #F0F0F0;
+  }
 }
 
 //drop down

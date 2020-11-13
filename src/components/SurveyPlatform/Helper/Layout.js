@@ -36,18 +36,18 @@ const Layout = ({
       itemClassName: 'md:hidden',
       href: '',
     },
-    { key: 2, title: 'Home', icon: <HomeOutlined />, href: '/client-admin/dashboard' },
+    { key: 2, title: 'Home', icon: <HomeOutlined />, href: '/survey-platform/welcome' },
     {
       key: 3,
       title: 'Customer Support',
       icon: <MailOutlined />,
-      href: '/client-admin/customer-support',
+      href: '#',
     },
     {
       key: 4,
       title: 'Guides',
       icon: <QuestionCircleOutlined />,
-      href: '/client-admin/reference-guide',
+      href: '/survey-platform/reference-guide',
     },
   ];
 
@@ -64,7 +64,7 @@ const Layout = ({
         <div className="lg:ml-16">
           <img src={budgetLogo} className="w-24 lg:w-32" alt="" />
         </div>
-        <Link to="#">
+        <Link to="/survey-platform/welcome">
           <div className="flex justify-between items-center text-base">
             <HomeOutlined />
             <span className="ml-2 text-xs lg:text-base">Home</span>
@@ -76,7 +76,7 @@ const Layout = ({
             <span className="ml-2 text-xs lg:text-base">Customer Support</span>
           </div>
         </Link>
-        <Link to="#">
+        <Link to="/survey-platform/reference-guide">
           <div className="flex justify-between items-center text-gray-500 text-base">
             <QuestionCircleOutlined />
             <span className="ml-2 text-xs lg:text-base">Guides</span>
@@ -94,7 +94,7 @@ const Layout = ({
       </div>
       <div
         className={`flex flex-col py-6 px-4 mt-8 mb-40 sm:mt-5
-       sm:py-4 sm:px-4 sm:mb-28 lg:pt-5 lg:pb-16 lg:mt-0 lg:px-24 ${className}`}
+       sm:py-4 sm:px-4 sm:mb-20 lg:pt-5 lg:pb-16 lg:mt-0 lg:px-24 ${className}`}
       >
         {hasBreadCrumb ? (
           <BreadCrumb className={`mt-2 hidden md:block ${headerClassName}`} />
@@ -102,7 +102,7 @@ const Layout = ({
         {children}
       </div>
       <div
-        className="absolute bottom-0 bg-antgray-100 bg-opacity-25 grid grid-cols-12 items-center
+        className="absolute bottom-0 w-full bg-antgray-100 bg-opacity-25 grid grid-cols-12 items-center
       gap-y-3 px-8 py-4 lg:px-32"
       >
         <img src={logo} alt="" />

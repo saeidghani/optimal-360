@@ -6,12 +6,14 @@ import comma from '../../assets/images/comma.svg';
 import person from '../../assets/images/surveyPlatformWelcome.png';
 
 import Layout from './Helper/Layout';
+import GuideCarousel from './Helper/GuideCarousel';
 
 import Dropdown from '../Common/Dropdown';
 import Button from '../Common/Button';
 import Modal from '../Common/Modal';
 
 const Welcome = ({ loading }) => {
+  const [project, setProject] = React.useState('');
   const [visible, setVisible] = React.useState(false);
 
   const history = useHistory();
@@ -32,14 +34,35 @@ const Welcome = ({ loading }) => {
         visible={visible}
         handleCancel={() => setVisible(false)}
         handleOk={handleNextClick}
+        okText="Next"
         width={580}
         closable
-        okText="Next"
-        className="relative"
-        footerClassName="absolute top-0 right-0 pt-32"
+        className="relative c-modal-sm-padding"
+        footerClassName="absolute top-0 right-0 pt-48"
         okButtonProps={{ className: 'px-6' }}
       >
-        OK, let’s enter your information. By hitting this button you will get to introduction form.
+        <GuideCarousel>
+          <div>
+            OK, let’s enter your information. By hitting this button you will get to introduction
+            form.
+          </div>
+          <div>
+            OK, let’s enter your information. By hitting this button you will get to introduction
+            form.
+          </div>
+          <div>
+            OK, let’s enter your information. By hitting this button you will get to introduction
+            form.
+          </div>
+          <div>
+            OK, let’s enter your information. By hitting this button you will get to introduction
+            form.
+          </div>
+          <div>
+            OK, let’s enter your information. By hitting this button you will get to introduction
+            form.
+          </div>
+        </GuideCarousel>
       </Modal>
       <div className="text-left text-heading">Welcome</div>
       <div className="grid grid-cols-12 mb-10 mt-8">
@@ -48,8 +71,9 @@ const Welcome = ({ loading }) => {
           className="c-autocomplete col-start-1 col-span-12
           md:col-start-1 md:col-span-4 lg:col-start-1 lg:col-span-3 w-full"
           showSearch={false}
-          value={1}
           type="gray"
+          value={project}
+          handleChange={(val) => setProject(val)}
           options={dropdownOptions}
         />
       </div>
