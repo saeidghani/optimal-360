@@ -32,7 +32,9 @@ const RateeGroup = ({ loading }) => {
       width: 100,
       render: (relationship) => (
         <div className="text-primary-500 h-full flex flex-col justify-start mb-auto">
-          {relationship}
+          <Link to="/survey-platform/managers/ratee-group/questions">
+            <span className="text-primary-500">{relationship}</span>
+          </Link>
         </div>
       ),
     },
