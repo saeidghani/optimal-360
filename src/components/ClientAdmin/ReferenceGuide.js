@@ -111,10 +111,10 @@ const ReferenceGuide = () => {
         ))}
       </div>
 
-      <div className="flex flex-col bg-white p-6 rounded-md mt-12">
+      <div className="flex flex-col bg-white py-6 mt-12">
         {rateInformation.map((item) => (
           <div
-            className="grid grid-cols-1 md:grid-cols-12 gap-x-20 border-b border-solid border-gray-400
+            className="grid grid-cols-1 md:grid-cols-12 gap-x-20 px-8 border-b border-solid border-gray-400
           py-4 md:flex-row justify-between items-start"
           >
             <div className="col-span-1 md:col-span-2 flex md:justify-between items-center">
@@ -130,7 +130,7 @@ const ReferenceGuide = () => {
         ))}
         {totalComperestionRateInformation.map((item, index) => (
           <div
-            className={`grid grid-cols-1 md:grid-cols-12 pb-4 bg-white my-auto py-6 rounded-md
+            className={`w-full grid grid-cols-1 md:grid-cols-12 px-8 pb-4 bg-white my-auto py-6
             ${
               totalComperestionRateInformation.length - 1 === index
                 ? ''
