@@ -124,10 +124,10 @@ const SurveyGroups = ({ loading }) => {
       {
         key: 'name',
         title: 'Survey Group',
-        render: (name) => (
+        render: (name, { project, surveyGroupId }) => (
           <Button
             className="pl-0"
-            onClick={() => history.push('/super-user/participants/ratee')}
+            onClick={() => history.push(`/super-user/participants/ratee?projectId=${project.id}&surveyGroupId=${surveyGroupId}`)}
             type="link"
             textSize="sm"
             text={name}
