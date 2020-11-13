@@ -11,82 +11,128 @@ import StatusDetails from './StatusDetails';
 import RatersEmail from './RatersEmail';
 import Result from './Result';
 
-const Ratee = ({ loading, fetchStatusDetails, statusDetails, raters, fetchRaters }) => {
-  const history = useHistory();
-  const { tab = 'status-overview' } = useParams() || {};
+import { useQuery, useTabs, useSurveyGroup } from '../../../hooks';
+
+const Ratee = (
+  {
+    loading,
+    summary,
+    completionRate,
+    fetchSummary,
+    fetchCompletionRate,
+    fetchStatusDetails,
+    removeRateeRaters,
+    changeAssessmentsStatus,
+    exportSurveyGroupRaters,
+    statusDetails,
+    raters,
+    emailOptions,
+    fetchRaters,
+    fetchEmailOptions,
+  },
+) => {
+  const [parsedQuery, query, setQuery] = useQuery();
+  const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
+  const [currentTab, setTab] = useTabs(['status-overview', 'status-details', 'raters-email', 'result']);
   const { TabPane } = Tabs;
-  const dropDownOptions = [
-    { title: 'Top Leadership', value: 1 },
-    { title: 'Top Leadership2', value: 2 },
-    { title: 'Top Leadership3', value: 3 },
-  ];
-  const tabs = [
-    {
-      title: 'Status Overview',
-      key: 'status-overview',
-      component: <StatusOverview loading={loading} />,
-    },
-    {
-      title: 'Status Details',
-      key: 'status-details',
-      component: (
-        <StatusDetails
-          fetchStatusDetails={fetchStatusDetails}
-          statusDetails={statusDetails}
-          loading={loading}
-        />
-      ),
-    },
-    {
-      title: 'Rates Email',
-      key: 'raters-email',
-      component: <RatersEmail loading={loading} raters={raters} fetchRaters={fetchRaters} />,
-    },
-    {
-      title: 'Results',
-      key: 'result',
-      component: <Result loading={loading} />,
-    },
-  ];
+
+  const dropDownOptions = React.useMemo(
+    () => (surveyGroups?.data || []).map((elm) => ({ title: elm.name, value: elm.id, label: elm.name })),
+    // eslint-disable-next-line
+    [surveyGroups.timeStamp],
+  );
 
   function tabChangeCallback(key) {
-    history.push(`/super-user/participants/ratee/${key}`);
+    setTab(key);
   }
 
   return (
     <MainLayout contentClass="pl-21 pr-6 py-4" title="Super User" titleClass="my-2" hasBreadCrumb>
       <div className="grid grid-cols-7 mt-3 mb-10">
         <h2 className="col-start-1 my-6 pt-6 pl-3 font-medium text-base">Survey Group</h2>
-        <Dropdown
-          className="c-autocomplete col-start-1 w-full"
-          showSearch
-          value={1}
-          type="gray"
-          options={dropDownOptions}
-        />
+        {parsedQuery?.projectId && (
+          <Dropdown
+            className="c-autocomplete col-start-1 w-full"
+            showSearch={false}
+            labelInValue
+            value={{ value: surveyGroupId, label: currentSurveyGroupName }}
+            handleChange={({ value }) => {
+              setQuery({ surveyGroupId: value });
+            }}
+            type="gray"
+            options={dropDownOptions}
+            loading={loading}
+          />
+        )
+        }
+
       </div>
-      <Tabs defaultActiveKey={tab} onChange={tabChangeCallback}>
-        {tabs.map(({ title, key, component }) => (
-          <TabPane tab={title} key={key}>
-            {component}
-          </TabPane>
-        ))}
+
+      <Tabs
+        defaultActiveKey={currentTab}
+        onChange={tabChangeCallback}
+        className="all-ratee-tabs"
+      >
+        <TabPane tab="Status Overview" key="status-overview">
+          <StatusOverview
+            summary={summary}
+            completionRate={completionRate}
+            fetchSummary={fetchSummary}
+            fetchCompletionRate={fetchCompletionRate}
+            loading={loading}
+          />
+        </TabPane>
+        <TabPane tab="Status Details" key="status-details">
+          <StatusDetails
+            fetchStatusDetails={fetchStatusDetails}
+            removeRateeRaters={removeRateeRaters}
+            changeAssessmentsStatus={changeAssessmentsStatus}
+            exportSurveyGroupRaters={exportSurveyGroupRaters}
+            statusDetails={statusDetails}
+            loading={loading}
+          />
+        </TabPane>
+        <TabPane tab="Raters Email" key="raters-email">
+          <RatersEmail
+            loading={loading}
+            raters={raters}
+            fetchRaters={fetchRaters}
+            emailOptions={emailOptions}
+            fetchEmailOptions={fetchEmailOptions}
+          />
+        </TabPane>
+        <TabPane tab="Results" key="result">
+          <Result loading={loading} />
+        </TabPane>
       </Tabs>
+
     </MainLayout>
   );
 };
 
 Ratee.propTypes = {
   loading: PropTypes.bool.isRequired,
+  summary: PropTypes.shape({}),
+  completionRate: PropTypes.shape({}),
   statusDetails: PropTypes.shape({}),
   raters: PropTypes.shape({}),
+  emailOptions: PropTypes.shape({}),
+  fetchSummary: PropTypes.func.isRequired,
+  fetchCompletionRate: PropTypes.func.isRequired,
   fetchStatusDetails: PropTypes.func.isRequired,
+  changeAssessmentsStatus: PropTypes.func.isRequired,
+  removeRateeRaters: PropTypes.func.isRequired,
+  exportSurveyGroupRaters: PropTypes.func.isRequired,
   fetchRaters: PropTypes.func.isRequired,
+  fetchEmailOptions: PropTypes.func.isRequired,
 };
 
 Ratee.defaultProps = {
+  summary: {},
+  completionRate: {},
   statusDetails: {},
   raters: {},
+  emailOptions: {},
 };
 
 export default Ratee;

@@ -32,7 +32,7 @@ const EmailTemplate = ({ loading }) => {
     const val = localStorage.getItem(templateKey);
 
     setEmailTemplate(val || TEMPLATES[chosenTemplate] || TEMPLATES.reminderEmails);
-  }, [chosenTemplate]);
+  }, [templateKey, chosenTemplate]);
 
   const pageTitle = (template.charAt(0).toUpperCase() + template.slice(1)).replaceAll('-', ' ');
 

@@ -54,7 +54,7 @@ const SurveyQuestionsList = ({
 
   React.useEffect(() => {
     fetchSurveyGroupInfo(parsedQuery.surveyGroupId);
-  }, []);
+  }, [fetchSurveyGroupInfo, parsedQuery.surveyGroupId]);
 
   const [addClusterModal, setAddClusterModal] = React.useState(false);
   const [addCompetencyModal, setAddCompetencyModal] = React.useState(false);
@@ -185,7 +185,6 @@ const SurveyQuestionsList = ({
       parsedQuery,
     );
 
-    console.log({ newClusters, oldClusters });
     setClusters(newClusters);
   };
 
@@ -326,8 +325,6 @@ const SurveyQuestionsList = ({
             {({ values, errors, touched, handleChange, handleSubmit }) => (
               <Form className="pr-28" onSubmit={handleSubmit}>
                 <h4 className="text-secondary text-lg mb-8 mt-17">Survey Group</h4>
-
-                <pre>{console.log({ touched, errors })}</pre>
 
                 <Input
                   placeholder="Survey Group"

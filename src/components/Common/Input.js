@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'antd';
 
+import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+
 const _Input = ({
   name,
   type,
@@ -21,58 +23,70 @@ const _Input = ({
   errorMessage,
   inputStyles,
   onPressEnter,
-}) => (
-  <div name={name} className={`flex flex-col  ${wrapperClassName}`}>
-    {labelText || (extrainfoText && extrainfoLink) ? (
-      <div className="flex justify-between items-center mb-10p pl-1">
-        {labelText ? (
-          <label className="text-heading" htmlFor={name}>
-            {labelText}
-          </label>
-        ) : null}
+}) => {
+  const [_type, setType] = React.useState(type);
 
-        {extrainfoText && extrainfoLink ? (
-          <div>
-            <a
-              className="text-black underline text-antgray-100 text-12px pl-2 sm:pl-0"
-              href={extrainfoLink}
-              onClick={(e) => {
-                if (!extrainfoLink) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }
+  return (
+    <div name={name} className={`flex flex-col  ${wrapperClassName}`}>
+      {labelText || (extrainfoText && extrainfoLink) ? (
+        <div className="flex justify-between items-center mb-10p pl-1">
+          {labelText ? (
+            <label className="text-heading" htmlFor={name}>
+              {labelText}
+            </label>
+          ) : null}
 
-                onExtraInfoLinkClick(e);
-              }}
-            >
-              {extrainfoText}
-            </a>
-          </div>
-        ) : null}
-      </div>
-    ) : null}
+          {extrainfoText && extrainfoLink ? (
+            <div>
+              <a
+                tabIndex="-1"
+                className="text-black underline text-antgray-100 text-12px pl-2 sm:pl-0"
+                href={extrainfoLink}
+                onClick={(e) => {
+                  if (!extrainfoLink) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
 
-    <Input
-      type={type}
-      disabled={disabled}
-      onChange={onChange}
-      value={value}
-      name={name}
-      size={size}
-      className={`c-sufix-prefix-gray text-12px ${inputClass}`}
-      style={inputStyles}
-      id={name}
-      placeholder={placeholder}
-      suffix={suffix}
-      prefix={prefix}
-      onPressEnter={onPressEnter}
-    />
+                  onExtraInfoLinkClick(e);
+                }}
+              >
+                {extrainfoText}
+              </a>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
 
-    {/* {errorMessage &&  */}
-    <p className="text-red-500 h-5 mt-1">{errorMessage}</p>
-    {/* } */}
-  </div>
-);
+      <Input
+        type={_type}
+        // type={type}
+        disabled={disabled}
+        onChange={onChange}
+        value={value}
+        name={name}
+        size={size}
+        className={`c-sufix-prefix-gray text-12px ${inputClass}`}
+        style={inputStyles}
+        id={name}
+        placeholder={placeholder}
+        suffix={
+          suffix || type === 'password' ? (
+            _type === 'password' ? (
+              <EyeInvisibleOutlined onClick={() => setType('text')} />
+            ) : (
+              <EyeOutlined onClick={() => setType('password')} />
+            )
+          ) : null
+        }
+        prefix={prefix}
+        onPressEnter={onPressEnter}
+      />
+
+      <p className="text-red-500 h-5 mt-1">{errorMessage}</p>
+    </div>
+  );
+};
 
 _Input.propTypes = {
   name: PropTypes.string.isRequired,

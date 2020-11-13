@@ -24,6 +24,7 @@ const RaterDetails = ({ loading }) => {
         </div>
       ),
       width: 100,
+      render: (ratee) => <span className="text-sm absolute top-0 pt-16">{ratee}</span>,
     },
     {
       key: 'noSubmission',
@@ -33,7 +34,7 @@ const RaterDetails = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: (num) => <span className="text-xs">{num}</span>,
+      render: (num) => <span className="text-sm absolute top-0 pt-16">{num}</span>,
     },
     {
       key: 'totalCompletionRate',

@@ -127,7 +127,7 @@ _Table.propTypes = {
       PropTypes.string,
       PropTypes.shape({
         key: PropTypes.string,
-        title: PropTypes.string,
+        title: PropTypes.oneOfType([PropTypes.element,PropTypes.string]),
         sorter: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
       }),
     ]),

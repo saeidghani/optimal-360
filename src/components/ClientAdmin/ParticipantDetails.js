@@ -24,6 +24,7 @@ const ParticipantDetails = ({ loading }) => {
         </div>
       ),
       width: 150,
+      render: (ratee) => <span className="text-sm absolute top-0 pt-16">{ratee}</span>,
     },
     {
       key: 'noSubmission',
@@ -33,7 +34,7 @@ const ParticipantDetails = ({ loading }) => {
         </div>
       ),
       width: 50,
-      render: (num) => <span className="text-xs">{num}</span>,
+      render: (num) => <span className="text-sm absolute top-0 pt-16">{num}</span>,
     },
     {
       key: 'totalCompletionRate',

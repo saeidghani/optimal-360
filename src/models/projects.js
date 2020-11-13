@@ -133,6 +133,22 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+
+    async removeSurveyGroups({ projectId, ...data }) {
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'patch',
+            url: `/super-user/projects/${projectId}/survey-groups/remove`,
+            data,
+          });
+
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
+    },
   }),
 
   reducers: {
