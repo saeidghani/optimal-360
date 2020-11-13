@@ -5,14 +5,18 @@ import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const _Carousel = ({ children }) => {
   const carouselRef = React.createRef();
+  const [activeSlide, setActiveSlide] = React.useState(0);
 
   const onPrevious = () => {
-    carouselRef.current.innerSlider.slickPrev();
+    // eslint-disable-next-line no-unused-expressions
+    carouselRef?.current?.innerSlider?.slickPrev();
   };
 
   const onNext = () => {
-    carouselRef.current.innerSlider.slickNext();
+    // eslint-disable-next-line no-unused-expressions
+    carouselRef?.current?.innerSlider?.slickNext();
   };
+
   const settings = {
     dots: true,
     infinite: true,
@@ -32,10 +36,18 @@ const _Carousel = ({ children }) => {
         <ul style={{ margin: '0px' }}> {dots} </ul>
       </div>
     ),
+    afterChange: (current) => setActiveSlide(current),
   };
 
   return (
     <div className="relative w-full h-full">
+      <div
+        style={{ width: '45px', height: '45px', position: 'absolute', top: '-80px', left: '-53px' }}
+        className="bg-pink-500 rounded-full
+      flex justify-center items-center"
+      >
+        <span className="text-white">{activeSlide + 1}</span>
+      </div>
       <Carousel
         {...settings}
         ref={carouselRef}
