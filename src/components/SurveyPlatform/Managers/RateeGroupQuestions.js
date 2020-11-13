@@ -52,7 +52,7 @@ const RateeGroupQuestions = ({ loading }) => {
       ),
       width: 100,
       render: (text) => (
-        <span className="text-xs flex justify-center xl:pr-8 md:text-sm">{text}</span>
+        <span className="text-xs flex justify-center p-4 xl:pr-8 md:text-sm">{text}</span>
       ),
     },
     {
@@ -171,6 +171,15 @@ const RateeGroupQuestions = ({ loading }) => {
       somewhat: { id: '101', options: [{ title: '', value: '3' }] },
       most: { id: '101', options: [{ title: '', value: '4' }] },
       notClear: { id: '101', options: [{ title: '', value: '5' }] },
+    },
+    {
+      key: '2',
+      describesThisPerson: 'Premela Jaganathan',
+      notAtAll: { id: '102', options: [{ title: '', value: '1' }] },
+      notMuch: { id: '102', options: [{ title: '', value: '2' }] },
+      somewhat: { id: '102', options: [{ title: '', value: '3' }] },
+      most: { id: '102', options: [{ title: '', value: '4' }] },
+      notClear: { id: '102', options: [{ title: '', value: '5' }] },
     },
   ];
 

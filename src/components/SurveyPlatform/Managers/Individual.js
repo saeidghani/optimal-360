@@ -6,9 +6,9 @@ import Layout from '../Helper/Layout';
 
 import Dropdown from '../../Common/Dropdown';
 import Button from '../../Common/Button';
-import Tabs from '../../Common/Tabs';
 import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
+import SecondaryTabs from '../Helper/SecondaryTabs';
 
 const Individual = ({ loading }) => {
   const [project, setProject] = React.useState('');
@@ -19,12 +19,6 @@ const Individual = ({ loading }) => {
     { title: 'Top Leadership', value: '1' },
     { title: 'Top Leadership2', value: '2' },
     { title: 'Top Leadership3', value: '3' },
-  ];
-
-  const secondaryTabOptions = [
-    { title: 'Individual', key: '1' },
-    { title: 'Group', key: '2' },
-    { title: 'All', key: '3' },
   ];
 
   const columns = React.useMemo(() => [
@@ -50,7 +44,7 @@ const Individual = ({ loading }) => {
       width: 100,
       render: (percentage) => (
         <div className="w-16 h-16 flex items-center justify-between pt-2">
-          <div className="pb-2 mr-1 md:mr-4">{percentage}</div>
+          <div className="pb-2 mr-1 md:mr-4">{percentage}%</div>
           <div className="w-12 h-full">
             <Progress className="-mb-12 ml-auto" percentage={percentage} showPercent={false} />
           </div>
@@ -63,37 +57,37 @@ const Individual = ({ loading }) => {
     {
       key: '1',
       name: 'Katherine Kan',
-      relationship: 'Katherine Kan',
-      statusAction: 'In progress',
+      relationship: 'Self',
+      statusAction: 'To review',
       rate: 100,
     },
     {
       key: '2',
-      name: 'Katherine Kan',
-      relationship: 'Katherine Kan',
-      statusAction: 'In progress',
-      rate: 50,
+      name: 'Premela Jaganathan',
+      relationship: 'Manager',
+      statusAction: 'To start',
+      rate: 0,
     },
     {
       key: '3',
-      name: 'Katherine Kan',
-      relationship: 'Katherine Kan',
-      statusAction: 'In progress',
+      name: 'Karyn Chow',
+      relationship: 'Manager',
+      statusAction: 'To review',
       rate: 100,
     },
     {
       key: '4',
-      name: 'Katherine Kan',
-      relationship: 'Katherine Kan',
+      name: 'Vince Hon',
+      relationship: 'Peers',
       statusAction: 'In progress',
       rate: 70,
     },
     {
       key: '5',
-      name: 'Katherine Kan',
-      relationship: 'Katherine Kan',
-      statusAction: 'In progress',
-      rate: 30,
+      name: 'Tek Ee Lin',
+      relationship: 'Direct Report',
+      statusAction: 'To start',
+      rate: 0,
     },
   ];
 
@@ -152,9 +146,7 @@ const Individual = ({ loading }) => {
         />
       </div>
       <div className="flex flex-col p-4 bg-white rounded-lg shadow mt-8 md:hidden">
-        <div className="md:w-3/4">
-          <Tabs className="md:c-tabs-class" defaultActiveKey="1" tabOptions={secondaryTabOptions} />
-        </div>
+        <SecondaryTabs defaultActiveKey="individual" />
         <DeadlineInfo />
       </div>
       <div
@@ -162,13 +154,7 @@ const Individual = ({ loading }) => {
       md:mt-0 md:p-8 md:bg-white md:rounded-lg md:shadow"
       >
         <div className="hidden md:flex justify-between w-full">
-          <div className="md:w-1/2">
-            <Tabs
-              className="md:c-tabs-class"
-              defaultActiveKey="1"
-              tabOptions={secondaryTabOptions}
-            />
-          </div>
+          <SecondaryTabs defaultActiveKey="individual" />
           <div className="my-auto">
             <DeadlineInfo />
           </div>
@@ -185,7 +171,7 @@ const Individual = ({ loading }) => {
           title={null}
         />
       </div>
-      <div className="block md:ml-auto mt-5 md:mb-24">
+      <div className="block md:ml-auto mt-5">
         <Button
           onClick={handleSubmit}
           className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none

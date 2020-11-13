@@ -54,7 +54,7 @@ const AllRateesQuestions = ({ loading }) => {
       ),
       width: 100,
       render: (text) => (
-        <span className="text-xs flex justify-center xl:pr-8 md:text-sm">{text}</span>
+        <span className="text-xs flex justify-center p-4 xl:pr-8 md:text-sm">{text}</span>
       ),
     },
     {
@@ -144,7 +144,7 @@ const AllRateesQuestions = ({ loading }) => {
     {
       key: 'notClear',
       title: (
-        <div className="inline-flex flex-col justify-between items-center md:flex-row">
+        <div className="inline-flex flex-col justify-between items-center pl-8 md:flex-row">
           <span className="mr-0 text-xs md:mr-2 mb-2 md:mb-0 md:text-sm">Not Clear</span>
           <QuestionOutlined
             className="text-white bg-gray-400 w-5 h-5 rounded-full"
@@ -159,6 +159,7 @@ const AllRateesQuestions = ({ loading }) => {
           items={itm.options}
           value={items[itm.id]}
           className="pl-5"
+          radioClassName="c-radio-red pl-8"
         />
       ),
     },
@@ -176,7 +177,7 @@ const AllRateesQuestions = ({ loading }) => {
     },
     {
       key: '2',
-      describesThisPerson: 'Katherine Kan',
+      describesThisPerson: 'Premela Jaganathan',
       notAtAll: { id: '102', options: [{ title: '', value: '1' }] },
       notMuch: { id: '102', options: [{ title: '', value: '2' }] },
       somewhat: { id: '102', options: [{ title: '', value: '3' }] },
@@ -185,7 +186,7 @@ const AllRateesQuestions = ({ loading }) => {
     },
     {
       key: '3',
-      describesThisPerson: 'Katherine Kan',
+      describesThisPerson: 'Vince Hon',
       notAtAll: { id: '103', options: [{ title: '', value: '1' }] },
       notMuch: { id: '103', options: [{ title: '', value: '2' }] },
       somewhat: { id: '103', options: [{ title: '', value: '3' }] },
@@ -194,7 +195,7 @@ const AllRateesQuestions = ({ loading }) => {
     },
     {
       key: '4',
-      describesThisPerson: 'Katherine Kan',
+      describesThisPerson: 'Tek Ee Lin',
       notAtAll: { id: '104', options: [{ title: '', value: '1' }] },
       notMuch: { id: '104', options: [{ title: '', value: '2' }] },
       somewhat: { id: '104', options: [{ title: '', value: '3' }] },
@@ -203,7 +204,7 @@ const AllRateesQuestions = ({ loading }) => {
     },
     {
       key: '5',
-      describesThisPerson: 'Katherine Kan',
+      describesThisPerson: 'Marina Nizar',
       notAtAll: { id: '105', options: [{ title: '', value: '1' }] },
       notMuch: { id: '105', options: [{ title: '', value: '2' }] },
       somewhat: { id: '105', options: [{ title: '', value: '3' }] },
@@ -252,7 +253,7 @@ const AllRateesQuestions = ({ loading }) => {
       </div>
       <Table
         size="middle"
-        className="p-4 mt-8 md:mt-16 md:p-6 bg-white rounded-lg shadow"
+        className="c-table-last-column-divide p-4 mt-8 md:mt-16 md:p-6 bg-white rounded-lg shadow"
         tableClassName="overflow-auto"
         loading={loading}
         columns={columns}

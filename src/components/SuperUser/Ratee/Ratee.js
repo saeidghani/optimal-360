@@ -3,17 +3,17 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
+import { useParams, useHistory } from 'react-router-dom';
 import MainLayout from '../../Common/Layout';
 import Dropdown from '../../Common/Dropdown';
 import StatusOverview from './StatusOverview';
 import StatusDetails from './StatusDetails';
 import RatersEmail from './RatersEmail';
 import Result from './Result';
-import { useParams, useHistory } from 'react-router-dom';
 
 const Ratee = ({ loading, fetchStatusDetails, statusDetails, raters, fetchRaters }) => {
   const history = useHistory();
-const { tab = 'status-overview' } = useParams() || {} ;
+  const { tab = 'status-overview' } = useParams() || {};
   const { TabPane } = Tabs;
   const dropDownOptions = [
     { title: 'Top Leadership', value: 1 },
@@ -40,13 +40,7 @@ const { tab = 'status-overview' } = useParams() || {} ;
     {
       title: 'Rates Email',
       key: 'raters-email',
-      component: (
-        <RatersEmail
-          loading={loading}
-          raters={raters}
-          fetchRaters={fetchRaters}
-        />
-      ),
+      component: <RatersEmail loading={loading} raters={raters} fetchRaters={fetchRaters} />,
     },
     {
       title: 'Results',

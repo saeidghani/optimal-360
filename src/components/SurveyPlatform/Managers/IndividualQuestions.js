@@ -52,7 +52,7 @@ const IndividualQuestions = ({ loading }) => {
       ),
       width: 100,
       render: (text) => (
-        <span className="text-xs flex justify-center xl:pr-8 md:text-sm">{text}</span>
+        <span className="text-xs flex justify-center p-4 xl:pr-8 md:text-sm">{text}</span>
       ),
     },
     {
@@ -198,7 +198,7 @@ const IndividualQuestions = ({ loading }) => {
         pagination={false}
         title={renderHeader}
       />
-      <div className="flex flex-col mt-5 mb-16 md:mb-10 md:flex-row-reverse md:ml-auto">
+      <div className="flex flex-col mt-5 md:flex-row-reverse md:ml-auto">
         <Button
           onClick={handleNext}
           className="mt-6 px-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"

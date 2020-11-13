@@ -6,9 +6,9 @@ import Layout from '../Helper/Layout';
 
 import Dropdown from '../../Common/Dropdown';
 import Button from '../../Common/Button';
-import Tabs from '../../Common/Tabs';
 import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
+import SecondaryTabs from '../Helper/SecondaryTabs';
 
 const RateeGroup = ({ loading }) => {
   const [project, setProject] = React.useState('');
@@ -21,36 +21,74 @@ const RateeGroup = ({ loading }) => {
     { title: 'Top Leadership3', value: '3' },
   ];
 
-  const secondaryTabOptions = [
-    { title: 'Individual', key: '1' },
-    { title: 'RateeGroup', key: '2' },
-    { title: 'All', key: '3' },
-  ];
-
   const columns = React.useMemo(() => [
+    {
+      key: 'relationship',
+      title: 'Relationship',
+      width: 100,
+      render: (relationship) => (
+        <div className="text-primary-500 h-full flex flex-col justify-start mb-auto">
+          {relationship}
+        </div>
+      ),
+    },
     {
       key: 'name',
       title: 'Name',
       width: 100,
       sorter: true,
-    },
-    {
-      key: 'relationship',
-      title: 'Relationship',
-      width: 100,
+      render: (names) => (
+        <div className="flex flex-col justify-between pt-2">
+          {names.map((name, index) => (
+            <span key={name.id} className={`${names.length - 1 === index ? 'mb-1' : 'mb-10'}`}>
+              {name.text}
+            </span>
+          ))}
+        </div>
+      ),
     },
     {
       key: 'statusAction',
       title: 'Status / Action:',
       width: 100,
+      render: (statuses) => (
+        <div className="flex flex-col justify-between pt-2">
+          {statuses.map((status, index) => (
+            <span key={status.id} className={`${statuses.length - 1 === index ? 'mb-2' : 'mb-10'}`}>
+              {status.text}
+            </span>
+          ))}
+        </div>
+      ),
     },
     {
       key: 'rate',
       title: 'Rate',
       width: 100,
+      render: (percentages) => (
+        <div className="flex flex-col justify-between pt-2">
+          {percentages.map((percentage) => (
+            <div className="flex items-center" key={percentage.id}>
+              <div className="pb-4 mr-1 md:mr-4">{percentage.number}%</div>
+              <div className="w-12 h-full">
+                <Progress
+                  className="-mb-12 ml-auto"
+                  percentage={percentage.number}
+                  showPercent={false}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      ),
+    },
+    {
+      key: 'collectiveCompletionRate',
+      title: 'Collective Completion Rate',
+      width: 100,
       render: (percentage) => (
         <div className="w-16 h-16 flex items-center justify-between pt-2">
-          <div className="pb-2 mr-1 md:mr-4">{percentage}</div>
+          <div className="pb-2 mr-1 md:mr-4">{percentage}%</div>
           <div className="w-12 h-full">
             <Progress className="-mb-12 ml-auto" percentage={percentage} showPercent={false} />
           </div>
@@ -62,38 +100,48 @@ const RateeGroup = ({ loading }) => {
   const dataSource = [
     {
       key: '1',
-      name: 'Katherine Kan',
-      relationship: 'Katherine Kan',
-      statusAction: 'In progress',
-      rate: 100,
+      name: [{ id: 1, text: 'Katherine Kan' }],
+      relationship: 'Self',
+      statusAction: [{ id: 1, text: 'In progress' }],
+      rate: [{ id: 1, number: 70 }],
+      collectiveCompletionRate: 70,
     },
     {
       key: '2',
-      name: 'Katherine Kan',
-      relationship: 'Katherine Kan',
-      statusAction: 'In progress',
-      rate: 50,
+      name: [
+        { id: 1, text: 'Premela Jaganathan' },
+        { id: 2, text: 'Karyn Chow' },
+        { id: 3, text: 'Vince Hon' },
+      ],
+      relationship: 'Manager',
+      statusAction: [
+        { id: 1, text: 'To start' },
+        { id: 2, text: 'To review' },
+        { id: 3, text: 'To review' },
+      ],
+      rate: [
+        { id: 1, number: 0 },
+        { id: 2, number: 100 },
+        { id: 3, number: 100 },
+      ],
+      collectiveCompletionRate: 66,
     },
     {
       key: '3',
-      name: 'Katherine Kan',
-      relationship: 'Katherine Kan',
-      statusAction: 'In progress',
-      rate: 100,
-    },
-    {
-      key: '4',
-      name: 'Katherine Kan',
-      relationship: 'Katherine Kan',
-      statusAction: 'In progress',
-      rate: 70,
-    },
-    {
-      key: '5',
-      name: 'Katherine Kan',
-      relationship: 'Katherine Kan',
-      statusAction: 'In progress',
-      rate: 30,
+      name: [
+        { id: 1, text: 'Tek Ee Lin' },
+        { id: 2, text: 'Karyn Chow' },
+      ],
+      relationship: 'Direct Report',
+      statusAction: [
+        { id: 1, text: 'To Start' },
+        { id: 2, text: 'In progress' },
+      ],
+      rate: [
+        { id: 1, number: 0 },
+        { id: 2, number: 90 },
+      ],
+      collectiveCompletionRate: 45,
     },
   ];
 
@@ -152,21 +200,13 @@ const RateeGroup = ({ loading }) => {
         />
       </div>
       <div className="flex flex-col p-4 bg-white rounded-lg shadow mt-8 md:hidden">
-        <div className="md:w-3/4">
-          <Tabs className="md:c-tabs-class" defaultActiveKey="1" tabOptions={secondaryTabOptions} />
-        </div>
+        <SecondaryTabs defaultActiveKey="ratee-group" />
         <DeadlineInfo />
       </div>
       {/* eslint-disable-next-line max-len */}
       <div className="p-0 bg-transparent rounded-none shadow-none mt-2 md:mt-0 md:p-8 md:bg-white md:rounded-lg md:shadow">
         <div className="hidden md:flex justify-between w-full">
-          <div className="md:w-1/2">
-            <Tabs
-              className="md:c-tabs-class"
-              defaultActiveKey="1"
-              tabOptions={secondaryTabOptions}
-            />
-          </div>
+          <SecondaryTabs defaultActiveKey="ratee-group" />
           <div className="my-auto">
             <DeadlineInfo />
           </div>
@@ -183,7 +223,7 @@ const RateeGroup = ({ loading }) => {
           title={null}
         />
       </div>
-      <div className="block md:ml-auto mt-5 md:mb-24">
+      <div className="block md:ml-auto mt-5">
         <Button
           onClick={handleSubmit}
           className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none
