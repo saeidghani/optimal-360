@@ -23,7 +23,7 @@ const Models = ({
   const pageNumber = parsedQuery?.page_number;
 
   React.useEffect(() => {
-    if (!parsedQuery?.page_number || !parsedQuery?.page_size || !parsedQuery?.status) {
+    if (!parsedQuery?.page_number || !parsedQuery?.page_size) {
       setQuery({
         page_number: 1,
         page_size: 10,
@@ -51,7 +51,7 @@ const Models = ({
 
   React.useEffect(() => {
     fetchSurveyGroups(query);
-  }, [query]);
+  }, [fetchSurveyGroups, query]);
 
   const columns = React.useCallback(
     [

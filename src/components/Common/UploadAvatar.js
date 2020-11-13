@@ -33,6 +33,8 @@ const UploadAvatar = ({ setFile, file, originalFile, wrapperClassName, title, pi
     if (imageSource && !loading) {
       setLoading(true);
     }
+
+    // eslint-disable-next-line
   }, [imageSource]);
 
   return (
@@ -44,7 +46,9 @@ const UploadAvatar = ({ setFile, file, originalFile, wrapperClassName, title, pi
       )}
 
       <div className={`${loading && 'hidden'} flex flex-row items-center justify-center`}>
-        {!imageSource && <span className={`${title && 'mx-4'} text-black-500 text-lg`}>{title}</span>}
+        {!imageSource && (
+          <span className={`${title && 'mx-4'} text-black-500 text-lg`}>{title}</span>
+        )}
 
         <label htmlFor="Client-picture">
           {imageSource ? (

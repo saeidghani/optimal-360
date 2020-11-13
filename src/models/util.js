@@ -59,6 +59,8 @@ export default {
 
       if (status === 401) {
         Cookies.remove('token');
+
+        return window.location.replace('/super-user/login');
       }
 
       const sendAlert = ({ message, description }) => {

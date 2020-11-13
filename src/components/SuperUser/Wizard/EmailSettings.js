@@ -265,8 +265,6 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
                 }
               });
 
-              console.log({ chosenTemplates });
-
               if (chosenTemplates.length > 0) {
                 try {
                   await setEmailSettings({ emailSettings: chosenTemplates, surveyGroupId });

@@ -24,6 +24,7 @@ const RaterDetails = ({ loading }) => {
         </div>
       ),
       width: 100,
+      render: (ratee) => <span className="text-sm absolute top-0 pt-16">{ratee}</span>,
     },
     {
       key: 'noSubmission',
@@ -33,7 +34,7 @@ const RaterDetails = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: (num) => <span className="text-xs">{num}</span>,
+      render: (num) => <span className="text-sm absolute top-0 pt-16">{num}</span>,
     },
     {
       key: 'totalCompletionRate',
@@ -270,6 +271,7 @@ const RaterDetails = ({ loading }) => {
           md:col-start-1 md:col-span-4 lg:col-start-1 lg:col-span-3 w-full"
           showSearch={false}
           type="gray"
+          placeholder="Leadership Development"
           value={project}
           handleChange={(val) => setProject(val)}
           options={dropdownOptions}

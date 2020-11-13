@@ -5,57 +5,45 @@ import PropTypes from 'prop-types';
 import Table from '../../Common/Table';
 import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
-import { useQuery } from "../../../hooks";
+import { useQuery } from '../../../hooks';
 
-const RatersEmail = ({ loading, fetchRaters, raters }) => {
+const RatersEmail = ({ loading, fetchRaters, raters, fetchEmailOptions, emailOptions }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const pageNumber = parsedQuery?.page_number;
+  const pageNumber = parsedQuery?.page_number || 1;
+  const surveyGroupId = parsedQuery?.surveyGroupId;
 
   useEffect(() => {
-    const newQuery = query || '?page_size=10&page_number=1';
-    fetchRaters(newQuery);
-  }, [fetchRaters, query]);
+    fetchRaters({ query, surveyGroupId });
+    setSelectedRows([]);
+  }, [
+    fetchRaters,
+    surveyGroupId,
+    parsedQuery.page_size,
+    parsedQuery.q,
+    parsedQuery.page_number,
+    parsedQuery.sort,
+  ]);
+  useEffect(() => {
+    fetchEmailOptions({ surveyGroupId });
+  }, [fetchEmailOptions, surveyGroupId]);
+
   const renderHeader = React.useCallback(() => {
     return selectedRows && selectedRows?.length > 0 ? (
       <div className="flex flex-row items-center">
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Send reminder email"
-          textClassName="mr-2"
-          className="ml-3"
-          icon="FileExcelOutlined"
-          iconPosition="right"
-        />
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Send reset password email"
-          textClassName="mr-2"
-          className="ml-3"
-          icon="FileExcelOutlined"
-          iconPosition="right"
-        />
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Send verification email"
-          textClassName="mr-2"
-          className="ml-3"
-          icon="FileExcelOutlined"
-          iconPosition="right"
-        />
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Send login email"
-          textClassName="mr-2"
-          className="ml-3"
-          icon="FileExcelOutlined"
-          iconPosition="right"
-        />
+        {(emailOptions?.data || []).map(({ id, name }) => (
+          <Button
+            size="middle"
+            textSize="xs"
+            text={name}
+            textClassName="mr-2"
+            className="ml-3"
+            icon="FileExcelOutlined"
+            iconPosition="right"
+          />
+        ))
+        }
         <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
       </div>
     ) : (
@@ -122,6 +110,8 @@ const RatersEmail = ({ loading, fetchRaters, raters }) => {
       rowKey="raterId"
       renderHeader={renderHeader}
       onPageSizeChange={(size) => {
+        console.log('new size', size);
+
         setPageSize(size);
         setQuery({ page_size: size, page_number: 1 });
       }}
@@ -158,10 +148,19 @@ RatersEmail.propTypes = {
     }),
     timeStamp: PropTypes.number,
   }),
+  fetchEmailOptions: PropTypes.func.isRequired,
+  emailOptions: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    })),
+  }),
+
 };
 
 RatersEmail.defaultProps = {
   raters: {},
+  emailOptions: {},
 };
 
 export default RatersEmail;
