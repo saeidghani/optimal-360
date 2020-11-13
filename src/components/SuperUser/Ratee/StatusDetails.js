@@ -7,30 +7,68 @@ import Table from '../../Common/Table';
 import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
 import AwardIcon from '../../../assets/images/award.svg';
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 
-const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
+const StatusDetails = (
+  {
+    loading,
+    fetchStatusDetails,
+    removeRateeRaters,
+    changeAssessmentsStatus,
+    exportSurveyGroupRaters,
+    statusDetails,
+  },
+) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const pageNumber = parsedQuery?.page_number;
+  const surveyGroupId = parsedQuery?.surveyGroupId;
+
+  const fetch = () => {
+    fetchStatusDetails({ query, surveyGroupId });
+  };
 
   useEffect(() => {
-    const newQuery = query || '?page_size=10&page_number=1';
-    fetchStatusDetails(newQuery);
-  }, [fetchStatusDetails, query]);
+    fetch();
+    setSelectedRows([]);
+  }, [
+    fetchStatusDetails,
+    surveyGroupId,
+    parsedQuery.page_size,
+    parsedQuery.q,
+    parsedQuery.page_number,
+    parsedQuery.sort,
+  ]);
 
   const renderHeader = React.useCallback(() => {
+    const selectedRowsIds = selectedRows?.length > 0 ? selectedRows.map((el) => el.relationId) : [];
+
     return selectedRows && selectedRows?.length > 0 ? (
       <div className="flex flex-row items-center">
-        <Button size="middle" textSize="xs" text="Remove" textClassName="mr-2" className="ml-3" />
+        <Button
+          size="middle"
+          textSize="xs"
+          text="Remove"
+          textClassName="mr-2"
+          className="ml-3"
+          onClick={async () => {
+            await removeRateeRaters({ selectedRowsIds, surveyGroupId });
+            fetch();
+          }}
+        />
         <Button
           size="middle"
           textSize="xs"
           text="Open Assessment"
           textClassName="mr-2"
           className="ml-3"
+          onClick={async () => {
+            await changeAssessmentsStatus({ selectedRowsIds, surveyGroupId, status: true });
+            fetch();
+            setSelectedRows([]);
+          }}
         />
         <Button
           size="middle"
@@ -38,6 +76,11 @@ const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
           text="Close Assessment"
           textClassName="mr-2"
           className="ml-3"
+          onClick={async () => {
+            await changeAssessmentsStatus({ selectedRowsIds, surveyGroupId, status: false });
+            fetch();
+            setSelectedRows([]);
+          }}
         />
         <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
       </div>
@@ -87,6 +130,9 @@ const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
             type="gray"
             icon="FileExcelOutlined"
             iconPosition="right"
+            onClick={() => {
+              exportSurveyGroupRaters({ surveyGroupId });
+            }}
           />
           <Button
             size="middle"
@@ -132,13 +178,13 @@ const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
       width: 100,
       sorter: true,
       sortOrder: getSortOrder('rateeName'),
-      render: (num) => (
+      render: (num, { rateeId }) => (
         <div className="flex items-center">
           <div className="text-12px inline-block">{num}</div>
           <div className="inline-block">
             <Button
               onClick={() => {
-                history.push('/super-user/participants/ratee/add/edit');
+                history.push(`/super-user/participants/ratee/add/edit?rateeId=${rateeId}&surveyGroupId=${parsedQuery.surveyGroupId}${parsedQuery.projectId ? `&projectId=${parsedQuery.projectId}` : ''}`);
               }}
               size="middle"
               textSize="xs"
@@ -173,7 +219,7 @@ const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
           <Progress
             className="-mb-12 ml-auto"
             subClassName={`mb-12 pb-2 ${!raterSubmited && 'text-gray-800'}`}
-            status={raterSubmited && 'sub'}
+            status={raterSubmited ? 'sub' : ''}
             percentage={parseInt((totalAnswered / totalQuestions) * 100, 10)}
           />
         </div>
@@ -224,6 +270,9 @@ const StatusDetails = ({ loading, fetchStatusDetails, statusDetails }) => {
 StatusDetails.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchStatusDetails: PropTypes.func.isRequired,
+  removeRateeRaters: PropTypes.func.isRequired,
+  changeAssessmentsStatus: PropTypes.func.isRequired,
+  exportSurveyGroupRaters: PropTypes.func.isRequired,
   statusDetails: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
     metaData: PropTypes.shape({

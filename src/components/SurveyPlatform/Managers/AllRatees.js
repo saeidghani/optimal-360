@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import { FileTextOutlined, CheckOutlined } from '@ant-design/icons';
 
 import Layout from '../Helper/Layout';
 import SecondaryTabs from '../Helper/SecondaryTabs';
@@ -11,8 +12,11 @@ import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
 
 import graphIcon from '../../../assets/images/graph-icon.svg';
+import Modal from '../../Common/Modal';
 
 const AllRatees = ({ loading }) => {
+  const [submitModalVisible, setSubmitModalVisible] = React.useState(false);
+  const [thankYouModalVisible, setThankYouModalVisible] = React.useState(false);
   const [pageSize] = React.useState(10);
   const [project, setProject] = React.useState('');
 
@@ -42,7 +46,7 @@ const AllRatees = ({ loading }) => {
       title: 'Rate',
       width: 100,
       render: (percentage) => (
-        <div className="w-16 h-16 flex items-center justify-between pt-2">
+        <div className="w-16 h-16 flex items-center justify-end pt-2">
           <div className="pb-2 mr-1 md:mr-4">{percentage}%</div>
           <div className="w-12 h-full">
             <Progress className="-mb-12 ml-auto" percentage={percentage} showPercent={false} />
@@ -116,15 +120,52 @@ const AllRatees = ({ loading }) => {
   );
 
   const handleContinue = () => {
-    history.push('/survey-platform/managers/individual');
+    history.push('/survey-platform/managers/all-ratees/questions');
   };
 
   const handleSubmit = () => {
-    history.push('/survey-platform/managers/individual');
+    setSubmitModalVisible(true);
+  };
+
+  const handleSubmitModalOk = () => {
+    setSubmitModalVisible(false);
+    setThankYouModalVisible(true);
+  };
+
+  const handleThankYouModalOk = () => {
+    setThankYouModalVisible(false);
   };
 
   return (
     <Layout hasBreadCrumb>
+      <Modal
+        visible={submitModalVisible}
+        handleOk={handleSubmitModalOk}
+        handleCancel={() => {}}
+        width={588}
+        okText="Yes"
+        cancelText=""
+        okButtonProps={{ textClassName: 'px-4' }}
+      >
+        <div className="flex flex-col items-center">
+          <FileTextOutlined className="text-4xl text-primary-500 mb-4" />
+          <p>Are you sure to submit this survey?</p>
+        </div>
+      </Modal>
+      <Modal
+        visible={thankYouModalVisible}
+        handleOk={handleThankYouModalOk}
+        handleCancel={() => {}}
+        width={588}
+        okText="Ok"
+        cancelText=""
+        okButtonProps={{ className: 'bg-antteal hover:bg-antteal', textClassName: 'px-4' }}
+      >
+        <div className="flex flex-col items-center">
+          <CheckOutlined className="w-10 h-10 bg-antteal rounded-full text-white text-2xl pt-2 mb-4" />
+          <p>Thank you for completing the survey. Your response has been submitted.</p>
+        </div>
+      </Modal>
       <div className="grid grid-cols-12 mb-10 mt-8">
         <div className="col-start-1 col-span-6 text-base text-body mb-3">Select Project</div>
         <Dropdown

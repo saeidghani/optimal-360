@@ -119,7 +119,7 @@ const Routes = ({ match }) => (
     />
     {/* TODO: change url */}
     <PrivateRoute
-      path={`${match.path}/participants/ratee/:tab?`}
+      path={`${match.path}/participants/ratee`}
       // tab: 'status-overview'||'status-details'||'raters-email'||'result'
       exact
       component={Rates}

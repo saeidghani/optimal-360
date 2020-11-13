@@ -1,0 +1,23 @@
+.all-ratee-tabs {
+  & > .ant-tabs-nav {
+    .ant-tabs-tab {
+      &:not(:first-child) {
+        margin-right: 66px;
+        margin-left: 66px;
+        color: @heading-color;
+      }
+
+      &:first-child {
+        margin-right: 66px;
+      }
+    }
+  }
+}
+
+.ant-tabs-top > .ant-tabs-nav::before {
+  border-bottom-color: @process-tail-color;
+}
+
+.result-tabs  .ant-tabs-top > .ant-tabs-nav::before{
+  border: unset;
+}

@@ -203,6 +203,7 @@ const ReferenceGuide = ({ loading }) => {
               rows={2}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
+              disabled
             />
           </div>
         </div>
