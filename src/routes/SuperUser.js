@@ -19,6 +19,7 @@ import GroupReports from '../containers/SuperUser/SurveyGroups/GroupReports';
 import Rates from '../containers/SuperUser/Ratee/Ratee';
 import OrganizationsUpdateStaff from '../containers/SuperUser/Organizations/UpdateStaff';
 
+import EditProject from '../containers/SuperUser/Wizard/EditProject';
 import ProjectInfo from '../containers/SuperUser/Wizard/ProjectInfo';
 import SurveySetting from '../containers/SuperUser/Wizard/SurveySetting';
 import EmailSettings from '../containers/SuperUser/Wizard/EmailSettings';
@@ -48,6 +49,14 @@ const Routes = ({ match }) => (
       exact
       component={SurveyGroupList}
     />
+
+    <PrivateRoute
+      path={`${match.path}/new-project/edit`}
+      exact
+      scrollToTop
+      component={EditProject}
+    />
+
     <PrivateRoute
       path={`${match.path}/new-project/project-info`}
       exact

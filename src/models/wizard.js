@@ -5,6 +5,7 @@ export default {
   namespace: 'wizard',
 
   state: {
+    project: '',
     surveySettings: '',
     emailSettings: '',
     selectedTemplates: '',
@@ -26,6 +27,30 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
+    async fetchProject(projectId) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/projects/${projectId}`,
+        });
+
+        this.fetchProject_reducer(res?.data?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async editProject({ projectId, ...data }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'put',
+          url: `/super-user/projects/${projectId}`,
+          data,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
     async fetchSurveySettings(surveyGroupId) {
       return actionWapper(async () => {
         const res = await axios({
@@ -33,7 +58,7 @@ export default {
           url: `super-user/wizard/survey-groups/${surveyGroupId}/survey-settings`,
         });
 
-        await this.fetchSurveySettings_reducer(res?.data?.data);
+        this.fetchSurveySettings_reducer(res?.data?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
@@ -57,7 +82,7 @@ export default {
           url: `super-user/wizard/survey-groups/${surveyGroupId}/email-settings`,
         });
 
-        await this.fetchEmailSettings_reducer(res?.data?.data);
+        this.fetchEmailSettings_reducer(res?.data?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
@@ -87,7 +112,7 @@ export default {
           url: `super-user/wizard/survey-groups/${surveyGroupId}/survey-intro`,
         });
 
-        await this.fetchSurveyIntro_reducer(res?.data?.data);
+        this.fetchSurveyIntro_reducer(res?.data?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
@@ -113,7 +138,7 @@ export default {
           url: `super-user/wizard/survey-groups/${surveyGroupId}/survey-questions`,
         });
 
-        await this.fetchSurveyQuestions_reducer(res?.data?.data);
+        this.fetchSurveyQuestions_reducer(res?.data?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
@@ -156,6 +181,11 @@ export default {
   }),
 
   reducers: {
+    fetchProject_reducer: (state, payload) => ({
+      ...state,
+      project: payload,
+    }),
+
     fetchSurveySettings_reducer: (state, payload) => ({
       ...state,
       surveySettings: payload,

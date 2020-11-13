@@ -15,7 +15,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
   const [parsedQuery, query, setQuery] = useQuery();
 
   React.useEffect(() => {
-    if (!parsedQuery?.page_number || !parsedQuery?.page_size || !parsedQuery?.status) {
+    if (!parsedQuery?.page_number || !parsedQuery?.page_size) {
       setQuery({
         page_number: 1,
         page_size: 10,
@@ -53,6 +53,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
         </div>
       </div>
     ),
+    // eslint-disable-next-line
     [],
   );
 
@@ -99,7 +100,9 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
         width: 100,
         render: (_data, { id }) => (
           <Button
-            onClick={() => history.push(`/super-user/organizations/${id}`)}
+            onClick={() =>
+              history.push(`/super-user/organizations/${id}?page_number=1&page_size=10`)
+            }
             icon="TeamOutlined"
             text="&nbsp;Staff"
             textSize="sm"
@@ -110,6 +113,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
         ),
       },
     ],
+    // eslint-disable-next-line
     [],
   );
 

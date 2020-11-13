@@ -59,6 +59,8 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
         reportType: 'individualReport',
       });
     }
+
+    // eslint-disable-next-line
   }, [query]);
 
   React.useEffect(() => {
