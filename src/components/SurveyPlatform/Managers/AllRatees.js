@@ -173,6 +173,7 @@ const AllRatees = ({ loading }) => {
           lg:col-span-3 w-full"
           showSearch={false}
           type="gray"
+          placeholder="Leadership Development"
           value={project}
           handleChange={(val) => setProject(val)}
           options={dropdownOptions}

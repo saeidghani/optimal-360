@@ -23,8 +23,8 @@ const _Dropdown = ({
     onChange={handleChange}
     placeholder={placeholder}
     size={size}
-    value={value}
-    defaultValue={defaultValue}
+    value={value || undefined}
+    defaultValue={defaultValue || undefined}
   >
     {options?.length > 0
       ? options.map((el, i) => (

@@ -270,6 +270,7 @@ const RaterDetails = ({ loading }) => {
           md:col-start-1 md:col-span-4 lg:col-start-1 lg:col-span-3 w-full"
           showSearch={false}
           type="gray"
+          placeholder="Leadership Development"
           value={project}
           handleChange={(val) => setProject(val)}
           options={dropdownOptions}
