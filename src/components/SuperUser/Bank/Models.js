@@ -53,52 +53,55 @@ const Models = ({
     fetchSurveyGroups(query);
   }, [query]);
 
-  const columns = [
-    {
-      key: 'id',
-      title: 'ID',
-      dataIndex: 'id',
-      sorter: true,
-      sortOrder: getSortOrder('id'),
-    },
-    {
-      key: 'name',
-      title: 'Survey Group',
-      dataIndex: 'SurveyGroup',
-      sorter: true,
-      sortOrder: getSortOrder('name'),
-    },
-    {
-      key: 'action',
-      width: 100,
-      render: (_, { id }) => (
-        <div className="flex items-center">
-          <Button
-            className="flex items-center mr-3.5"
-            text="Export Exel File"
-            icon="FileExcelOutlined"
-            size="middle"
-            textSize="xs"
-            textClassName="mr-2"
-            iconPosition="right"
-            type="gray"
-            onClick={() => exportSurveyGroup(id)}
-          />
-          <Button
-            onClick={() => {
-              const params = stringify({ surveyGroupId: id });
+  const columns = React.useCallback(
+    [
+      {
+        key: 'id',
+        title: 'ID',
+        dataIndex: 'id',
+        sorter: true,
+        sortOrder: getSortOrder('id'),
+      },
+      {
+        key: 'name',
+        title: 'Survey Group',
+        dataIndex: 'SurveyGroup',
+        sorter: true,
+        sortOrder: getSortOrder('name'),
+      },
+      {
+        key: 'action',
+        width: 100,
+        render: (_, { id }) => (
+          <div className="flex items-center">
+            <Button
+              className="flex items-center mr-3.5"
+              text="Export Exel File"
+              icon="FileExcelOutlined"
+              size="middle"
+              textSize="xs"
+              textClassName="mr-2"
+              iconPosition="right"
+              type="gray"
+              onClick={() => exportSurveyGroup(id)}
+            />
+            <Button
+              onClick={() => {
+                const params = stringify({ surveyGroupId: id });
 
-              history.push(`/super-user/pre-defined-data/add${params}`);
-            }}
-            icon="EditOutlined"
-            type="link"
-            className="text-lg"
-            size="middle"
-          />
-        </div>
-      ),
-    },
-  ];
+                history.push(`/super-user/pre-defined-data/add${params}`);
+              }}
+              icon="EditOutlined"
+              type="link"
+              className="text-lg"
+              size="middle"
+            />
+          </div>
+        ),
+      },
+    ],
+    [],
+  );
 
   const renderHeader = React.useCallback(
     () => (
