@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -19,22 +19,32 @@ class OrganizationsStaff extends Component {
     return fetchOrganizationsInfo(organizationId);
   };
 
+  importStaff = async (data) => {
+    const { importStaff } = this.props;
+
+    return importStaff(data);
+  };
+
   render() {
     const { loading, organizationsInfo, staff } = this.props;
 
-    return (<Layout
-      fetchOrganizationsInfo={this.fetchOrganizationsInfo}
-      fetchOrganizationsStaff={this.fetchOrganizationsStaff}
-      organizationsInfo={organizationsInfo}
-      staff={staff}
-      loading={loading}
-    />);
+    return (
+      <Layout
+        fetchOrganizationsInfo={this.fetchOrganizationsInfo}
+        fetchOrganizationsStaff={this.fetchOrganizationsStaff}
+        importStaff={this.importStaff}
+        organizationsInfo={organizationsInfo}
+        staff={staff}
+        loading={loading}
+      />
+    );
   }
 }
 
 OrganizationsStaff.propTypes = {
   fetchOrganizationsStaff: PropTypes.func.isRequired,
   fetchOrganizationsInfo: PropTypes.func.isRequired,
+  importStaff: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   staff: PropTypes.shape({}),
   organizationsInfo: PropTypes.shape({}),
@@ -54,7 +64,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchOrganizationsStaff: dispatch.organizations.fetchOrganizationsStaff,
   fetchOrganizationsInfo: dispatch.organizations.fetchOrganizationsInfo,
-
+  importStaff: dispatch.organizations.importStaff,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrganizationsStaff);

@@ -1,17 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FileTextOutlined, CheckOutlined } from '@ant-design/icons';
 
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import Layout from '../Helper/Layout';
 
 import Dropdown from '../../Common/Dropdown';
 import Button from '../../Common/Button';
-import Tabs from '../../Common/Tabs';
 import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
+import SecondaryTabs from '../Helper/SecondaryTabs';
+import Modal from '../../Common/Modal';
 
 const Individual = ({ loading }) => {
-  const [pageSize] = React.useState(10);
+  const [submitModalVisible, setSubmitModalVisible] = React.useState(false);
+  const [thankYouModalVisible, setThankYouModalVisible] = React.useState(false);
   const [project, setProject] = React.useState('');
 
   const history = useHistory();
@@ -22,38 +25,17 @@ const Individual = ({ loading }) => {
     { title: 'Top Leadership3', value: '3' },
   ];
 
-  const secondaryTabOptions = [
-    { title: 'Individual', key: '1' },
-    { title: 'Group', key: '2' },
-    { title: 'All', key: '3' },
-  ];
-
-  const renderHeader = React.useCallback((size) => {
-    return (
-      <div className={`${size !== 'sm' ? 'hidden md:flex justify-between items-center' : ''}`}>
-        <div className="md:w-3/2">
-          <Tabs className="md:c-tabs-class" defaultActiveKey="1" tabOptions={secondaryTabOptions} />
-        </div>
-        <div className="flex">
-          <span className="text-xs md:text-sm">Survey Ends on 28 Sep</span>
-          <span className="mx-1 md:mx-3">|</span>
-          <div className="text-xs md:text-sm">
-            <span className="mr-1 text-purple-500">29d</span>
-            <span>and</span>
-            <span className="mx-1 text-purple-500">2h</span>
-            <span>left</span>
-          </div>
-        </div>
-      </div>
-    );
-  }, []);
-
   const columns = React.useMemo(() => [
     {
       key: 'name',
       title: 'Name',
       width: 100,
       sorter: true,
+      render: (name) => (
+        <Link to="/survey-platform/managers/individual/questions">
+          <span className="text-primary-500">{name}</span>
+        </Link>
+      ),
     },
     {
       key: 'relationship',
@@ -70,8 +52,8 @@ const Individual = ({ loading }) => {
       title: 'Rate',
       width: 100,
       render: (percentage) => (
-        <div className="w-16 h-16 flex items-center justify-between pt-2">
-          <div className="pb-2 mr-1 md:mr-4">{percentage}</div>
+        <div className="w-16 h-16 flex items-center justify-end pt-2">
+          <div className="pb-2 mr-1 md:mr-4">{percentage}%</div>
           <div className="w-12 h-full">
             <Progress className="-mb-12 ml-auto" percentage={percentage} showPercent={false} />
           </div>
@@ -84,52 +66,102 @@ const Individual = ({ loading }) => {
     {
       key: '1',
       name: 'Katherine Kan',
-      relationship: 'Katherine Kan',
-      statusAction: 'In progress',
+      relationship: 'Self',
+      statusAction: 'To review',
       rate: 100,
     },
     {
       key: '2',
-      name: 'Katherine Kan',
-      relationship: 'Katherine Kan',
-      statusAction: 'In progress',
-      rate: 50,
+      name: 'Premela Jaganathan',
+      relationship: 'Manager',
+      statusAction: 'To start',
+      rate: 0,
     },
     {
       key: '3',
-      name: 'Katherine Kan',
-      relationship: 'Katherine Kan',
-      statusAction: 'In progress',
+      name: 'Karyn Chow',
+      relationship: 'Manager',
+      statusAction: 'To review',
       rate: 100,
     },
     {
       key: '4',
-      name: 'Katherine Kan',
-      relationship: 'Katherine Kan',
+      name: 'Vince Hon',
+      relationship: 'Peers',
       statusAction: 'In progress',
       rate: 70,
     },
     {
       key: '5',
-      name: 'Katherine Kan',
-      relationship: 'Katherine Kan',
-      statusAction: 'In progress',
-      rate: 30,
+      name: 'Tek Ee Lin',
+      relationship: 'Direct Report',
+      statusAction: 'To start',
+      rate: 0,
     },
   ];
 
+  const DeadlineInfo = () => (
+    <div className="flex">
+      <span className="text-xs md:text-sm">Survey Ends on 28 Sep</span>
+      <span className="mx-1 md:mx-3">|</span>
+      <div className="text-xs md:text-sm">
+        <span className="mr-1 text-purple-500">29d</span>
+        <span>and</span>
+        <span className="mx-1 text-purple-500">2h</span>
+        <span>left</span>
+      </div>
+    </div>
+  );
+
   const handleSubmit = () => {
-    history.push('/survey-platform/managers/ratee-group');
+    setSubmitModalVisible(true);
+  };
+
+  const handleSubmitModalOk = () => {
+    setSubmitModalVisible(false);
+    setThankYouModalVisible(true);
+  };
+
+  const handleThankYouModalOk = () => {
+    setThankYouModalVisible(false);
   };
 
   return (
     <Layout hasBreadCrumb>
+      <Modal
+        visible={submitModalVisible}
+        handleOk={handleSubmitModalOk}
+        handleCancel={() => {}}
+        width={588}
+        okText="Yes"
+        cancelText=""
+        okButtonProps={{ textClassName: 'px-4' }}
+      >
+        <div className="flex flex-col items-center">
+          <FileTextOutlined className="text-4xl text-primary-500 mb-4" />
+          <p>Are you sure to submit this survey?</p>
+        </div>
+      </Modal>
+      <Modal
+        visible={thankYouModalVisible}
+        handleOk={handleThankYouModalOk}
+        handleCancel={() => {}}
+        width={588}
+        okText="Ok"
+        cancelText=""
+        okButtonProps={{ className: 'bg-antteal hover:bg-antteal', textClassName: 'px-4' }}
+      >
+        <div className="flex flex-col items-center">
+          <CheckOutlined className="w-10 h-10 bg-antteal rounded-full text-white text-2xl pt-2 mb-4" />
+          <p>Thank you for completing the survey. Your response has been submitted.</p>
+        </div>
+      </Modal>
       <div className="grid grid-cols-12 mb-10 mt-10">
         <div className="col-start-1 col-span-6 text-base text-body mb-3">Select Project</div>
         <Dropdown
           className="c-autocomplete col-start-1 col-span-12 md:col-start-1 md:col-span-4 lg:col-start-1
           lg:col-span-3 w-full"
-          showSearch
+          showSearch={false}
           type="gray"
           options={dropdownOptions}
           value={project}
@@ -142,35 +174,50 @@ const Individual = ({ loading }) => {
           textClassName="text-heading"
           textSize="sm"
           text="Top Leadership"
+          onClick={() => {}}
         />
         <Button
           className="mr-1 bg-white border-list-border shadow-none px-6 md:px-4"
           textClassName="text-heading text-primary-500"
           textSize="sm"
           text="Managers"
+          onClick={() => {}}
         />
         <Button
           className="mr-1 bg-white border-list-border shadow-none px-2 md:px-4"
           textClassName="text-heading"
           textSize="sm"
           text="High Potentials"
+          onClick={() => {}}
         />
       </div>
-      <div className="bg-white rounded-lg shadow p-4 mt-6 md:hidden">{renderHeader('sm')}</div>
-      <Table
-        size="middle"
-        className="p-4 mt-8 md:mt-0 md:p-6 bg-white rounded-lg shadow"
-        tableClassName="overflow-auto"
-        loading={loading}
-        columns={columns}
-        dataSource={dataSource}
-        pageSize={pageSize * 1}
-        pageNumber={1}
-        rowSelection={false}
-        title={renderHeader}
-        paginationClassName="flex flex-col md:flex-row justify-between h-24"
-      />
-      <div className="block md:ml-auto mt-5 md:mb-24">
+      <div className="flex flex-col p-4 bg-white rounded-lg shadow mt-8 md:hidden">
+        <SecondaryTabs defaultActiveKey="individual" />
+        <DeadlineInfo />
+      </div>
+      <div
+        className="p-0 bg-transparent rounded-none shadow-none mt-2
+      md:mt-0 md:p-8 md:bg-white md:rounded-lg md:shadow"
+      >
+        <div className="hidden md:flex justify-between w-full">
+          <SecondaryTabs defaultActiveKey="individual" />
+          <div className="my-auto">
+            <DeadlineInfo />
+          </div>
+        </div>
+        <Table
+          size="middle"
+          className="p-4 mt-8 md:mt-0 md:p-6 bg-white rounded-lg shadow"
+          tableClassName="overflow-auto"
+          loading={loading}
+          columns={columns}
+          dataSource={dataSource}
+          rowSelection={false}
+          pagination={false}
+          title={null}
+        />
+      </div>
+      <div className="block md:ml-auto mt-5">
         <Button
           onClick={handleSubmit}
           className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none

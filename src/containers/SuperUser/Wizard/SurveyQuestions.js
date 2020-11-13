@@ -13,12 +13,6 @@ class SurveyQuestions extends React.Component {
     await fetchSurveyQuestions(surveyGroupId);
   };
 
-  fetchSurveyGroups = async (projectId) => {
-    const { fetchSurveyGroups } = this.props;
-
-    await fetchSurveyGroups({ projectId });
-  };
-
   setSurveyQuestions = async (data) => {
     const { setSurveyQuestions } = this.props;
 
@@ -81,14 +75,12 @@ class SurveyQuestions extends React.Component {
   };
 
   render() {
-    const { loading, surveyQuestions, surveyGroups } = this.props;
+    const { loading, surveyQuestions } = this.props;
 
     return (
       <Layout
         surveyQuestions={surveyQuestions}
-        surveyGroups={surveyGroups}
         fetchSurveyQuestions={this.fetchSurveyQuestions}
-        fetchSurveyGroups={this.fetchSurveyGroups}
         setSurveyQuestions={this.setSurveyQuestions}
         loading={loading}
       />
@@ -98,28 +90,23 @@ class SurveyQuestions extends React.Component {
 
 SurveyQuestions.propTypes = {
   fetchSurveyQuestions: PropTypes.func.isRequired,
-  fetchSurveyGroups: PropTypes.func.isRequired,
   setSurveyQuestions: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   surveyQuestions: PropTypes.shape({}),
-  surveyGroups: PropTypes.shape({}),
 };
 
 SurveyQuestions.defaultProps = {
   surveyQuestions: {},
-  surveyGroups: {},
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
   surveyQuestions: state.wizard?.surveyQuestions || {},
-  surveyGroups: state.projects?.surveyGroups || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchSurveyQuestions: dispatch.wizard.fetchSurveyQuestions,
   setSurveyQuestions: dispatch.wizard.setSurveyQuestions,
-  fetchSurveyGroups: dispatch.projects.fetchSurveyGroups,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyQuestions);

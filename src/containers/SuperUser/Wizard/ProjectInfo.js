@@ -47,14 +47,27 @@ ProjectInfo.propTypes = {
   fetchSurveyGroups: PropTypes.func.isRequired,
   createProject: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
-  organizations: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  surveyGroups: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  organizations: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.object),
+  }),
+  surveyGroups: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.object),
+  }),
+};
+
+ProjectInfo.defaultProps = {
+  organizations: {
+    data: [],
+  },
+  surveyGroups: {
+    data: [],
+  },
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
   organizations: state.organizations.organizations || [],
-  surveyGroups: state.bank.surveyGroups || [],
+  surveyGroups: state.bank.surveyGroups || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({

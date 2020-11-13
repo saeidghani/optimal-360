@@ -3,19 +3,16 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { useQuery } from '../../../hooks';
 
+import { fetchFullURL } from '../../../lib/utils';
+
 import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import SearchBox from '../../Common/SearchBox';
 
-import { fetchFullURL } from '../../../lib/utils';
-
 const Organizations = ({ organizations, fetchOrganizations, loading }) => {
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
-
-  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
-  const pageNumber = parsedQuery?.page_number;
 
   React.useEffect(() => {
     if (!parsedQuery?.page_number || !parsedQuery?.page_size || !parsedQuery?.status) {
@@ -29,12 +26,11 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
   }, [history?.location?.pathname]);
 
   React.useEffect(() => {
-    // const newQuery = query || '?page_size=10&page_number=1';
     fetchOrganizations(query);
   }, [fetchOrganizations, query]);
 
-  const renderHeader = React.useCallback(() => {
-    return (
+  const renderHeader = React.useCallback(
+    () => (
       <div className="flex flex-row justify-end items-center">
         <div className="flex flex-row">
           <SearchBox
@@ -56,8 +52,9 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
           />
         </div>
       </div>
-    );
-  }, [loading]);
+    ),
+    [],
+  );
 
   const getSortOrder = (key) => {
     return parsedQuery?.sort?.includes(key)
@@ -67,46 +64,54 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
       : '';
   };
 
-  const columns = React.useMemo(() => [
-    {
-      key: 'id',
-      title: 'ID',
-      sorter: true,
-      sortOrder: getSortOrder('id'),
-    },
-    {
-      key: 'name',
-      title: 'Organization',
-      sorter: true,
-      sortOrder: getSortOrder('name'),
-      render: (organization, { logo }) => {
-        return (
-          <div className="inline-flex flex-row items-center justify-between">
+  const columns = React.useMemo(
+    () => [
+      {
+        key: 'id',
+        title: 'ID',
+        sorter: true,
+        sortOrder: getSortOrder('id'),
+        render: (id, { logo }) => (
+          <div className="flex items-center justify-between">
+            <div>{id}</div>
             <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
               <img className="rounded-full w-10 h-10" src={fetchFullURL(logo)} alt="logo" />
             </div>
-            <p className="text-sm font-normal ml-2">{organization}</p>
           </div>
-        );
+        ),
       },
-    },
-    {
-      key: 'project',
-      title: '',
-      width: 100,
-      render: (_data, { id }) => (
-        <Button
-          onClick={() => history.push(`/super-user/organizations/${id}`)}
-          icon="TeamOutlined"
-          text="&nbsp;Staff"
-          textSize="sm"
-          type="link"
-          className="text-lg mr-7"
-          size="middle"
-        />
-      ),
-    },
-  ]);
+      {
+        key: 'name',
+        title: 'Organization',
+        sorter: true,
+        sortOrder: getSortOrder('name'),
+        render: (organization) => {
+          return (
+            <div className="inline-flex flex-row items-center justify-between">
+              <p className="text-sm font-normal ml-2">{organization}</p>
+            </div>
+          );
+        },
+      },
+      {
+        key: 'project',
+        title: '',
+        width: 100,
+        render: (_data, { id }) => (
+          <Button
+            onClick={() => history.push(`/super-user/organizations/${id}`)}
+            icon="TeamOutlined"
+            text="&nbsp;Staff"
+            textSize="sm"
+            type="link"
+            className="text-lg mr-7"
+            size="middle"
+          />
+        ),
+      },
+    ],
+    [],
+  );
 
   const sort = (sorter) => {
     // eslint-disable-next-line operator-linebreak
@@ -116,11 +121,6 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
     setQuery({ sort: newItem });
   };
 
-  const dataSource = React.useMemo(
-    () => (organizations?.data || []).map((item) => ({ ...item, key: `${item.id}` })),
-    // eslint-disable-next-line
-    [organizations.timeStamp],
-  );
   return (
     <MainLayout
       titleClass="mb-6 mt-3"
@@ -135,14 +135,13 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
         loading={loading}
         columns={columns}
         rowSelection={false}
-        dataSource={dataSource}
+        dataSource={organizations?.data || []}
         renderHeader={renderHeader}
         onPageSizeChange={(size) => {
-          setPageSize(size);
           setQuery({ page_size: size, page_number: 1 });
         }}
-        pageSize={pageSize * 1}
-        pageNumber={pageNumber * 1}
+        pageSize={(parsedQuery?.page_size || 10) * 1}
+        pageNumber={parsedQuery?.page_number * 1}
         // eslint-disable-next-line camelcase
         onPaginationChange={(page_number, page_size) => {
           setQuery({

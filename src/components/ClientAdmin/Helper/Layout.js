@@ -104,8 +104,8 @@ const Layout = ({
         {children}
       </div>
       <div
-        className="absolute bottom-0 bg-antgray-100 bg-opacity-25 grid grid-cols-12 items-center
-      gap-y-3 px-8 py-6 lg:px-32 lg:py-10"
+        className="absolute bottom-0 w-full bg-antgray-100 bg-opacity-25 grid grid-cols-12 items-center
+      gap-y-3 px-8 py-6 lg:px-32 lg:py-4 w-full	"
       >
         <img src={optimal360Logo} alt="" />
         <p

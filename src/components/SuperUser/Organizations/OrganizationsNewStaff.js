@@ -94,6 +94,7 @@ const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
                 <Button
                   loading={loading}
                   onClick={handleSubmit}
+                  htmlType="submit"
                   text="Create"
                   textSize="base"
                   className="ml-auto c-force-padding-y-px px-8 mt-6"

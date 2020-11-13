@@ -2,7 +2,7 @@ import React from 'react';
 import { Radio } from 'antd';
 import PropTypes from 'prop-types';
 
-const RadioGroup = ({ className, defaultValue, items, value, onChange }) => (
+const RadioGroup = ({ className, radioClassName, defaultValue, items, value, onChange }) => (
   <Radio.Group
     className={` ${className}`}
     name="radiogroup"
@@ -13,7 +13,7 @@ const RadioGroup = ({ className, defaultValue, items, value, onChange }) => (
     {items?.length > 0
       ? items.map(({ value, title }) => (
           // eslint-disable-next-line react/jsx-indent
-          <Radio color="red" key={title} value={value}>
+          <Radio color="red" key={title} value={value} className={radioClassName}>
             {title}
           </Radio>
         ))
@@ -24,6 +24,7 @@ const RadioGroup = ({ className, defaultValue, items, value, onChange }) => (
 RadioGroup.propTypes = {
   defaultValue: PropTypes.string,
   className: PropTypes.string,
+  radioClassName: PropTypes.string,
   items: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.string,
@@ -37,6 +38,7 @@ RadioGroup.propTypes = {
 RadioGroup.defaultProps = {
   defaultValue: '',
   className: '',
+  radioClassName: '',
 };
 
 export default RadioGroup;

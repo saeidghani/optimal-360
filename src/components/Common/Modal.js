@@ -28,6 +28,7 @@ const _Modal = ({
     title={title}
     visible={visible}
     closable={false}
+    onCancel={handleCancel}
     width={width}
     footer={
       footer || (

@@ -69,7 +69,7 @@ const RateeGroupQuestions2 = ({ loading }) => {
           <p>Thank you for completing the survey. Your response has been submitted.</p>
         </div>
       </Modal>
-      <div className="px-4 py-6 mt-16 flex flex-col justify-between md:bg-white md:rounded-lg md:shadow">
+      <div className="px-4 py-6 mt-16 flex flex-col justify-between md:px-8 md:bg-white md:rounded-lg md:shadow">
         <div>
           <p>
             1. This person effectively motivates his/her team members in meeting their work
@@ -78,7 +78,7 @@ const RateeGroupQuestions2 = ({ loading }) => {
           <div className="flex justify-between md:border-b md:border-solid md:border-gray-200 mb-8 md:pb-4">
             <div className="inline-flex flex-col md:flex-row mt-5">
               <div className="w-40 -ml-12">
-                <Progress showPercent={false} type="line" percentage={60} />
+                <Progress showPercent={false} type="line" percentage={20} />
               </div>
               <div className="text-antgray-100 text-sm md:ml-4">Question 1 of 5</div>
             </div>
@@ -91,14 +91,15 @@ const RateeGroupQuestions2 = ({ loading }) => {
           </div>
         </div>
         {persons.map((person) => (
-          <div className="grid grid-cols-12 w-full" key={person.id}>
+          <div className="grid grid-cols-12 mt-8 w-full" key={person.id}>
             <span className="col-start-1 col-span-12 md:col-span-2 md:ml-3 lg:ml-5">
               {person.title}
             </span>
-            <div className="w-full col-start-1 col-span-12 md:col-start-3 md:col-span-10">
+            <div
+              className="w-full col-start-1 col-span-12 md:col-start-3 md:col-span-10
+            border border-solid border-antgray-100 rounded-md h-24"
+            >
               <TextArea
-                wrapperClassName="-mt-2"
-                className="border border-solid border-gray-500 rounded-md bg-white  md:bg-transparent"
                 placeholder="(The verbatim can be left empty by clicking skip)"
                 rows={2}
                 value={items[person.name]}
@@ -112,7 +113,7 @@ const RateeGroupQuestions2 = ({ loading }) => {
         <Button
           onClick={handleNext}
           text="Next"
-          className="mt-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
+          className="mt-6 px-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
           textSize="base"
         />
         <Button

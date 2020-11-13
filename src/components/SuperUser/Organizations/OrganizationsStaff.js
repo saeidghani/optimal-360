@@ -1,82 +1,83 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '../../../hooks';
 
+import { fetchFullURL } from '../../../lib/utils';
+
 import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
+import ImportExcelButton from '../../Common/ImportExcelButton';
 
-import budgetLogo from '../../../assets/images/budget-logo.jpg';
-import { fetchFullURL } from "../../../lib/utils";
-
-const OrganizationsStaff = (
-  {
-    organizationsInfo,
-    staff,
-    fetchOrganizationsInfo,
-    fetchOrganizationsStaff,
-    loading,
-  },
-) => {
+const OrganizationsStaff = ({
+  importStaff,
+  organizationsInfo,
+  staff,
+  fetchOrganizationsInfo,
+  fetchOrganizationsStaff,
+  loading,
+}) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const { organizationId } = useParams();
 
-  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
+  React.useEffect(() => {
+    if (!parsedQuery?.page_number || !parsedQuery?.page_size || !parsedQuery?.status) {
+      setQuery({
+        page_number: 1,
+        page_size: 10,
+      });
+    }
 
-  const pageNumber = parsedQuery?.page_number;
-
-  const handleEdit = (staffId) => {
-    history.push(`/super-user/organizations/${organizationId}/staff/${staffId}/update`);
-  };
-
-  useEffect(() => {
-    const newQuery = query || '?page_size=10&page_number=1';
-    fetchOrganizationsStaff({ organizationId, query: newQuery });
-  }, [fetchOrganizationsStaff, query]);
-
-  useEffect(() => {
-    fetchOrganizationsInfo(organizationId);
-  }, []);
-
-  const renderHeader = React.useCallback(
-    () => {
-      return (
-        <div className="flex flex-row justify-between items-center">
-          <div className="inline-flex flex-row items-center justify-between">
-            <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
-              <img className="rounded-full w-10 h-10" src={fetchFullURL(organizationsInfo.logo)} alt="logo" />
-            </div>
-            <p className="text-sm font-normal ml-2">{organizationsInfo.name}</p>
-          </div>
-          <div className="flex flex-row">
-            <Button
-              size="middle"
-              textSize="xs"
-              text="Import Exel File"
-              type="gray"
-              className="mx-3 px-3 flex-row-reverse"
-              textClassName="mr-2"
-              icon="FileExcelOutlined"
-            />
-            <Button
-              size="middle"
-              textSize="xs"
-              text="New Staff Member"
-              type="gray"
-              className="mx-3 px-3 flex-row-reverse"
-              textClassName="mr-2"
-              icon="UserAddOutlined"
-              onClick={() => history.push(`/super-user/organizations/${organizationId}/new-staff`)}
-            />
-          </div>
-        </div>
-      );
-    },
     // eslint-disable-next-line
-    [loading],
+  }, [history?.location?.pathname]);
+
+  React.useEffect(() => {
+    fetchOrganizationsStaff({ organizationId, query });
+  }, [fetchOrganizationsStaff, organizationId, query]);
+
+  React.useEffect(() => {
+    fetchOrganizationsInfo(organizationId);
+  }, [fetchOrganizationsInfo, organizationId]);
+
+  const renderHeader = () => (
+    <div className="flex flex-row justify-between items-center">
+      <div className="inline-flex flex-row items-center justify-between">
+        <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
+          <img
+            className="rounded-full w-10 h-10"
+            src={fetchFullURL(organizationsInfo.logo)}
+            alt="logo"
+          />
+        </div>
+
+        <p className="text-sm text-base font-normal ml-2">{organizationsInfo.name}</p>
+      </div>
+
+      <div className="flex flex-row">
+        <ImportExcelButton
+          beforeUpload={(file) => {
+            importStaff({ organizationId, file });
+
+            return false;
+          }}
+        />
+
+        <Button
+          size="middle"
+          textSize="xs"
+          text="New Staff Member"
+          type="gray"
+          className="mx-3 px-3 flex-row-reverse"
+          textClassName="mr-2"
+          icon="UserAddOutlined"
+          onClick={() => history.push(`/super-user/organizations/${organizationId}/new-staff`)}
+        />
+      </div>
+    </div>
   );
+
   const getSortOrder = (key) => {
     return parsedQuery?.sort?.includes(key)
       ? parsedQuery?.sort?.[0] === '+'
@@ -85,47 +86,42 @@ const OrganizationsStaff = (
       : '';
   };
 
-  const columns = React.useMemo(
-    () => [
-      {
-        key: 'id',
-        title: 'ID',
-        sorter: true,
-        sortOrder: getSortOrder('id'),
-      },
-      {
-        key: 'name',
-        title: 'Name',
-      },
-      {
-        key: 'email',
-        title: 'Email',
-      },
-      {
-        key: 'password',
-        title: 'Password',
-      },
-      {
-        key: 'edit',
-        title: '',
-        render: (_, { id }) => (
-          <Button
-            size="middle"
-            className="text-primary-500"
-            type="link"
-            icon="EditOutlined"
-            iconPosition="right"
-            onClick={() => {
-              handleEdit(id);
-            }}
-          />
-
-        ),
-      },
-    ],
-    // eslint-disable-next-line
-    [],
-  );
+  const columns = [
+    {
+      key: 'id',
+      title: 'ID',
+      sorter: true,
+      sortOrder: getSortOrder('id'),
+    },
+    {
+      key: 'name',
+      title: 'Name',
+    },
+    {
+      key: 'email',
+      title: 'Email',
+    },
+    {
+      key: 'password',
+      title: 'Password',
+    },
+    {
+      key: 'edit',
+      title: '',
+      render: (_, { id }) => (
+        <Button
+          size="middle"
+          className="text-primary-500"
+          type="link"
+          icon="EditOutlined"
+          iconPosition="right"
+          onClick={() =>
+            history.push(`/super-user/organizations/${organizationId}/staff/${id}/update`)
+          }
+        />
+      ),
+    },
+  ];
 
   const sort = (sorter) => {
     // eslint-disable-next-line operator-linebreak
@@ -135,18 +131,8 @@ const OrganizationsStaff = (
     setQuery({ sort: newItem });
   };
 
-  const dataSource = React.useMemo(
-    () => (staff?.data || []).map((item) => ({ ...item, key: `${item.id}` })),
-    // eslint-disable-next-line
-    [staff.timeStamp],
-  );
   return (
-    <MainLayout
-      titleClass="mb-6 mt-3"
-      hasBreadCrumb
-      title="Staff"
-      contentClass="py-6 pl-21 pr-6"
-    >
+    <MainLayout titleClass="mb-6 mt-3" hasBreadCrumb title="Staff" contentClass="py-6 pl-21 pr-6">
       <Table
         onTableChange={({ sorter }) => sort(sorter)}
         size="middle"
@@ -154,14 +140,11 @@ const OrganizationsStaff = (
         loading={loading}
         columns={columns}
         rowSelection={false}
-        dataSource={dataSource}
+        dataSource={staff?.data || []}
         renderHeader={renderHeader}
-        onPageSizeChange={(size) => {
-          setPageSize(size);
-          setQuery({ page_size: size, page_number: 1 });
-        }}
-        pageSize={pageSize * 1}
-        pageNumber={pageNumber * 1}
+        onPageSizeChange={(size) => setQuery({ page_size: size, page_number: 1 })}
+        pageSize={(parsedQuery?.page_size || 10) * 1}
+        pageNumber={parsedQuery?.page_number * 1}
         // eslint-disable-next-line camelcase
         onPaginationChange={(page_number, page_size) => {
           setQuery({
@@ -176,6 +159,7 @@ const OrganizationsStaff = (
 };
 
 OrganizationsStaff.propTypes = {
+  importStaff: PropTypes.func.isRequired,
   fetchOrganizationsStaff: PropTypes.func.isRequired,
   fetchOrganizationsInfo: PropTypes.func.isRequired,
   staff: PropTypes.shape({

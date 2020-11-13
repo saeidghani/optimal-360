@@ -6,11 +6,7 @@ import arrayMove from 'array-move';
 
 import { useHistory } from 'react-router-dom';
 
-import { useQuery, useSurveyGroup, usePersist, useClusters } from '../../../hooks';
-import { stringify } from '../../../hooks/useQuery';
-
-import ChangeSurveyGroupModal from '../Wizard/Helper/ChangeSurveyGroupModal';
-import Menu from '../Wizard/Helper/Menu';
+import { useQuery } from '../../../hooks';
 
 import * as ClusterUtils from '../../../lib/Wizard/clusterUtils';
 
@@ -19,36 +15,29 @@ import CompetencyEditSection from '../Wizard/Helper/CompetencyEditSection';
 import QuestionEditSection from '../Wizard/Helper/QuestionEditSection';
 import SortableFeedbacks from '../Wizard/Helper/SortableFeedbacks';
 
-import AddQuestionModal from '../Wizard/Helper/AddQuestionModal';
+import AddClusterModal from '../Wizard/Helper/AddClusterModal';
 import AddCompetencyModal from '../Wizard/Helper/AddCompetencyModal';
+import AddQuestionModal from '../Wizard/Helper/AddQuestionModal';
 
 import MainLayout from '../../Common/Layout';
-import Steps from '../../Common/Steps';
 import Input from '../../Common/Input';
 import SecondaryMenu from '../../Common/Menu';
 import Button from '../../Common/Button';
 import DraggableTable from '../../Common/DataTable';
 import Loading from '../../Common/Loading';
 
-const _ratingScales = [
-  { score: 0, description: '', label: '' },
-  { score: 1, description: '', label: '' },
-  { score: 2, description: '', label: '' },
-  { score: 3, description: '', label: '' },
-  { score: 4, description: '', label: '' },
-];
-
-const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading }) => {
+const SurveyQuestionsList = ({
+  surveyGroupInfo,
+  fetchSurveyGroupInfo,
+  setSurveyGroupInfo,
+  addSurveyGroup,
+  loading,
+}) => {
   const formRef = React.useRef();
 
   const schema = yup.object({
-    ratingScales: yup.array(
-      yup.object({
-        score: yup.number().required('score is required'),
-        description: yup.string().required('description is required'),
-        label: yup.string().required('label is required'),
-      }),
-    ),
+    name: yup.string().required('Survey group name is required'),
+    clusters: yup.array(yup.object({})).min(1, 'You must specify at least one cluster item'),
     feedbacks: yup
       .array(
         yup.object({
@@ -61,92 +50,40 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
   });
 
   const history = useHistory();
-
-  const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
-  const [persistedData, setPersistData] = usePersist();
-  const [surveyQuestions, firstClusterItem, _selectedCluster, _selectedCompetency] = useClusters();
   const [parsedQuery, query, setQuery] = useQuery();
 
-  const [surveyGroupModal, setSurveyGroupModal] = React.useState(false);
+  React.useEffect(() => {
+    fetchSurveyGroupInfo(parsedQuery.surveyGroupId);
+  }, []);
+
+  const [addClusterModal, setAddClusterModal] = React.useState(false);
   const [addCompetencyModal, setAddCompetencyModal] = React.useState(false);
   const [addQuestionModal, setAddQuestionModal] = React.useState(false);
-
-  const [isFormDone, setIsFormDone] = React.useState(false);
-  const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
 
   const [selectedCluster, setSelectedCluster] = React.useState('');
   const [selectedCompetency, setSelectedCompetency] = React.useState('');
   const [selectedQuestion, setSelectedQuestion] = React.useState('');
 
-  const surveyQuestionsStringified = JSON.stringify(surveyQuestions);
+  const firstClusterItem = surveyGroupInfo?.clusters?.length > 0 ? surveyGroupInfo.clusters[0] : {};
+  const _selectedCluster =
+    surveyGroupInfo?.clusters?.length > 0
+      ? surveyGroupInfo.clusters.find((el) => el.id * 1 === parsedQuery.clusterId * 1)
+      : {};
+  const _selectedCompetency =
+    _selectedCluster?.competencies?.length > 0
+      ? _selectedCluster.competencies.find((el) => el.id * 1 === parsedQuery.competencyId * 1)
+      : {};
 
   const handleFormChange = (newVal, row, key, subKey) => {
     const newValues = formRef.current.values[key].map((el) => {
       if (el.id === row.id) {
         return { ...el, [subKey]: newVal };
       }
-
       return el;
     });
 
     formRef.current.setValues({ ...formRef.current.values, [key]: newValues });
   };
-
-  React.useEffect(() => {
-    if (
-      isFormDone &&
-      selectedSurveyGroupKey &&
-      selectedSurveyGroupKey !== parsedQuery?.surveyGroupId
-    ) {
-      setQuery({ surveyGroupId: selectedSurveyGroupKey });
-      setIsFormDone(false);
-      setSurveyGroupModal(false);
-    }
-  }, [isFormDone, selectedSurveyGroupKey, setQuery, parsedQuery.surveyGroupId]);
-
-  React.useEffect(() => {
-    const validateForm = async () => {
-      try {
-        const errorObj = await formRef.current.validateForm(formRef?.current?.values);
-
-        if (errorObj && Object.values(errorObj).length > 0) {
-          throw errorObj;
-        } else {
-          setIsFormDone(true);
-        }
-      } catch (errorObj) {
-        formRef.current.setErrors(errorObj);
-        formRef.current.setTouched(errorObj);
-
-        if (selectedSurveyGroupKey !== parsedQuery?.surveyGroupId) setSurveyGroupModal(true);
-      }
-    };
-
-    if (selectedSurveyGroupKey && formRef?.current) {
-      validateForm(formRef?.current?.values);
-    }
-
-    // eslint-disable-next-line
-  }, [selectedSurveyGroupKey]);
-
-  React.useEffect(() => {
-    const resetForm = async () => {
-      await fetchSurveyQuestions(surveyGroupId);
-
-      if (formRef?.current) {
-        // reset form state when surveyGroup changes
-        // happens when user decides to discard current settings and changes currentSurveyGroup
-        formRef.current.setTouched({});
-        formRef.current.setErrors({});
-      }
-    };
-
-    if (surveyGroupId) {
-      resetForm();
-    }
-
-    // eslint-disable-next-line
-  }, [fetchSurveyQuestions, surveyGroupId]);
 
   const onMenuClick = ({ clusterId, competencyId, questionId }) => {
     setSelectedCluster('');
@@ -177,7 +114,6 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
   };
 
   const setClusters = (clusters) => {
-    setPersistData(clusters);
     formRef.current.setValues({ ...formRef.current.values, clusters });
   };
 
@@ -198,7 +134,6 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
   const onClusterSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex !== newIndex && formRef?.current) {
       const oldValues = formRef.current.values || {};
-
       const clusters = ClusterUtils.clusterSortRefactor(
         parsedQuery,
         oldValues.clusters,
@@ -216,7 +151,6 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
     // creating a unique id
     const feedbackIds = feedbacks?.length > 0 ? feedbacks.map((el) => el.id * 1) : [1];
     const id = feedbackIds.reduce((prevValue, currentValue) => prevValue + currentValue);
-
     const index = feedbacks.length;
     const showOrder =
       feedbacks?.length > 0 ? Math.max(...feedbacks.map((el) => el.showOrder * 1)) + 1 : 1;
@@ -238,8 +172,8 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
 
   const addItemToClusters = (newItem) => {
     const currentClusterId = _selectedCluster?.id;
-
     const oldClusters = [...formRef.current?.values?.clusters];
+
     const newClusters = ClusterUtils.addItem(
       oldClusters,
       {
@@ -251,6 +185,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
       parsedQuery,
     );
 
+    console.log({ newClusters, oldClusters });
     setClusters(newClusters);
   };
 
@@ -271,28 +206,24 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
 
   const deleteFeedback = (oldFeedbacks, removableFeedback) => {
     const newFeedbacks = [...oldFeedbacks];
-
     const removeIndex = newFeedbacks.findIndex(
       (feedback) => feedback.id * 1 === removableFeedback.id * 1,
     );
+
     newFeedbacks.splice(removeIndex, 1);
 
     formRef.current.setValues({ ...formRef.current.values, feedbacks: newFeedbacks });
   };
 
   const initialValues = React.useMemo(() => {
-    const clusters =
-      persistedData?.data?.length > 0 ? persistedData.data : surveyQuestions.clusters || [];
-
+    const clusters = surveyGroupInfo.clusters || [];
     return {
-      ratingScales:
-        surveyQuestions?.ratingScales?.length > 0 ? surveyQuestions.ratingScales : _ratingScales,
-      feedbacks: surveyQuestions?.feedbacks?.length > 0 ? surveyQuestions.feedbacks : [],
+      name: surveyGroupInfo?.name,
       clusters: clusters.map((el) => ({ ...el, index: el.showOrder, name: el.name || el.label })),
+      feedbacks: surveyGroupInfo?.feedbacks?.length > 0 ? surveyGroupInfo.feedbacks : [],
     };
-
     // eslint-disable-next-line
-  }, [query, surveyQuestionsStringified]);
+  }, [query, JSON.stringify(surveyGroupInfo)]);
 
   const renderHeader = () => (
     <div
@@ -314,24 +245,19 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
               ? 'Add Competency'
               : 'Add Cluster'
           }
-          className="mr-3 text-base"
+          className="text-base"
           onClick={() => {
-            setAddQuestionModal(true);
+            if (parsedQuery?.competencyId) {
+              setAddQuestionModal(true);
+            } else if (parsedQuery?.clusterId) {
+              setAddCompetencyModal(true);
+            } else {
+              setAddClusterModal(true);
+              // addItemToClusters();
+            }
           }}
           icon="PlusCircleOutlined"
           iconPosition="right"
-        />
-
-        <Button
-          size="middle"
-          type="gray"
-          textSize="xs"
-          textClassName="mr-2"
-          text="Export Exel File"
-          icon="PlusCircleOutlined"
-          iconPosition="right"
-          className="text-base"
-          // onClick={() => setQuery()}
         />
       </div>
     </div>
@@ -348,24 +274,12 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
     >
       <Loading visible={loading} />
 
-      <ChangeSurveyGroupModal
-        handleOk={() => {
-          setIsFormDone(true);
-        }}
-        handleCancel={() => {
-          setSelectedSurveyGroupKey('');
-          setSurveyGroupModal(false);
-        }}
-        currentSurveyGroup={currentSurveyGroupName}
-        visible={surveyGroupModal}
-      />
-
-      <AddQuestionModal
-        visible={addQuestionModal}
-        onCancel={() => setAddQuestionModal(false)}
+      <AddClusterModal
+        visible={addClusterModal}
+        onCancel={() => setAddClusterModal(false)}
         onSave={(vals) => {
           addItemToClusters(vals);
-          setAddQuestionModal(false);
+          setAddClusterModal(false);
         }}
       />
 
@@ -378,6 +292,15 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
         }}
       />
 
+      <AddQuestionModal
+        visible={addQuestionModal}
+        onCancel={() => setAddQuestionModal(false)}
+        onSave={(vals) => {
+          addItemToClusters(vals);
+          setAddQuestionModal(false);
+        }}
+      />
+
       <div className="bg-white grid grid-cols-12 pl-15">
         <div className="px-6 py-5 col-start-2 col-span-11">
           <Formik
@@ -387,25 +310,33 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
             validationSchema={schema}
             onSubmit={async (values) => {
               try {
-                const { projectId } = parsedQuery;
-                const params = stringify({ projectId, surveyGroupId });
+                if (parsedQuery.surveyGroupId) {
+                  await setSurveyGroupInfo({
+                    surveyGroupId: parsedQuery.surveyGroupId,
+                    ...values,
+                  });
+                } else {
+                  await addSurveyGroup(values);
+                }
 
-                await setSurveyQuestions({ ...values, surveyGroupId });
-                setPersistData('');
-
-                history.push(`/super-user/bank/models`);
-              } catch (error) {}
+                history.push('/super-user/organizations');
+              } catch (err) {}
             }}
           >
-            {({ values, errors, touched, handleSubmit }) => (
+            {({ values, errors, touched, handleChange, handleSubmit }) => (
               <Form className="pr-28" onSubmit={handleSubmit}>
                 <h4 className="text-secondary text-lg mb-8 mt-17">Survey Group</h4>
 
+                <pre>{console.log({ touched, errors })}</pre>
+
                 <Input
                   placeholder="Survey Group"
-                  wrapperClassName="col-span-3 mr-6"
-                  inputClass="w-40"
-                  disabled
+                  wrapperClassName="w-40"
+                  inputClass="bg-antgray-100 bg-opacity-10 border-0 border-transparent text-antgray-100 hover:border-transparent"
+                  name="name"
+                  value={values.name}
+                  onChange={handleChange}
+                  errorMessage={touched.name && errors.name}
                 />
 
                 <h4 className="text-secondary text-lg mt-8.5">Data Model</h4>
@@ -483,6 +414,12 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                       />
                     )}
                   </div>
+
+                  <div className="col-span-8">
+                    <p className="text-red-500 h-5">
+                      {touched.clusters && typeof errors.clusters === 'string' && errors.clusters}
+                    </p>
+                  </div>
                 </div>
 
                 <div className="bg-antgray-600 rounded-lg p-6 mt-12">
@@ -511,20 +448,17 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                   />
                 </div>
 
+                <p className="text-red-500 h-5">
+                  {touched.feedbacks && typeof errors.feedbacks === 'string' && errors.feedbacks}
+                </p>
+
                 <div className="mt-16 pb-22 flex justify-end">
                   <Button
                     className="w-24.5 h-9.5"
                     type="link"
                     text="Back"
                     textSize="base"
-                    onClick={() => {
-                      const params = stringify({
-                        projectId: parsedQuery?.projectId,
-                        surveyGroupId: parsedQuery?.surveyGroupId,
-                      });
-
-                      history.push(`/super-user/bank/models`);
-                    }}
+                    onClick={() => history.push('/super-user/pre-defined-data')}
                   />
 
                   <Button
@@ -544,20 +478,11 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
 };
 
 SurveyQuestionsList.propTypes = {
-  fetchSurveyQuestions: PropTypes.func.isRequired,
-  setSurveyQuestions: PropTypes.func.isRequired,
+  fetchSurveyGroupInfo: PropTypes.func.isRequired,
+  addSurveyGroup: PropTypes.func.isRequired,
+  setSurveyGroupInfo: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
-  surveyGroups: PropTypes.shape({
-    data: PropTypes.arrayOf(PropTypes.object),
-  }),
-  surveyQuestions: PropTypes.shape({
-    ratingScales: PropTypes.arrayOf(
-      PropTypes.shape({
-        score: PropTypes.number,
-        description: PropTypes.string,
-        label: PropTypes.string,
-      }),
-    ),
+  surveyGroupInfo: PropTypes.shape({
     feedbacks: PropTypes.arrayOf(
       PropTypes.shape({
         label: PropTypes.string,
@@ -584,14 +509,7 @@ SurveyQuestionsList.propTypes = {
 };
 
 SurveyQuestionsList.defaultProps = {
-  surveyGroups: {
-    data: [],
-  },
-  surveyQuestions: {
-    ratingScales: [],
-    feedbacks: [],
-    clusters: [],
-  },
+  surveyGroupInfo: {},
 };
 
 export default SurveyQuestionsList;

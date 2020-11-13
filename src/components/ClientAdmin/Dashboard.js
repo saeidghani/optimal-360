@@ -10,6 +10,8 @@ import OverallCompletion from './Helper/OverallCompletion';
 import RateCards from './Helper/RateCards';
 
 const Dashboard = ({ loading }) => {
+  const [project, setProject] = React.useState('');
+
   const dropdownOptions = [
     { title: 'Leadership Development1', value: 1 },
     { title: 'Leadership Development2', value: 2 },
@@ -29,9 +31,10 @@ const Dashboard = ({ loading }) => {
         <Dropdown
           className="c-autocomplete col-start-1 col-span-12
           md:col-start-1 md:col-span-4 lg:col-start-1 lg:col-span-3 w-full"
-          showSearch
-          value={1}
+          showSearch={false}
           type="gray"
+          value={project}
+          handleChange={(val) => setProject(val)}
           options={dropdownOptions}
         />
       </div>

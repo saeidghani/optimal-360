@@ -11,7 +11,6 @@ import Table from '../../Common/Table';
 import Radio from '../../Common/RadioGroup';
 
 const RateeGroupQuestions = ({ loading }) => {
-  const [pageSize] = React.useState(10);
   const [items, setItems] = React.useState({});
 
   const history = useHistory();
@@ -27,7 +26,7 @@ const RateeGroupQuestions = ({ loading }) => {
           <div className="flex justify-between">
             <div className="inline-flex flex-col md:flex-row mt-5">
               <div className="w-40 -ml-12">
-                <Progress showPercent={false} type="line" percentage={60} />
+                <Progress showPercent={false} type="line" percentage={20} />
               </div>
               <div className="text-antgray-100 text-sm md:ml-4">Question 1 of 5</div>
             </div>
@@ -53,7 +52,7 @@ const RateeGroupQuestions = ({ loading }) => {
       ),
       width: 100,
       render: (text) => (
-        <span className="text-xs flex justify-center xl:pr-8 md:text-sm">{text}</span>
+        <span className="text-xs flex justify-center p-4 xl:pr-8 md:text-sm">{text}</span>
       ),
     },
     {
@@ -173,6 +172,15 @@ const RateeGroupQuestions = ({ loading }) => {
       most: { id: '101', options: [{ title: '', value: '4' }] },
       notClear: { id: '101', options: [{ title: '', value: '5' }] },
     },
+    {
+      key: '2',
+      describesThisPerson: 'Premela Jaganathan',
+      notAtAll: { id: '102', options: [{ title: '', value: '1' }] },
+      notMuch: { id: '102', options: [{ title: '', value: '2' }] },
+      somewhat: { id: '102', options: [{ title: '', value: '3' }] },
+      most: { id: '102', options: [{ title: '', value: '4' }] },
+      notClear: { id: '102', options: [{ title: '', value: '5' }] },
+    },
   ];
 
   const handleNext = () => {
@@ -195,16 +203,15 @@ const RateeGroupQuestions = ({ loading }) => {
         loading={loading}
         columns={columns}
         dataSource={dataSource}
-        pageSize={pageSize * 1}
         pageNumber={1}
         rowSelection={false}
+        pagination={false}
         title={renderHeader}
-        paginationClassName="flex flex-col md:flex-row justify-between h-24"
       />
       <div className="flex flex-col mt-5 mb-16 md:mb-10 md:flex-row-reverse md:ml-auto">
         <Button
           onClick={handleNext}
-          className="mt-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
+          className="mt-6 px-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
           text="Next"
         />
         <Button
