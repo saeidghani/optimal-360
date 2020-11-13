@@ -39,7 +39,7 @@ const ParticipantDetails = ({ loading }) => {
       key: 'totalCompletionRate',
       title: (
         <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100">Total CompletionRate</span>
+          <span className="text-antgray-100">Total Completion Rate</span>
         </div>
       ),
       width: 50,
@@ -314,7 +314,7 @@ const ParticipantDetails = ({ loading }) => {
       <Table
         size="middle"
         className="p-6 bg-white rounded-lg shadow"
-        tableClassName="overflow-auto ant-table-thead align-top"
+        tableClassName="c-table-thead-white overflow-auto align-top"
         loading={loading}
         columns={columns}
         dataSource={dataSource}

@@ -153,7 +153,6 @@ const ReferenceGuide = () => {
             activeButtonKey=""
             wrapperClassName="flex-col justify-between px-10"
             buttonClassName="mb-4 sm:mr-0"
-            disabled
           />
           <p className="mt-4 text-center md:text-left">
             Go to the Main Dashboard (Overview) Also to move between Competency sets using these
@@ -207,7 +206,12 @@ const ReferenceGuide = () => {
         </div>
       </div>
       <div className="flex justify-center mt-8 md:mt-16">
-        <Button textSize="sm" text="Ok, Got it!" href="/client-admin/dashboard" />
+        <Button
+          className="c-force-padding-y-px"
+          textSize="sm"
+          text="Ok, Got it!"
+          href="/client-admin/dashboard"
+        />
       </div>
     </Layout>
   );
