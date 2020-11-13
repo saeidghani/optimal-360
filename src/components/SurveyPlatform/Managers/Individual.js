@@ -163,6 +163,7 @@ const Individual = ({ loading }) => {
           lg:col-span-3 w-full"
           showSearch={false}
           type="gray"
+          placeholder="Leadership Development"
           options={dropdownOptions}
           value={project}
           handleChange={(val) => setProject(val)}
