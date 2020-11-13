@@ -21,13 +21,13 @@ const StatusOverview = ({
 
   useEffect(() => {
       fetchCompletionRate({ query, surveyGroupId });
-    }, [fetchCompletionRate, surveyGroupId]
+    }, [fetchCompletionRate, surveyGroupId],
   );
 
   useEffect(() => {
       fetchSummary({ query, surveyGroupId });
     }, [
-      fetchSummary, surveyGroupId, pageSize, pageNumber]
+      fetchSummary, surveyGroupId, pageSize, pageNumber],
   );
 
   const columns = React.useMemo(() => [
