@@ -11,7 +11,7 @@ import Button from '../../Common/Button';
 import Modal from '../../Common/Modal';
 import Checkbox from '../../Common/Checkbox';
 import SearchBox from '../../Common/SearchBox';
-import { CloseCircleOutlined, CloseOutlined } from "@ant-design/icons";
+import { CloseOutlined } from "@ant-design/icons";
 
 const Result = ({
                   loading,
@@ -37,9 +37,9 @@ const Result = ({
     setSelectedTab(key);
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchIndividualReports({ query, surveyGroupId });
-    fetchGroupReports({ query, surveyGroupId });
+    // fetchGroupReports({ query, surveyGroupId });
     setSelectedRows([]);
   }, [
     pageSize,
@@ -48,6 +48,10 @@ const Result = ({
     parsedQuery.page_size,
     parsedQuery.sort,
   ]);
+
+  React.useEffect(() => {
+    setSelectedRows([]);
+  }, [selectedTab]);
 
   const renderHeader = React.useCallback(() => {
     return selectedRows && selectedRows?.length > 0 ? (
@@ -354,7 +358,7 @@ const Result = ({
             page_number,
           });
         }}
-        rowKey="rateeId"
+        rowKey={selectedTab === '1' ? 'rateeId' : ''}
         selectedRowKeys={selectedRows?.map((el) => el.rateeId)}
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
