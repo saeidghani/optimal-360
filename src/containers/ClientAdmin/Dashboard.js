@@ -7,21 +7,42 @@ import Layout from '../../components/ClientAdmin/Dashboard';
 class Dashboard extends Component {
   state = {};
 
-  render() {
-    const { loading } = this.props;
+  fetchCompletionRate = async (surveyGroupId) => {
+    const { fetchCompletionRate } = this.props;
 
-    return <Layout loading={loading} />;
+    return fetchCompletionRate(surveyGroupId);
+  };
+
+  render() {
+    const { loading, completionRate } = this.props;
+
+    return (
+      <Layout
+        loading={loading}
+        completionRate={completionRate}
+        fetchCompletionRate={this.fetchCompletionRate}
+      />
+    );
   }
 }
 
 Dashboard.propTypes = {
   loading: PropTypes.bool.isRequired,
+  fetchCompletionRate: PropTypes.func.isRequired,
+  completionRate: PropTypes.shape({}),
+};
+
+Dashboard.defaultProps = {
+  completionRate: {},
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
+  completionRate: state.clientAdmin?.completionRate || {},
 });
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = (dispatch) => ({
+  fetchCompletionRate: dispatch.clientAdmin?.fetchCompletionRate || {},
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

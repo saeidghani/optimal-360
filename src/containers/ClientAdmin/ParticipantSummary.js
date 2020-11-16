@@ -7,21 +7,36 @@ import Layout from '../../components/ClientAdmin/ParticipantSummary';
 class ParticipantSummary extends Component {
   state = {};
 
-  render() {
-    const { loading } = this.props;
+  fetchSummary = async (surveyGroupId) => {
+    const { fetchSummary } = this.props;
 
-    return <Layout loading={loading} />;
+    return fetchSummary(surveyGroupId);
+  };
+
+  render() {
+    const { loading, summary } = this.props;
+
+    return <Layout loading={loading} fetchSummary={this.fetchSummary} summary={summary} />;
   }
 }
 
 ParticipantSummary.propTypes = {
   loading: PropTypes.bool.isRequired,
+  fetchSummary: PropTypes.func.isRequired,
+  summary: PropTypes.shape({}),
+};
+
+ParticipantSummary.defaultProps = {
+  summary: {},
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
+  summary: state.clientAdmin?.summary || {},
 });
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = (dispatch) => ({
+  fetchSummary: dispatch.clientAdmin?.fetchSummary || {},
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ParticipantSummary);

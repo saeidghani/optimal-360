@@ -7,21 +7,36 @@ import Layout from '../../components/ClientAdmin/ParticipantDetails';
 class ParticipantDetails extends Component {
   state = {};
 
-  render() {
-    const { loading } = this.props;
+  fetchRatees = async (surveyGroupId) => {
+    const { fetchRatees } = this.props;
 
-    return <Layout loading={loading} />;
+    return fetchRatees(surveyGroupId);
+  };
+
+  render() {
+    const { loading, ratees } = this.props;
+
+    return <Layout loading={loading} fetchRatees={this.fetchRatees} ratees={ratees} />;
   }
 }
 
 ParticipantDetails.propTypes = {
   loading: PropTypes.bool.isRequired,
+  fetchRatees: PropTypes.func.isRequired,
+  ratees: PropTypes.shape({}),
+};
+
+ParticipantDetails.defaultProps = {
+  ratees: {},
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
+  ratees: state.clientAdmin?.ratees || {},
 });
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = (dispatch) => ({
+  fetchRatees: dispatch.clientAdmin?.fetchRatees || {},
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ParticipantDetails);
