@@ -46,11 +46,8 @@ const RateeGroup = ({ loading }) => {
       render: (names) => (
         <div className="flex flex-col justify-between pt-2">
           {names.map((name, index) => (
-            <span
-              key={name.id}
-              className={`text-primary-500 ${names.length - 1 === index ? 'mb-1' : 'mb-10'}`}
-            >
-              <Link to="/survey-platform/managers/ratee-group/questions">{name.text}</Link>
+            <span key={name.id} className={`${names.length - 1 === index ? 'mb-1' : 'mb-10'}`}>
+              {name.text}
             </span>
           ))}
         </div>
