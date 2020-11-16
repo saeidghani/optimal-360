@@ -22,6 +22,7 @@ const StatusDetails = (
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
+  const [viewByRaters, setViewByRaters] = React.useState(true);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const pageNumber = parsedQuery?.page_number;
   const surveyGroupId = parsedQuery?.surveyGroupId;
@@ -93,6 +94,9 @@ const StatusDetails = (
             text="View by raters"
             textClassName="mr-2"
             className="ml-3"
+            light={!viewByRaters}
+            onClick={() => (!viewByRaters && setViewByRaters((!viewByRaters)))
+            }
           />
           <Button
             size="middle"
@@ -100,7 +104,8 @@ const StatusDetails = (
             text="View by ratees"
             textClassName="mr-2"
             className="ml-3"
-            light
+            light={viewByRaters}
+            onClick={() => (viewByRaters && setViewByRaters((!viewByRaters)))}
           />
         </div>
         <div className="flex flex-row">
@@ -147,7 +152,7 @@ const StatusDetails = (
         </div>
       </div>
     );
-  }, [loading, selectedRows.length]);
+  }, [loading, selectedRows.length, viewByRaters]);
 
   const getSortOrder = (key) => {
     return parsedQuery?.sort?.includes(key)
@@ -158,12 +163,35 @@ const StatusDetails = (
   };
 
   const columns = React.useMemo(() => [
-    {
+    viewByRaters ? {
       key: 'raterName',
       title: 'Rater Name',
       width: 100,
       sorter: true,
       sortOrder: getSortOrder('raterName'),
+    } : {
+      key: 'rateeName',
+      title: 'Ratee Name',
+      width: 100,
+      sorter: true,
+      sortOrder: getSortOrder('rateeName'),
+      render: (num, { rateeId }) => (
+        <div className="flex items-center">
+          <div className="text-12px inline-block">{num}</div>
+          <div className="inline-block">
+            <Button
+              onClick={() => {
+                history.push(`/super-user/participants/ratee/add/edit?rateeId=${rateeId}&surveyGroupId=${parsedQuery.surveyGroupId}${parsedQuery.projectId ? `&projectId=${parsedQuery.projectId}` : ''}`);
+              }}
+              size="middle"
+              textSize="xs"
+              type="link"
+              className="ml-2 p-0 h-6 w-6"
+              icon={<img src={AwardIcon} alt="Ratee Name" className="purple-check h-6 w-6 inline-block" />}
+            />
+          </div>
+        </div>
+      ),
     },
     {
       key: 'raterEmail',
@@ -172,7 +200,13 @@ const StatusDetails = (
       sorter: true,
       sortOrder: getSortOrder('raterEmail'),
     },
-    {
+    !viewByRaters ? {
+      key: 'raterName',
+      title: 'Rater Name',
+      width: 100,
+      sorter: true,
+      sortOrder: getSortOrder('raterName'),
+    } : {
       key: 'rateeName',
       title: 'Ratee Name',
       width: 100,
