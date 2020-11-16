@@ -7,13 +7,15 @@ import Tabs from '../Common/Tabs';
 import Layout from './Helper/Layout';
 import ButtonsTab from './Helper/ButtonsTab';
 import OverallCompletion from './Helper/OverallCompletion';
-import RateCards from './Helper/RateCards';
+import RateCard from './Helper/RateCard';
+import Loading from '../Common/Loading';
 
-const Dashboard = ({ loading, completionRate, fetchCompletionRate }) => {
+const Dashboard = ({ loading, completionRate, fetchProjects, fetchCompletionRate }) => {
   const [project, setProject] = React.useState('');
 
   useEffect(() => {
-    fetchCompletionRate(1);
+    fetchCompletionRate(120);
+    fetchProjects('');
   }, []);
 
   const dropdownOptions = [
@@ -30,6 +32,7 @@ const Dashboard = ({ loading, completionRate, fetchCompletionRate }) => {
 
   return (
     <Layout>
+      <Loading visible={loading} />
       <div className="grid grid-cols-12 mb-10 mt-8">
         <div className="col-start-1 col-span-6 text-base text-body mb-3">Select Project</div>
         <Dropdown
@@ -47,8 +50,18 @@ const Dashboard = ({ loading, completionRate, fetchCompletionRate }) => {
         <Tabs className="md:c-tabs-class" defaultActiveKey="1" tabOptions={tabOptions} />
       </div>
       <ButtonsTab activeButtonKey="" />
-      <OverallCompletion />
-      <RateCards />
+      <OverallCompletion
+        totalRatees={completionRate?.totalRatees}
+        totalSurveySubmissionRate={completionRate?.totalSurveySubmissionRate}
+        totalSurveyRate={completionRate?.totalSurveyRate}
+        totalAnsweredRate={completionRate?.totalAnsweredRate}
+        totalQuestionRate={completionRate?.totalQuestionRate}
+      />
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 mt-10">
+        {(completionRate?.raterGroups || []).map((data) => (
+          <RateCard {...data} />
+        ))}
+      </div>
     </Layout>
   );
 };
@@ -56,7 +69,23 @@ const Dashboard = ({ loading, completionRate, fetchCompletionRate }) => {
 Dashboard.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchCompletionRate: PropTypes.func.isRequired,
-  completionRate: PropTypes.shape({}),
+  fetchProjects: PropTypes.func.isRequired,
+  completionRate: PropTypes.shape({
+    totalRatees: PropTypes.string,
+    totalSurveySubmissionRate: PropTypes.string,
+    totalSurveyRate: PropTypes.string,
+    totalAnsweredRate: PropTypes.string,
+    totalQuestionRate: PropTypes.string,
+    raterGroups: PropTypes.arrayOf(
+      PropTypes.shape({
+        totalRaters: PropTypes.string.isRequired,
+        totalSubmissions: PropTypes.string.isRequired,
+        totalQuestions: PropTypes.string.isRequired,
+        totalAnswered: PropTypes.string.isRequired,
+        raterGroupName: PropTypes.string.isRequired,
+      }),
+    ),
+  }),
 };
 
 Dashboard.defaultProps = {

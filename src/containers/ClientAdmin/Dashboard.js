@@ -7,6 +7,12 @@ import Layout from '../../components/ClientAdmin/Dashboard';
 class Dashboard extends Component {
   state = {};
 
+  fetchProjects = async (query) => {
+    const { fetchProjects } = this.props;
+
+    return fetchProjects(query);
+  };
+
   fetchCompletionRate = async (surveyGroupId) => {
     const { fetchCompletionRate } = this.props;
 
@@ -21,6 +27,7 @@ class Dashboard extends Component {
         loading={loading}
         completionRate={completionRate}
         fetchCompletionRate={this.fetchCompletionRate}
+        fetchProjects={this.fetchProjects}
       />
     );
   }
@@ -29,6 +36,7 @@ class Dashboard extends Component {
 Dashboard.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchCompletionRate: PropTypes.func.isRequired,
+  fetchProjects: PropTypes.func.isRequired,
   completionRate: PropTypes.shape({}),
 };
 
@@ -43,6 +51,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchCompletionRate: dispatch.clientAdmin?.fetchCompletionRate || {},
+  fetchProjects: dispatch.clientAdmin?.fetchProjects || {},
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

@@ -9,7 +9,7 @@ import Layout from './Helper/Layout';
 import Table from '../Common/Table';
 import ButtonsTab from './Helper/ButtonsTab';
 import OverallCompletion from './Helper/OverallCompletion';
-import RateCards from './Helper/RateCards';
+import RateCard from './Helper/RateCard';
 
 const RaterDetails = ({ loading, fetchRaters, raters }) => {
   const [pageSize] = React.useState(10);
@@ -282,7 +282,7 @@ const RaterDetails = ({ loading, fetchRaters, raters }) => {
       </div>
       <ButtonsTab activeButtonKey="3" />
       <OverallCompletion />
-      <RateCards />
+      <RateCard />
       <Table
         size="middle"
         className="p-6 bg-white rounded-lg shadow"

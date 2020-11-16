@@ -42,6 +42,19 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
+    async fetchProjects(query) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/client-admin/projects${query}`,
+        });
+
+        this.fetchProjects_reducer(res?.data?.data);
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
     async fetchCompletionRate(surveyGroupId) {
       if (!surveyGroupId) return this.fetchCompletionRate_Reducer('');
 
@@ -108,6 +121,10 @@ export default {
 
       return null;
     },
+    fetchProjects_reducer: (state, payload) => ({
+      ...state,
+      projects: payload,
+    }),
     fetchCompletionRate_Reducer: (state, payload) => ({
       ...state,
       completionRate: payload,

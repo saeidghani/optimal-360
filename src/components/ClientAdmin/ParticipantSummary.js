@@ -9,7 +9,7 @@ import Layout from './Helper/Layout';
 import Table from '../Common/Table';
 import ButtonsTab from './Helper/ButtonsTab';
 import OverallCompletion from './Helper/OverallCompletion';
-import RateCards from './Helper/RateCards';
+import RateCard from './Helper/RateCard';
 
 const ParticipantSummary = ({ loading, fetchSummary, summary }) => {
   const [pageSize] = React.useState(10);
@@ -281,7 +281,7 @@ const ParticipantSummary = ({ loading, fetchSummary, summary }) => {
       </div>
       <ButtonsTab activeButtonKey="1" />
       <OverallCompletion />
-      <RateCards />
+      <RateCard />
       <Table
         size="middle"
         className="p-6 bg-white rounded-lg shadow"
