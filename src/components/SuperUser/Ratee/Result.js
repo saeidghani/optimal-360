@@ -11,7 +11,8 @@ import Button from '../../Common/Button';
 import Modal from '../../Common/Modal';
 import Checkbox from '../../Common/Checkbox';
 import SearchBox from '../../Common/SearchBox';
-import { CloseOutlined } from "@ant-design/icons";
+import { CloseOutlined } from '@ant-design/icons';
+import { Form, Formik } from 'formik';
 
 const Result = ({
                   loading,
@@ -23,6 +24,8 @@ const Result = ({
                 }) => {
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
+
+  const formRef = React.useRef();
 
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [visible, setVisible] = React.useState(false);
@@ -289,53 +292,150 @@ const Result = ({
 
   return (
     <>
-      <Modal
-        okText="Discard These Settings"
-        cancelText="Cancel"
-        visible={visible}
-        cancelButtonText="Cancel"
-        okButtonText="Export"
-        handleOk={() => setVisible(false)}
-        handleCancel={() => setVisible(false)}
-        width={605}
+      <Formik
+        innerRef={formRef}
+        initialValues={{
+          lengthOfService: false,
+          ageGroup: false,
+          highestEducation: false,
+          jobLevel: false,
+          jobFunction: false,
+          industry: false,
+          sector: false,
+          employmentLocation: false,
+          sex: false,
+        }}
+        onSubmit={(values) => {
+          const fields = Object.entries(values).filter(([_, item]) => item === true).map((item) => item[0]);
+          exportDemographicData({ fields, surveyGroupId, rateeIds: selectedRows?.map((el) => el.rateeId) });
+          setVisible(false);
+        }}
       >
-        <div className="grid grid-cols-2 mb-3">
-          <div>
-            <Checkbox className="block mb-3" labelClass="text-sm">
-              All
-            </Checkbox>
-            <Checkbox className="block mb-3" labelClass="text-sm">
-              Employment location
-            </Checkbox>
-            <Checkbox className="block mb-3" labelClass="text-sm">
-              Sector
-            </Checkbox>
-            <Checkbox className="block mb-3" labelClass="text-sm">
-              Industry
-            </Checkbox>
-            <Checkbox className="block mb-3" labelClass="text-sm">
-              Job Function
-            </Checkbox>
-            <Checkbox className="block mb-3" labelClass="text-sm">
-              Job Level
-            </Checkbox>
-          </div>
-          <div>
-            <Checkbox className="block mb-3" labelClass="text-sm">
-              Length of service in current role
-            </Checkbox>
-            <Checkbox className="block mb-3" labelClass="text-sm">
-              Age Group
-            </Checkbox>
-            <Checkbox className="block mb-3" labelClass="text-sm">
-              Gender
-            </Checkbox>
-            <Checkbox className="block mb-3" labelClass="text-sm">
-              Highest education attained
-            </Checkbox>
-          </div>
-        </div>
-      </Modal>
+        {({ values, errors, touched, handleSubmit, setFieldValue }) => (
+          <Form>
+            <Modal
+              okText="Discard These Settings"
+              cancelText="Cancel"
+              visible={visible}
+              cancelButtonText="Cancel"
+              okButtonText="Export"
+              handleOk={handleSubmit}
+              handleCancel={() => setVisible(false)}
+              width={605}
+            >
+              <div className="grid grid-cols-2 mb-3">
+                <div>
+                  <Checkbox
+                    checked={!Object.values(values).some(c => c === false)}
+                    className="block mb-3"
+                    labelClass="text-sm"
+                    onChange={() => {
+                      const state = Object.values(values).some(c => c === false);
+                      setFieldValue('lengthOfService', state);
+                      setFieldValue('ageGroup', state);
+                      setFieldValue('highestEducation', state);
+                      setFieldValue('jobLevel', state);
+                      setFieldValue('jobFunction', state);
+                      setFieldValue('industry', state);
+                      setFieldValue('sector', state);
+                      setFieldValue('employmentLocation', state);
+                      setFieldValue('sex', state);
+                      console.log(values);
+                    }}
+                  >
+                    All
+                  </Checkbox>
+                  <Checkbox
+                    checked={values.employmentLocation}
+                    onChange={(val) => setFieldValue('employmentLocation', val)}
+                    className="block mb-3"
+                    value="admin"
+                    labelClass="text-sm"
+                  >
+                    Employment location
+                  </Checkbox>
+                  <Checkbox
+                    onChange={(val) => setFieldValue('sector', val)}
+                    checked={values.sector}
+                    name="checked"
+                    value="a11"
+                    className="block mb-3"
+                    labelClass="text-sm"
+                  >
+                    Sector
+                  </Checkbox>
+                  <Checkbox
+                    onChange={(val) => setFieldValue('industry', val)}
+                    checked={values.industry}
+                    name="checked"
+                    value="a22"
+                    className="block mb-3"
+                    labelClass="text-sm"
+                  >
+                    Industry
+                  </Checkbox>
+                  <Checkbox
+                    onChange={(val) => setFieldValue('jobFunction', val)}
+                    checked={values.jobFunction}
+                    name="checked"
+                    value="a33"
+                    className="block mb-3"
+                    labelClass="text-sm"
+                  >
+                    Job Function
+                  </Checkbox>
+                  <Checkbox
+                    onChange={(val) => setFieldValue('jobLevel', val)}
+                    checked={values.jobLevel}
+                    name="checked"
+                    value="a44"
+                    className="block mb-3"
+                    labelClass="text-sm">
+                    Job Level
+                  </Checkbox>
+                </div>
+                <div>
+                  <Checkbox
+                    onChange={(val) => setFieldValue('lengthOfService', val)}
+                    checked={values.lengthOfService}
+                    name="checked"
+                    className="block mb-3"
+                    labelClass="text-sm"
+                  >
+                    Length of service in current role
+                  </Checkbox>
+                  <Checkbox
+                    onChange={(val) => setFieldValue('ageGroup', val)}
+                    checked={values.ageGroup}
+                    name="checked"
+                    className="block mb-3"
+                    labelClass="text-sm"
+                  >
+                    Age Group
+                  </Checkbox>
+                  <Checkbox
+                    onChange={(val) => setFieldValue('sex', val)}
+                    checked={values.sex}
+                    name="checked"
+                    className="block mb-3"
+                    labelClass="text-sm"
+                  >
+                    Gender
+                  </Checkbox>
+                  <Checkbox
+                    onChange={(val) => setFieldValue('highestEducation', val)}
+                    checked={values.highestEducation}
+                    name="checked"
+                    className="block mb-3"
+                    labelClass="text-sm">
+                    Highest education attained
+                  </Checkbox>
+                </div>
+              </div>
+            </Modal>
+          </Form>
+        )}
+      </Formik>
 
       <Table
         size="middle"
