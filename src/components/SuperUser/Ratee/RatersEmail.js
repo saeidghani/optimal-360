@@ -7,7 +7,15 @@ import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
 import { useQuery } from '../../../hooks';
 
-const RatersEmail = ({ loading, fetchRaters, raters, fetchEmailOptions, emailOptions, exportSurveyGroupRaters, sendEmail }) => {
+const RatersEmail = ({
+                       loading,
+                       fetchRaters,
+                       raters,
+                       fetchEmailOptions,
+                       emailOptions,
+                       exportSurveyGroupRaters,
+                       sendEmail,
+                     }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
@@ -34,6 +42,7 @@ const RatersEmail = ({ loading, fetchRaters, raters, fetchEmailOptions, emailOpt
       <div className="flex flex-row items-center">
         {(emailOptions?.data || []).map(({ id, name }) => (
           <Button
+            key={id}
             size="middle"
             textSize="xs"
             text={name}
@@ -119,8 +128,6 @@ const RatersEmail = ({ loading, fetchRaters, raters, fetchEmailOptions, emailOpt
       rowKey="raterId"
       renderHeader={renderHeader}
       onPageSizeChange={(size) => {
-        console.log('new size', size);
-
         setPageSize(size);
         setQuery({ page_size: size, page_number: 1 });
       }}
