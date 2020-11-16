@@ -7,21 +7,44 @@ import Layout from '../../../components/SuperUser/SurveyGroups/GroupReports';
 class GroupReports extends Component {
   state = {};
 
-  render() {
-    const { loading } = this.props;
+  fetchGroupReports = (projectId) => {
+    const { fetchGroupReports } = this.props;
 
-    return <Layout loading={loading} />;
+    return fetchGroupReports(projectId);
+  };
+
+  render() {
+    const { loading, groupReports } = this.props;
+
+    return (
+      <Layout
+        loading={loading}
+        groupReports={groupReports}
+        fetchGroupReports={this.fetchGroupReports}
+      />
+    );
   }
 }
 
 GroupReports.propTypes = {
   loading: PropTypes.bool.isRequired,
+  fetchGroupReports: PropTypes.func.isRequired,
+  groupReports: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.object),
+  }),
+};
+
+GroupReports.defaultProps = {
+  groupReports: {},
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
+  groupReports: state.projects.groupReports || {},
 });
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = (dispatch) => ({
+  fetchGroupReports: dispatch.projects.fetchGroupReports,
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(GroupReports);

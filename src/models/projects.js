@@ -9,6 +9,7 @@ export default {
     surveyGroups: '',
     clientAdmin: '',
     project: '',
+    groupReports: '',
   },
 
   effects: (dispatch) => ({
@@ -149,6 +150,19 @@ export default {
         dispatch.util.alert,
       );
     },
+
+    async fetchGroupReports(projectId) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/projects/${projectId}/results/group-reports`,
+        });
+
+        this.fetchGroupReports_reducer(res?.data);
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
   }),
 
   reducers: {
@@ -170,6 +184,11 @@ export default {
     fetchSurveyGroups_reducer: (state, payload) => ({
       ...state,
       surveyGroups: payload,
+    }),
+
+    fetchGroupReports_reducer: (state, payload) => ({
+      ...state,
+      groupReports: payload,
     }),
   },
 };

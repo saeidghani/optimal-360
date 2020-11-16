@@ -1,21 +1,22 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-
 import PropTypes from 'prop-types';
+
+import { useQuery } from '../../../hooks/useQuery';
+
 import MainLayout from '../../Common/Layout';
-import Dropdown from '../../Common/Dropdown';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 
-const GroupReports = ({ loading }) => {
-  const [pageSize] = React.useState(10);
+const GroupReports = ({ loading, groupReports, fetchGroupReports }) => {
   const [selectedRows, setSelectedRows] = React.useState([]);
 
-  const dropDownOptions = [
-    { title: 'Top Leadership', value: 1 },
-    { title: 'Top Leadership2', value: 2 },
-    { title: 'Top Leadership3', value: 3 },
-  ];
+  const [parsedQuery] = useQuery();
+
+  React.useEffect(() => {
+    if (parsedQuery.projectId) fetchGroupReports(parsedQuery.projectId);
+  }, [parsedQuery.projectId]);
+
+  console.log({ groupReports });
 
   const renderHeader = React.useCallback(() => {
     return (
@@ -64,21 +65,22 @@ const GroupReports = ({ loading }) => {
 
   const columns = React.useMemo(() => [
     {
-      key: 'clusterID',
+      key: 'id',
       title: 'Cluster ID',
       width: 100,
       sorter: true,
     },
     {
-      key: 'competencies',
-      title: 'Competencies',
-      width: 100,
+      key: 'name',
+      title: 'Cluster',
+      // width: 100,
       sorter: true,
     },
     {
-      key: 'externalBenchmark',
+      key: 'reportAvailable',
       title: '',
-      width: 100,
+      // width: 100,
+      render: (a, b, c) => console.log({ a, b, c }),
     },
   ]);
 
@@ -128,24 +130,12 @@ const GroupReports = ({ loading }) => {
 
   return (
     <MainLayout contentClass="pl-21 pr-6 py-4" title="Super User" titleClass="my-2" hasBreadCrumb>
-      <div className="lg:w-2/12 w-4/12 mt-3 mb-10">
-        <h2 className="my-6 pt-6 pl-3 font-medium text-16px">Survey Group</h2>
-        <Dropdown
-          className="c-autocomplete w-full"
-          showSearch
-          value={1}
-          type="gray"
-          options={dropDownOptions}
-        />
-      </div>
       <Table
         size="middle"
         className="p-6 mt-5 bg-white rounded-lg shadow"
         loading={loading}
         columns={columns}
-        dataSource={dataSource}
-        pageSize={pageSize * 1}
-        pageNumber={1}
+        dataSource={groupReports?.data || []}
         renderHeader={renderHeader}
         footer={footer}
         selectedRowKeys={selectedRows?.map((el) => el.key)}
@@ -160,8 +150,14 @@ const GroupReports = ({ loading }) => {
 
 GroupReports.propTypes = {
   loading: PropTypes.bool.isRequired,
+  fetchGroupReports: PropTypes.func.isRequired,
+  groupReports: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.object),
+  }),
 };
 
-GroupReports.defaultProps = {};
+GroupReports.defaultProps = {
+  groupReports: {},
+};
 
 export default GroupReports;
