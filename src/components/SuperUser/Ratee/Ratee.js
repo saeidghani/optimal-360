@@ -1,15 +1,14 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-
 import PropTypes from 'prop-types';
-import { Tabs } from 'antd';
-import { useParams, useHistory } from 'react-router-dom';
-import MainLayout from '../../Common/Layout';
-import Dropdown from '../../Common/Dropdown';
+
 import StatusOverview from './StatusOverview';
 import StatusDetails from './StatusDetails';
 import RatersEmail from './RatersEmail';
 import Result from './Result';
+
+import { Tabs } from 'antd';
+import MainLayout from '../../Common/Layout';
+import Dropdown from '../../Common/Dropdown';
 
 import { useQuery, useTabs, useSurveyGroup } from '../../../hooks';
 
@@ -32,6 +31,11 @@ const Ratee = (
     fetchEmailOptions,
     importRelations,
     exportRelations,
+    fetchIndividualReports,
+    fetchGroupReports,
+    exportDemographicData,
+    individualReports,
+    groupReports,
   },
 ) => {
   const [parsedQuery, query, setQuery] = useQuery();
@@ -108,7 +112,14 @@ const Ratee = (
           />
         </TabPane>
         <TabPane tab="Results" key="result">
-          <Result loading={loading} />
+          <Result
+            loading={loading}
+            fetchIndividualReports={fetchIndividualReports}
+            fetchGroupReports={fetchGroupReports}
+            exportDemographicData={exportDemographicData}
+            individualReports={individualReports}
+            groupReports={groupReports}
+          />
         </TabPane>
       </Tabs>
 
@@ -131,8 +142,14 @@ Ratee.propTypes = {
   exportSurveyGroupRaters: PropTypes.func.isRequired,
   importRelations: PropTypes.func.isRequired,
   exportRelations: PropTypes.func.isRequired,
+  sendEmail: PropTypes.func.isRequired,
   fetchRaters: PropTypes.func.isRequired,
   fetchEmailOptions: PropTypes.func.isRequired,
+  fetchIndividualReports: PropTypes.func.isRequired,
+  fetchGroupReports: PropTypes.func.isRequired,
+  exportDemographicData: PropTypes.func.isRequired,
+  individualReports: PropTypes.shape({}),
+  groupReports: PropTypes.shape({}),
 };
 
 Ratee.defaultProps = {

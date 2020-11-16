@@ -10,6 +10,8 @@ export default {
     statusDetails: '',
     raters: '',
     emailOptions: '',
+    individualReports: '',
+    groupReports: '',
   },
 
   effects: (dispatch) => ({
@@ -159,6 +161,45 @@ export default {
         dispatch.util.alert,
       );
     },
+    async fetchIndividualReports({ surveyGroupId, query }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/survey-groups/${surveyGroupId}/results/individual-reports${query}`,
+        });
+
+        await this.fetchIndividualReports_reducer(res?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+    async fetchGroupReports({ surveyGroupId, query }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/survey-groups/${surveyGroupId}/results/group-reports${query}`,
+        });
+
+        await this.fetchGroupReports_reducer(res?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+    async exportDemographicData({ surveyGroupId, fields, rateeIds }) {
+      return actionWapper(async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/demographic-data/export`,
+            data: {
+              rateeIds,
+              fields,
+            },
+            responseType: 'blob',
+          });
+
+          dispatch.util.saveFile({ blob: res.data, filename: `relations-${surveyGroupId}` });
+          return res;
+        }, dispatch.util.errorHandler,
+      );
+    },
   }),
 
   reducers: {
@@ -181,6 +222,14 @@ export default {
     fetchEmailOptions_reducer: (state, payload) => ({
       ...state,
       emailOptions: payload,
+    }),
+    fetchIndividualReports_reducer: (state, payload) => ({
+      ...state,
+      individualReports: payload,
+    }),
+    fetchGroupReports_reducer: (state, payload) => ({
+      ...state,
+      groupReports: payload,
     }),
   },
 };

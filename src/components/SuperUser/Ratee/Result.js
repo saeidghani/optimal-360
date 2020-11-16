@@ -11,28 +11,41 @@ import Button from '../../Common/Button';
 import Modal from '../../Common/Modal';
 import Checkbox from '../../Common/Checkbox';
 import SearchBox from '../../Common/SearchBox';
+import { CloseCircleOutlined, CloseOutlined } from "@ant-design/icons";
 
-const Result = ({ loading }) => {
-  const [parsedQuery, , setQuery] = useQuery();
+const Result = ({
+                  loading,
+                  fetchIndividualReports,
+                  fetchGroupReports,
+                  exportDemographicData,
+                  individualReports,
+                  groupReports,
+                }) => {
+  const history = useHistory();
+  const [parsedQuery, query, setQuery] = useQuery();
 
-  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [visible, setVisible] = React.useState(false);
   const [selectedTab, setSelectedTab] = useState('1');
+
   const { TabPane } = Tabs;
   const pageNumber = parsedQuery?.page_number || 1;
-  const history = useHistory();
+  const pageSize = parsedQuery?.page_size || 10;
+  const surveyGroupId = parsedQuery?.surveyGroupId;
 
   function tabChangeCallback(key) {
     setSelectedTab(key);
   }
 
   useEffect(() => {
+    fetchIndividualReports({ query, surveyGroupId });
+    fetchGroupReports({ query, surveyGroupId });
     setSelectedRows([]);
   }, [
     pageSize,
     parsedQuery.q,
     pageNumber,
+    parsedQuery.page_size,
     parsedQuery.sort,
   ]);
 
@@ -81,7 +94,13 @@ const Result = ({ loading }) => {
           <TabPane tab="Group Report" key="2" />
         </Tabs>
         <div className="flex flex-row ">
-          <SearchBox className="text-xs" placeholder="SEARCH" loading={loading} />
+          <SearchBox
+            className="text-xs"
+            placeholder="SEARCH"
+            loading={loading}
+            onSearch={(val) => setQuery({ q: val })}
+            onPressEnter={(e) => setQuery({ q: e.target.value })}
+          />
           <Button
             size="middle"
             textSize="xs"
@@ -98,13 +117,13 @@ const Result = ({ loading }) => {
 
   const individualColumns = React.useMemo(() => [
     {
-      key: 'id',
+      key: 'rateeId',
       title: 'ID',
       width: 100,
       sorter: true,
     },
     {
-      key: 'ratee',
+      key: 'rateeName',
       title: 'Ratee',
       width: 100,
       sorter: true,
@@ -113,13 +132,13 @@ const Result = ({ loading }) => {
       key: 'status',
       title: 'Status',
       width: 100,
-      render: (percentage) => (
+      render: (_, { totalQuestions, totalAnswered, totalRaters, totalSubmissions }) => (
         <div className="w-16 flex-inline items-center justify-start">
           <Progress
             className="-mb-12 ml-auto"
-            subClassName="mb-12 pb-2"
-            status="sub"
-            percentage={percentage}
+            subClassName="mb-12 pb-2 text-sm"
+            status={totalSubmissions === totalRaters ? 'sub' : ''}
+            percentage={parseInt((totalAnswered / totalQuestions) * 100, 10)}
           />
         </div>
       ),
@@ -133,9 +152,12 @@ const Result = ({ loading }) => {
         </div>
       ),
       width: 100,
+      render: (_, { totalSubmissions, totalRaters }) => (
+        <div>{totalSubmissions}/{totalRaters}</div>
+      ),
     },
     {
-      key: 'minSubmission',
+      key: 'minMet',
       title: (
         <div>
           <div>Min.</div>
@@ -143,9 +165,12 @@ const Result = ({ loading }) => {
         </div>
       ),
       width: 100,
+      render: (minMet) => (
+        <div className={`${minMet && 'opacity-50'}`}>Min. Met</div>
+      ),
     },
     {
-      key: 'critCompData',
+      key: 'criticalCompetencyData',
       title: (
         <div>
           <div>Crit. Comp</div>
@@ -153,14 +178,18 @@ const Result = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: () => (
+      render: (criticalCompetencyData) => (
         <div className="w-16 flex-inline items-center justify-start">
-          <div className="w-5 h-5 bg-green-400 rounded-full" />
+          {criticalCompetencyData ? (
+            <div className="w-5 h-5 bg-green-400 rounded-full" />
+          ) : (
+            <CloseOutlined className="text-base ml-2 text-red-500" />
+          )}
         </div>
       ),
     },
     {
-      key: 'previousResults',
+      key: 'previosResults',
       title: (
         <div>
           <div>Previous</div>
@@ -168,9 +197,14 @@ const Result = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: () => (
+      render: (previosResults) => (
         <div className="w-16 flex-inline items-center justify-start">
-          <div className="w-5 h-5 bg-orange rounded-full" />
+          {previosResults ? (
+            <div className="w-5 h-5 bg-orange rounded-full" />
+          ) : (
+            <CloseOutlined className="text-base ml-2 text-red-500" />
+          )}
+
         </div>
       ),
     },
@@ -183,9 +217,13 @@ const Result = ({ loading }) => {
         </div>
       ),
       width: 100,
-      render: (status) => (
+      render: (reportAvailable) => (
         <div className="w-16 flex-inline items-center justify-start">
-          <span className={status === 'No' && 'text-red'}>{status}</span>
+          {reportAvailable ? (
+            <span>Yes</span>
+          ) : (
+            <span className="text-red">No</span>
+          )}
         </div>
       ),
     },
@@ -237,58 +275,6 @@ const Result = ({ loading }) => {
     },
   ];
 
-  const IndividualDataSource = [
-    {
-      id: 1002520001,
-      ratee: 'Katherine Kan',
-      status: 100,
-      responsesSubmitted: '2/10',
-      minSubmission: 'Min. Met',
-      critCompData: '',
-      previousResults: '',
-      reportAvailable: 'No',
-    },
-    {
-      id: 1002420001,
-      ratee: 'Katherine Kan',
-      status: 100,
-      responsesSubmitted: '2/10',
-      minSubmission: 'Min. Met',
-      critCompData: '',
-      previousResults: '',
-      reportAvailable: 'No',
-    },
-    {
-      id: 1002230001,
-      ratee: 'Katherine Kan',
-      status: 100,
-      responsesSubmitted: '2/10',
-      minSubmission: 'Min. Met',
-      critCompData: '',
-      previousResults: '',
-      reportAvailable: 'No',
-    },
-    {
-      id: 1002200201,
-      ratee: 'Katherine Kan',
-      status: 100,
-      responsesSubmitted: '2/10',
-      minSubmission: 'Min. Met',
-      critCompData: '',
-      previousResults: '',
-      reportAvailable: 'No',
-    },
-    {
-      id: 10022078011,
-      ratee: 'Katherine Kan',
-      status: 100,
-      responsesSubmitted: '2/10',
-      minSubmission: 'Min. Met',
-      critCompData: '',
-      previousResults: '',
-      reportAvailable: 'No',
-    },
-  ];
   const sort = (sorter) => {
     // eslint-disable-next-line operator-linebreak
     const order = parsedQuery?.sort?.[0] === '+' ? '-' : '+';
@@ -353,10 +339,9 @@ const Result = ({ loading }) => {
         onTableChange={({ sorter }) => sort(sorter)}
         loading={loading}
         columns={selectedTab === '1' ? individualColumns : groupColumns}
-        dataSource={(selectedTab === '1' ? IndividualDataSource : groupDataSource) || []}
+        dataSource={(selectedTab === '1' ? individualReports?.data : groupDataSource) || []}
         renderHeader={renderHeader}
         onPageSizeChange={(size) => {
-          setPageSize(size);
           setQuery({ page_size: size, page_number: 1 });
         }}
         pageSize={pageSize * 1}
@@ -369,8 +354,8 @@ const Result = ({ loading }) => {
             page_number,
           });
         }}
-        rowKey="id"
-        selectedRowKeys={selectedRows?.map((el) => el.id)}
+        rowKey="rateeId"
+        selectedRowKeys={selectedRows?.map((el) => el.rateeId)}
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
         }}
@@ -382,8 +367,38 @@ const Result = ({ loading }) => {
 
 Result.propTypes = {
   loading: PropTypes.bool.isRequired,
+  fetchIndividualReports: PropTypes.func.isRequired,
+  fetchGroupReports: PropTypes.func.isRequired,
+  exportDemographicData: PropTypes.func.isRequired,
+  individualReports: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.shape({
+      surveyGroupId: PropTypes.string,
+      rateeId: PropTypes.string,
+      rateeName: PropTypes.string,
+      minMet: PropTypes.bool,
+      totalRaters: PropTypes.string,
+      totalSubmissions: PropTypes.string,
+      totalQuestions: PropTypes.string,
+      totalAnswered: PropTypes.string,
+      criticalCompetencyData: false,
+      previosResults: PropTypes.bool,
+      reportAvailable: PropTypes.bool,
+    })),
+    metaData: PropTypes.shape({
+      pagination: PropTypes.shape({
+        pageNumber: PropTypes.string,
+        pageSize: PropTypes.string,
+        totalRecords: PropTypes.string,
+      }),
+    }),
+    timeStamp: PropTypes.number,
+  }),
+  groupReports: PropTypes.shape({}),
 };
 
-Result.defaultProps = {};
+Result.defaultProps = {
+  individualReports: {},
+  groupReports: {},
+};
 
 export default Result;

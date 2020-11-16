@@ -7,8 +7,7 @@ import Layout from '../../../components/SuperUser/Ratee/Ratee';
 class Ratee extends Component {
   state = {};
 
-  // Status overview
-
+// Status overview
   fetchCompletionRate = async (query) => {
     const { fetchCompletionRate } = this.props;
 
@@ -21,7 +20,7 @@ class Ratee extends Component {
     return fetchSummary(query);
   };
 
-  // Status Details
+// Status Details
   fetchStatusDetails = async (query) => {
     const { fetchStatusDetails } = this.props;
 
@@ -77,8 +76,36 @@ class Ratee extends Component {
     return fetchEmailOptions(query);
   };
 
+// results
+  fetchIndividualReports = async (query) => {
+    const { fetchIndividualReports } = this.props;
+
+    return fetchIndividualReports(query);
+  };
+
+  fetchGroupReports = async (query) => {
+    const { fetchGroupReports } = this.props;
+
+    return fetchGroupReports(query);
+  };
+
+  exportDemographicData = async (query) => {
+    const { exportDemographicData } = this.props;
+
+    return exportDemographicData(query);
+  };
+
   render() {
-    const { loading, summary, completionRate, statusDetails, raters, emailOptions } = this.props;
+    const {
+      loading,
+      summary,
+      completionRate,
+      statusDetails,
+      raters,
+      emailOptions,
+      individualReports,
+      groupReports,
+    } = this.props;
 
     return (
       <Layout
@@ -99,12 +126,20 @@ class Ratee extends Component {
         exportSurveyGroupRaters={this.exportSurveyGroupRaters}
         exportRelations={this.exportRelations}
         importRelations={this.importRelations}
+        fetchIndividualReports={this.fetchIndividualReports}
+        fetchGroupReports={this.fetchGroupReports}
+        exportDemographicData={this.exportDemographicData}
+        groupReports={groupReports}
+        individualReports={individualReports}
       />
     );
   }
 }
 
 Ratee.propTypes = {
+  fetchIndividualReports: PropTypes.func.isRequired,
+  fetchGroupReports: PropTypes.func.isRequired,
+  exportDemographicData: PropTypes.func.isRequired,
   fetchSummary: PropTypes.func.isRequired,
   fetchCompletionRate: PropTypes.func.isRequired,
   fetchStatusDetails: PropTypes.func.isRequired,
@@ -122,6 +157,8 @@ Ratee.propTypes = {
   statusDetails: PropTypes.shape({}),
   raters: PropTypes.shape({}),
   emailOptions: PropTypes.shape({}),
+  individualReports: PropTypes.shape({}),
+  groupReports: PropTypes.shape({}),
 };
 
 Ratee.defaultProps = {
@@ -130,6 +167,8 @@ Ratee.defaultProps = {
   statusDetails: {},
   raters: {},
   emailOptions: {},
+  individualReports: {},
+  groupReports: {},
 };
 
 const mapStateToProps = (state) => ({
@@ -139,6 +178,8 @@ const mapStateToProps = (state) => ({
   statusDetails: state.ratee?.statusDetails || {},
   raters: state.ratee?.raters || {},
   emailOptions: state.ratee?.emailOptions || {},
+  individualReports: state.ratee?.individualReports || {},
+  groupReports: state.ratee?.groupReports || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -153,6 +194,9 @@ const mapDispatchToProps = (dispatch) => ({
   fetchRaters: dispatch.ratee.fetchRaters,
   sendEmail: dispatch.ratee.sendEmail,
   fetchEmailOptions: dispatch.ratee.fetchEmailOptions,
+  fetchIndividualReports: dispatch.ratee.fetchIndividualReports,
+  fetchGroupReports: dispatch.ratee.fetchGroupReports,
+  exportDemographicData: dispatch.ratee.exportDemographicData,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Ratee);
