@@ -59,6 +59,12 @@ class Ratee extends Component {
     return fetchRaters(query);
   };
 
+  sendEmail = async (query) => {
+    const { sendEmail } = this.props;
+
+    return sendEmail(query);
+  };
+
   exportSurveyGroupRaters = async (query) => {
     const { exportSurveyGroupRaters } = this.props;
 
@@ -85,6 +91,7 @@ class Ratee extends Component {
         fetchSummary={this.fetchSummary}
         fetchCompletionRate={this.fetchCompletionRate}
         fetchRaters={this.fetchRaters}
+        sendEmail={this.sendEmail}
         fetchEmailOptions={this.fetchEmailOptions}
         fetchStatusDetails={this.fetchStatusDetails}
         removeRateeRaters={this.removeRateeRaters}
@@ -104,6 +111,7 @@ Ratee.propTypes = {
   removeRateeRaters: PropTypes.func.isRequired,
   changeAssessmentsStatus: PropTypes.func.isRequired,
   fetchRaters: PropTypes.func.isRequired,
+  sendEmail: PropTypes.func.isRequired,
   fetchEmailOptions: PropTypes.func.isRequired,
   exportSurveyGroupRaters: PropTypes.func.isRequired,
   exportRelations: PropTypes.func.isRequired,
@@ -143,6 +151,7 @@ const mapDispatchToProps = (dispatch) => ({
   exportRelations: dispatch.ratee.exportRelations,
   importRelations: dispatch.ratee.importRelations,
   fetchRaters: dispatch.ratee.fetchRaters,
+  sendEmail: dispatch.ratee.sendEmail,
   fetchEmailOptions: dispatch.ratee.fetchEmailOptions,
 });
 

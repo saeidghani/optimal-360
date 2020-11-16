@@ -57,6 +57,22 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+    async sendEmail({ raterIds, emailOptionId, surveyGroupId }) {
+      return actionWapper(async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/send-email`,
+            data: {
+              raterIds,
+              emailOptionId,
+            },
+          });
+
+          return res;
+        }, dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
+    },
     async fetchEmailOptions({ surveyGroupId }) {
       return actionWapper(async () => {
         const res = await axios({
@@ -110,7 +126,6 @@ export default {
         }, dispatch.util.errorHandler,
       );
     },
-
     async importRelations({ file, surveyGroupId }) {
       // eslint-disable-next-line no-undef
       const data = new FormData();
@@ -130,7 +145,6 @@ export default {
         dispatch.util.alert,
       );
     },
-
     async changeAssessmentsStatus({ surveyGroupId, status, selectedRowsIds }) {
       return actionWapper(async () => {
           const res = await axios({

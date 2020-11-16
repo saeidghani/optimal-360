@@ -28,6 +28,7 @@ const Ratee = (
     raters,
     emailOptions,
     fetchRaters,
+    sendEmail,
     fetchEmailOptions,
     importRelations,
     exportRelations,
@@ -101,6 +102,7 @@ const Ratee = (
             raters={raters}
             fetchRaters={fetchRaters}
             emailOptions={emailOptions}
+            sendEmail={sendEmail}
             fetchEmailOptions={fetchEmailOptions}
             exportSurveyGroupRaters={exportSurveyGroupRaters}
           />

@@ -7,7 +7,7 @@ import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
 import { useQuery } from '../../../hooks';
 
-const RatersEmail = ({ loading, fetchRaters, raters, fetchEmailOptions, emailOptions, exportSurveyGroupRaters }) => {
+const RatersEmail = ({ loading, fetchRaters, raters, fetchEmailOptions, emailOptions, exportSurveyGroupRaters, sendEmail }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
@@ -41,9 +41,15 @@ const RatersEmail = ({ loading, fetchRaters, raters, fetchEmailOptions, emailOpt
             className="ml-3"
             icon="FileExcelOutlined"
             iconPosition="right"
+            onClick={() => {
+              sendEmail({
+                surveyGroupId,
+                emailOptionId: id,
+                raterIds: selectedRows?.map((el) => el.raterId),
+              });
+            }}
           />
-        ))
-        }
+        ))}
         <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
       </div>
     ) : (
@@ -141,6 +147,7 @@ RatersEmail.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchRaters: PropTypes.func.isRequired,
   exportSurveyGroupRaters: PropTypes.func.isRequired,
+  sendEmail: PropTypes.func.isRequired,
   raters: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
     metaData: PropTypes.shape({
