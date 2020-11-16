@@ -4,12 +4,13 @@ import { useParams, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
+import { dynamicMap } from '../../../routes/RouteMap';
+import { useQuery, stringify } from '../../../hooks/useQuery';
+
 import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import Tag from '../../Common/Tag';
-
-import { useQuery, stringify } from '../../../hooks/useQuery';
 
 const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loading }) => {
   const history = useHistory();
@@ -75,7 +76,7 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
 
           <div className="flex flex-row items-center">
             <Button
-              onClick={() => history.push('/super-user/organizations/new')}
+              onClick={() => history.push(dynamicMap.superUser.addOrganization())}
               size="middle"
               textSize="xs"
               text="New Organization"
@@ -84,11 +85,10 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
             />
 
             <Button
-              onClick={() => history.push('/super-user/new-project/project-info')}
+              onClick={() => history.push(dynamicMap.superUser.projectInfo())}
               size="middle"
               textSize="xs"
               text="Edit Project"
-              // textClassName="mr-2"
               type="gray"
               className="ml-3"
             />
@@ -117,7 +117,12 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
         render: (name, { project, surveyGroupId }) => (
           <Button
             className="pl-0"
-            onClick={() => history.push(`/super-user/participants/ratee?projectId=${project.id}&surveyGroupId=${surveyGroupId}`)}
+            onClick={() => {
+              const params = stringify({ projectId: project.id, surveyGroupId });
+              const path = `${history.push(dynamicMap.superUser.ratersList())}${params}`;
+
+              history.push(path);
+            }}
             type="link"
             textSize="sm"
             text={name}
@@ -154,7 +159,9 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
           <Button
             onClick={() => {
               const params = stringify({ surveyGroupId, projectId: project.id });
-              history.push(`/super-user/new-project/survey-settings${params}`);
+              const path = `${dynamicMap.superUser.surveySettings()}${params}`;
+
+              history.push(path);
             }}
             icon="EditOutlined"
             type="link"

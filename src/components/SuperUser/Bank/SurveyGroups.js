@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import arrayMove from 'array-move';
-
 import { useHistory } from 'react-router-dom';
+
+import { dynamicMap } from '../../../routes/RouteMap';
 
 import { useQuery } from '../../../hooks';
 
@@ -318,7 +319,7 @@ const SurveyQuestionsList = ({
                   await addSurveyGroup(values);
                 }
 
-                history.push('/super-user/organizations');
+                history.push(dynamicMap.superUser.organizationsList());
               } catch (err) {}
             }}
           >
@@ -455,7 +456,7 @@ const SurveyQuestionsList = ({
                     type="link"
                     text="Back"
                     textSize="base"
-                    onClick={() => history.push('/super-user/pre-defined-data')}
+                    onClick={() => history.push(dynamicMap.superUser.bankModels())}
                   />
 
                   <Button

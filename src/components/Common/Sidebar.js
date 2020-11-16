@@ -2,6 +2,8 @@ import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
 
+import { dynamicMap } from '../../routes/RouteMap';
+
 import logo from '../../assets/images/360-icon.svg';
 
 const Sidebar = () => {
@@ -23,9 +25,11 @@ const Sidebar = () => {
         <Link
           className={`py-5 w-full flex flex-row justify-center items-center text-center text-2xl
             hover:text-primary-500 ${
-              pathname === '/super-user/projects' ? activeClassNames : 'text-antgray-100'
+              pathname === dynamicMap.superUser.projectsList()
+                ? activeClassNames
+                : 'text-antgray-100'
             } `}
-          to="/super-user/projects?status=active&page_size=10&page_number=1"
+          to={`${dynamicMap.superUser.projectsList()}?status=active&page_size=10&page_number=1`}
         >
           <svg className="fill-current" width="1em" height="1em" fill="none">
             <path
@@ -41,9 +45,11 @@ const Sidebar = () => {
         <Link
           className={`py-5 w-full flex flex-row justify-center items-center text-center text-2xl
           hover:text-primary-500 ${
-            pathname === '/super-user/organizations' ? activeClassNames : 'text-antgray-100'
+            pathname === dynamicMap.superUser.organizationsList()
+              ? activeClassNames
+              : 'text-antgray-100'
           } `}
-          to="/super-user/organizations?page_size=10&page_number=1"
+          to={`${dynamicMap.superUser.organizationsList()}?page_size=10&page_number=1`}
         >
           <svg className="fill-current" width="1em" height="1em" fill="none">
             <path
@@ -58,9 +64,9 @@ const Sidebar = () => {
         <Link
           className={`py-5 w-full flex flex-row justify-center items-center text-center text-2xl
           hover:text-primary-500 ${
-            pathname === '/super-user/pre-defined-data' ? activeClassNames : 'text-antgray-100'
+            pathname === dynamicMap.superUser.bankModels() ? activeClassNames : 'text-antgray-100'
           } `}
-          to="/super-user/pre-defined-data?page_size=10&page_number=1"
+          to={`${dynamicMap.superUser.bankModels()}?page_size=10&page_number=1`}
         >
           <svg className="fill-current" width="1em" height="1em" fill="none">
             <path
