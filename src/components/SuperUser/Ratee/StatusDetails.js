@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from '../../../hooks';
+import { useHistory } from 'react-router-dom';
 
 import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
 import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
+import ImportExcelButton from '../../Common/ImportExcelButton';
+
 import AwardIcon from '../../../assets/images/award.svg';
-import { useHistory } from 'react-router-dom';
 
 const StatusDetails = (
   {
@@ -15,8 +17,9 @@ const StatusDetails = (
     fetchStatusDetails,
     removeRateeRaters,
     changeAssessmentsStatus,
-    exportSurveyGroupRaters,
     statusDetails,
+    importRelations,
+    exportRelations,
   },
 ) => {
   const [parsedQuery, query, setQuery] = useQuery();
@@ -131,23 +134,21 @@ const StatusDetails = (
             textSize="xs"
             text="Export Exel File"
             textClassName="mr-2"
-            className="ml-3"
+            className="ml-3 mr-3"
             type="gray"
             icon="FileExcelOutlined"
             iconPosition="right"
             onClick={() => {
-              exportSurveyGroupRaters({ surveyGroupId });
+              exportRelations({ surveyGroupId });
             }}
           />
-          <Button
-            size="middle"
-            textSize="xs"
-            text="Import Exel File"
+          <ImportExcelButton
             textClassName="mr-2"
             className="ml-3"
-            type="gray"
-            icon="FileExcelOutlined"
-            iconPosition="right"
+            beforeUpload={(file) => {
+              importRelations({ file, surveyGroupId });
+              return false;
+            }}
           />
         </div>
       </div>
@@ -304,9 +305,10 @@ const StatusDetails = (
 StatusDetails.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchStatusDetails: PropTypes.func.isRequired,
+  importRelations: PropTypes.func.isRequired,
+  exportRelations: PropTypes.func.isRequired,
   removeRateeRaters: PropTypes.func.isRequired,
   changeAssessmentsStatus: PropTypes.func.isRequired,
-  exportSurveyGroupRaters: PropTypes.func.isRequired,
   statusDetails: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
     metaData: PropTypes.shape({

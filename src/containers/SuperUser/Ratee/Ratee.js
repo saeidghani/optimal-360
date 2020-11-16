@@ -40,10 +40,16 @@ class Ratee extends Component {
     return changeAssessmentsStatus(query);
   };
 
-  exportSurveyGroupRaters = async (query) => {
-    const { exportSurveyGroupRaters } = this.props;
+  exportRelations = async (query) => {
+    const { exportRelations } = this.props;
 
-    return exportSurveyGroupRaters(query);
+    return exportRelations(query);
+  };
+
+  importRelations = async (query) => {
+    const { importRelations } = this.props;
+
+    return importRelations(query);
   };
 
 // raters email
@@ -51,6 +57,12 @@ class Ratee extends Component {
     const { fetchRaters } = this.props;
 
     return fetchRaters(query);
+  };
+
+  exportSurveyGroupRaters = async (query) => {
+    const { exportSurveyGroupRaters } = this.props;
+
+    return exportSurveyGroupRaters(query);
   };
 
   fetchEmailOptions = async (query) => {
@@ -78,6 +90,8 @@ class Ratee extends Component {
         removeRateeRaters={this.removeRateeRaters}
         changeAssessmentsStatus={this.changeAssessmentsStatus}
         exportSurveyGroupRaters={this.exportSurveyGroupRaters}
+        exportRelations={this.exportRelations}
+        importRelations={this.importRelations}
       />
     );
   }
@@ -91,6 +105,9 @@ Ratee.propTypes = {
   changeAssessmentsStatus: PropTypes.func.isRequired,
   fetchRaters: PropTypes.func.isRequired,
   fetchEmailOptions: PropTypes.func.isRequired,
+  exportSurveyGroupRaters: PropTypes.func.isRequired,
+  exportRelations: PropTypes.func.isRequired,
+  importRelations: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   summary: PropTypes.shape({}),
   completionRate: PropTypes.shape({}),
@@ -123,6 +140,8 @@ const mapDispatchToProps = (dispatch) => ({
   removeRateeRaters: dispatch.ratee.removeRateeRaters,
   changeAssessmentsStatus: dispatch.ratee.changeAssessmentsStatus,
   exportSurveyGroupRaters: dispatch.ratee.exportSurveyGroupRaters,
+  exportRelations: dispatch.ratee.exportRelations,
+  importRelations: dispatch.ratee.importRelations,
   fetchRaters: dispatch.ratee.fetchRaters,
   fetchEmailOptions: dispatch.ratee.fetchEmailOptions,
 });

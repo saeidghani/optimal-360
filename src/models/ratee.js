@@ -96,6 +96,41 @@ export default {
         dispatch.util.errorHandler,
       );
     },
+    async exportRelations({ surveyGroupId }) {
+      return actionWapper(async () => {
+          const res = await axios({
+            method: 'get',
+            url: `/super-user/survey-groups/${surveyGroupId}/relations/export`,
+            responseType: 'blob',
+          });
+
+          dispatch.util.saveFile({ blob: res.data, filename: `relations-${surveyGroupId}` });
+
+          return res;
+        }, dispatch.util.errorHandler,
+      );
+    },
+
+    async importRelations({ file, surveyGroupId }) {
+      // eslint-disable-next-line no-undef
+      const data = new FormData();
+      data.append('excel', file);
+
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/relations/import`,
+            data,
+          });
+
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
+    },
+
     async changeAssessmentsStatus({ surveyGroupId, status, selectedRowsIds }) {
       return actionWapper(async () => {
           const res = await axios({

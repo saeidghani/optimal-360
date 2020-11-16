@@ -29,6 +29,8 @@ const Ratee = (
     emailOptions,
     fetchRaters,
     fetchEmailOptions,
+    importRelations,
+    exportRelations,
   },
 ) => {
   const [parsedQuery, query, setQuery] = useQuery();
@@ -87,8 +89,9 @@ const Ratee = (
             fetchStatusDetails={fetchStatusDetails}
             removeRateeRaters={removeRateeRaters}
             changeAssessmentsStatus={changeAssessmentsStatus}
-            exportSurveyGroupRaters={exportSurveyGroupRaters}
             statusDetails={statusDetails}
+            importRelations={importRelations}
+            exportRelations={exportRelations}
             loading={loading}
           />
         </TabPane>
@@ -99,6 +102,7 @@ const Ratee = (
             fetchRaters={fetchRaters}
             emailOptions={emailOptions}
             fetchEmailOptions={fetchEmailOptions}
+            exportSurveyGroupRaters={exportSurveyGroupRaters}
           />
         </TabPane>
         <TabPane tab="Results" key="result">
@@ -123,6 +127,8 @@ Ratee.propTypes = {
   changeAssessmentsStatus: PropTypes.func.isRequired,
   removeRateeRaters: PropTypes.func.isRequired,
   exportSurveyGroupRaters: PropTypes.func.isRequired,
+  importRelations: PropTypes.func.isRequired,
+  exportRelations: PropTypes.func.isRequired,
   fetchRaters: PropTypes.func.isRequired,
   fetchEmailOptions: PropTypes.func.isRequired,
 };
