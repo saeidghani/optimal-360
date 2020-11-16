@@ -87,12 +87,13 @@ export default {
           const res = await axios({
             method: 'get',
             url: `/super-user/survey-groups/${surveyGroupId}/raters/export`,
+            responseType: 'blob',
           });
+          dispatch.util.saveFile({ blob: res.data, filename: `raters-${surveyGroupId}` });
 
           return res;
         },
         dispatch.util.errorHandler,
-        dispatch.util.alert,
       );
     },
     async changeAssessmentsStatus({ surveyGroupId, status, selectedRowsIds }) {
