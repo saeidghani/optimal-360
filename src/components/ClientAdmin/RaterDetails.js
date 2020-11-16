@@ -11,7 +11,7 @@ import ButtonsTab from './Helper/ButtonsTab';
 import OverallCompletion from './Helper/OverallCompletion';
 import RateCards from './Helper/RateCards';
 
-const RaterDetails = ({ loading }) => {
+const RaterDetails = ({ loading, fetchRaters, raters }) => {
   const [pageSize] = React.useState(10);
   const [project, setProject] = React.useState('');
 
@@ -301,8 +301,12 @@ const RaterDetails = ({ loading }) => {
 
 RaterDetails.propTypes = {
   loading: PropTypes.bool.isRequired,
+  fetchRaters: PropTypes.func.isRequired,
+  raters: PropTypes.shape({}),
 };
 
-RaterDetails.defaultProps = {};
+RaterDetails.defaultProps = {
+  raters: {},
+};
 
 export default RaterDetails;
