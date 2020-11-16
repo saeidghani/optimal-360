@@ -363,7 +363,7 @@ const Result = ({
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
         }}
-        // totalRecordSize={raters?.metaData?.pagination?.totalRecords * 1}
+        totalRecordSize={(selectedTab === '1' ? individualReports : groupReports)?.metaData?.pagination?.totalRecords}
       />
     </>
   );
