@@ -11,6 +11,7 @@ import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
 import SecondaryTabs from '../Helper/SecondaryTabs';
 import Modal from '../../Common/Modal';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 const Individual = ({ loading }) => {
   const [submitModalVisible, setSubmitModalVisible] = React.useState(false);
@@ -32,7 +33,7 @@ const Individual = ({ loading }) => {
       width: 100,
       sorter: true,
       render: (name) => (
-        <Link to="/survey-platform/managers/individual/questions">
+        <Link to={dynamicMap.surveyPlatform.individualQuestions()}>
           <span className="text-primary-500">{name}</span>
         </Link>
       ),
@@ -131,10 +132,10 @@ const Individual = ({ loading }) => {
       <Modal
         visible={submitModalVisible}
         handleOk={handleSubmitModalOk}
-        handleCancel={() => {}}
+        handleCancel={() => setSubmitModalVisible(false)}
         width={588}
         okText="Yes"
-        cancelText=""
+        cancelText="Cancel"
         okButtonProps={{ textClassName: 'px-4' }}
       >
         <div className="flex flex-col items-center">

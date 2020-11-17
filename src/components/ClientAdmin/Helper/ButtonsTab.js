@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '../../Common/Button';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 const ButtonsTab = ({ activeButtonKey, wrapperClassName, buttonClassName }) => {
   const viewButtons = [
-    { key: '1', title: 'View Ratee Summary', href: '/client-admin/participant-summary' },
-    { key: '2', title: 'View Ratee Details', href: '/client-admin/participant-details' },
-    { key: '3', title: 'View Rater Details', href: '/client-admin/rater-details' },
+    { key: '1', title: 'View Ratee Summary', href: dynamicMap.clientAdmin.participantSummary() },
+    { key: '2', title: 'View Ratee Details', href: dynamicMap.clientAdmin.participantDetails() },
+    { key: '3', title: 'View Rater Details', href: dynamicMap.clientAdmin.raterDetails() },
   ];
 
   return (

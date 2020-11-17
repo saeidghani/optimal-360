@@ -9,6 +9,7 @@ import Button from '../../Common/Button';
 import Progress from '../../Common/Progress';
 import TextArea from '../../Common/TextArea';
 import Modal from '../../Common/Modal';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 const RateeGroupQuestions2 = ({ loading }) => {
   const [submitModalVisible, setSubmitModalVisible] = React.useState(false);
@@ -27,7 +28,7 @@ const RateeGroupQuestions2 = ({ loading }) => {
   };
 
   const handleBack = () => {
-    history.push('/survey-platform/managers/ratee-group/questions');
+    history.push(dynamicMap.surveyPlatform.rateeGroupQuestions());
   };
 
   const handleSubmitModalOk = () => {

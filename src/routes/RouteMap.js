@@ -44,7 +44,7 @@ const clientAdmin = {
   participantSummary: 'participant-summary',
   participantDetails: 'participant-details',
 
-  ratersDetails: 'rater-details',
+  raterDetails: 'rater-details',
 
   referenceGuide: 'reference-guide',
 };
@@ -57,7 +57,13 @@ const surveyPlatform = {
   information: 'information',
   referenceGuide: 'reference-guide',
 
-  mangars: 'managers',
+  allRateesList: 'managers/all-ratees',
+  individualList: 'managers/individual',
+  rateeGroupList: 'managers/ratee-group',
+  allRateesQuestions: 'managers/all-ratees/questions',
+  individualQuestions: 'managers/individual/questions',
+  rateeGroupQuestions: 'managers/ratee-group/questions',
+  rateeGroupQuestions2: 'managers/ratee-group/questions/:id',
 
   ratersDetails: 'rater-details',
 };
