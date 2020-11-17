@@ -40,8 +40,7 @@ const Ratee = (
     groupReports,
   },
 ) => {
-  const [parsedQuery, query, setQuery] = useQuery();
-  const history = useHistory();
+  const [, , setQuery] = useQuery();
   const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
   const [currentTab, setTab] = useTabs(['status-overview', 'status-details', 'raters-email', 'result']);
   const { TabPane } = Tabs;
@@ -51,11 +50,6 @@ const Ratee = (
     // eslint-disable-next-line
     [surveyGroups.timeStamp],
   );
-  React.useEffect(() => {
-    if (!parsedQuery?.projectId || !parsedQuery?.surveyGroupId) {
-      history.push(dynamicMap.superUser.projectsList());
-    }
-  }, []);
 
   function tabChangeCallback(key) {
     setTab(key);

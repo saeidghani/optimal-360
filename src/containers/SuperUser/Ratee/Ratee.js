@@ -8,88 +8,88 @@ class Ratee extends Component {
   state = {};
 
 // Status overview
-  fetchCompletionRate = async (query) => {
+  fetchCompletionRate = (query) => {
     const { fetchCompletionRate } = this.props;
 
     return fetchCompletionRate(query);
   };
 
-  fetchSummary = async (query) => {
+  fetchSummary = (query) => {
     const { fetchSummary } = this.props;
 
     return fetchSummary(query);
   };
 
 // Status Details
-  fetchStatusDetails = async (query) => {
+  fetchStatusDetails = (query) => {
     const { fetchStatusDetails } = this.props;
 
     return fetchStatusDetails(query);
   };
 
-  removeRateeRaters = async (query) => {
+  removeRateeRaters = (query) => {
     const { removeRateeRaters } = this.props;
 
     return removeRateeRaters(query);
   };
 
-  changeAssessmentsStatus = async (query) => {
+  changeAssessmentsStatus = (query) => {
     const { changeAssessmentsStatus } = this.props;
 
     return changeAssessmentsStatus(query);
   };
 
-  exportRelations = async (query) => {
+  exportRelations = (query) => {
     const { exportRelations } = this.props;
 
     return exportRelations(query);
   };
 
-  importRelations = async (query) => {
+  importRelations = (query) => {
     const { importRelations } = this.props;
 
     return importRelations(query);
   };
 
 // raters email
-  fetchRaters = async (query) => {
+  fetchRaters = (query) => {
     const { fetchRaters } = this.props;
 
     return fetchRaters(query);
   };
 
-  sendEmail = async (query) => {
+  sendEmail = (query) => {
     const { sendEmail } = this.props;
 
     return sendEmail(query);
   };
 
-  exportSurveyGroupRaters = async (query) => {
+  exportSurveyGroupRaters = (query) => {
     const { exportSurveyGroupRaters } = this.props;
 
     return exportSurveyGroupRaters(query);
   };
 
-  fetchEmailOptions = async (query) => {
+  fetchEmailOptions = (query) => {
     const { fetchEmailOptions } = this.props;
 
     return fetchEmailOptions(query);
   };
 
 // results
-  fetchIndividualReports = async (query) => {
+  fetchIndividualReports = (query) => {
     const { fetchIndividualReports } = this.props;
 
     return fetchIndividualReports(query);
   };
 
-  fetchGroupReports = async (query) => {
+  fetchGroupReports = (query) => {
     const { fetchGroupReports } = this.props;
 
     return fetchGroupReports(query);
   };
 
-  exportDemographicData = async (query) => {
+  exportDemographicData = (query) => {
     const { exportDemographicData } = this.props;
 
     return exportDemographicData(query);
