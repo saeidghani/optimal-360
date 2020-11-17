@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 // import PropTypes from 'prop-types';
 import { TeamOutlined } from '@ant-design/icons';
 
@@ -15,20 +15,17 @@ const StatusOverview = ({
                           loading,
                         }) => {
   const [parsedQuery, query, setQuery] = useQuery();
-  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const pageNumber = parsedQuery?.page_number || 1;
+  const pageSize = parsedQuery?.page_size || 10;
   const surveyGroupId = parsedQuery?.surveyGroupId;
 
-  useEffect(() => {
-      fetchCompletionRate({ query, surveyGroupId });
-    }, [fetchCompletionRate, surveyGroupId],
-  );
+  React.useEffect(() => {
+    fetchCompletionRate({ query, surveyGroupId });
+  }, [fetchCompletionRate, surveyGroupId]);
 
-  useEffect(() => {
-      fetchSummary({ query, surveyGroupId });
-    }, [
-      fetchSummary, surveyGroupId, pageSize, pageNumber],
-  );
+  React.useEffect(() => {
+    fetchSummary({ query, surveyGroupId });
+  }, [fetchSummary, surveyGroupId, pageSize, pageNumber]);
 
   const columns = React.useMemo(() => [
     {
@@ -270,7 +267,7 @@ const StatusOverview = ({
         </div>
         <Progress
           type="line"
-          percentage={parseInt((completionRate?.data?.totalSubmissions / completionRate?.data?.totalRaters) * 100, 10) || 0}
+          percentage={parseInt((completionRate?.data?.totalSurveySubmissionRate / completionRate?.data?.totalSurveyRate) * 100, 10) || 0}
         />
       </div>
       <div className="bg-white p-6 pb-8 pr-32 rounded-md my-6">
@@ -280,7 +277,7 @@ const StatusOverview = ({
         </div>
         <Progress
           type="line"
-          percentage={parseInt((completionRate?.data?.totalSubmissions / completionRate?.data?.totalRaters) * 100, 10) || 0}
+          percentage={parseInt((completionRate?.data?.totalAnsweredRate / completionRate?.data?.totalQuestionRate) * 100, 10) || 0}
         />
       </div>
       <div className="grid grid-cols-5 gap-6">
@@ -297,7 +294,6 @@ const StatusOverview = ({
         rowKey="key"
         rowSelection={false}
         onPageSizeChange={(size) => {
-          setPageSize(size);
           setQuery({ page_size: size, page_number: 1 });
         }}
         pageSize={pageSize * 1}
@@ -367,6 +363,7 @@ StatusOverview.propTypes = {
       }),
     }),
     data: PropTypes.arrayOf(PropTypes.shape({
+      rateeId: PropTypes.string,
       rateeName: PropTypes.string,
       totalRaters: PropTypes.string,
       totalSubmissions: PropTypes.string,
@@ -387,16 +384,18 @@ StatusOverview.propTypes = {
 
   completionRate: PropTypes.shape({
     data: PropTypes.shape({
+      totalRatees: PropTypes.string,
       totalRaters: PropTypes.string,
-      totalSubmissions: PropTypes.string,
+      totalSurveyRate: PropTypes.string,
+      totalSurveySubmissionRate: PropTypes.string,
+      totalQuestionRate: PropTypes.string,
+      totalAnsweredRate: PropTypes.string,
       raterGroups: PropTypes.arrayOf(PropTypes.shape({
-        raterGroupId: PropTypes.number,
         raterGroupName: PropTypes.string,
-        raterGroupMinRater: PropTypes.number,
-        totalQuestions: PropTypes.string,
-        totalAnswered: PropTypes.string,
         totalRaters: PropTypes.string,
         totalSubmissions: PropTypes.string,
+        totalQuestions: PropTypes.string,
+        totalAnswered: PropTypes.string,
       })),
     }),
     message: PropTypes.string,

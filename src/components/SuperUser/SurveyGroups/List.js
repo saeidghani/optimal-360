@@ -114,13 +114,12 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
       {
         key: 'name',
         title: 'Survey Group',
-        render: (name, { project, surveyGroupId }) => (
+        render: (name, { project, id: surveyGroupId }) => (
           <Button
             className="pl-0"
             onClick={() => {
               const params = stringify({ projectId: project.id, surveyGroupId });
-              const path = `${history.push(dynamicMap.superUser.ratersList())}${params}`;
-
+              const path = `${dynamicMap.superUser.ratersList()}${params}`;
               history.push(path);
             }}
             type="link"
