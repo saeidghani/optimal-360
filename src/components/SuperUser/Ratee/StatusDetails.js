@@ -28,8 +28,9 @@ const StatusDetails = (
 ) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
-  const [viewByRaters, setViewByRaters] = React.useState(true);
   const [selectedRows, setSelectedRows] = React.useState([]);
+
+  const viewBy = parsedQuery?.viewBy || 'raters';
   const pageNumber = parsedQuery?.page_number || 1;
   const pageSize = parsedQuery?.page_size || 10;
   const surveyGroupId = parsedQuery?.surveyGroupId;
@@ -95,9 +96,8 @@ const StatusDetails = (
             text="View by raters"
             textClassName="mr-2"
             className="ml-3"
-            light={!viewByRaters}
-            onClick={() => (!viewByRaters && setViewByRaters((!viewByRaters)))
-            }
+            light={viewBy === 'ratees'}
+            onClick={() => (setQuery({ viewBy: 'raters' }))}
           />
           <Button
             size="middle"
@@ -105,8 +105,8 @@ const StatusDetails = (
             text="View by ratees"
             textClassName="mr-2"
             className="ml-3"
-            light={viewByRaters}
-            onClick={() => (viewByRaters && setViewByRaters((!viewByRaters)))}
+            light={viewBy === 'raters'}
+            onClick={() => (setQuery({ viewBy: 'ratees' }))}
           />
         </div>
         <div className="flex flex-row">
@@ -151,7 +151,7 @@ const StatusDetails = (
         </div>
       </div>
     );
-  }, [loading, selectedRows.length, viewByRaters]);
+  }, [loading, selectedRows.length, viewBy]);
 
   const getSortOrder = (key) => {
     return parsedQuery?.sort?.includes(key)
@@ -162,7 +162,7 @@ const StatusDetails = (
   };
 
   const columns = React.useMemo(() => [
-    viewByRaters ? {
+    viewBy === 'raters' ? {
       key: 'raterName',
       title: 'Rater Name',
       width: 100,
@@ -201,7 +201,7 @@ const StatusDetails = (
       sorter: true,
       sortOrder: getSortOrder('raterEmail'),
     },
-    !viewByRaters ? {
+    viewBy === 'ratees' ? {
       key: 'raterName',
       title: 'Rater Name',
       width: 100,
