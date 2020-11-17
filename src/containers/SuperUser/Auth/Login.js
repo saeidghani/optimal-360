@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Cookies from 'js-cookie';
 
 import { parse } from '../../../hooks/useQuery';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 import Layout from '../../../components/SuperUser/Auth/Login';
 
@@ -13,7 +14,9 @@ class _Login extends Component {
   getNewPath = () => {
     const { prevPath } = parse(window.location.search);
 
-    return prevPath || '/super-user/projects?status=active&page_size=10&page_number=1';
+    return (
+      prevPath || `${dynamicMap.superUser.projectsList()}?status=active&page_size=10&page_number=1`
+    );
   };
 
   componentDidMount = () => {

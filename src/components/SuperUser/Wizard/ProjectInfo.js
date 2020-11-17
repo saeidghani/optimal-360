@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 
 import { useQuery, parse, stringify } from '../../../hooks/useQuery';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 import MainLayout from '../../Common/Layout';
 
@@ -69,7 +70,9 @@ const ProjectInfo = ({
                 projectId,
               });
 
-              history.replace(`/super-user/new-project/survey-settings${params}`);
+              const path = dynamicMap.superUser.surveySettings();
+
+              history.replace(`${path}${params}`);
             } catch (error) {}
           }}
         >

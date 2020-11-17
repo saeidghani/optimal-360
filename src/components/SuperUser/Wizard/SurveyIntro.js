@@ -6,6 +6,7 @@ import * as yup from 'yup';
 
 import { useQuery, stringify } from '../../../hooks/useQuery';
 import { useSurveyGroup } from '../../../hooks';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
 
@@ -140,7 +141,10 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
             onSubmit={async (values) => {
               try {
                 await setSurveyIntro({ ...values, surveyGroupId });
-                history.push(`/super-user/new-project/survey-questions${search}`);
+
+                const path = dynamicMap.superUser.surveyQuestions();
+
+                history.push(`${path}${search}`);
               } catch (error) {}
             }}
           >
@@ -188,7 +192,9 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
                           surveyGroupId: parsedQuery?.surveyGroupId,
                         });
 
-                        history.push(`/super-user/new-project/email-settings${params}`);
+                        const path = dynamicMap.superUser.emailSettings();
+
+                        history.push(`${path}${params}`);
                       }}
                       text="Back"
                     />

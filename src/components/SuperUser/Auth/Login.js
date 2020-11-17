@@ -3,6 +3,8 @@ import { PropTypes } from 'prop-types';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
 
+import { map } from '../../../routes/RouteMap';
+
 import Logo from '../../Common/Logo';
 import Input from '../../Common/Input';
 import Checkbox from '../../Common/Checkbox';
@@ -71,10 +73,11 @@ const Login = ({ login, loading }) => {
                   name="password"
                   type="password"
                   wrapperClassName="mb-4"
+                  inputClass="ant-input-lg"
                   labelText="Password"
                   placeholder="Password"
                   extrainfoText="Forgot Password?"
-                  extrainfoLink="/super-user/forgot-password"
+                  extrainfoLink={map.superUser.forgotPassword}
                   errorMessage={touched.password && errors.password}
                   onPressEnter={handleSubmit}
                 />
@@ -90,7 +93,7 @@ const Login = ({ login, loading }) => {
                 <Button
                   loading={loading}
                   onClick={handleSubmit}
-                  textSize="16px"
+                  textSize="base"
                   text="Log in"
                   className="ml-auto mt-16 c-force-padding-y-px c-force-padding-x-px"
                 />

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '../../../hooks';
 
+import { dynamicMap } from '../../../routes/RouteMap';
+
 import { fetchFullURL } from '../../../lib/utils';
 
 import MainLayout from '../../Common/Layout';
@@ -72,7 +74,13 @@ const OrganizationsStaff = ({
           className="mx-3 px-3 flex-row-reverse"
           textClassName="mr-2"
           icon="UserAddOutlined"
-          onClick={() => history.push(`/super-user/organizations/${organizationId}/new-staff`)}
+          onClick={() => {
+            const path = dynamicMap.superUser.addOrganizationStaff({
+              organizationId,
+            });
+
+            history.push(path);
+          }}
         />
       </div>
     </div>
@@ -108,16 +116,21 @@ const OrganizationsStaff = ({
     {
       key: 'edit',
       title: '',
-      render: (_, { id }) => (
+      render: (_, { id: staffId }) => (
         <Button
           size="middle"
           className="text-primary-500"
           type="link"
           icon="EditOutlined"
           iconPosition="right"
-          onClick={() =>
-            history.push(`/super-user/organizations/${organizationId}/staff/${id}/update`)
-          }
+          onClick={() => {
+            const path = dynamicMap.superUser.organizationStaffEdit({
+              organizationId,
+              staffId,
+            });
+
+            history.push(path);
+          }}
         />
       ),
     },

@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom';
 
 import { useQuery, useSurveyGroup, usePersist, useClusters } from '../../../hooks';
 import { stringify } from '../../../hooks/useQuery';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
 import Menu from './Helper/Menu';
@@ -83,7 +84,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
 
   const surveyQuestionsStringified = JSON.stringify(surveyQuestions);
 
-  const handleFormChange = (newVal, row, key, subKey) => {
+  const handleFeedbackChange = (newVal, row, key, subKey) => {
     const newValues = formRef.current.values[key].map((el) => {
       if (el.id === row.id) {
         return { ...el, [subKey]: newVal };
@@ -93,6 +94,14 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
     });
 
     formRef.current.setValues({ ...formRef.current.values, [key]: newValues });
+  };
+
+  const handleRatingScalesChange = (newVal, index, subKey) => {
+    const newValues = { ...formRef.current.values };
+
+    newValues.ratingScales[index][subKey] = newVal;
+
+    formRef.current.setValues({ ...newValues });
   };
 
   React.useEffect(() => {
@@ -408,7 +417,9 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                 await setSurveyQuestions({ ...values, surveyGroupId });
                 setPersistData('');
 
-                history.push(`/super-user/new-project/report${params}`);
+                const path = dynamicMap.superUser.report();
+
+                history.push(`${path}${params}`);
               } catch (error) {}
             }}
           >
@@ -425,9 +436,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                       value={row.label}
                       name={`ratingScales[${i}].label`}
                       wrapperClassName="col-span-3 mr-6"
-                      onChange={(e) =>
-                        handleFormChange(e.target.value, row, 'ratingScales', 'label')
-                      }
+                      onChange={(e) => handleRatingScalesChange(e.target.value, i, 'label')}
                       errorMessage={
                         touched?.ratingScales?.[i]?.label && errors?.ratingScales?.[i]?.label
                       }
@@ -436,9 +445,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                     <Input
                       value={row.description}
                       name={`ratingScales[${i}].description`}
-                      onChange={(e) =>
-                        handleFormChange(e.target.value, row, 'ratingScales', 'description')
-                      }
+                      onChange={(e) => handleRatingScalesChange(e.target.value, i, 'description')}
                       placeholder="Does not describe the person at all"
                       wrapperClassName="col-span-9"
                       errorMessage={
@@ -553,7 +560,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                     touched={touched}
                     items={values.feedbacks}
                     onSortEnd={onFeedbackSortEnd}
-                    handleFormChange={handleFormChange}
+                    handleFormChange={handleFeedbackChange}
                     deleteFeedback={(feedback) => deleteFeedback(values.feedbacks, feedback)}
                   />
                 </div>
@@ -574,7 +581,9 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                         surveyGroupId: parsedQuery?.surveyGroupId,
                       });
 
-                      history.push(`/super-user/new-project/survey-intro${params}`);
+                      const path = dynamicMap.superUser.surveyIntro();
+
+                      history.push(`${path}${params}`);
                     }}
                   />
 

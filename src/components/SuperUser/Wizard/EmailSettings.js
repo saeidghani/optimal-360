@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 import { useQuery, stringify } from '../../../hooks/useQuery';
 import { useSurveyGroup } from '../../../hooks';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 import pascalize from '../../../lib/pascalize';
 
@@ -137,12 +138,12 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
       key: 'button ',
       render: (_, { name }) => (
         <Button
-          onClick={async () => {
-            history.push(
-              `/super-user/new-project/email-settings/${name
-                .toLowerCase()
-                .replaceAll(' ', '-')}${search}`,
-            );
+          onClick={() => {
+            const path = dynamicMap.superUser.emailSettingsTemplate({
+              template: `${name.toLowerCase().replaceAll(' ', '-')}${search}`,
+            });
+
+            history.push(path);
           }}
           textSize="xs"
           ghost
@@ -265,15 +266,24 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
                 }
               });
 
+              const params = stringify({
+                projectId: parsedQuery?.projectId,
+                surveyGroupId: parsedQuery?.surveyGroupId,
+              });
+
               if (chosenTemplates.length > 0) {
                 try {
                   await setEmailSettings({ emailSettings: chosenTemplates, surveyGroupId });
                   localStorage.clear();
-                  history.push(`/super-user/new-project/survey-intro${search}`);
+
+                  const path = dynamicMap.superUser.surveyIntro();
+                  history.push(`${path}${params}`);
                 } catch (error) {}
               } else {
                 localStorage.clear();
-                history.push(`/super-user/new-project/survey-intro${search}`);
+
+                const path = dynamicMap.superUser.surveyIntro();
+                history.push(`${path}${params}`);
               }
             }}
           >
@@ -386,7 +396,8 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
                         surveyGroupId: parsedQuery?.surveyGroupId,
                       });
 
-                      history.push(`/super-user/new-project/survey-settings${params}`);
+                      const path = dynamicMap.superUser.surveySettings();
+                      history.push(`${path}${params}`);
                     }}
                   />
 

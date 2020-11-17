@@ -2,11 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
+import { useHistory } from 'react-router-dom';
+
+import { dynamicMap } from '../../../routes/RouteMap';
 
 import MainLayout from '../../Common/Layout';
 import Input from '../../Common/Input';
 import Button from '../../Common/Button';
-import { useHistory } from 'react-router-dom';
 import UploadAvatar from '../../Common/UploadAvatar';
 
 const NewOrganizations = ({ addNewOrganization, loading }) => {
@@ -40,13 +42,12 @@ const NewOrganizations = ({ addNewOrganization, loading }) => {
             onSubmit={async (values) => {
               try {
                 await addNewOrganization(values);
-                history.push('/super-user/organizations/');
-              } catch (error) {
-              }
+
+                history.push(dynamicMap.superUser.organizationsList());
+              } catch (error) {}
             }}
           >
             {({ values, errors, touched, handleChange, handleSubmit, setFieldValue }) => (
-
               <Form onSubmit={handleSubmit} className="w-full">
                 <Input
                   disabled={loading}
