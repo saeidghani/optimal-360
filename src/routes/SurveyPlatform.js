@@ -1,9 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 
 import CustomRoute from './Route';
 import PrivateRoute from './PrivateRoute';
+import { map } from './RouteMap';
 
 import SurveyPlatformLogin from '../containers/SurveyPlatform/Auth/Login';
 import SurveyPlatformForgotPassword from '../containers/SurveyPlatform/Auth/ForgotPassword';
@@ -20,55 +20,43 @@ import ReferenceGuide from '../containers/SurveyPlatform/ReferenceGuide';
 
 import NotFound from '../components/404';
 
-const Routes = ({ match }) => (
+const Routes = () => (
   <Switch>
-    <CustomRoute path={`${match.path}/login`} exact component={SurveyPlatformLogin} />
+    <CustomRoute path={map.surveyPlatform.login} exact component={SurveyPlatformLogin} />
     <CustomRoute
-      path={`${match.path}/forgot-password`}
+      path={map.surveyPlatform.forgotPassword}
       exact
       component={SurveyPlatformForgotPassword}
     />
 
-    <PrivateRoute path={`${match.path}/welcome`} exact component={SurveyPlatformWelcome} />
-    <PrivateRoute path={`${match.path}/information`} exact component={Information} />
-    <PrivateRoute path={`${match.path}/reference-guide`} exact component={ReferenceGuide} />
-    <PrivateRoute path={`${match.path}/managers/all-ratees`} exact component={AllRatees} />
-    <PrivateRoute path={`${match.path}/managers/individual`} exact component={Individual} />
-    <PrivateRoute path={`${match.path}/managers/ratee-group`} exact component={RateeGroup} />
+    <PrivateRoute path={map.surveyPlatform.welcome} exact component={SurveyPlatformWelcome} />
+    <PrivateRoute path={map.surveyPlatform.information} exact component={Information} />
+    <PrivateRoute path={map.surveyPlatform.referenceGuide} exact component={ReferenceGuide} />
+    <PrivateRoute path={map.surveyPlatform.allRateesList} exact component={AllRatees} />
+    <PrivateRoute path={map.surveyPlatform.individualList} exact component={Individual} />
+    <PrivateRoute path={map.surveyPlatform.rateeGroupList} exact component={RateeGroup} />
     <PrivateRoute
-      path={`${match.path}/managers/all-ratees/questions`}
+      path={map.surveyPlatform.allRateesQuestions}
       exact
       component={AllRateesQuestions}
     />
     <PrivateRoute
-      path={`${match.path}/managers/individual/questions`}
+      path={map.surveyPlatform.individualQuestions}
       exact
       component={IndividualQuestions}
     />
     <PrivateRoute
-      path={`${match.path}/managers/ratee-group/questions`}
+      path={map.surveyPlatform.rateeGroupQuestions}
       exact
       component={RateeGroupQuestions}
     />
     <PrivateRoute
-      path={`${match.path}/managers/ratee-group/questions/:id`}
+      path={map.surveyPlatform.rateeGroupQuestions2}
       exact
       component={RateeGroupQuestions2}
     />
     <Route component={NotFound} />
   </Switch>
 );
-
-Routes.propTypes = {
-  match: PropTypes.shape({
-    path: PropTypes.string,
-  }),
-};
-
-Routes.defaultProps = {
-  match: {
-    path: '',
-  },
-};
 
 export default Routes;

@@ -6,23 +6,27 @@ import { HomeOutlined, MailOutlined, QuestionCircleOutlined } from '@ant-design/
 import BudgetLogo from './BudgetLogo';
 import ProfileDropdown from '../../Common/ProfileDropdown';
 
+import { dynamicMap } from '../../../routes/RouteMap';
+
 import optimal360Logo from '../../../assets/images/optimal360Logo.png';
 import optimal360MiniLogo from '../../../assets/images/optimal360MiniLogo.png';
 
 const Layout = ({ children, className, wrapperClassName, isLogin }) => {
-  const dropdownOptions = [
-    { key: 2, title: 'Home', icon: <HomeOutlined />, href: 'survey-platform/welcome' },
+  const profileDropdownOptions = [
+    { key: 2, title: 'Home', icon: <HomeOutlined />, href: dynamicMap.surveyPlatform.welcome() },
     {
       key: 3,
       title: 'Customer Support',
       icon: <MailOutlined />,
-      href: 'survey-platform/customer-support',
+      href: '#',
+      // eslint-disable-next-line no-undef
+      onClick: () => alert('coming soon'),
     },
     {
       key: 4,
       title: 'Guides',
       icon: <QuestionCircleOutlined />,
-      href: 'survey-platform/reference-guide',
+      href: dynamicMap.surveyPlatform.referenceGuide(),
     },
   ];
 
@@ -38,14 +42,18 @@ const Layout = ({ children, className, wrapperClassName, isLogin }) => {
         {isLogin && (
           <div className="flex justify-between items-center">
             <Link to="#">
-              <div className="hidden sm:flex justify-between items-center text-gray-500 text-base">
+              <div
+                /* eslint-disable-next-line no-undef */
+                onClick={() => alert('coming soon')}
+                className="hidden sm:flex justify-between items-center text-gray-500 text-base"
+              >
                 <MailOutlined />
                 <span className="ml-2">Customer Support</span>
               </div>
             </Link>
             <BudgetLogo className="ml-6 lg:ml-16" />
             <div className="md:hidden">
-              <ProfileDropdown title="Anthony Hardy" options={dropdownOptions} />
+              <ProfileDropdown title="Anthony Hardy" options={profileDropdownOptions} />
             </div>
           </div>
         )}

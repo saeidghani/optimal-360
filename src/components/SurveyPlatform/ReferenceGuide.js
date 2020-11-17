@@ -8,6 +8,7 @@ import Button from '../Common/Button';
 import Table from '../Common/Table';
 import Radio from '../Common/RadioGroup';
 import TextArea from '../Common/TextArea';
+import { dynamicMap } from '../../routes/RouteMap';
 
 const ReferenceGuide = ({ loading }) => {
   const [comment, setComment] = React.useState('');
@@ -280,7 +281,7 @@ const ReferenceGuide = ({ loading }) => {
         <Button
           className="c-force-padding-y-px mt-16 shadow-none w-full px-5 md:w-auto md:border-none"
           text="Ok, Got it!"
-          href="/survey-platform/managers/ratee-group/questions/2"
+          href={dynamicMap.surveyPlatform.rateeGroupQuestions2({ id: '2' })}
         />
       </div>
     </Layout>

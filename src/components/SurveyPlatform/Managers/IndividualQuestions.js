@@ -9,6 +9,7 @@ import Button from '../../Common/Button';
 import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
 import Radio from '../../Common/RadioGroup';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 const IndividualQuestions = ({ loading }) => {
   const [items, setItems] = React.useState({});
@@ -175,11 +176,11 @@ const IndividualQuestions = ({ loading }) => {
   ];
 
   const handleNext = () => {
-    history.push('/survey-platform/managers/ratee-group/questions');
+    history.push(dynamicMap.surveyPlatform.rateeGroupQuestions());
   };
 
   const handleBack = () => {
-    history.push('/survey-platform/managers/all-ratees/questions');
+    history.push(dynamicMap.surveyPlatform.allRateesQuestions());
   };
 
   return (

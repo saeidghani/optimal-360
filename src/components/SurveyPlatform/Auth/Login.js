@@ -9,6 +9,7 @@ import Button from '../../Common/Button';
 
 import Shape from '../Helper/AnimatedShape';
 import AuthLayout from '../Helper/AuthLayout';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 const Login = ({ login, loading }) => {
   const schema = yup.object({
@@ -71,7 +72,7 @@ const Login = ({ login, loading }) => {
                   labelText="Password"
                   placeholder="Password"
                   extrainfoText="Forgot Password?"
-                  extrainfoLink="/survey-platform/forgot-password"
+                  extrainfoLink={dynamicMap.surveyPlatform.forgotPassword()}
                   errorMessage={touched.password && errors.password}
                   onPressEnter={handleSubmit}
                 />

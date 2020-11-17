@@ -10,6 +10,7 @@ import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
 import Radio from '../../Common/RadioGroup';
 import Modal from '../../Common/Modal';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 const AllRateesQuestions = ({ loading }) => {
   const [visible, setVisible] = React.useState(false);
@@ -214,7 +215,7 @@ const AllRateesQuestions = ({ loading }) => {
   ];
 
   const handleNext = () => {
-    history.push('/survey-platform/managers/individual/questions');
+    history.push(dynamicMap.surveyPlatform.individualQuestions());
   };
 
   const handleBack = () => {
@@ -223,12 +224,12 @@ const AllRateesQuestions = ({ loading }) => {
 
   const handleOk = () => {
     setVisible(false);
-    history.push('/survey-platform/managers/ratee-group');
+    history.push(dynamicMap.surveyPlatform.rateeGroupList());
   };
 
   const handleCancel = () => {
     setVisible(false);
-    history.push('/survey-platform/managers/individual/questions');
+    history.push(dynamicMap.surveyPlatform.individualQuestions());
   };
 
   return (

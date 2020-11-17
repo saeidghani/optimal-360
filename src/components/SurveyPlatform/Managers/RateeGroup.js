@@ -11,6 +11,7 @@ import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
 import SecondaryTabs from '../Helper/SecondaryTabs';
 import Modal from '../../Common/Modal';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 const RateeGroup = ({ loading }) => {
   const [submitModalVisible, setSubmitModalVisible] = React.useState(false);
@@ -32,7 +33,7 @@ const RateeGroup = ({ loading }) => {
       width: 100,
       render: (relationship) => (
         <div className="text-primary-500 h-full flex flex-col justify-start mb-auto">
-          <Link to="/survey-platform/managers/ratee-group/questions">
+          <Link to={dynamicMap.surveyPlatform.rateeGroupQuestions()}>
             <span className="text-primary-500">{relationship}</span>
           </Link>
         </div>

@@ -4,6 +4,8 @@ import { TeamOutlined } from '@ant-design/icons';
 import Progress from '../Common/Progress';
 import Button from '../Common/Button';
 
+import { dynamicMap } from '../../routes/RouteMap';
+
 import Layout from './Helper/Layout';
 import './Helper/bubble.css';
 
@@ -213,7 +215,7 @@ const ReferenceGuide = () => {
           className="c-force-padding-y-px"
           textSize="sm"
           text="Ok, Got it!"
-          href="/client-admin/dashboard"
+          href={dynamicMap.clientAdmin.dashboard()}
         />
       </div>
     </Layout>
