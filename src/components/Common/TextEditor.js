@@ -43,7 +43,7 @@ const TextEditor = ({
       {label && <p className="font-normal text-body text-base leading-snug mb-3.5">{label}</p>}
 
       <SunEditor
-        className={` ${className}`}
+        className={`c-sun-editor ${className}`}
         ref={editorRef}
         enable={!disabled}
         onChange={onChange}
