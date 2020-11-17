@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { map } from '../../../routes/RouteMap';
+
 import SuccessIcon from '../../../assets/images/success-purple.svg';
 
 import Button from '../../Common/Button';
@@ -16,7 +18,11 @@ const Success = () => (
         Please check your email inbox, we have sent you a new password in your email.
       </p>
 
-      <Button href="/super-user/login" className="mt-12 c-force-padding-y-px px-7" text="Log in" />
+      <Button
+        href={map.superUser.login}
+        className="mt-12 c-force-padding-y-px px-7"
+        text="Log in"
+      />
     </div>
   </Layout>
 );

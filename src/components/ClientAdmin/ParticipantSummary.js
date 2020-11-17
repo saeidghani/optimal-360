@@ -11,7 +11,7 @@ import ButtonsTab from './Helper/ButtonsTab';
 import OverallCompletion from './Helper/OverallCompletion';
 import RateCards from './Helper/RateCards';
 
-const ParticipantSummary = ({ loading }) => {
+const ParticipantSummary = ({ loading, fetchSummary, summary }) => {
   const [pageSize] = React.useState(10);
   const [project, setProject] = React.useState('');
 
@@ -300,8 +300,12 @@ const ParticipantSummary = ({ loading }) => {
 
 ParticipantSummary.propTypes = {
   loading: PropTypes.bool.isRequired,
+  fetchSummary: PropTypes.func.isRequired,
+  summary: PropTypes.shape({}),
 };
 
-ParticipantSummary.defaultProps = {};
+ParticipantSummary.defaultProps = {
+  summary: {},
+};
 
 export default ParticipantSummary;

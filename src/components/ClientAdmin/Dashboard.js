@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import Dropdown from '../Common/Dropdown';
@@ -9,8 +9,12 @@ import ButtonsTab from './Helper/ButtonsTab';
 import OverallCompletion from './Helper/OverallCompletion';
 import RateCards from './Helper/RateCards';
 
-const Dashboard = ({ loading }) => {
+const Dashboard = ({ loading, completionRate, fetchCompletionRate }) => {
   const [project, setProject] = React.useState('');
+
+  useEffect(() => {
+    fetchCompletionRate(1);
+  }, []);
 
   const dropdownOptions = [
     { title: 'Leadership Development1', value: 1 },
@@ -51,8 +55,12 @@ const Dashboard = ({ loading }) => {
 
 Dashboard.propTypes = {
   loading: PropTypes.bool.isRequired,
+  fetchCompletionRate: PropTypes.func.isRequired,
+  completionRate: PropTypes.shape({}),
 };
 
-Dashboard.defaultProps = {};
+Dashboard.defaultProps = {
+  completionRate: {},
+};
 
 export default Dashboard;

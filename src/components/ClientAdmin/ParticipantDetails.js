@@ -11,7 +11,7 @@ import ButtonsTab from './Helper/ButtonsTab';
 import OverallCompletion from './Helper/OverallCompletion';
 import RateCards from './Helper/RateCards';
 
-const ParticipantDetails = ({ loading }) => {
+const ParticipantDetails = ({ loading, fetchRatees, ratees }) => {
   const [pageSize] = React.useState(10);
   const [project, setProject] = React.useState('');
 
@@ -331,8 +331,12 @@ const ParticipantDetails = ({ loading }) => {
 
 ParticipantDetails.propTypes = {
   loading: PropTypes.bool.isRequired,
+  fetchRatees: PropTypes.func.isRequired,
+  ratees: PropTypes.shape({}),
 };
 
-ParticipantDetails.defaultProps = {};
+ParticipantDetails.defaultProps = {
+  ratees: {},
+};
 
 export default ParticipantDetails;

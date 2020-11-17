@@ -5,6 +5,8 @@ import { useQuery } from '../../../hooks';
 
 import { fetchFullURL } from '../../../lib/utils';
 
+import { dynamicMap } from '../../../routes/RouteMap';
+
 import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
@@ -48,7 +50,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
             type="gray"
             icon="BankOutlined"
             iconPosition="right"
-            onClick={() => history.push('/super-user/organizations/new')}
+            onClick={() => history.push(dynamicMap.superUser.addOrganization())}
           />
         </div>
       </div>
@@ -98,13 +100,16 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
         key: 'project',
         title: '',
         width: 100,
-        render: (_data, { id }) => (
+        render: (_, { id: organizationId }) => (
           <Button
-            onClick={() =>
-              history.push(`/super-user/organizations/${id}?page_number=1&page_size=10`)
-            }
+            onClick={() => {
+              const path = dynamicMap.superUser.organizationStaffList({ organizationId });
+
+              history.push(`${path}?page_number=1&page_size=10`);
+            }}
             icon="TeamOutlined"
-            text="&nbsp;Staff"
+            textClassName="ml-2"
+            text="Staff"
             textSize="sm"
             type="link"
             className="text-lg mr-7"

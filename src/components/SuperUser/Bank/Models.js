@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 
 import { useQuery, stringify } from '../../../hooks/useQuery';
 
+import { dynamicMap } from '../../../routes/RouteMap';
+
 import Button from '../../Common/Button';
 import ImportExcelButton from '../../Common/ImportExcelButton';
 import MainLayout from '../../Common/Layout';
@@ -72,7 +74,7 @@ const Models = ({
       {
         key: 'action',
         width: 100,
-        render: (_, { id }) => (
+        render: (_, { id: surveyGroupId }) => (
           <div className="flex items-center">
             <Button
               className="flex items-center mr-3.5"
@@ -83,13 +85,14 @@ const Models = ({
               textClassName="mr-2"
               iconPosition="right"
               type="gray"
-              onClick={() => exportSurveyGroup(id)}
+              onClick={() => exportSurveyGroup(surveyGroupId)}
             />
             <Button
               onClick={() => {
-                const params = stringify({ surveyGroupId: id });
+                const params = stringify({ surveyGroupId });
+                const path = `${dynamicMap.superUser.bankSurveyGroups()}${params}`;
 
-                history.push(`/super-user/pre-defined-data/add${params}`);
+                history.push(path);
               }}
               icon="EditOutlined"
               type="link"
@@ -115,7 +118,7 @@ const Models = ({
           textSize="xs"
           iconPosition="right"
           type="gray"
-          onClick={() => history.push('/super-user/pre-defined-data/add')}
+          onClick={() => history.push(dynamicMap.superUser.bankSurveyGroups())}
         />
 
         <ImportExcelButton

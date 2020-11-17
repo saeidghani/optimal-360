@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import arrayMove from 'array-move';
-
 import { useHistory } from 'react-router-dom';
+
+import { dynamicMap } from '../../../routes/RouteMap';
 
 import { useQuery } from '../../../hooks';
 
@@ -36,13 +37,13 @@ const SurveyQuestionsList = ({
   const formRef = React.useRef();
 
   const schema = yup.object({
-    name: yup.string().required('Survey group name is required'),
+    name: yup.string().nullable().required('Survey group name is required'),
     clusters: yup.array(yup.object({})).min(1, 'You must specify at least one cluster item'),
     feedbacks: yup
       .array(
         yup.object({
-          label: yup.string().required('label is required'),
-          statement: yup.string().required('statement is required'),
+          label: yup.string().nullable().required('label is required'),
+          statement: yup.string().nullable().required('statement is required'),
           required: yup.bool().required('required is required'),
         }),
       )
@@ -318,7 +319,7 @@ const SurveyQuestionsList = ({
                   await addSurveyGroup(values);
                 }
 
-                history.push('/super-user/organizations');
+                history.push(dynamicMap.superUser.organizationsList());
               } catch (err) {}
             }}
           >
@@ -455,7 +456,7 @@ const SurveyQuestionsList = ({
                     type="link"
                     text="Back"
                     textSize="base"
-                    onClick={() => history.push('/super-user/pre-defined-data')}
+                    onClick={() => history.push(dynamicMap.superUser.bankModels())}
                   />
 
                   <Button
