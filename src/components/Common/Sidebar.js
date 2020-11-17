@@ -1,9 +1,10 @@
 import React from 'react';
-import { useLocation, Link } from 'react-router-dom';
-import { UserOutlined } from '@ant-design/icons';
+import { Link, useLocation } from 'react-router-dom';
+import { stringify } from '../../hooks/useQuery';
 
 import { dynamicMap } from '../../routes/RouteMap';
 
+import { UserOutlined } from '@ant-design/icons';
 import logo from '../../assets/images/360-icon.svg';
 
 const Sidebar = () => {
@@ -25,11 +26,11 @@ const Sidebar = () => {
         <Link
           className={`py-5 w-full flex flex-row justify-center items-center text-center text-2xl
             hover:text-primary-500 ${
-              pathname === dynamicMap.superUser.projectsList()
-                ? activeClassNames
-                : 'text-antgray-100'
-            } `}
-          to={`${dynamicMap.superUser.projectsList()}?status=active&page_size=10&page_number=1`}
+            pathname === dynamicMap.superUser.projectsList()
+              ? activeClassNames
+              : 'text-antgray-100'
+          } `}
+          to={`${dynamicMap.superUser.projectsList()}${stringify({ status: 'active', page_size: 10, page_number: 1 })}`}
         >
           <svg className="fill-current" width="1em" height="1em" fill="none">
             <path
@@ -49,7 +50,7 @@ const Sidebar = () => {
               ? activeClassNames
               : 'text-antgray-100'
           } `}
-          to={`${dynamicMap.superUser.organizationsList()}?page_size=10&page_number=1`}
+          to={`${dynamicMap.superUser.organizationsList()}${stringify({ page_size: 10, page_number: 1 })}`}
         >
           <svg className="fill-current" width="1em" height="1em" fill="none">
             <path
@@ -66,7 +67,7 @@ const Sidebar = () => {
           hover:text-primary-500 ${
             pathname === dynamicMap.superUser.bankModels() ? activeClassNames : 'text-antgray-100'
           } `}
-          to={`${dynamicMap.superUser.bankModels()}?page_size=10&page_number=1`}
+          to={`${dynamicMap.superUser.bankModels()}${stringify({ page_size: 10, page_number: 1 })}`}
         >
           <svg className="fill-current" width="1em" height="1em" fill="none">
             <path
@@ -96,7 +97,7 @@ const Sidebar = () => {
       </div>
 
       <div
-        className="c-user-icon-sidebar flex justify-center p-3 mb-4 
+        className="c-user-icon-sidebar flex justify-center p-3 mb-4
       items-center rounded-full bg-primary-500 text-xl text-white"
       >
         <UserOutlined />

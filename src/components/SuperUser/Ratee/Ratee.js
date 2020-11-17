@@ -12,6 +12,7 @@ import Result from './Result';
 import { Tabs } from 'antd';
 import MainLayout from '../../Common/Layout';
 import Dropdown from '../../Common/Dropdown';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 const Ratee = (
   {
@@ -52,7 +53,7 @@ const Ratee = (
   );
   React.useEffect(() => {
     if (!parsedQuery?.projectId || !parsedQuery?.surveyGroupId) {
-      history.push('/');
+      history.push(dynamicMap.superUser.projectsList());
     }
   }, []);
 

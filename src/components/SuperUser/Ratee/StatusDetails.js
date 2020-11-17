@@ -1,7 +1,11 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useQuery } from '../../../hooks';
+
 import { useHistory } from 'react-router-dom';
+import { useQuery } from '../../../hooks';
+import { stringify } from '../../../hooks/useQuery';
+
+import { dynamicMap } from '../../../routes/RouteMap';
 
 import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
@@ -29,6 +33,7 @@ const StatusDetails = (
   const [selectedRows, setSelectedRows] = React.useState([]);
   const pageNumber = parsedQuery?.page_number;
   const surveyGroupId = parsedQuery?.surveyGroupId;
+  const projectId = parsedQuery?.projectId;
 
   const fetch = () => {
     fetchStatusDetails({ query, surveyGroupId });
@@ -182,7 +187,9 @@ const StatusDetails = (
           <div className="inline-block">
             <Button
               onClick={() => {
-                history.push(`/super-user/participants/ratee/add/edit?rateeId=${rateeId}&surveyGroupId=${parsedQuery.surveyGroupId}${parsedQuery.projectId ? `&projectId=${parsedQuery.projectId}` : ''}`);
+                const params = stringify({ projectId, surveyGroupId, rateeId });
+                const path = `${dynamicMap.superUser.editRatee()}${params}`;
+                history.push(path);
               }}
               size="middle"
               textSize="xs"
@@ -219,7 +226,9 @@ const StatusDetails = (
           <div className="inline-block">
             <Button
               onClick={() => {
-                history.push(`/super-user/participants/ratee/add/edit?rateeId=${rateeId}&surveyGroupId=${parsedQuery.surveyGroupId}${parsedQuery.projectId ? `&projectId=${parsedQuery.projectId}` : ''}`);
+                const params = stringify({ projectId, surveyGroupId, rateeId });
+                const path = `${dynamicMap.superUser.editRatee()}${params}`;
+                history.push(path);
               }}
               size="middle"
               textSize="xs"
