@@ -15,6 +15,7 @@ const SortableItem = sortableElement((props) => <tr {...props} />);
 const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 
 const SortableTable = ({
+  tableClassName,
   data,
   onSortEnd,
   renderHeader,
@@ -96,7 +97,7 @@ const SortableTable = ({
 
   return (
     <Table
-      className="c-table-blue-bg"
+      className={tableClassName}
       pagination={false}
       showHeader={false}
       dataSource={data}
@@ -123,10 +124,12 @@ SortableTable.propTypes = {
   onQuestionEdit: PropTypes.func.isRequired,
   onQuestionDelete: PropTypes.func.isRequired,
   data: PropTypes.arrayOf(PropTypes.shape({})),
+  tableClassName: PropTypes.string,
 };
 
 SortableTable.defaultProps = {
   data: [],
+  tableClassName: '',
 };
 
 export default SortableTable;
