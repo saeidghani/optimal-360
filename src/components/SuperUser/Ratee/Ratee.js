@@ -65,22 +65,18 @@ const Ratee = (
     <MainLayout contentClass="pl-21 pr-6 py-4" title="Super User" titleClass="my-2" hasBreadCrumb>
       <div className="grid grid-cols-7 mt-3 mb-10">
         <h2 className="col-start-1 my-6 pt-6 pl-3 font-medium text-base">Survey Group</h2>
-        {parsedQuery?.projectId && (
-          <Dropdown
-            className="c-autocomplete col-start-1 w-full"
-            showSearch={false}
-            labelInValue
-            value={{ value: surveyGroupId, label: currentSurveyGroupName }}
-            handleChange={({ value }) => {
-              setQuery({ surveyGroupId: value });
-            }}
-            type="gray"
-            options={dropDownOptions}
-            loading={loading}
-          />
-        )
-        }
-
+        <Dropdown
+          className="c-autocomplete col-start-1 w-full"
+          showSearch={false}
+          labelInValue
+          value={{ value: surveyGroupId, label: currentSurveyGroupName }}
+          handleChange={({ value }) => {
+            setQuery({ surveyGroupId: value });
+          }}
+          type="gray"
+          options={dropDownOptions}
+          loading={loading}
+        />
       </div>
 
       <Tabs
