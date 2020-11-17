@@ -11,9 +11,15 @@ const RadioGroup = ({ className, radioClassName, defaultValue, items, value, onC
     defaultValue={defaultValue}
   >
     {items?.length > 0
-      ? items.map(({ value, title }) => (
+      ? items.map(({ value, title, disabled }) => (
           // eslint-disable-next-line react/jsx-indent
-          <Radio color="red" key={title} value={value} className={radioClassName}>
+          <Radio
+            color="red"
+            key={title}
+            value={value}
+            className={radioClassName}
+            // disabled={disabled}
+          >
             {title}
           </Radio>
         ))
@@ -29,6 +35,7 @@ RadioGroup.propTypes = {
     PropTypes.shape({
       value: PropTypes.string,
       title: PropTypes.string,
+      disabled: PropTypes.bool,
     }),
   ).isRequired,
   value: PropTypes.string.isRequired,

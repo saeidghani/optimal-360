@@ -5,6 +5,7 @@ import { Formik, Form } from 'formik';
 
 import { useQuery } from '../../../hooks/useQuery';
 import { useSurveyGroup } from '../../../hooks';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
 
@@ -168,7 +169,9 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
               try {
                 await setReports({ surveyGroupId, ...values });
 
-                history.push('/super-user/participants/ratee/add');
+                const path = dynamicMap.superUser.addRatee();
+
+                history.push(path);
               } catch (error) {}
             }}
           >

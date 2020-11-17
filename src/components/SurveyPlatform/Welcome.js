@@ -11,6 +11,7 @@ import GuideCarousel from './Helper/GuideCarousel';
 import Dropdown from '../Common/Dropdown';
 import Button from '../Common/Button';
 import Modal from '../Common/Modal';
+import { dynamicMap } from '../../routes/RouteMap';
 
 const Welcome = ({ loading }) => {
   const [project, setProject] = React.useState('');
@@ -25,7 +26,7 @@ const Welcome = ({ loading }) => {
   ];
 
   const handleNextClick = () => {
-    history.push('/survey-platform/information');
+    history.push(dynamicMap.surveyPlatform.information());
   };
 
   return (

@@ -5,6 +5,7 @@ import { notification } from 'antd';
 
 import { useQuery } from '../../../hooks/useQuery';
 import * as TEMPLATES from './Helper/EmailTemplates';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 import pascalize from '../../../lib/pascalize';
 
@@ -37,15 +38,14 @@ const EmailTemplate = ({ loading }) => {
   const pageTitle = (template.charAt(0).toUpperCase() + template.slice(1)).replaceAll('-', ' ');
 
   const addTag = (title) => {
-    let temp = emailTemplate;
-
-    temp = `${temp} <% ${title} %>`;
-
-    setEmailTemplate(temp);
+    document.execCommand('insertText', false, `<% ${title} %>`);
   };
 
   const validateTableData = () => {
     const table = document.querySelector('.text-editor-table');
+
+    if (!table) return false;
+
     const cells = table.querySelectorAll('td');
 
     const notify = (description) => {
@@ -119,7 +119,11 @@ const EmailTemplate = ({ loading }) => {
 
           <div className="flex flex-row">
             <Button
-              onClick={() => history.replace(`/super-user/new-project/email-settings${search}`)}
+              onClick={() => {
+                const path = dynamicMap.superUser.emailSettings();
+
+                history.replace(`${path}${search}`);
+              }}
               className="w-24.5 h-9.5"
               size="middle"
               type="link"
@@ -135,7 +139,10 @@ const EmailTemplate = ({ loading }) => {
                 // validateTableData returns true if there aren't any errors
                 if (!validateTableData(emailTemplate)) {
                   localStorage.setItem(templateKey, emailTemplate);
-                  history.replace(`/super-user/new-project/email-settings${search}`);
+
+                  const path = dynamicMap.superUser.emailSettings();
+
+                  history.replace(`${path}${search}`);
                 }
               }}
               textSize="base"

@@ -2,13 +2,12 @@ import React from 'react';
 import { TeamOutlined } from '@ant-design/icons';
 
 import Progress from '../Common/Progress';
-import ButtonsGroup from './Helper/ButtonsGroup';
 import Button from '../Common/Button';
+
+import { dynamicMap } from '../../routes/RouteMap';
 
 import Layout from './Helper/Layout';
 import './Helper/bubble.css';
-
-// import peopleIcon from '../../assets/images/people-outline.svg';
 
 const ReferenceGuide = () => {
   const ReferenceGuideCards = [
@@ -149,11 +148,17 @@ const ReferenceGuide = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-6 mt-10 gap-10">
         <div className="md:col-span-2 bg-white py-6 px-12 rounded-md">
-          <ButtonsGroup
-            activeButtonKey=""
-            wrapperClassName="flex-col justify-between px-10"
-            buttonClassName="mb-4 sm:mr-0"
-          />
+          <div className="grid grid-cols-6 overflow-auto mt-4">
+            <div className="mb-4 sm:mr-0 mr-4 col-start-2 col-span-4 border border-solid border-gray-500 text-center py-2 px-2 bg-white w-full">
+              View Ratee Summary
+            </div>
+            <div className="mb-4 sm:mr-0 mr-4 col-start-2 col-span-4 border border-solid border-gray-500 text-center py-2 px-2 bg-white w-full">
+              View Ratee Details
+            </div>
+            <div className="mb-4 sm:mr-0 mr-4 col-start-2 col-span-4 text-center py-2 px-2 text-white bg-primary-500 w-full">
+              View Rater Details
+            </div>
+          </div>
           <p className="mt-4 text-center md:text-left">
             Go to the Main Dashboard (Overview) Also to move between Competency sets using these
             tabs
@@ -210,7 +215,7 @@ const ReferenceGuide = () => {
           className="c-force-padding-y-px"
           textSize="sm"
           text="Ok, Got it!"
-          href="/client-admin/dashboard"
+          href={dynamicMap.clientAdmin.dashboard()}
         />
       </div>
     </Layout>

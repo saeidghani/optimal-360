@@ -7,6 +7,8 @@ import Input from '../../Common/Input';
 import Checkbox from '../../Common/Checkbox';
 import Button from '../../Common/Button';
 
+import { dynamicMap } from '../../../routes/RouteMap';
+
 import Shape from '../Helper/AnimatedShape';
 import AuthLayout from '../Helper/AuthLayout';
 
@@ -61,6 +63,7 @@ const Login = ({ login, loading }) => {
                 />
 
                 <Input
+                  inputClass="c-input-sm-placeholder"
                   value={values.password}
                   disabled={loading}
                   onChange={handleChange}
@@ -70,7 +73,7 @@ const Login = ({ login, loading }) => {
                   labelText="Password"
                   placeholder="Password"
                   extrainfoText="Forgot Password?"
-                  extrainfoLink="/forgot-password"
+                  extrainfoLink={dynamicMap.clientAdmin.forgotPassword()}
                   errorMessage={touched.password && errors.password}
                   onPressEnter={handleSubmit}
                 />

@@ -10,6 +10,7 @@ import Dropdown from '../Common/Dropdown';
 import Button from '../Common/Button';
 import RadioGroup from '../Common/RadioGroup';
 import Input from '../Common/Input';
+import { dynamicMap } from '../../routes/RouteMap';
 
 const Information = ({ loading }) => {
   const [gender, setGender] = React.useState('2');
@@ -88,7 +89,7 @@ const Information = ({ loading }) => {
   };
 
   const handleSubmit = () => {
-    history.push('/survey-platform/managers/all-ratees');
+    history.push(dynamicMap.surveyPlatform.allRateesList());
   };
 
   return (

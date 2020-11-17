@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 
 import CustomRoute from './Route';
 import PrivateRoute from './PrivateRoute';
+import { map } from './RouteMap';
 
 import Login from '../containers/ClientAdmin/Auth/Login';
 import ForgotPassword from '../containers/ClientAdmin/Auth/ForgotPassword';
@@ -16,13 +17,13 @@ import NotFound from '../components/404';
 
 const Routes = () => (
   <Switch>
-    <CustomRoute path="/client-admin/login" exact component={Login} />
-    <CustomRoute path="/client-admin/forgot-password" exact component={ForgotPassword} />
-    <PrivateRoute path="/client-admin/dashboard" exact component={Dashboard} />
-    <PrivateRoute path="/client-admin/participant-summary" exact component={ParticipantSummary} />
-    <PrivateRoute path="/client-admin/participant-details" exact component={ParticipantDetails} />
-    <PrivateRoute path="/client-admin/rater-details" exact component={RaterDetails} />
-    <PrivateRoute path="/client-admin/reference-guide" exact component={ReferenceGuide} />
+    <CustomRoute path={map.clientAdmin.login} exact component={Login} />
+    <CustomRoute path={map.clientAdmin.forgotPassword} exact component={ForgotPassword} />
+    <PrivateRoute path={map.clientAdmin.dashboard} exact component={Dashboard} />
+    <PrivateRoute path={map.clientAdmin.participantSummary} exact component={ParticipantSummary} />
+    <PrivateRoute path={map.clientAdmin.participantDetails} exact component={ParticipantDetails} />
+    <PrivateRoute path={map.clientAdmin.raterDetails} exact component={RaterDetails} />
+    <PrivateRoute path={map.clientAdmin.referenceGuide} exact component={ReferenceGuide} />
     <Route component={NotFound} />
   </Switch>
 );

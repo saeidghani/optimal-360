@@ -4,6 +4,8 @@ import { useParams, useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import PropTypes from 'prop-types';
 
+import { dynamicMap } from '../../../routes/RouteMap';
+
 import { generateNewPassword } from '../../../lib/utils';
 
 import MainLayout from '../../Common/Layout';
@@ -42,7 +44,9 @@ const SetAdmin = ({ loading, setAdmin, fetchAdmin, clientAdmin }) => {
           validationSchema={schema}
           onSubmit={async ({ email, password, status }) => {
             await setAdmin({ email, password, active: status === 'active', projectId });
-            history.replace('/super-user/projects?status=active&page_size=10&page_number=1');
+
+            const path = dynamicMap.superUser.projectsList();
+            history.replace(`${path}?status=active&page_size=10&page_number=1`);
           }}
           enableReinitialize
         >

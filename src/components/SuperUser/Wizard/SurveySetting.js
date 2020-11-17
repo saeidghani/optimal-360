@@ -6,6 +6,7 @@ import * as yup from 'yup';
 import moment from 'moment';
 
 import { useQuery, useSurveyGroup } from '../../../hooks';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 import Menu from './Helper/Menu';
 import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
@@ -336,9 +337,10 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                   surveyGroupId,
                 });
 
+                const path = dynamicMap.superUser.emailSettings();
                 const params = history?.location?.search;
 
-                history.push(`/super-user/new-project/email-settings${params}`);
+                history.push(`${path}${params}`);
               } catch (error) {}
             }}
           >

@@ -13,6 +13,7 @@ import Table from '../../Common/Table';
 
 import graphIcon from '../../../assets/images/graph-icon.svg';
 import Modal from '../../Common/Modal';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 const AllRatees = ({ loading }) => {
   const [submitModalVisible, setSubmitModalVisible] = React.useState(false);
@@ -120,7 +121,7 @@ const AllRatees = ({ loading }) => {
   );
 
   const handleContinue = () => {
-    history.push('/survey-platform/managers/all-ratees/questions');
+    history.push(dynamicMap.surveyPlatform.allRateesQuestions());
   };
 
   const handleSubmit = () => {
@@ -141,10 +142,10 @@ const AllRatees = ({ loading }) => {
       <Modal
         visible={submitModalVisible}
         handleOk={handleSubmitModalOk}
-        handleCancel={() => {}}
+        handleCancel={() => setSubmitModalVisible(false)}
         width={588}
         okText="Yes"
-        cancelText=""
+        cancelText="Cancel"
         okButtonProps={{ textClassName: 'px-4' }}
       >
         <div className="flex flex-col items-center">
