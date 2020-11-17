@@ -126,6 +126,11 @@ const StatusDetails = (
             type="gray"
             icon="PlusCircleOutlined"
             iconPosition="right"
+            onClick={() => {
+              const params = stringify({ projectId, surveyGroupId });
+              const path = `${dynamicMap.superUser.addRatee()}${params}`;
+              history.push(path);
+            }}
           />
           <Button
             size="middle"
