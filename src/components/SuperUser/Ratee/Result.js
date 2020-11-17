@@ -283,7 +283,7 @@ const Result = ({
           setVisible(false);
         }}
       >
-        {({ values, errors, touched, handleSubmit, setFieldValue }) => (
+        {({ values, handleSubmit, setFieldValue }) => (
           <Form>
             <Modal
               okText="Export"
@@ -298,11 +298,11 @@ const Result = ({
               <div className="grid grid-cols-2 mb-3">
                 <div>
                   <Checkbox
-                    checked={!Object.values(values).some(c => c === false)}
+                    checked={!Object.values(values).some((fieldVal) => fieldVal === false)}
                     className="block mb-3"
                     labelClass="text-sm"
                     onChange={() => {
-                      const state = Object.values(values).some(c => c === false);
+                      const state = Object.values(values).some((fieldVal) => fieldVal === false);
                       setFieldValue('lengthOfService', state);
                       setFieldValue('ageGroup', state);
                       setFieldValue('highestEducation', state);
@@ -312,7 +312,6 @@ const Result = ({
                       setFieldValue('sector', state);
                       setFieldValue('employmentLocation', state);
                       setFieldValue('sex', state);
-                      console.log(values);
                     }}
                   >
                     All
@@ -431,8 +430,8 @@ const Result = ({
             page_number,
           });
         }}
-        rowKey={selectedTab === '1' ? 'rateeId' : ''}
-        selectedRowKeys={selectedRows?.map((el) => el.rateeId)}
+        rowKey={selectedTab === '1' ? 'rateeId' : 'id'}
+        selectedRowKeys={selectedRows?.map((el) => (selectedTab === '1' ? el.rateeId : el.id))}
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
         }}

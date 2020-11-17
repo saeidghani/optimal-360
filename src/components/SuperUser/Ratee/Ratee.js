@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { useHistory } from 'react-router-dom';
+import { useQuery, useSurveyGroup, useTabs } from '../../../hooks';
+
 import StatusOverview from './StatusOverview';
 import StatusDetails from './StatusDetails';
 import RatersEmail from './RatersEmail';
@@ -9,8 +12,6 @@ import Result from './Result';
 import { Tabs } from 'antd';
 import MainLayout from '../../Common/Layout';
 import Dropdown from '../../Common/Dropdown';
-
-import { useQuery, useTabs, useSurveyGroup } from '../../../hooks';
 
 const Ratee = (
   {
@@ -39,6 +40,7 @@ const Ratee = (
   },
 ) => {
   const [parsedQuery, query, setQuery] = useQuery();
+  const history = useHistory();
   const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
   const [currentTab, setTab] = useTabs(['status-overview', 'status-details', 'raters-email', 'result']);
   const { TabPane } = Tabs;
@@ -48,6 +50,11 @@ const Ratee = (
     // eslint-disable-next-line
     [surveyGroups.timeStamp],
   );
+  React.useEffect(() => {
+    if (!parsedQuery?.projectId || !parsedQuery?.surveyGroupId) {
+      history.push('/');
+    }
+  }, []);
 
   function tabChangeCallback(key) {
     setTab(key);
