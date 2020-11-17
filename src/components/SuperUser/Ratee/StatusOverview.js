@@ -270,7 +270,7 @@ const StatusOverview = ({
         </div>
         <Progress
           type="line"
-          percentage={parseInt((completionRate?.data?.totalSubmissions / completionRate?.data?.totalRaters) * 100, 10) || 0}
+          percentage={parseInt((completionRate?.data?.totalSurveySubmissionRate / completionRate?.data?.totalSurveyRate) * 100, 10) || 0}
         />
       </div>
       <div className="bg-white p-6 pb-8 pr-32 rounded-md my-6">
@@ -280,7 +280,7 @@ const StatusOverview = ({
         </div>
         <Progress
           type="line"
-          percentage={parseInt((completionRate?.data?.totalSubmissions / completionRate?.data?.totalRaters) * 100, 10) || 0}
+          percentage={parseInt((completionRate?.data?.totalAnsweredRate / completionRate?.data?.totalQuestionRate) * 100, 10) || 0}
         />
       </div>
       <div className="grid grid-cols-5 gap-6">
@@ -367,6 +367,7 @@ StatusOverview.propTypes = {
       }),
     }),
     data: PropTypes.arrayOf(PropTypes.shape({
+      rateeId: PropTypes.string,
       rateeName: PropTypes.string,
       totalRaters: PropTypes.string,
       totalSubmissions: PropTypes.string,
@@ -387,16 +388,18 @@ StatusOverview.propTypes = {
 
   completionRate: PropTypes.shape({
     data: PropTypes.shape({
+      totalRatees: PropTypes.string,
       totalRaters: PropTypes.string,
-      totalSubmissions: PropTypes.string,
+      totalSurveyRate: PropTypes.string,
+      totalSurveySubmissionRate: PropTypes.string,
+      totalQuestionRate: PropTypes.string,
+      totalAnsweredRate: PropTypes.string,
       raterGroups: PropTypes.arrayOf(PropTypes.shape({
-        raterGroupId: PropTypes.number,
         raterGroupName: PropTypes.string,
-        raterGroupMinRater: PropTypes.number,
-        totalQuestions: PropTypes.string,
-        totalAnswered: PropTypes.string,
         totalRaters: PropTypes.string,
         totalSubmissions: PropTypes.string,
+        totalQuestions: PropTypes.string,
+        totalAnswered: PropTypes.string,
       })),
     }),
     message: PropTypes.string,
