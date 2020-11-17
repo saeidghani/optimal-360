@@ -13,13 +13,13 @@ import Button from '../../Common/Button';
 import ImportExcelButton from '../../Common/ImportExcelButton';
 
 const OrganizationsStaff = ({
-  importStaff,
-  organizationsInfo,
-  staff,
-  fetchOrganizationsInfo,
-  fetchOrganizationsStaff,
-  loading,
-}) => {
+                              importStaff,
+                              organizationsInfo,
+                              staff,
+                              fetchOrganizationsInfo,
+                              fetchOrganizationsStaff,
+                              loading,
+                            }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const { organizationId } = useParams();
@@ -116,6 +116,7 @@ const OrganizationsStaff = ({
     {
       key: 'edit',
       title: '',
+      width: 50,
       render: (_, { id: staffId }) => (
         <Button
           size="middle"
