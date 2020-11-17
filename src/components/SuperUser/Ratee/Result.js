@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 
@@ -29,16 +29,16 @@ const Result = ({
 
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [visible, setVisible] = React.useState(false);
-  const [selectedTab, setSelectedTab] = useState('1');
 
   const { TabPane } = Tabs;
   const pageNumber = parsedQuery?.page_number || 1;
   const pageSize = parsedQuery?.page_size || 10;
   const surveyGroupId = parsedQuery?.surveyGroupId;
   const projectId = parsedQuery?.projectId;
+  const resultBy = parsedQuery?.resultBy || 'individual';
 
   function tabChangeCallback(key) {
-    setSelectedTab(key);
+    setQuery({ resultBy: key });
   }
 
   React.useEffect(() => {
@@ -52,10 +52,6 @@ const Result = ({
   React.useEffect(() => {
     fetchIndividualReports({ query, surveyGroupId });
   }, [fetchIndividualReports, pageSize, pageNumber, parsedQuery.q, parsedQuery.sort]);
-
-  React.useEffect(() => {
-    setSelectedRows([]);
-  }, [selectedTab]);
 
   const renderHeader = React.useCallback(() => {
     return selectedRows && selectedRows?.length > 0 ? (
@@ -91,16 +87,16 @@ const Result = ({
     ) : (
       <div className="flex justify-between items-center result-tabs">
         <Tabs
-          defaultActiveKey={selectedTab}
+          defaultActiveKey={resultBy || 'individual'}
           onChange={tabChangeCallback}
           className="relative contents"
           tabBarStyle={{ color: '#262626' }}
         >
-          <TabPane tab="Individual Report" key="1" />
-          <TabPane tab="Group Report" key="2" />
+          <TabPane tab="Individual Report" key="individual" />
+          <TabPane tab="Group Report" key="group" />
         </Tabs>
         <div className="flex flex-row ">
-          {selectedTab === '1' && (<SearchBox
+          {resultBy === 'individual' && (<SearchBox
             className="text-xs"
             placeholder="SEARCH"
             loading={loading}
@@ -119,7 +115,7 @@ const Result = ({
         </div>
       </div>
     );
-  }, [loading, selectedRows.length, selectedTab]);
+  }, [loading, selectedRows.length, resultBy]);
 
   const individualColumns = React.useMemo(() => [
     {
@@ -412,13 +408,13 @@ const Result = ({
         className="p-6 mt-5 bg-white rounded-lg shadow"
         onTableChange={({ sorter }) => sort(sorter)}
         loading={loading}
-        columns={selectedTab === '1' ? individualColumns : groupColumns}
-        dataSource={(selectedTab === '1' ? individualReports?.data : groupReports?.data) || []}
+        columns={resultBy === 'individual' ? individualColumns : groupColumns}
+        dataSource={(resultBy === 'individual' ? individualReports?.data : groupReports?.data) || []}
         renderHeader={renderHeader}
         onPageSizeChange={(size) => {
           setQuery({ page_size: size, page_number: 1 });
         }}
-        pagination={selectedTab === '1'}
+        pagination={resultBy === 'individual'}
         pageSize={pageSize * 1}
         pageNumber={pageNumber * 1}
         // eslint-disable-next-line camelcase
@@ -429,12 +425,12 @@ const Result = ({
             page_number,
           });
         }}
-        rowKey={selectedTab === '1' ? 'rateeId' : 'id'}
-        selectedRowKeys={selectedRows?.map((el) => (selectedTab === '1' ? el.rateeId : el.id))}
+        rowKey={resultBy === 'individual' ? 'rateeId' : 'id'}
+        selectedRowKeys={selectedRows?.map((el) => (resultBy === 'individual' ? el.rateeId : el.id))}
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
         }}
-        totalRecordSize={(selectedTab === '1' ? individualReports : groupReports)?.metaData?.pagination?.totalRecords}
+        totalRecordSize={(resultBy === 'individual' ? individualReports : groupReports)?.metaData?.pagination?.totalRecords}
       />
     </>
   );
