@@ -43,16 +43,15 @@ const Result = ({
 
   React.useEffect(() => {
     fetchIndividualReports({ query, surveyGroupId });
-    fetchGroupReports({ query, projectId });
-    setSelectedRows([]);
-  }, [
-    pageSize,
-    parsedQuery.q,
-    pageNumber,
-    parsedQuery.page_size,
-    parsedQuery.sort,
-    surveyGroupId,
-  ]);
+  }, [fetchIndividualReports, surveyGroupId]);
+
+  React.useEffect(() => {
+    fetchGroupReports({ projectId });
+  }, [fetchGroupReports, projectId]);
+
+  React.useEffect(() => {
+    fetchIndividualReports({ query, surveyGroupId });
+  }, [fetchIndividualReports, pageSize, pageNumber, parsedQuery.q, parsedQuery.sort]);
 
   React.useEffect(() => {
     setSelectedRows([]);

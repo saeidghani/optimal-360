@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 // import PropTypes from 'prop-types';
 
 import PropTypes from 'prop-types';
@@ -17,23 +17,23 @@ const RatersEmail = ({
                        sendEmail,
                      }) => {
   const [parsedQuery, query, setQuery] = useQuery();
-  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const pageNumber = parsedQuery?.page_number || 1;
+  const pageSize = parsedQuery?.page_size || 10;
   const surveyGroupId = parsedQuery?.surveyGroupId;
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchRaters({ query, surveyGroupId });
     setSelectedRows([]);
   }, [
     fetchRaters,
     surveyGroupId,
-    parsedQuery.page_size,
+    pageSize,
+    pageNumber,
     parsedQuery.q,
-    parsedQuery.page_number,
     parsedQuery.sort,
   ]);
-  useEffect(() => {
+  React.useEffect(() => {
     fetchEmailOptions({ surveyGroupId });
   }, [fetchEmailOptions, surveyGroupId]);
 
@@ -128,7 +128,6 @@ const RatersEmail = ({
       rowKey="raterId"
       renderHeader={renderHeader}
       onPageSizeChange={(size) => {
-        setPageSize(size);
         setQuery({ page_size: size, page_number: 1 });
       }}
       pageSize={pageSize * 1}

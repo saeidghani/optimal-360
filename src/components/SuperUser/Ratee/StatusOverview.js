@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 // import PropTypes from 'prop-types';
 import { TeamOutlined } from '@ant-design/icons';
 
@@ -15,20 +15,17 @@ const StatusOverview = ({
                           loading,
                         }) => {
   const [parsedQuery, query, setQuery] = useQuery();
-  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const pageNumber = parsedQuery?.page_number || 1;
+  const pageSize = parsedQuery?.page_size || 10;
   const surveyGroupId = parsedQuery?.surveyGroupId;
 
-  useEffect(() => {
-      fetchCompletionRate({ query, surveyGroupId });
-    }, [fetchCompletionRate, surveyGroupId],
-  );
+  React.useEffect(() => {
+    fetchCompletionRate({ query, surveyGroupId });
+  }, [fetchCompletionRate, surveyGroupId]);
 
-  useEffect(() => {
-      fetchSummary({ query, surveyGroupId });
-    }, [
-      fetchSummary, surveyGroupId, pageSize, pageNumber],
-  );
+  React.useEffect(() => {
+    fetchSummary({ query, surveyGroupId });
+  }, [fetchSummary, surveyGroupId, pageSize, pageNumber]);
 
   const columns = React.useMemo(() => [
     {
@@ -297,7 +294,6 @@ const StatusOverview = ({
         rowKey="key"
         rowSelection={false}
         onPageSizeChange={(size) => {
-          setPageSize(size);
           setQuery({ page_size: size, page_number: 1 });
         }}
         pageSize={pageSize * 1}

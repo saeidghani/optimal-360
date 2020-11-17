@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useHistory } from 'react-router-dom';
@@ -28,10 +28,10 @@ const StatusDetails = (
 ) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
-  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [viewByRaters, setViewByRaters] = React.useState(true);
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const pageNumber = parsedQuery?.page_number;
+  const pageNumber = parsedQuery?.page_number || 1;
+  const pageSize = parsedQuery?.page_size || 10;
   const surveyGroupId = parsedQuery?.surveyGroupId;
   const projectId = parsedQuery?.projectId;
 
@@ -39,17 +39,10 @@ const StatusDetails = (
     fetchStatusDetails({ query, surveyGroupId });
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetch();
     setSelectedRows([]);
-  }, [
-    fetchStatusDetails,
-    surveyGroupId,
-    parsedQuery.page_size,
-    parsedQuery.q,
-    parsedQuery.page_number,
-    parsedQuery.sort,
-  ]);
+  }, [fetchStatusDetails, surveyGroupId, pageSize, pageNumber, parsedQuery.q, parsedQuery.sort]);
 
   const renderHeader = React.useCallback(() => {
     const selectedRowsIds = selectedRows?.length > 0 ? selectedRows.map((el) => el.relationId) : [];
@@ -289,7 +282,6 @@ const StatusDetails = (
       rowKey="relationId"
       renderHeader={renderHeader}
       onPageSizeChange={(size) => {
-        setPageSize(size);
         setQuery({ page_size: size, page_number: 1 });
       }}
       pageSize={pageSize * 1}
