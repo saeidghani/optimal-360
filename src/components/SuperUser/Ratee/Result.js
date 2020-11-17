@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 
@@ -35,6 +35,7 @@ const Result = ({
   const pageNumber = parsedQuery?.page_number || 1;
   const pageSize = parsedQuery?.page_size || 10;
   const surveyGroupId = parsedQuery?.surveyGroupId;
+  const projectId = parsedQuery?.projectId;
 
   function tabChangeCallback(key) {
     setSelectedTab(key);
@@ -42,7 +43,7 @@ const Result = ({
 
   React.useEffect(() => {
     fetchIndividualReports({ query, surveyGroupId });
-    // fetchGroupReports({ query, surveyGroupId });
+    fetchGroupReports({ query, projectId });
     setSelectedRows([]);
   }, [
     pageSize,
@@ -50,6 +51,7 @@ const Result = ({
     pageNumber,
     parsedQuery.page_size,
     parsedQuery.sort,
+    surveyGroupId,
   ]);
 
   React.useEffect(() => {
@@ -65,7 +67,6 @@ const Result = ({
           text="Force generate report"
           textClassName="mr-2"
           className="ml-3"
-          onClick={() => setVisible(true)}
         />
         <Button
           size="middle"
@@ -75,7 +76,6 @@ const Result = ({
           className="ml-3"
           icon="FileExcelOutlined"
           iconPosition="right"
-          onClick={() => setVisible(true)}
         />
         <Button
           size="middle"
@@ -101,13 +101,13 @@ const Result = ({
           <TabPane tab="Group Report" key="2" />
         </Tabs>
         <div className="flex flex-row ">
-          <SearchBox
+          {selectedTab === '1' && (<SearchBox
             className="text-xs"
             placeholder="SEARCH"
             loading={loading}
             onSearch={(val) => setQuery({ q: val })}
             onPressEnter={(e) => setQuery({ q: e.target.value })}
-          />
+          />)}
           <Button
             size="middle"
             textSize="xs"
@@ -120,7 +120,7 @@ const Result = ({
         </div>
       </div>
     );
-  }, [loading, selectedRows.length]);
+  }, [loading, selectedRows.length, selectedTab]);
 
   const individualColumns = React.useMemo(() => [
     {
@@ -237,7 +237,7 @@ const Result = ({
   ]);
   const groupColumns = React.useMemo(() => [
     {
-      key: 'groupReport',
+      key: 'name',
       title: 'Group Report',
       width: 200,
       sorter: true,
@@ -246,41 +246,13 @@ const Result = ({
       key: 'reportAvailable',
       title: 'Report Available',
       width: 200,
-      render: (status) => (
+      render: (reportAvailable) => (
         <div className="w-16 flex-inline items-center justify-start">
-          <span className={status === 'No' && 'text-red'}>{status}</span>
+          <span className={!reportAvailable && 'text-red'}>{reportAvailable ? 'Yes' : 'No'}</span>
         </div>
       ),
     },
   ]);
-
-  const groupDataSource = [
-    {
-      id: 111,
-      groupReport: 'Top Leadership',
-      reportAvailable: 'No',
-    },
-    {
-      id: 112,
-      groupReport: 'Top Leadership',
-      reportAvailable: 'Yes',
-    },
-    {
-      id: 113,
-      groupReport: 'Top Leadership',
-      reportAvailable: 'No',
-    },
-    {
-      id: 114,
-      groupReport: 'Top Leadership',
-      reportAvailable: 'Yes',
-    },
-    {
-      id: 115,
-      groupReport: 'Top Leadership',
-      reportAvailable: 'No',
-    },
-  ];
 
   const sort = (sorter) => {
     // eslint-disable-next-line operator-linebreak
@@ -314,7 +286,7 @@ const Result = ({
         {({ values, errors, touched, handleSubmit, setFieldValue }) => (
           <Form>
             <Modal
-              okText="Discard These Settings"
+              okText="Export"
               cancelText="Cancel"
               visible={visible}
               cancelButtonText="Cancel"
@@ -443,11 +415,12 @@ const Result = ({
         onTableChange={({ sorter }) => sort(sorter)}
         loading={loading}
         columns={selectedTab === '1' ? individualColumns : groupColumns}
-        dataSource={(selectedTab === '1' ? individualReports?.data : groupDataSource) || []}
+        dataSource={(selectedTab === '1' ? individualReports?.data : groupReports?.data) || []}
         renderHeader={renderHeader}
         onPageSizeChange={(size) => {
           setQuery({ page_size: size, page_number: 1 });
         }}
+        pagination={selectedTab === '1'}
         pageSize={pageSize * 1}
         pageNumber={pageNumber * 1}
         // eslint-disable-next-line camelcase
@@ -497,7 +470,21 @@ Result.propTypes = {
     }),
     timeStamp: PropTypes.number,
   }),
-  groupReports: PropTypes.shape({}),
+  groupReports: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      reportAvailable: PropTypes.bool,
+    })),
+    metaData: PropTypes.shape({
+      pagination: PropTypes.shape({
+        pageNumber: PropTypes.string,
+        pageSize: PropTypes.string,
+        totalRecords: PropTypes.string,
+      }),
+    }),
+    timeStamp: PropTypes.number,
+  }),
 };
 
 Result.defaultProps = {

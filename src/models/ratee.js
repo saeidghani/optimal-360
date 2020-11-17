@@ -172,11 +172,11 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
-    async fetchGroupReports({ surveyGroupId, query }) {
+    async fetchGroupReports({ projectId }) {
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
-          url: `/super-user/survey-groups/${surveyGroupId}/results/group-reports${query}`,
+          url: `/super-user/projects/${projectId}/results/group-reports`,
         });
 
         await this.fetchGroupReports_reducer(res?.data);
