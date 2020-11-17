@@ -42,7 +42,9 @@ const Layout = ({
       key: 3,
       title: 'Customer Support',
       icon: <MailOutlined />,
-      href: '/client-admin/customer-support',
+      href: '#',
+      // eslint-disable-next-line no-undef
+      onClick: () => alert('coming soon'),
     },
     {
       key: 4,
@@ -72,7 +74,11 @@ const Layout = ({
           </div>
         </Link>
         <Link to="#">
-          <div className="flex justify-between items-center text-gray-500 text-base">
+          <div
+            /* eslint-disable-next-line no-undef */
+            onClick={() => alert('coming soon')}
+            className="flex justify-between items-center text-gray-500 text-base"
+          >
             <MailOutlined />
             <span className="ml-2 text-xs lg:text-base">Customer Support</span>
           </div>

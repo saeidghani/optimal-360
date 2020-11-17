@@ -4,6 +4,14 @@
 //   background-color: @primary-color !important;
 // }
 
+.c-input-sm-placeholder {
+  input {
+    &::placeholder {
+      font-size: 12px !important;
+    }
+  }
+}
+
 .c-modal-sm-padding {
   .ant-modal-content {
     padding: 60px 30px 30px 30px !important;
@@ -540,6 +548,26 @@
     border-color: red;
   }
 }
+
+.c-radio-primary {
+  .ant-radio-checked .ant-radio-inner {
+    border-color: #1BB7D9 !important;
+  }
+
+  .ant-radio-checked .ant-radio-inner:after {
+    background-color: #1BB7D9;
+  }
+
+  .ant-radio:hover .ant-radio-inner {
+    border-color: #1BB7D9;
+  }
+
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #1BB7D9;
+    border-color: #1BB7D9;
+  }
+}
+
 
 .ant-radio-checked .ant-radio-inner {
   border-color: #1890ff !important;

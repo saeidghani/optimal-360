@@ -61,6 +61,7 @@ const Login = ({ login, loading }) => {
                 />
 
                 <Input
+                  inputClass="c-input-sm-placeholder"
                   value={values.password}
                   disabled={loading}
                   onChange={handleChange}
@@ -70,7 +71,7 @@ const Login = ({ login, loading }) => {
                   labelText="Password"
                   placeholder="Password"
                   extrainfoText="Forgot Password?"
-                  extrainfoLink="/forgot-password"
+                  extrainfoLink="/survey-platform/forgot-password"
                   errorMessage={touched.password && errors.password}
                   onPressEnter={handleSubmit}
                 />

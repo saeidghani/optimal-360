@@ -27,7 +27,7 @@ _Tabs.propTypes = {
     }),
   ).isRequired,
   className: PropTypes.string,
-  onTabChange: PropTypes.func.isRequired,
+  onTabChange: PropTypes.func,
 };
 
 _Tabs.defaultProps = {

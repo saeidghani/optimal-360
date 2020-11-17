@@ -18,7 +18,10 @@ const PrivateRoute = ({ scrollToTop, ...props }) => {
 
   // Not logged in - redirect to (/super-user/login) with previous path (/prevPath)
   if (!token) {
-    return <Redirect to={`/super-user/login${prevPath}`} />;
+    let platform = 'super-user';
+    if (pathname.includes('client-admin')) platform = 'client-admin';
+    if (pathname.includes('survey-platform')) platform = 'survey-platform';
+    return <Redirect to={`/${platform}/login${prevPath}`} />;
   }
 
   // Logged in and verified

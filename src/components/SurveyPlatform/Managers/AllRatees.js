@@ -141,10 +141,10 @@ const AllRatees = ({ loading }) => {
       <Modal
         visible={submitModalVisible}
         handleOk={handleSubmitModalOk}
-        handleCancel={() => {}}
+        handleCancel={() => setSubmitModalVisible(false)}
         width={588}
         okText="Yes"
-        cancelText=""
+        cancelText="Cancel"
         okButtonProps={{ textClassName: 'px-4' }}
       >
         <div className="flex flex-col items-center">
