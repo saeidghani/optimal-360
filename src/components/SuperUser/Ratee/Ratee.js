@@ -1,17 +1,18 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-
 import PropTypes from 'prop-types';
-import { Tabs } from 'antd';
-import { useParams, useHistory } from 'react-router-dom';
-import MainLayout from '../../Common/Layout';
-import Dropdown from '../../Common/Dropdown';
+
+import { useHistory } from 'react-router-dom';
+import { useQuery, useSurveyGroup, useTabs } from '../../../hooks';
+
 import StatusOverview from './StatusOverview';
 import StatusDetails from './StatusDetails';
 import RatersEmail from './RatersEmail';
 import Result from './Result';
 
-import { useQuery, useTabs, useSurveyGroup } from '../../../hooks';
+import { Tabs } from 'antd';
+import MainLayout from '../../Common/Layout';
+import Dropdown from '../../Common/Dropdown';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 const Ratee = (
   {
@@ -28,10 +29,18 @@ const Ratee = (
     raters,
     emailOptions,
     fetchRaters,
+    sendEmail,
     fetchEmailOptions,
+    importRelations,
+    exportRelations,
+    fetchIndividualReports,
+    fetchGroupReports,
+    exportDemographicData,
+    individualReports,
+    groupReports,
   },
 ) => {
-  const [parsedQuery, query, setQuery] = useQuery();
+  const [, , setQuery] = useQuery();
   const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
   const [currentTab, setTab] = useTabs(['status-overview', 'status-details', 'raters-email', 'result']);
   const { TabPane } = Tabs;
@@ -50,22 +59,18 @@ const Ratee = (
     <MainLayout contentClass="pl-21 pr-6 py-4" title="Super User" titleClass="my-2" hasBreadCrumb>
       <div className="grid grid-cols-7 mt-3 mb-10">
         <h2 className="col-start-1 my-6 pt-6 pl-3 font-medium text-base">Survey Group</h2>
-        {parsedQuery?.projectId && (
-          <Dropdown
-            className="c-autocomplete col-start-1 w-full"
-            showSearch={false}
-            labelInValue
-            value={{ value: surveyGroupId, label: currentSurveyGroupName }}
-            handleChange={({ value }) => {
-              setQuery({ surveyGroupId: value });
-            }}
-            type="gray"
-            options={dropDownOptions}
-            loading={loading}
-          />
-        )
-        }
-
+        <Dropdown
+          className="c-autocomplete col-start-1 w-full"
+          showSearch={false}
+          labelInValue
+          value={{ value: surveyGroupId, label: currentSurveyGroupName }}
+          handleChange={({ value }) => {
+            setQuery({ surveyGroupId: value });
+          }}
+          type="gray"
+          options={dropDownOptions}
+          loading={loading}
+        />
       </div>
 
       <Tabs
@@ -87,8 +92,9 @@ const Ratee = (
             fetchStatusDetails={fetchStatusDetails}
             removeRateeRaters={removeRateeRaters}
             changeAssessmentsStatus={changeAssessmentsStatus}
-            exportSurveyGroupRaters={exportSurveyGroupRaters}
             statusDetails={statusDetails}
+            importRelations={importRelations}
+            exportRelations={exportRelations}
             loading={loading}
           />
         </TabPane>
@@ -98,11 +104,20 @@ const Ratee = (
             raters={raters}
             fetchRaters={fetchRaters}
             emailOptions={emailOptions}
+            sendEmail={sendEmail}
             fetchEmailOptions={fetchEmailOptions}
+            exportSurveyGroupRaters={exportSurveyGroupRaters}
           />
         </TabPane>
         <TabPane tab="Results" key="result">
-          <Result loading={loading} />
+          <Result
+            loading={loading}
+            fetchIndividualReports={fetchIndividualReports}
+            fetchGroupReports={fetchGroupReports}
+            exportDemographicData={exportDemographicData}
+            individualReports={individualReports}
+            groupReports={groupReports}
+          />
         </TabPane>
       </Tabs>
 
@@ -123,8 +138,16 @@ Ratee.propTypes = {
   changeAssessmentsStatus: PropTypes.func.isRequired,
   removeRateeRaters: PropTypes.func.isRequired,
   exportSurveyGroupRaters: PropTypes.func.isRequired,
+  importRelations: PropTypes.func.isRequired,
+  exportRelations: PropTypes.func.isRequired,
+  sendEmail: PropTypes.func.isRequired,
   fetchRaters: PropTypes.func.isRequired,
   fetchEmailOptions: PropTypes.func.isRequired,
+  fetchIndividualReports: PropTypes.func.isRequired,
+  fetchGroupReports: PropTypes.func.isRequired,
+  exportDemographicData: PropTypes.func.isRequired,
+  individualReports: PropTypes.shape({}),
+  groupReports: PropTypes.shape({}),
 };
 
 Ratee.defaultProps = {

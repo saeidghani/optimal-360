@@ -1,13 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+
+import { useHistory } from 'react-router-dom';
 import { useQuery } from '../../../hooks';
+import { stringify } from '../../../hooks/useQuery';
+
+import { dynamicMap } from '../../../routes/RouteMap';
 
 import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
 import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
+import ImportExcelButton from '../../Common/ImportExcelButton';
+
 import AwardIcon from '../../../assets/images/award.svg';
-import { useHistory } from 'react-router-dom';
 
 const StatusDetails = (
   {
@@ -15,32 +21,29 @@ const StatusDetails = (
     fetchStatusDetails,
     removeRateeRaters,
     changeAssessmentsStatus,
-    exportSurveyGroupRaters,
     statusDetails,
+    importRelations,
+    exportRelations,
   },
 ) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
-  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const pageNumber = parsedQuery?.page_number;
+
+  const viewBy = parsedQuery?.viewBy || 'raters';
+  const pageNumber = parsedQuery?.page_number || 1;
+  const pageSize = parsedQuery?.page_size || 10;
   const surveyGroupId = parsedQuery?.surveyGroupId;
+  const projectId = parsedQuery?.projectId;
 
   const fetch = () => {
     fetchStatusDetails({ query, surveyGroupId });
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetch();
     setSelectedRows([]);
-  }, [
-    fetchStatusDetails,
-    surveyGroupId,
-    parsedQuery.page_size,
-    parsedQuery.q,
-    parsedQuery.page_number,
-    parsedQuery.sort,
-  ]);
+  }, [fetchStatusDetails, surveyGroupId, pageSize, pageNumber, parsedQuery.q, parsedQuery.sort]);
 
   const renderHeader = React.useCallback(() => {
     const selectedRowsIds = selectedRows?.length > 0 ? selectedRows.map((el) => el.relationId) : [];
@@ -93,6 +96,8 @@ const StatusDetails = (
             text="View by raters"
             textClassName="mr-2"
             className="ml-3"
+            light={viewBy === 'ratees'}
+            onClick={() => (setQuery({ viewBy: 'raters' }))}
           />
           <Button
             size="middle"
@@ -100,7 +105,8 @@ const StatusDetails = (
             text="View by ratees"
             textClassName="mr-2"
             className="ml-3"
-            light
+            light={viewBy === 'raters'}
+            onClick={() => (setQuery({ viewBy: 'ratees' }))}
           />
         </div>
         <div className="flex flex-row">
@@ -120,34 +126,37 @@ const StatusDetails = (
             type="gray"
             icon="PlusCircleOutlined"
             iconPosition="right"
+            onClick={() => {
+              const params = stringify({ projectId, surveyGroupId });
+              const path = `${dynamicMap.superUser.addRatee()}${params}`;
+              history.push(path);
+            }}
           />
           <Button
             size="middle"
             textSize="xs"
             text="Export Exel File"
             textClassName="mr-2"
-            className="ml-3"
+            className="ml-3 mr-3"
             type="gray"
             icon="FileExcelOutlined"
             iconPosition="right"
             onClick={() => {
-              exportSurveyGroupRaters({ surveyGroupId });
+              exportRelations({ surveyGroupId });
             }}
           />
-          <Button
-            size="middle"
-            textSize="xs"
-            text="Import Exel File"
+          <ImportExcelButton
             textClassName="mr-2"
             className="ml-3"
-            type="gray"
-            icon="FileExcelOutlined"
-            iconPosition="right"
+            beforeUpload={(file) => {
+              importRelations({ file, surveyGroupId });
+              return false;
+            }}
           />
         </div>
       </div>
     );
-  }, [loading, selectedRows.length]);
+  }, [loading, selectedRows.length, viewBy]);
 
   const getSortOrder = (key) => {
     return parsedQuery?.sort?.includes(key)
@@ -158,21 +167,13 @@ const StatusDetails = (
   };
 
   const columns = React.useMemo(() => [
-    {
+    viewBy === 'raters' ? {
       key: 'raterName',
       title: 'Rater Name',
       width: 100,
       sorter: true,
       sortOrder: getSortOrder('raterName'),
-    },
-    {
-      key: 'raterEmail',
-      title: 'Rater Email',
-      width: 100,
-      sorter: true,
-      sortOrder: getSortOrder('raterEmail'),
-    },
-    {
+    } : {
       key: 'rateeName',
       title: 'Ratee Name',
       width: 100,
@@ -184,7 +185,48 @@ const StatusDetails = (
           <div className="inline-block">
             <Button
               onClick={() => {
-                history.push(`/super-user/participants/ratee/add/edit?rateeId=${rateeId}&surveyGroupId=${parsedQuery.surveyGroupId}${parsedQuery.projectId ? `&projectId=${parsedQuery.projectId}` : ''}`);
+                const params = stringify({ projectId, surveyGroupId, rateeId });
+                const path = `${dynamicMap.superUser.editRatee()}${params}`;
+                history.push(path);
+              }}
+              size="middle"
+              textSize="xs"
+              type="link"
+              className="ml-2 p-0 h-6 w-6"
+              icon={<img src={AwardIcon} alt="Ratee Name" className="purple-check h-6 w-6 inline-block" />}
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: 'raterEmail',
+      title: 'Rater Email',
+      width: 100,
+      sorter: true,
+      sortOrder: getSortOrder('raterEmail'),
+    },
+    viewBy === 'ratees' ? {
+      key: 'raterName',
+      title: 'Rater Name',
+      width: 100,
+      sorter: true,
+      sortOrder: getSortOrder('raterName'),
+    } : {
+      key: 'rateeName',
+      title: 'Ratee Name',
+      width: 100,
+      sorter: true,
+      sortOrder: getSortOrder('rateeName'),
+      render: (num, { rateeId }) => (
+        <div className="flex items-center">
+          <div className="text-12px inline-block">{num}</div>
+          <div className="inline-block">
+            <Button
+              onClick={() => {
+                const params = stringify({ projectId, surveyGroupId, rateeId });
+                const path = `${dynamicMap.superUser.editRatee()}${params}`;
+                history.push(path);
               }}
               size="middle"
               textSize="xs"
@@ -245,7 +287,6 @@ const StatusDetails = (
       rowKey="relationId"
       renderHeader={renderHeader}
       onPageSizeChange={(size) => {
-        setPageSize(size);
         setQuery({ page_size: size, page_number: 1 });
       }}
       pageSize={pageSize * 1}
@@ -270,9 +311,10 @@ const StatusDetails = (
 StatusDetails.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchStatusDetails: PropTypes.func.isRequired,
+  importRelations: PropTypes.func.isRequired,
+  exportRelations: PropTypes.func.isRequired,
   removeRateeRaters: PropTypes.func.isRequired,
   changeAssessmentsStatus: PropTypes.func.isRequired,
-  exportSurveyGroupRaters: PropTypes.func.isRequired,
   statusDetails: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
     metaData: PropTypes.shape({

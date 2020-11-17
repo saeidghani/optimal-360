@@ -22,7 +22,7 @@ const superUser = {
   editRatee: 'participants/ratee/add/edit',
   rateesList: 'participants/ratee/add/step2',
 
-  ratersList: 'participants/ratee/:tab?',
+  ratersList: 'participants/ratee',
 
   organizationsList: 'organizations',
   addOrganizationStaff: 'organizations/:organizationId/new-staff',

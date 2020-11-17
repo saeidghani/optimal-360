@@ -147,7 +147,7 @@ _Table.propTypes = {
   onPaginationChange: PropTypes.func,
   onRowSelectionChange: PropTypes.func,
   totalRecordSize: PropTypes.number,
-  selectedRowKeys: PropTypes.arrayOf(PropTypes.string),
+  selectedRowKeys: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
   onRowClick: PropTypes.func,
   onTableChange: PropTypes.func,
   size: PropTypes.string,
