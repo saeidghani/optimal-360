@@ -38,11 +38,7 @@ const EmailTemplate = ({ loading }) => {
   const pageTitle = (template.charAt(0).toUpperCase() + template.slice(1)).replaceAll('-', ' ');
 
   const addTag = (title) => {
-    let temp = emailTemplate;
-
-    temp = `${temp} <% ${title} %>`;
-
-    setEmailTemplate(temp);
+    document.execCommand('insertText', false, `<% ${title} %>`);
   };
 
   const validateTableData = () => {
