@@ -54,9 +54,8 @@ const SortableItem = SortableElement(
           checked={value.required}
           onChange={(val) => handleFormChange(val, value, 'feedbacks', 'required')}
           labelClass="text-secondary"
-        >
-          This question is required to answer
-        </Checkbox>
+          textNode="This question is required to answer"
+        />
       </div>
     </div>
   ),

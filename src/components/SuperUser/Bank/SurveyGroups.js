@@ -37,13 +37,13 @@ const SurveyQuestionsList = ({
   const formRef = React.useRef();
 
   const schema = yup.object({
-    name: yup.string().required('Survey group name is required'),
+    name: yup.string().nullable().required('Survey group name is required'),
     clusters: yup.array(yup.object({})).min(1, 'You must specify at least one cluster item'),
     feedbacks: yup
       .array(
         yup.object({
-          label: yup.string().required('label is required'),
-          statement: yup.string().required('statement is required'),
+          label: yup.string().nullable().required('label is required'),
+          statement: yup.string().nullable().required('statement is required'),
           required: yup.bool().required('required is required'),
         }),
       )

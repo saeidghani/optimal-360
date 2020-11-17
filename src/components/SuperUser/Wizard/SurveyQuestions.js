@@ -46,17 +46,17 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
   const schema = yup.object({
     ratingScales: yup.array(
       yup.object({
-        score: yup.number().required('score is required'),
-        description: yup.string().required('description is required'),
-        label: yup.string().required('label is required'),
+        score: yup.number().nullable().required('score is required'),
+        description: yup.string().nullable().required('description is required'),
+        label: yup.string().nullable().required('label is required'),
       }),
     ),
     clusters: yup.array(yup.object({})).min(1, 'You must specify at least one cluster item'),
     feedbacks: yup
       .array(
         yup.object({
-          label: yup.string().required('label is required'),
-          statement: yup.string().required('statement is required'),
+          label: yup.string().nullable().required('label is required'),
+          statement: yup.string().nullable().required('statement is required'),
           required: yup.bool().required('required is required'),
         }),
       )
