@@ -458,9 +458,10 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
 
                 <h4 className="text-secondary text-lg mt-8.5">Data Model</h4>
 
-                <div className="grid grid-cols-12 gap-x-8">
+                <div className="grid grid-cols-12 gap-x-8 mt-8">
                   <SecondaryMenu
                     title="ALL"
+                    titleClassName="text-body"
                     className="py-3 col-span-3 h-94 overflow-x-hidden overflow-y-auto"
                     items={values.clusters}
                     defaultClusterId={firstClusterItem.id}
@@ -517,6 +518,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                       />
                     ) : (
                       <DraggableTable
+                        tableClassName="clusters-table"
                         renderHeader={renderHeader}
                         onClusterEdit={(cluster) => setSelectedCluster(cluster)}
                         onClusterDelete={(cluster) => deleteCluster({ clusterId: cluster.id })}

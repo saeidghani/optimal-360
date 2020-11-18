@@ -32,7 +32,7 @@ const AddFeedbackModal = ({ visible, onSave, onCancel }) => {
         initialValues={{
           label: '',
           statement: '',
-          statementType: 'positive',
+          statementType: 'Positive',
           required: false,
         }}
         validationSchema={schema}
@@ -74,7 +74,7 @@ const AddFeedbackModal = ({ visible, onSave, onCancel }) => {
                 />
               </div>
 
-              <div className="col-span-12 my-5">
+              <div className="col-span-12 mt-2">
                 <Input
                   labelText="Question Statement"
                   name="statement"
@@ -86,7 +86,7 @@ const AddFeedbackModal = ({ visible, onSave, onCancel }) => {
                 />
               </div>
 
-              <div className="col-span-12 mt-5">
+              <div className="col-span-12">
                 <Checkbox
                   checked={values.required}
                   onChange={(required) => setFieldValue('required', required)}

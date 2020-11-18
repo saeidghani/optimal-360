@@ -44,7 +44,7 @@ const SortableItem = SortableElement(
             type="link"
             onClick={() => deleteFeedback(value)}
             icon="DeleteOutlined"
-            className="text-lg text-antgray-200"
+            className="text-lg text-antgray-200 h-6 py-3"
           />
         }
       />

@@ -123,7 +123,13 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
           <Button
             className="pl-0"
             onClick={() => {
-              const params = stringify({ projectId: project.id, surveyGroupId });
+              const params = stringify({
+                projectId: project.id,
+                surveyGroupId,
+                tab: 'status-overview',
+                page_number: 1,
+                page_size: 10,
+              });
               const path = `${dynamicMap.superUser.ratersList()}${params}`;
               history.push(path);
             }}
