@@ -13,8 +13,6 @@ import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
 import ImportExcelButton from '../../Common/ImportExcelButton';
 
-import AwardIcon from '../../../assets/images/award.svg';
-
 const StatusDetails = (
   {
     loading,
