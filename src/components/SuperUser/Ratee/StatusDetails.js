@@ -13,8 +13,6 @@ import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
 import ImportExcelButton from '../../Common/ImportExcelButton';
 
-import AwardIcon from '../../../assets/images/award.svg';
-
 const StatusDetails = (
   {
     loading,
@@ -193,7 +191,7 @@ const StatusDetails = (
               textSize="xs"
               type="link"
               className="ml-2 p-0 h-6 w-6"
-              icon={<img src={AwardIcon} alt="Ratee Name" className="purple-check h-6 w-6 inline-block" />}
+              icon={"EditOutlined"}
             />
           </div>
         </div>
@@ -232,7 +230,7 @@ const StatusDetails = (
               textSize="xs"
               type="link"
               className="ml-2 p-0 h-6 w-6"
-              icon={<img src={AwardIcon} alt="Ratee Name" className="purple-check h-6 w-6 inline-block" />}
+              icon="EditOutlined"
             />
           </div>
         </div>
@@ -304,6 +302,11 @@ const StatusDetails = (
         setSelectedRows(rows);
       }}
       totalRecordSize={statusDetails?.metaData?.pagination?.totalRecords * 1}
+      rowClassName={({ assessmentStatus }) => {
+        if (!assessmentStatus) {
+          return 'td-gray';
+        }
+      }}
     />
   );
 };
