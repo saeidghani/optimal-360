@@ -13,11 +13,6 @@ const useTabs = (tabArray) => {
       setQuery({ tab: allTabs[0], page_size: '10', sort: '', page_number: '1', q: '' });
     }
   };
-  useEffect(() => {
-    const tabFromQuery = parsedQuery?.tab?.toString() || '';
-    // eslint-disable-next-line no-unused-expressions
-    !allTabs.includes(tabFromQuery) && setQuery({ tab: allTabs[0] });
-  }, [parsedQuery?.tab]);
 
   return [currentTab, setTab];
 };
