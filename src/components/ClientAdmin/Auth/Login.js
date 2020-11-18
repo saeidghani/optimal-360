@@ -9,8 +9,8 @@ import Button from '../../Common/Button';
 
 import { dynamicMap } from '../../../routes/RouteMap';
 
-import Shape from '../Helper/AnimatedShape';
-import AuthLayout from '../Helper/AuthLayout';
+import Shape from './Helper/AnimatedShape';
+import AuthLayout from './Helper/AuthLayout';
 
 const Login = ({ login, loading }) => {
   const schema = yup.object({

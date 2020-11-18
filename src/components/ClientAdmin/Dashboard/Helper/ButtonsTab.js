@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Button from '../../Common/Button';
-import { dynamicMap } from '../../../routes/RouteMap';
+import Button from '../../../Common/Button';
+import { dynamicMap } from '../../../../routes/RouteMap';
 
 const ButtonsTab = ({ activeButtonKey, wrapperClassName, buttonClassName }) => {
   const viewButtons = [

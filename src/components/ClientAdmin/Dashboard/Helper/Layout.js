@@ -13,13 +13,13 @@ import {
 } from '@ant-design/icons';
 import { Avatar } from 'antd';
 
-import ProfileDropdown from '../../Common/ProfileDropdown';
-import BreadCrumb from '../../Common/BreadCrumb';
+import ProfileDropdown from '../../../Common/ProfileDropdown';
+import BreadCrumb from '../../../Common/BreadCrumb';
 
-import { dynamicMap } from '../../../routes/RouteMap';
+import { dynamicMap } from '../../../../routes/RouteMap';
 
-import budgetLogo from '../../../assets/images/budgetLogo.png';
-import optimal360Logo from '../../../assets/images/optimal360Logo.png';
+import budgetLogo from '../../../../assets/images/budgetLogo.png';
+import optimal360Logo from '../../../../assets/images/optimal360Logo.png';
 
 const Layout = ({
   children,

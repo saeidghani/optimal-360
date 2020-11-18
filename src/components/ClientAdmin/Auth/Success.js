@@ -1,8 +1,8 @@
 import React from 'react';
 
-import SuccessIcon from '../../assets/images/success-purple.svg';
+import SuccessIcon from '../../../assets/images/success-purple.svg';
 
-import Button from '../Common/Button';
+import Button from '../../Common/Button';
 import AuthLayout from './Helper/AuthLayout';
 
 const Success = () => (

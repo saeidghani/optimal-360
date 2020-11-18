@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import { HomeOutlined, MailOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
 import BudgetLogo from './BudgetLogo';
-import ProfileDropdown from '../../Common/ProfileDropdown';
+import ProfileDropdown from '../../../Common/ProfileDropdown';
 
-import { dynamicMap } from '../../../routes/RouteMap';
+import { dynamicMap } from '../../../../routes/RouteMap';
 
-import optimal360Logo from '../../../assets/images/optimal360Logo.png';
-import optimal360MiniLogo from '../../../assets/images/optimal360MiniLogo.png';
+import optimal360Logo from '../../../../assets/images/optimal360Logo.png';
+import optimal360MiniLogo from '../../../../assets/images/optimal360MiniLogo.png';
 
 const Layout = ({ children, className, wrapperClassName, isLogin }) => {
   const profileDropdownOptions = [

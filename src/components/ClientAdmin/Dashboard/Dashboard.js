@@ -1,34 +1,33 @@
 import React, { useEffect } from 'react';
+import { Tabs } from 'antd';
+
 import PropTypes from 'prop-types';
-
-import Dropdown from '../Common/Dropdown';
-import Tabs from '../Common/Tabs';
-
 import Layout from './Helper/Layout';
-import ButtonsTab from './Helper/ButtonsTab';
-import OverallCompletion from './Helper/OverallCompletion';
-import RateCard from './Helper/RateCard';
-import Loading from '../Common/Loading';
 
-const Dashboard = ({ loading, completionRate, fetchProjects, fetchCompletionRate }) => {
+import TopLeadership from './TopLeadership/TopLeadership';
+import Managers from './Managers/Managers';
+import HighPotentials from './HighPotentials/HighPotentials';
+import Loading from '../../Common/Loading';
+import Dropdown from '../../Common/Dropdown';
+
+const Dashboard = ({ loading, completionRate, fetchProjects, projects, fetchCompletionRate }) => {
   const [project, setProject] = React.useState('');
 
+  const { TabPane } = Tabs;
+
   useEffect(() => {
-    fetchCompletionRate(120);
     fetchProjects('');
   }, []);
 
-  const dropdownOptions = [
-    { title: 'Leadership Development1', value: 1 },
-    { title: 'Leadership Development2', value: 2 },
-    { title: 'Leadership Development3', value: 3 },
-  ];
-
-  const tabOptions = [
-    { title: 'Top Leadership', key: '1' },
-    { title: 'Managers', key: '2' },
-    { title: 'High Potentials', key: '3' },
-  ];
+  const dropdownOptions = React.useMemo(() => {
+    if (projects?.data) {
+      /* return (projects.data[0] || []).map((el) => ({
+         title: el.name,
+         value: el.id,
+         label: el.name,
+       })); */
+    }
+  }, [projects]);
 
   return (
     <Layout>
@@ -46,22 +45,22 @@ const Dashboard = ({ loading, completionRate, fetchProjects, fetchCompletionRate
           options={dropdownOptions}
         />
       </div>
-      <div className="md:w-full">
-        <Tabs className="md:c-tabs-class" defaultActiveKey="1" tabOptions={tabOptions} />
-      </div>
-      <ButtonsTab activeButtonKey="" />
-      <OverallCompletion
-        totalRatees={completionRate?.totalRatees}
-        totalSurveySubmissionRate={completionRate?.totalSurveySubmissionRate}
-        totalSurveyRate={completionRate?.totalSurveyRate}
-        totalAnsweredRate={completionRate?.totalAnsweredRate}
-        totalQuestionRate={completionRate?.totalQuestionRate}
-      />
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 mt-10">
-        {(completionRate?.raterGroups || []).map((data) => (
-          <RateCard {...data} />
-        ))}
-      </div>
+      <Tabs>
+        <TabPane tab="Top Leadership" key="top-leadership">
+          <TopLeadership
+            loading={loading}
+            completionRate={completionRate}
+            projects={projects}
+            fetchCompletionRate={fetchCompletionRate}
+          />
+        </TabPane>
+        <TabPane tab="Managers" key="managers">
+          <Managers />
+        </TabPane>
+        <TabPane tab="High Potentials" key="high-potentials">
+          <HighPotentials />
+        </TabPane>
+      </Tabs>
     </Layout>
   );
 };
@@ -70,6 +69,10 @@ Dashboard.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchCompletionRate: PropTypes.func.isRequired,
   fetchProjects: PropTypes.func.isRequired,
+  projects: PropTypes.shape({
+    data: PropTypes.shape({}),
+    timeStamp: PropTypes.number,
+  }),
   completionRate: PropTypes.shape({
     totalRatees: PropTypes.string,
     totalSurveySubmissionRate: PropTypes.string,
@@ -90,6 +93,7 @@ Dashboard.propTypes = {
 
 Dashboard.defaultProps = {
   completionRate: {},
+  projects: {},
 };
 
 export default Dashboard;

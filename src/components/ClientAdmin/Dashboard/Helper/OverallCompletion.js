@@ -2,7 +2,7 @@ import React from 'react';
 import { TeamOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
-import Progress from '../../Common/Progress';
+import Progress from '../../../Common/Progress';
 
 const OverallCompletion = ({
   totalRatees,

@@ -6,8 +6,8 @@ import Button from '../Common/Button';
 
 import { dynamicMap } from '../../routes/RouteMap';
 
-import Layout from './Helper/Layout';
-import './Helper/bubble.css';
+import Layout from './Dashboard/Helper/Layout';
+import './Dashboard/Helper/bubble.css';
 
 const ReferenceGuide = () => {
   const ReferenceGuideCards = [

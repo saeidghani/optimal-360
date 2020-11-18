@@ -6,6 +6,7 @@ export default {
   namespace: 'clientAdmin',
 
   state: {
+    projects: '',
     completionRate: '',
     summary: '',
     ratees: '',
@@ -43,13 +44,13 @@ export default {
     },
 
     async fetchProjects(query) {
-      return actionWapper(async () => {
+      return actionWrapper(async () => {
         const res = await axios({
           method: 'get',
           url: `/client-admin/projects${query}`,
         });
 
-        this.fetchProjects_reducer(res?.data?.data);
+        this.fetchProjects_reducer(res?.data);
 
         return res;
       }, dispatch.util.errorHandler);
@@ -64,7 +65,7 @@ export default {
           url: `/client-admin/survey-groups/${surveyGroupId}/overview/completion-rate`,
         });
 
-        this.fetchCompletionRate_Reducer(res?.data?.data);
+        this.fetchCompletionRate_Reducer(res?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
@@ -78,7 +79,7 @@ export default {
           url: `/client-admin/survey-groups/${surveyGroupId}/overview/summary`,
         });
 
-        this.fetchSummary_reducer(res?.data?.data);
+        this.fetchSummary_reducer(res?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
@@ -92,7 +93,7 @@ export default {
           url: `/client-admin/survey-groups/${surveyGroupId}/overview/ratees`,
         });
 
-        this.fetchRatees_reducer(res?.data?.data);
+        this.fetchRatees_reducer(res?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
@@ -106,7 +107,7 @@ export default {
           url: `/client-admin/survey-groups/${surveyGroupId}/overview/raters`,
         });
 
-        this.fetchRaters_reducer(res?.data?.data);
+        this.fetchRaters_reducer(res?.data);
         return res;
       }, dispatch.util.errorHandler);
     },

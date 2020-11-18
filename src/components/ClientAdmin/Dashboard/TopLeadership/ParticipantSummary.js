@@ -1,19 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Dropdown from '../Common/Dropdown';
-import Tabs from '../Common/Tabs';
-import Progress from '../Common/Progress';
-
-import Layout from './Helper/Layout';
-import Table from '../Common/Table';
-import ButtonsTab from './Helper/ButtonsTab';
-import OverallCompletion from './Helper/OverallCompletion';
-import RateCard from './Helper/RateCard';
+import Progress from '../../../Common/Progress';
+import Table from '../../../Common/Table';
 
 const ParticipantSummary = ({ loading, fetchSummary, summary }) => {
   const [pageSize] = React.useState(10);
-  const [project, setProject] = React.useState('');
 
   const columns = React.useMemo(() => [
     {
@@ -249,52 +241,19 @@ const ParticipantSummary = ({ loading, fetchSummary, summary }) => {
     },
   ];
 
-  const dropdownOptions = [
-    { title: 'Leadership Development1', value: 1 },
-    { title: 'Leadership Development2', value: 2 },
-    { title: 'Leadership Development3', value: 3 },
-  ];
-
-  const tabOptions = [
-    { title: 'Top Leadership', key: '1' },
-    { title: 'Managers', key: '2' },
-    { title: 'High Potentials', key: '3' },
-  ];
-
   return (
-    <Layout>
-      <div className="grid grid-cols-12 mb-10 mt-8">
-        <div className="col-start-1 col-span-6 text-base text-body mb-3">Select Project</div>
-        <Dropdown
-          className="c-autocomplete col-start-1 col-span-12
-          md:col-start-1 md:col-span-4 lg:col-start-1 lg:col-span-3 w-full"
-          showSearch={false}
-          type="gray"
-          placeholder="Leadership Development"
-          value={project}
-          handleChange={(val) => setProject(val)}
-          options={dropdownOptions}
-        />
-      </div>
-      <div className="md:w-full">
-        <Tabs className="md:c-tabs-class" defaultActiveKey="1" tabOptions={tabOptions} />
-      </div>
-      <ButtonsTab activeButtonKey="1" />
-      <OverallCompletion />
-      <RateCard />
-      <Table
-        size="middle"
-        className="p-6 bg-white rounded-lg shadow"
-        tableClassName="c-table-thead-white overflow-auto header-bg-white"
-        loading={loading}
-        columns={columns}
-        dataSource={dataSource}
-        pageSize={pageSize * 1}
-        pageNumber={1}
-        rowSelection={false}
-        paginationClassName="flex flex-col md:flex-row justify-between h-24"
-      />
-    </Layout>
+    <Table
+      size="middle"
+      className="p-6 bg-white rounded-lg shadow"
+      tableClassName="c-table-thead-white overflow-auto header-bg-white"
+      loading={loading}
+      columns={columns}
+      dataSource={dataSource}
+      pageSize={pageSize * 1}
+      pageNumber={1}
+      rowSelection={false}
+      paginationClassName="flex flex-col md:flex-row justify-between h-24"
+    />
   );
 };
 
