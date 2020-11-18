@@ -68,7 +68,7 @@ const AddQuestion = ({ visible, onSave, onCancel }) => {
                 className="bg-gray-200 hover:bg-gray-200"
               />
 
-              <h3 className="text-base text-body">Low Scores Tend to</h3>
+              <h3 className="text-base text-body mb-2">Low Scores Tend to</h3>
 
               {(values.lowScores || []).map((item, i, originialArr) => (
                 <Input
@@ -110,7 +110,7 @@ const AddQuestion = ({ visible, onSave, onCancel }) => {
                 iconPosition="right"
               />
 
-              <h3 className="text-base text-body">High Scores Tend to</h3>
+              <h3 className="text-base text-body mb-2">High Scores Tend to</h3>
 
               {(values.highScores || []).map((item, i, originialArr) => (
                 <Input
