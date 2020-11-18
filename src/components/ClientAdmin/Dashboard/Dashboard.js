@@ -1,17 +1,18 @@
 import React, { useEffect } from 'react';
 import { Tabs } from 'antd';
-
 import PropTypes from 'prop-types';
-import Layout from './Helper/Layout';
 
+import Loading from '../../Common/Loading';
+import Dropdown from '../../Common/Dropdown';
+import { useQuery } from '../../../hooks';
+
+import Layout from './Helper/Layout';
 import TopLeadership from './TopLeadership/TopLeadership';
 import Managers from './Managers/Managers';
 import HighPotentials from './HighPotentials/HighPotentials';
-import Loading from '../../Common/Loading';
-import Dropdown from '../../Common/Dropdown';
 
 const Dashboard = ({ loading, completionRate, fetchProjects, projects, fetchCompletionRate }) => {
-  const [project, setProject] = React.useState('');
+  const [, , setQuery] = useQuery();
 
   const { TabPane } = Tabs;
 
@@ -19,15 +20,15 @@ const Dashboard = ({ loading, completionRate, fetchProjects, projects, fetchComp
     fetchProjects('');
   }, []);
 
-  const dropdownOptions = React.useMemo(() => {
-    if (projects?.data) {
-      /* return (projects.data[0] || []).map((el) => ({
-         title: el.name,
-         value: el.id,
-         label: el.name,
-       })); */
-    }
-  }, [projects]);
+  const dropdownOptions = React.useMemo(
+    () =>
+      ((projects?.data?.length > 0 && projects.data[0].surveyGroups) || []).map((el) => ({
+        title: el.surveyGroupName,
+        value: el.surveyGroupId,
+        label: el.surveyGroupName,
+      })),
+    [projects.timeStamp],
+  );
 
   return (
     <Layout>
@@ -40,8 +41,7 @@ const Dashboard = ({ loading, completionRate, fetchProjects, projects, fetchComp
           showSearch={false}
           type="gray"
           placeholder="Leadership Development"
-          value={project}
-          handleChange={(val) => setProject(val)}
+          handleChange={(val) => setQuery({ surveyGroupId: val })}
           options={dropdownOptions}
         />
       </div>
@@ -70,7 +70,9 @@ Dashboard.propTypes = {
   fetchCompletionRate: PropTypes.func.isRequired,
   fetchProjects: PropTypes.func.isRequired,
   projects: PropTypes.shape({
-    data: PropTypes.shape({}),
+    data: PropTypes.shape({
+      length: PropTypes.number,
+    }),
     timeStamp: PropTypes.number,
   }),
   completionRate: PropTypes.shape({

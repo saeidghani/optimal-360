@@ -2,13 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '../../../Common/Button';
-import { dynamicMap } from '../../../../routes/RouteMap';
 
-const ButtonsTab = ({ activeButtonKey, wrapperClassName, buttonClassName }) => {
+const ViewTypeButtons = ({ activeButtonKey, wrapperClassName, buttonClassName }) => {
   const viewButtons = [
-    { key: '1', title: 'View Ratee Summary', href: dynamicMap.clientAdmin.participantSummary() },
-    { key: '2', title: 'View Ratee Details', href: dynamicMap.clientAdmin.participantDetails() },
-    { key: '3', title: 'View Rater Details', href: dynamicMap.clientAdmin.raterDetails() },
+    { key: '1', title: 'View Ratee Summary' },
+    { key: '2', title: 'View Ratee Details' },
+    { key: '3', title: 'View Rater Details' },
   ];
 
   return (
@@ -21,23 +20,22 @@ const ButtonsTab = ({ activeButtonKey, wrapperClassName, buttonClassName }) => {
           textClassName={`pt-2 ${button.key === activeButtonKey ? 'text-white' : 'text-heading'}`}
           textSize="sm"
           text={button.title}
-          href={button.href}
         />
       ))}
     </div>
   );
 };
 
-ButtonsTab.propTypes = {
+ViewTypeButtons.propTypes = {
   activeButtonKey: PropTypes.string,
   wrapperClassName: PropTypes.string,
   buttonClassName: PropTypes.string,
 };
 
-ButtonsTab.defaultProps = {
+ViewTypeButtons.defaultProps = {
   activeButtonKey: '',
   wrapperClassName: '',
   buttonClassName: '',
 };
 
-export default ButtonsTab;
+export default ViewTypeButtons;

@@ -1,18 +1,23 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import ButtonsTab from '../Helper/ButtonsTab';
+import { useQuery } from '../../../../hooks';
+
+import ButtonsTab from '../Helper/ViewTypeButtons';
 import OverallCompletion from '../Helper/OverallCompletion';
 import RateCard from '../Helper/RateCard';
 
-const TopLeadership = ({ loading, completionRate, fetchCompletionRate }) => {
+const TopLeadership = ({ completionRate, fetchCompletionRate }) => {
+  const [parsedQuery, query] = useQuery();
+  const surveyGroupId = parsedQuery?.surveyGroupId;
+
   useEffect(() => {
-    fetchCompletionRate(120);
-  }, []);
+    if (surveyGroupId) fetchCompletionRate({ query, surveyGroupId });
+  }, [fetchCompletionRate, surveyGroupId]);
 
   return (
     <div>
-      <ButtonsTab activeButtonKey="" />
+      {surveyGroupId && <ButtonsTab activeButtonKey="" />}
       <OverallCompletion
         totalRatees={completionRate?.data?.totalRatees}
         totalSurveySubmissionRate={completionRate?.data?.totalSurveySubmissionRate}
@@ -30,7 +35,6 @@ const TopLeadership = ({ loading, completionRate, fetchCompletionRate }) => {
 };
 
 TopLeadership.propTypes = {
-  loading: PropTypes.bool.isRequired,
   fetchCompletionRate: PropTypes.func.isRequired,
   completionRate: PropTypes.shape({
     data: PropTypes.shape({

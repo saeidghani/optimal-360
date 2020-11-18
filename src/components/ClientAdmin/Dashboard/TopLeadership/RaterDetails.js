@@ -1,19 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Dropdown from '../../../Common/Dropdown';
-import Tabs from '../../../Common/Tabs';
 import Progress from '../../../Common/Progress';
 
-import Layout from '../Helper/Layout';
 import Table from '../../../Common/Table';
-import ButtonsTab from '../Helper/ButtonsTab';
-import OverallCompletion from '../Helper/OverallCompletion';
-import RateCard from '../Helper/RateCard';
 
 const RaterDetails = ({ loading, fetchRaters, raters }) => {
   const [pageSize] = React.useState(10);
-  const [project, setProject] = React.useState('');
 
   const columns = React.useMemo(() => [
     {
@@ -248,18 +241,6 @@ const RaterDetails = ({ loading, fetchRaters, raters }) => {
       others: { percentage: 10, status: '' },
       status: 'Met Min Req',
     },
-  ];
-
-  const dropdownOptions = [
-    { title: 'Leadership Development1', value: 1 },
-    { title: 'Leadership Development2', value: 2 },
-    { title: 'Leadership Development3', value: 3 },
-  ];
-
-  const tabOptions = [
-    { title: 'Top Leadership', key: '1' },
-    { title: 'Managers', key: '2' },
-    { title: 'High Potentials', key: '3' },
   ];
 
   return (

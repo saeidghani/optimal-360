@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
-import Layout from '../../components/ClientAdmin/Dashboard/TopLeadership/ParticipantDetails';
+import Layout from '../../../components/ClientAdmin/Dashboard/TopLeadership/ParticipantDetails';
 
 class ParticipantDetails extends Component {
   state = {};

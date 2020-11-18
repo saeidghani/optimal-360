@@ -7,10 +7,10 @@ import { map } from './RouteMap';
 
 import Login from '../containers/ClientAdmin/Auth/Login';
 import ForgotPassword from '../containers/ClientAdmin/Auth/ForgotPassword';
-import Dashboard from '../containers/ClientAdmin/Dashboard';
-import ParticipantSummary from '../containers/ClientAdmin/ParticipantSummary';
-import ParticipantDetails from '../containers/ClientAdmin/ParticipantDetails';
-import RaterDetails from '../containers/ClientAdmin/RaterDetails';
+import Dashboard from '../containers/ClientAdmin/Dashboard/Dashboard';
+import ParticipantSummary from '../containers/ClientAdmin/Dashboard/ParticipantSummary';
+import ParticipantDetails from '../containers/ClientAdmin/Dashboard/ParticipantDetails';
+import RaterDetails from '../containers/ClientAdmin/Dashboard/RaterDetails';
 import ReferenceGuide from '../containers/ClientAdmin/ReferenceGuide';
 
 import NotFound from '../components/404';
