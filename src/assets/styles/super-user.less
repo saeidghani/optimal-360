@@ -18,8 +18,32 @@
   border-bottom-color: @process-tail-color;
 }
 
-.result-tabs  .ant-tabs-top > .ant-tabs-nav::before{
+.result-tabs .ant-tabs-top > .ant-tabs-nav::before {
   border: unset;
+}
+
+.td-gray {
+  & {
+    background-color: rgba(232, 234, 241, 0.75);
+    color: #8D98BA;
+  }
+
+  &.ant-table-row-selected td {
+    background-color: rgba(232, 234, 241, 1) !important;
+  }
+
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #8D98BA;
+    border: unset;
+  }
+
+  .ant-checkbox-inner {
+    border-color: rgba(141, 152, 186, var(--bg-opacity));
+  }
+
+  .ant-progress-circle path:nth-child(2) {
+    stroke: #8D98BA !important;
+  }
 }
 
 .clusters-table {
@@ -35,3 +59,4 @@
     color: #1BB7D9 !important;
   }
 }
+
