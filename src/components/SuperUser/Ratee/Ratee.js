@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useHistory } from 'react-router-dom';
 import { useQuery, useSurveyGroup, useTabs } from '../../../hooks';
 
 import StatusOverview from './StatusOverview';
@@ -12,7 +11,6 @@ import Result from './Result';
 import { Tabs } from 'antd';
 import MainLayout from '../../Common/Layout';
 import Dropdown from '../../Common/Dropdown';
-import { dynamicMap } from '../../../routes/RouteMap';
 
 const Ratee = (
   {
@@ -42,12 +40,11 @@ const Ratee = (
 ) => {
   const [, , setQuery] = useQuery();
   const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
-  const [currentTab, setTab] = useTabs(['status-overview', 'status-details', 'raters-email', 'result']);
+  const [currentTab, setTab] = useTabs('tab', ['status-overview', 'status-details', 'raters-email', 'result']);
   const { TabPane } = Tabs;
 
   const dropDownOptions = React.useMemo(
     () => (surveyGroups?.data || []).map((elm) => ({ title: elm.name, value: elm.id, label: elm.name })),
-    // eslint-disable-next-line
     [surveyGroups.timeStamp],
   );
 
