@@ -18,6 +18,45 @@
   border-bottom-color: @process-tail-color;
 }
 
-.result-tabs  .ant-tabs-top > .ant-tabs-nav::before{
+.result-tabs .ant-tabs-top > .ant-tabs-nav::before {
   border: unset;
 }
+
+.td-gray {
+  & {
+    background-color: rgba(232, 234, 241, 0.75);
+    color: #8D98BA;
+  }
+
+  &.ant-table-row-selected td {
+    background-color: rgba(232, 234, 241, 1) !important;
+  }
+
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #8D98BA;
+    border: unset;
+  }
+
+  .ant-checkbox-inner {
+    border-color: rgba(141, 152, 186, var(--bg-opacity));
+  }
+
+  .ant-progress-circle path:nth-child(2) {
+    stroke: #8D98BA !important;
+  }
+}
+
+.clusters-table {
+  .ant-table-title + .ant-table-container {
+    background-color: aliceblue;
+  }
+
+  .ant-table-thead > tr > th, .ant-table-tbody > tr > td, .ant-table tfoot > tr > th, .ant-table tfoot > tr > td {
+    padding: 10px 16px;
+  }
+
+  .ant-table-tbody > tr.ant-table-row > td , .ant-table-tbody > tr.ant-table-row > td > span {
+    color: #1BB7D9 !important;
+  }
+}
+

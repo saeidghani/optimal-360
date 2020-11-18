@@ -12,7 +12,6 @@ import Result from './Result';
 import { Tabs } from 'antd';
 import MainLayout from '../../Common/Layout';
 import Dropdown from '../../Common/Dropdown';
-import { dynamicMap } from '../../../routes/RouteMap';
 
 const Ratee = (
   {
@@ -40,20 +39,29 @@ const Ratee = (
     groupReports,
   },
 ) => {
-  const [, , setQuery] = useQuery();
+  const history = useHistory();
+  const [parsedQuery, query, setQuery] = useQuery();
   const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
-  const [currentTab, setTab] = useTabs(['status-overview', 'status-details', 'raters-email', 'result']);
+  const [currentTab, setTab] = useTabs('tab', ['status-overview', 'status-details', 'raters-email', 'result']);
   const { TabPane } = Tabs;
 
   const dropDownOptions = React.useMemo(
     () => (surveyGroups?.data || []).map((elm) => ({ title: elm.name, value: elm.id, label: elm.name })),
-    // eslint-disable-next-line
     [surveyGroups.timeStamp],
   );
 
-  function tabChangeCallback(key) {
+  React.useEffect(() => {
+    if (!parsedQuery?.page_number || !parsedQuery?.page_size) {
+      setQuery({
+        page_number: 1,
+        page_size: 10,
+      });
+    }
+  }, [history?.location?.pathname]);
+
+  const tabChangeCallback = (key) => {
     setTab(key);
-  }
+  };
 
   return (
     <MainLayout contentClass="pl-21 pr-6 py-4" title="Super User" titleClass="my-2" hasBreadCrumb>

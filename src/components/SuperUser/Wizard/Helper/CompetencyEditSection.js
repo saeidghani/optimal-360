@@ -48,7 +48,7 @@ const CompetencyEditSection = ({ data, onSave, onCancel, clusterName }) => {
             </div>
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col mt-6">
             <Input
               name="name"
               labelText="Competency Label"
@@ -59,6 +59,7 @@ const CompetencyEditSection = ({ data, onSave, onCancel, clusterName }) => {
             />
 
             <TextArea
+              className="bg-antgray-200 bg-opacity-25 hover:bg-antgray-200 hover:bg-opacity-25 text-body"
               name="definition"
               value={values.definition}
               onChange={(e) => setFieldValue('definition', e.target.value)}
@@ -67,7 +68,7 @@ const CompetencyEditSection = ({ data, onSave, onCancel, clusterName }) => {
               errorMessage={touched.definition && errors.definition}
             />
 
-            <h3 className="text-base text-body">Low Scores Tend to</h3>
+            <h3 className="text-base text-body mb-2">Low Scores Tend to</h3>
 
             {(values.lowScores || []).map((item, i, originialArr) => (
               <Input
@@ -93,23 +94,25 @@ const CompetencyEditSection = ({ data, onSave, onCancel, clusterName }) => {
               />
             ))}
 
-            <p className="mt-3 text-red-500">
-              {errors.lowScores && typeof errors.lowScores === 'string' ? errors.lowScores : ''}
-            </p>
+            <div className="flex">
+              <p className="mt-2 text-red-500">
+                {errors.lowScores && typeof errors.lowScores === 'string' ? errors.lowScores : ''}
+              </p>
 
-            <Button
-              size="middle"
-              type="gray"
-              textSize="xs"
-              textClassName="mr-2"
-              text="Add"
-              className="w-18 ml-auto text-base"
-              onClick={() => setFieldValue('lowScores', [...values.lowScores, ''])}
-              icon="PlusCircleOutlined"
-              iconPosition="right"
-            />
+              <Button
+                size="middle"
+                type="gray"
+                textSize="xs"
+                textClassName="mr-2"
+                text="Add"
+                className="w-18 ml-auto text-base"
+                onClick={() => setFieldValue('lowScores', [...values.lowScores, ''])}
+                icon="PlusCircleOutlined"
+                iconPosition="right"
+              />
+            </div>
 
-            <h3 className="text-base text-body">High Scores Tend to</h3>
+            <h3 className="text-base text-body mb-2">High Scores Tend to</h3>
 
             {(values.highScores || []).map((item, i, originialArr) => (
               <Input
@@ -135,21 +138,25 @@ const CompetencyEditSection = ({ data, onSave, onCancel, clusterName }) => {
               />
             ))}
 
-            <p className="mt-3 text-red-500">
-              {errors.highScores && typeof errors.highScores === 'string' ? errors.highScores : ''}
-            </p>
+            <div className="flex">
+              <p className="mt-2 text-red-500">
+                {errors.highScores && typeof errors.highScores === 'string'
+                  ? errors.highScores
+                  : ''}
+              </p>
 
-            <Button
-              size="middle"
-              type="gray"
-              textSize="xs"
-              textClassName="mr-2"
-              text="Add"
-              className="w-18 ml-auto text-base"
-              onClick={() => setFieldValue('highScores', [...values.highScores, ''])}
-              icon="PlusCircleOutlined"
-              iconPosition="right"
-            />
+              <Button
+                size="middle"
+                type="gray"
+                textSize="xs"
+                textClassName="mr-2"
+                text="Add"
+                className="w-18 ml-auto text-base"
+                onClick={() => setFieldValue('highScores', [...values.highScores, ''])}
+                icon="PlusCircleOutlined"
+                iconPosition="right"
+              />
+            </div>
           </div>
         </>
       )}
