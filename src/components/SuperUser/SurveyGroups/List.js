@@ -85,7 +85,12 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
             />
 
             <Button
-              onClick={() => history.push(dynamicMap.superUser.projectInfo())}
+              onClick={() => {
+                const path = dynamicMap.superUser.editProject();
+                const params = stringify({ projectId });
+
+                history.push(`${path}${params}`);
+              }}
               size="middle"
               textSize="xs"
               text="Edit Project"

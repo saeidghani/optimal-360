@@ -7,10 +7,10 @@ import Layout from '../../../components/SuperUser/Wizard/EditProject';
 class EditProject extends Component {
   state = {};
 
-  fetchProject = (data) => {
-    const { fetchProject } = this.props;
+  fetchSingleProject = (data) => {
+    const { fetchSingleProject } = this.props;
 
-    return fetchProject(data);
+    return fetchSingleProject(data);
   };
 
   editProject = (data) => {
@@ -31,7 +31,7 @@ class EditProject extends Component {
     return (
       <Layout
         project={project}
-        fetchProject={this.fetchProject}
+        fetchSingleProject={this.fetchSingleProject}
         fetchSurveyGroups={this.fetchSurveyGroups}
         editProject={this.editProject}
         surveyGroups={surveyGroups}
@@ -43,7 +43,7 @@ class EditProject extends Component {
 
 EditProject.propTypes = {
   fetchSurveyGroups: PropTypes.func.isRequired,
-  fetchProject: PropTypes.func.isRequired,
+  fetchSingleProject: PropTypes.func.isRequired,
   editProject: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   surveyGroups: PropTypes.shape({
@@ -62,12 +62,12 @@ EditProject.defaultProps = {
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
   surveyGroups: state.bank.surveyGroups || {},
-  project: state.wizard.project || {},
+  project: state.projects.project || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchSurveyGroups: dispatch.bank.fetchSurveyGroups,
-  fetchProject: dispatch.wizard.fetchProject,
+  fetchSingleProject: dispatch.projects.fetchSingleProject,
   editProject: dispatch.wizard.editProject,
 });
 
