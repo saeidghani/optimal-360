@@ -3,6 +3,8 @@ import React from 'react';
 import SuccessIcon from '../../../assets/images/success-purple.svg';
 
 import Button from '../../Common/Button';
+import { dynamicMap } from '../../../routes/RouteMap';
+
 import AuthLayout from './Helper/AuthLayout';
 
 const Success = () => (
@@ -21,7 +23,7 @@ const Success = () => (
         </p>
 
         <Button
-          href="/login"
+          href={dynamicMap.clientAdmin.login()}
           className="mt-12 c-force-padding-y-px px-7 w-full sm:w-auto"
           text="Log in"
         />

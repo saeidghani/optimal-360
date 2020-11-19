@@ -63,7 +63,7 @@ const Login = ({ login, loading }) => {
                 />
 
                 <Input
-                  inputClass="c-input-sm-placeholder"
+                  inputClass="c-input-sm-placeholder h-10 py-0"
                   value={values.password}
                   disabled={loading}
                   onChange={handleChange}

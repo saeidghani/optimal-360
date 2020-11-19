@@ -41,11 +41,6 @@ const clientAdmin = {
 
   dashboard: 'dashboard',
 
-  participantSummary: 'participant-summary',
-  participantDetails: 'participant-details',
-
-  raterDetails: 'rater-details',
-
   referenceGuide: 'reference-guide',
 };
 
