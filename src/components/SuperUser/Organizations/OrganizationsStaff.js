@@ -99,15 +99,18 @@ const OrganizationsStaff = ({
       key: 'id',
       title: 'ID',
       sorter: true,
+      width: 196,
       sortOrder: getSortOrder('id'),
     },
     {
       key: 'name',
       title: 'Name',
+      width: 324,
     },
     {
       key: 'email',
       title: 'Email',
+      width: 220,
     },
     {
       key: 'password',

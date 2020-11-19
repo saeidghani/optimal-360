@@ -95,7 +95,8 @@ const UpdateStaff = ({ fetchStaffDetails, staffDetails, setStaffDetails, loading
                 <Button
                   loading={loading}
                   onClick={handleSubmit}
-                  text="Create"
+                  htmlType="submit"
+                  text="Save"
                   textSize="base"
                   className="ml-auto c-force-padding-y-px px-8 mt-6"
                 />
