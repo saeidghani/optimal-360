@@ -27,7 +27,7 @@ import Button from '../../Common/Button';
 import DraggableTable from '../../Common/DataTable';
 import Loading from '../../Common/Loading';
 
-const SurveyQuestionsList = ({
+const SurveyGroupCluster = ({
   surveyGroupInfo,
   fetchSurveyGroupInfo,
   setSurveyGroupInfo,
@@ -74,6 +74,10 @@ const SurveyQuestionsList = ({
     _selectedCluster?.competencies?.length > 0
       ? _selectedCluster.competencies.find((el) => el.id * 1 === parsedQuery.competencyId * 1)
       : {};
+
+  React.useEffect(() => {
+    setQuery({ clusterId: null, competencyId: null, questionId: null });
+  }, [history.location.pathname]);
 
   const handleFormChange = (newVal, row, key, subKey) => {
     const newValues = formRef.current.values[key].map((el) => {
@@ -151,7 +155,7 @@ const SurveyQuestionsList = ({
 
     // creating a unique id
     const feedbackIds = feedbacks?.length > 0 ? feedbacks.map((el) => el.id * 1) : [1];
-    const id = feedbackIds.reduce((prevValue, currentValue) => prevValue + currentValue);
+    const id = feedbackIds.reduce((prevValue, currentValue) => prevValue + currentValue) + 1;
     const index = feedbacks.length;
     const showOrder =
       feedbacks?.length > 0 ? Math.max(...feedbacks.map((el) => el.showOrder * 1)) + 1 : 1;
@@ -175,7 +179,7 @@ const SurveyQuestionsList = ({
     const currentClusterId = _selectedCluster?.id;
     const oldClusters = [...formRef.current?.values?.clusters];
 
-    const newClusters = ClusterUtils.addItem(
+    const { clusters, id } = ClusterUtils.addItem(
       oldClusters,
       {
         clusterId: currentClusterId,
@@ -186,7 +190,9 @@ const SurveyQuestionsList = ({
       parsedQuery,
     );
 
-    setClusters(newClusters);
+    setClusters(clusters);
+
+    return id;
   };
 
   const onFeedbackSortEnd = ({ oldIndex, newIndex }) => {
@@ -220,7 +226,20 @@ const SurveyQuestionsList = ({
     return {
       name: surveyGroupInfo?.name,
       clusters: clusters.map((el) => ({ ...el, index: el.showOrder, name: el.name || el.label })),
-      feedbacks: surveyGroupInfo?.feedbacks?.length > 0 ? surveyGroupInfo.feedbacks : [],
+      feedbacks:
+        surveyGroupInfo?.feedbacks?.length > 0
+          ? surveyGroupInfo.feedbacks
+          : [
+              {
+                label: '',
+                statement: '',
+                required: false,
+                showOrder: 1,
+                index: 0,
+                id: 1,
+                newAddedItem: true,
+              },
+            ],
     };
     // eslint-disable-next-line
   }, [query, JSON.stringify(surveyGroupInfo)]);
@@ -278,8 +297,10 @@ const SurveyQuestionsList = ({
         visible={addClusterModal}
         onCancel={() => setAddClusterModal(false)}
         onSave={(vals) => {
-          addItemToClusters(vals);
+          const clusterId = addItemToClusters(vals);
           setAddClusterModal(false);
+
+          setQuery({ clusterId });
         }}
       />
 
@@ -287,8 +308,10 @@ const SurveyQuestionsList = ({
         visible={addCompetencyModal}
         onCancel={() => setAddCompetencyModal(false)}
         onSave={(vals) => {
-          addItemToClusters(vals);
+          const competencyId = addItemToClusters(vals);
           setAddCompetencyModal(false);
+
+          setQuery({ competencyId });
         }}
       />
 
@@ -296,8 +319,10 @@ const SurveyQuestionsList = ({
         visible={addQuestionModal}
         onCancel={() => setAddQuestionModal(false)}
         onSave={(vals) => {
-          addItemToClusters(vals);
+          const questionId = addItemToClusters(vals);
           setAddQuestionModal(false);
+
+          setQuery({ questionId });
         }}
       />
 
@@ -319,7 +344,7 @@ const SurveyQuestionsList = ({
                   await addSurveyGroup(values);
                 }
 
-                history.push(dynamicMap.superUser.organizationsList());
+                history.push(dynamicMap.superUser.bankModels());
               } catch (err) {}
             }}
           >
@@ -463,7 +488,7 @@ const SurveyQuestionsList = ({
 
                   <Button
                     className="w-24.5 h-9.5"
-                    text="Next"
+                    text="Save"
                     textSize="base"
                     onClick={handleSubmit}
                   />
@@ -477,7 +502,7 @@ const SurveyQuestionsList = ({
   );
 };
 
-SurveyQuestionsList.propTypes = {
+SurveyGroupCluster.propTypes = {
   fetchSurveyGroupInfo: PropTypes.func.isRequired,
   addSurveyGroup: PropTypes.func.isRequired,
   setSurveyGroupInfo: PropTypes.func.isRequired,
@@ -508,8 +533,8 @@ SurveyQuestionsList.propTypes = {
   }),
 };
 
-SurveyQuestionsList.defaultProps = {
+SurveyGroupCluster.defaultProps = {
   surveyGroupInfo: {},
 };
 
-export default SurveyQuestionsList;
+export default SurveyGroupCluster;

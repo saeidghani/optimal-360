@@ -126,7 +126,7 @@ const getTableData = (parsedQuery, values) => {
 
   const { clusterId, competencyId } = parsedQuery;
 
-  const { clusters = [] } = values || {};
+  const clusters = values.clusters ? values.clusters : [];
 
   const { competencies = [] } =
     clusters.find((el) => el.id * 1 === parsedQuery?.clusterId * 1) || {};
@@ -155,7 +155,7 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
 
     // creating a unique id
     const refArrIds = refArr?.length > 0 ? refArr.map((el) => el.id * 1) : [1];
-    const id = refArrIds.reduce((prevValue, currentValue) => prevValue + currentValue);
+    const id = refArrIds.reduce((prevValue, currentValue) => prevValue + currentValue) + 1;
 
     return {
       index,
@@ -172,7 +172,7 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
 
     const { id, index, showOrder, newAddedItem } = generateNewItemProperties(clusters);
 
-    const newClusters = {
+    const newCluster = {
       // name: `Cluster ${index + 1}`,
       ...newItem,
       competencies: [],
@@ -182,9 +182,9 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
       newAddedItem,
     };
 
-    clusters.push(newClusters);
+    clusters.push(newCluster);
 
-    return clusters;
+    return { clusters, id };
   }
 
   if (isIndexValid(clusterIndex) && !isIndexValid(competencyIndex)) {
@@ -204,7 +204,7 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
 
     clusters[clusterIndex].competencies.push(newCompetency);
 
-    return clusters;
+    return { clusters, id };
   }
 
   if (isIndexValid(clusterIndex) && isIndexValid(competencyIndex)) {
@@ -217,10 +217,10 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
     const newQuestion = { ...newItem, id, index, showOrder, newAddedItem };
     clusters[clusterIndex].competencies[competencyIndex].questions.push(newQuestion);
 
-    return clusters;
+    return { clusters, id };
   }
 
-  return clusters;
+  return { clusters };
 };
 
 export { updateItem, deleteItem, clusterSortRefactor, getTableData, addItem };
