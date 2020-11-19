@@ -227,7 +227,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
 
     // creating a unique id
     const feedbackIds = feedbacks?.length > 0 ? feedbacks.map((el) => el.id * 1) : [1];
-    const id = feedbackIds.reduce((prevValue, currentValue) => prevValue + currentValue);
+    const id = feedbackIds.reduce((prevValue, currentValue) => prevValue + currentValue) + 1;
 
     const index = feedbacks.length;
     const showOrder =
@@ -252,7 +252,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
     const currentClusterId = _selectedCluster?.id;
 
     const oldClusters = [...formRef.current?.values?.clusters];
-    const newClusters = ClusterUtils.addItem(
+    const { clusters, id } = ClusterUtils.addItem(
       oldClusters,
       {
         clusterId: currentClusterId,
@@ -263,7 +263,9 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
       parsedQuery,
     );
 
-    setClusters(newClusters);
+    setClusters(clusters);
+
+    return id;
   };
 
   const onFeedbackSortEnd = ({ oldIndex, newIndex }) => {
@@ -299,8 +301,42 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
     return {
       ratingScales:
         surveyQuestions?.ratingScales?.length > 0 ? surveyQuestions.ratingScales : _ratingScales,
-      feedbacks: surveyQuestions?.feedbacks?.length > 0 ? surveyQuestions.feedbacks : [],
-      clusters: clusters.map((el) => ({ ...el, index: el.showOrder, name: el.name || el.label })),
+      feedbacks:
+        surveyQuestions?.feedbacks?.length > 0
+          ? surveyQuestions.feedbacks
+          : [
+              {
+                label: '',
+                statement: '',
+                required: false,
+                showOrder: 1,
+                index: 0,
+                id: 1,
+                newAddedItem: true,
+              },
+            ],
+      clusters:
+        clusters?.length > 0
+          ? clusters
+              .sort((a, b) => a.showOrder - b.showOrder)
+              .map((cluster) => ({
+                ...cluster,
+                competencies:
+                  cluster.competencies?.length > 0
+                    ? cluster.competencies
+                        .sort((a, b) => a.showOrder - b.showOrder)
+                        .map((competency) => ({
+                          ...competency,
+                          questions:
+                            competency?.length > 0
+                              ? competency.sort((a, b) => a.showOrder - b.showOrder)
+                              : [],
+                        }))
+                    : [],
+                index: cluster.showOrder,
+                name: cluster.name || cluster.label,
+              }))
+          : null,
     };
 
     // eslint-disable-next-line
@@ -343,6 +379,8 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
     </div>
   );
 
+  console.log({ initialValues, persistedData, surveyQuestions });
+
   return (
     <MainLayout
       title="Super User"
@@ -370,17 +408,10 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
         visible={addClusterModal}
         onCancel={() => setAddClusterModal(false)}
         onSave={(vals) => {
-          addItemToClusters(vals);
+          const clusterId = addItemToClusters(vals);
           setAddClusterModal(false);
-        }}
-      />
 
-      <AddQuestionModal
-        visible={addQuestionModal}
-        onCancel={() => setAddQuestionModal(false)}
-        onSave={(vals) => {
-          addItemToClusters(vals);
-          setAddQuestionModal(false);
+          setQuery({ clusterId });
         }}
       />
 
@@ -388,8 +419,21 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
         visible={addCompetencyModal}
         onCancel={() => setAddCompetencyModal(false)}
         onSave={(vals) => {
-          addItemToClusters(vals);
+          const competencyId = addItemToClusters(vals);
           setAddCompetencyModal(false);
+
+          setQuery({ competencyId });
+        }}
+      />
+
+      <AddQuestionModal
+        visible={addQuestionModal}
+        onCancel={() => setAddQuestionModal(false)}
+        onSave={(vals) => {
+          const questionId = addItemToClusters(vals);
+          setAddQuestionModal(false);
+
+          setQuery({ questionId });
         }}
       />
 

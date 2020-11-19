@@ -9,7 +9,7 @@ import { TeamOutlined } from '@ant-design/icons';
 
 import { dynamicMap } from '../../../routes/RouteMap';
 
-import { useQuery } from '../../../hooks/useQuery';
+import { useQuery, stringify } from '../../../hooks/useQuery';
 
 import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
@@ -230,7 +230,12 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
               text="Set Client Admin"
             />
             <Button
-              onClick={() => history.push(dynamicMap.superUser.projectInfo())}
+              onClick={() => {
+                const path = dynamicMap.superUser.projectInfo();
+                const params = stringify({ projectId });
+
+                history.push(`${path}${params}`);
+              }}
               icon="CopyOutlined"
               type="link"
               className="text-lg mr-7"
