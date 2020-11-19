@@ -1,26 +1,40 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-
 import MainLayout from '../../Common/Layout';
-import Loading from '../../Common/Loading';
 import Menu from '../Wizard/Helper/Menu';
 import Steps from '../../Common/Steps';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import SearchBox from '../../Common/SearchBox';
+import { useQuery, parse, stringify } from '../../../hooks/useQuery';
 
-const AddRateeStep2 = ({ loading, isEditing }) => {
+const RaterSelection = ({
+  loading,
+  fetchStaffForRater,
+  staffForRatee,
+  fetchRaterGroups,
+  raterGroups,
+}) => {
+  const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const surveyGroupId = parsedQuery?.surveyGroupId;
+  const rateeId = parsedQuery?.rateeId;
+  const raterGroupId = raterGroups[0]?.id?.toString();
+  const defaultSelectedRows = staffForRatee?.filter((el) => el.relationId);
+  const staffQuery = stringify(parse({ q: parsedQuery.sq }));
 
-  const buttonLinks = isEditing ? {
-    Submit: '/super-user/participants/ratee/status-details',
-    Prev: '/super-user/participants/ratee/add/edit',
-  } : {
-    Submit: '/super-user/participants/ratee/status-details',
-    Prev: '/super-user/participants/ratee/add',
-  };
+  useEffect(() => {
+     fetchRaterGroups({ surveyGroupId });
+     if (raterGroupId) {
+      fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId, query: staffQuery });
+     }
+  }, [query, fetchRaterGroups, raterGroupId, parsedQuery.sq]);
+
+  useEffect(() => {
+    setSelectedRows(defaultSelectedRows);
+  }, [staffForRatee]);
 
   const renderHeader = React.useCallback(
     () => {
@@ -31,15 +45,14 @@ const AddRateeStep2 = ({ loading, isEditing }) => {
               className="text-xs"
               placeholder="SEARCH"
               loading={loading}
-              // onSearch={(val) => setQuery({ q: val })}
-              // onPressEnter={(e) => setQuery({ q: e.target.value })}
+              onChange={(e) => setQuery({ sq: e.target.value })}
             />
           </div>
         </div>
       );
     },
     // eslint-disable-next-line
-    [loading],
+    [loading,parsedQuery.sq],
   );
 
   const columns = React.useMemo(() => [
@@ -54,61 +67,8 @@ const AddRateeStep2 = ({ loading, isEditing }) => {
     {
       key: 'email',
       title: 'Email',
-    }, ,
+    },
   ]);
-
-  const dataSource = [
-    {
-      id: 202006042211,
-      name: 'Jean Luc Picard',
-      email: 'jtkirk@ufp.com',
-    },
-    {
-      id: 202006042212,
-      name: 'William Riker',
-      email: 'jtkirk@ufp.com',
-    },
-    {
-      id: 202006042213,
-      name: 'Jean Luc Picard',
-      email: 'jtkirk@ufp.com',
-    },
-    {
-      id: 202006042214,
-      name: 'James Kirk',
-      email: 'jtkirk@ufp.com',
-    },
-    {
-      id: 202006042215,
-      name: 'James Kirk',
-      email: 'jtkirk@ufp.com',
-    },
-    {
-      id: 202006042216,
-      name: 'James Kirk',
-      email: 'jtkirk@ufp.com',
-    },
-    {
-      id: 202006042217,
-      name: 'Jean Luc Picard',
-      email: 'jtkirk@ufp.com',
-    },
-    {
-      id: 202006042218,
-      name: 'Benjamin Sisko',
-      email: 'jtkirk@ufp.com',
-    },
-    {
-      id: 202006042219,
-      name: 'William Riker',
-      email: 'jtkirk@ufp.com',
-    },
-    {
-      id: 20200604271,
-      name: 'Tom Paris',
-      email: 'jtkirk@ufp.com',
-    },
-  ];
 
   return (
     <MainLayout
@@ -119,14 +79,13 @@ const AddRateeStep2 = ({ loading, isEditing }) => {
       headerClassName="pl-21"
       childrenPadding={false}
     >
-      <Loading visible={loading} />
+      {/* <Loading visible={loading} /> */}
 
       <div className="bg-white grid grid-cols-12 pl-15">
         <Menu
-          onClick={() => {
-          }}
+          onClick={(id) => fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId: id })}
           title="Rater Group"
-          items={[{ id: 1, name: 'Managers' }, { id: 2, name: 'peers' }]}
+          items={raterGroups}
           className="col-span-2"
         />
 
@@ -138,7 +97,7 @@ const AddRateeStep2 = ({ loading, isEditing }) => {
             renderHeader={renderHeader}
             loading={loading}
             columns={columns}
-            dataSource={dataSource || []}
+            dataSource={staffForRatee || []}
             selectedRowKeys={selectedRows?.map((el) => el.id)}
             onRowSelectionChange={(_, rows) => {
               setSelectedRows(rows);
@@ -150,15 +109,13 @@ const AddRateeStep2 = ({ loading, isEditing }) => {
               className="w-24.5 h-9.5"
               type="link"
               text="Prev"
-              onClick={() => {
-                history.push(buttonLinks.Prev);
-              }}
+              onClick={() => history.goBack()}
             />
             <Button
               className="w-24.5 h-9.5"
               text="Submit"
               onClick={() => {
-                history.push(buttonLinks.Submit);
+               // TODO submit rateeSelection
               }}
             />
           </div>
@@ -168,11 +125,14 @@ const AddRateeStep2 = ({ loading, isEditing }) => {
   );
 };
 
-AddRateeStep2.propTypes = {
+RaterSelection.propTypes = {
   loading: PropTypes.bool.isRequired,
-  isEditing: PropTypes.bool.isRequired,
+  fetchStaffForRater: PropTypes.func.isRequired,
+  staffForRatee: PropTypes.arrayOf(PropTypes.object).isRequired,
+  fetchRaterGroups: PropTypes.func.isRequired,
+  raterGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-AddRateeStep2.defaultProps = {};
+RaterSelection.defaultProps = {};
 
-export default AddRateeStep2;
+export default RaterSelection;
