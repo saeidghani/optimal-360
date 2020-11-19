@@ -49,9 +49,10 @@ const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
               try {
                 await addNewOrganizationStaff({ ...values, organizationId });
 
-                const path = dynamicMap.superUser.addRatee();
+                const path = dynamicMap.superUser.organizationStaffList({ organizationId });
                 history.push(path);
-              } catch (error) {}
+              } catch (error) {
+              }
             }}
           >
             {({ values, errors, touched, handleChange, handleSubmit, setFieldValue }) => (
