@@ -32,7 +32,7 @@ const NewOrganizations = ({ addNewOrganization, loading }) => {
         lg:col-start-4 lg:col-span-6 xl:col-start-5 xl:col-span-4
         rounded-lg sm:px-16 px-4 sm:pb-10 sm:pt-12 py-6 bg-white"
         >
-          <h2 className="text-xl font-medium text-heading mb-6">New Organization</h2>
+          <h2 className="text-xl font-medium text-heading mb-10">New Organization</h2>
           <Formik
             initialValues={{
               name: '',
@@ -60,18 +60,25 @@ const NewOrganizations = ({ addNewOrganization, loading }) => {
                   errorMessage={touched.name && errors.name}
                 />
                 <UploadAvatar
-                  wrapperClassName="mt-14 mb-3"
+                  wrapperClassName="mt-6"
                   title=""
+                  textSize="xs"
+                  text="Upload Logo"
                   pickedTitle="Organization picture"
                   setFile={(file) => setFieldValue('logo', file)}
                   file={values.clientPicture}
+                  icon="CloudUploadOutlined"
+                  iconPosition="right"
+                  textClassName="mr-2"
+                  type="dashed"
+                  className="h-8"
                 />
                 <Button
                   loading={loading}
                   onClick={handleSubmit}
                   text="Create"
                   textSize="base"
-                  className="ml-auto c-force-padding-y-px px-8 mt-10"
+                  className="ml-auto c-force-padding-y-px px-8 mt-12"
                 />
               </Form>
             )}

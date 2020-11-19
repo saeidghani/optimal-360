@@ -145,7 +145,8 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
                 const path = dynamicMap.superUser.surveyQuestions();
 
                 history.push(`${path}${search}`);
-              } catch (error) {}
+              } catch (error) {
+              }
             }}
           >
             {({ values, errors, touched, handleSubmit, setFieldValue }) => (
@@ -155,6 +156,7 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
                   originalFile={surveyIntro?.clientPicture}
                   setFile={(file) => setFieldValue('clientPicture', file)}
                   file={values.clientPicture}
+                  className="w-24.5 h-9.5"
                 />
                 {touched.clientPicture && errors.clientPicture && (
                   <p className="ml-2 text-red-500 py-2">{errors.clientPicture}</p>
