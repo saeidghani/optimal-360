@@ -1,15 +1,20 @@
 const tableTemplate = () => {
   return `
-       <table>
-        <tbody class="text-editor-table">
+       <table style="table-layout:fixed;">
+        <tbody id="text-editor-table">
           <tr>
-            ${['Name', 'Relationship', 'Start Date', 'End Date'].map((txt) => `<td>${txt}</td>`)}
+            ${['Name', 'Relationship', 'Start Date', 'End Date'].map(
+              (txt) => `<td style="width:25%; max-width:25%;" >${txt}</td>`,
+            )}
           </tr>
 
           <tr>
            
            ${['John Doe', 'Your Peer', 'DD / MM / YYYY', 'DD / MM / YYYY'].map(
-             (txt) => `<td >${txt}</td>`,
+             (txt, i) =>
+               `<td class="${
+                 i > 1 ? 'date-td' : ''
+               }" style="width:25%; max-width:25%; word-wrap: break-word;">${txt}</td>`,
            )}
           </tr>
 

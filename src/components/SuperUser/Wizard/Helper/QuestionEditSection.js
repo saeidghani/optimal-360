@@ -57,15 +57,19 @@ const CompetencyEditSection = ({ data, onSave, onCancel, clusterName, competency
             <div className="col-span-6">
               <AutoComplete
                 labelText="Statement Type"
-                onSelect={(item) => setFieldValue('statementType', item.value)}
+                onSelect={(item) => setFieldValue('statementType', item.value.toLowerCase())}
                 placeholder="Search"
                 options={['positive', 'negative'].map((val, i) => ({
-                  label: val,
+                  label: val.charAt(0).toUpperCase() + val.slice(1),
                   value: val,
                   key: i,
                 }))}
                 onChange={() => {}}
-                value={values.statementType}
+                value={
+                  values.statementType
+                    ? values.statementType.charAt(0).toUpperCase() + values.statementType.slice(1)
+                    : ''
+                }
                 errorMessage={touched.statementType && errors.statementType}
               />
             </div>

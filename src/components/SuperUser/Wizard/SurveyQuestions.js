@@ -261,28 +261,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                 newAddedItem: true,
               },
             ],
-      clusters:
-        clusters?.length > 0
-          ? clusters
-              .sort((a, b) => a.showOrder - b.showOrder)
-              .map((cluster) => ({
-                ...cluster,
-                competencies:
-                  cluster.competencies?.length > 0
-                    ? cluster.competencies
-                        .sort((a, b) => a.showOrder - b.showOrder)
-                        .map((competency) => ({
-                          ...competency,
-                          questions:
-                            competency?.length > 0
-                              ? competency.sort((a, b) => a.showOrder - b.showOrder)
-                              : [],
-                        }))
-                    : [],
-                index: cluster.showOrder,
-                name: cluster.name || cluster.label,
-              }))
-          : null,
+      clusters: clusters?.length > 0 ? clusters : [],
     };
 
     // eslint-disable-next-line
@@ -421,6 +400,8 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
           >
             {({ values, errors, touched, handleSubmit }) => (
               <Form className="pr-28" onSubmit={handleSubmit}>
+                <pre>{console.log({ values })}</pre>
+
                 <h4 className="text-secondary text-lg mb-8 mt-17">Rating Scale</h4>
 
                 {values.ratingScales.map((row, i) => (
