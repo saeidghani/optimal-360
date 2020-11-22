@@ -39,13 +39,12 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
   });
   const history = useHistory();
 
-  const [parsedQuery, , setQuery] = useQuery();
+  const [parsedQuery] = useQuery();
   const { search } = history?.location;
 
   const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
 
   const [surveyGroupModal, setSurveyGroupModal] = React.useState(false);
-  const [isFormDone, setIsFormDone] = React.useState(false);
   const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
 
   const { projectId } = parsedQuery;
@@ -83,45 +82,8 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
   ];
 
   React.useEffect(() => {
-    if (
-      isFormDone &&
-      selectedSurveyGroupKey &&
-      selectedSurveyGroupKey !== parsedQuery?.surveyGroupId
-    ) {
-      setQuery({ surveyGroupId: selectedSurveyGroupKey });
-      setIsFormDone(false);
-      setSurveyGroupModal(false);
-    }
-  }, [isFormDone, selectedSurveyGroupKey, setQuery, parsedQuery.surveyGroupId]);
-
-  React.useEffect(() => {
     if (surveyGroupId) fetchEmailSettings(surveyGroupId);
-  }, [projectId, surveyGroupId, fetchEmailSettings]);
-
-  React.useEffect(() => {
-    const validateForm = async () => {
-      try {
-        const errorObj = await formRef.current.validateForm(formRef?.current?.values);
-
-        if (errorObj && Object.values(errorObj).length > 0) {
-          throw errorObj;
-        } else {
-          setIsFormDone(true);
-        }
-      } catch (errorObj) {
-        formRef.current.setErrors(errorObj);
-        formRef.current.setTouched(errorObj);
-
-        if (selectedSurveyGroupKey !== parsedQuery?.surveyGroupId) setSurveyGroupModal(true);
-      }
-    };
-
-    if (selectedSurveyGroupKey && formRef?.current) {
-      validateForm(formRef?.current?.values);
-    }
-
-    // eslint-disable-next-line
-  }, [selectedSurveyGroupKey]);
+  }, [surveyGroupId, fetchEmailSettings]);
 
   const emailSettingsStringified = JSON.stringify(emailSettings);
 
@@ -187,26 +149,6 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
     localStorage.setItem(`emailSettings-${surveyGroupId}`, JSON.stringify(newValues.emailSettings));
   };
 
-  React.useEffect(() => {
-    const resetForm = async () => {
-      await fetchEmailSettings(surveyGroupId);
-
-      if (formRef?.current) {
-        // reset form state when surveyGroup changes
-        // happens when user decides to discard current settings and changes currentSurveyGroup
-        formRef.current.setTouched({});
-        formRef.current.setErrors({});
-        formRef.current.setValues({ ...formRef?.current?.values });
-      }
-    };
-
-    if (surveyGroupId) {
-      resetForm();
-    }
-
-    // eslint-disable-next-line
-  }, [fetchEmailSettings, surveyGroupId]);
-
   return (
     <MainLayout
       hasBreadCrumb
@@ -221,7 +163,10 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
 
         <ChangeSurveyGroupModal
           handleOk={() => {
-            setIsFormDone(true);
+            const path = dynamicMap.superUser.surveySettings();
+            const params = stringify({ projectId, surveyGroupId: selectedSurveyGroupKey });
+
+            history.push(`${path}${params}`);
           }}
           handleCancel={() => {
             setSelectedSurveyGroupKey('');
@@ -232,8 +177,11 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
         />
 
         <Menu
-          onClick={(key) => setSelectedSurveyGroupKey(key)}
-          isFormDone={isFormDone}
+          onClick={(key) => {
+            setSurveyGroupModal(true);
+            setSelectedSurveyGroupKey(key);
+          }}
+          isFormDone={false}
           items={surveyGroups?.data}
           className="col-span-2"
         />
