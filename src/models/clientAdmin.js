@@ -6,6 +6,7 @@ export default {
   namespace: 'clientAdmin',
 
   state: {
+    projects: '',
     completionRate: '',
     summary: '',
     ratees: '',
@@ -42,58 +43,71 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
-    async fetchCompletionRate(surveyGroupId) {
-      if (!surveyGroupId) return this.fetchCompletionRate_Reducer('');
-
+    async fetchProjects(query) {
       return actionWrapper(async () => {
         const res = await axios({
           method: 'get',
-          url: `/client-admin/survey-groups/${surveyGroupId}/overview/completion-rate`,
+          url: `/client-admin/projects${query}`,
         });
 
-        this.fetchCompletionRate_Reducer(res?.data?.data);
+        this.fetchProjects_reducer(res?.data);
+
         return res;
       }, dispatch.util.errorHandler);
     },
 
-    async fetchSummary(surveyGroupId) {
+    async fetchCompletionRate({ query, surveyGroupId }) {
+      if (!surveyGroupId) return this.fetchCompletionRate_reducer('');
+
+      return actionWrapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/client-admin/survey-groups/${surveyGroupId}/overview/completion-rate${query}`,
+        });
+
+        this.fetchCompletionRate_reducer(res?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async fetchSummary({ query, surveyGroupId }) {
       if (!surveyGroupId) return this.fetchSummary_reducer('');
 
       return actionWrapper(async () => {
         const res = await axios({
           method: 'get',
-          url: `/client-admin/survey-groups/${surveyGroupId}/overview/summary`,
+          url: `/client-admin/survey-groups/${surveyGroupId}/overview/summary${query}`,
         });
 
-        this.fetchSummary_reducer(res?.data?.data);
+        this.fetchSummary_reducer(res?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
 
-    async fetchRatees(surveyGroupId) {
-      if (!surveyGroupId) return this.fetchRatees_Reducer('');
+    async fetchRatees({ query, surveyGroupId }) {
+      if (!surveyGroupId) return this.fetchRatees_reducer('');
 
       return actionWrapper(async () => {
         const res = await axios({
           method: 'get',
-          url: `/client-admin/survey-groups/${surveyGroupId}/overview/ratees`,
+          url: `/client-admin/survey-groups/${surveyGroupId}/overview/ratees${query}`,
         });
 
-        this.fetchRatees_reducer(res?.data?.data);
+        this.fetchRatees_reducer(res?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
 
-    async fetchRaters(surveyGroupId) {
-      if (!surveyGroupId) return this.fetchRaters_Reducer('');
+    async fetchRaters({ query, surveyGroupId }) {
+      if (!surveyGroupId) return this.fetchRaters_reducer('');
 
       return actionWrapper(async () => {
         const res = await axios({
           method: 'get',
-          url: `/client-admin/survey-groups/${surveyGroupId}/overview/raters`,
+          url: `/client-admin/survey-groups/${surveyGroupId}/overview/raters${query}`,
         });
 
-        this.fetchRaters_reducer(res?.data?.data);
+        this.fetchRaters_reducer(res?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
@@ -108,7 +122,11 @@ export default {
 
       return null;
     },
-    fetchCompletionRate_Reducer: (state, payload) => ({
+    fetchProjects_reducer: (state, payload) => ({
+      ...state,
+      projects: payload,
+    }),
+    fetchCompletionRate_reducer: (state, payload) => ({
       ...state,
       completionRate: payload,
     }),
