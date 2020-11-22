@@ -12,7 +12,7 @@ import { useQuery, parse, stringify } from '../../../hooks/useQuery';
 const RaterSelection = ({
   loading,
   fetchStaffForRater,
-  staffForRatee,
+  staffForRater,
   fetchRaterGroups,
   raterGroups,
 }) => {
@@ -22,8 +22,8 @@ const RaterSelection = ({
   const surveyGroupId = parsedQuery?.surveyGroupId;
   const rateeId = parsedQuery?.rateeId;
   const raterGroupId = raterGroups[0]?.id?.toString();
-  const defaultSelectedRows = staffForRatee?.filter((el) => el.relationId);
-  const staffQuery = stringify(parse({ q: parsedQuery.sq }));
+  const defaultSelectedRows = staffForRater?.filter((el) => el.relationId);
+  const staffQuery = stringify(parse({ q: parsedQuery.sq })) || '';
 
   useEffect(() => {
      fetchRaterGroups({ surveyGroupId });
@@ -34,7 +34,7 @@ const RaterSelection = ({
 
   useEffect(() => {
     setSelectedRows(defaultSelectedRows);
-  }, [staffForRatee]);
+  }, [staffForRater]);
 
   const renderHeader = React.useCallback(
     () => {
@@ -79,11 +79,12 @@ const RaterSelection = ({
       headerClassName="pl-21"
       childrenPadding={false}
     >
-      {/* <Loading visible={loading} /> */}
 
       <div className="bg-white grid grid-cols-12 pl-15">
         <Menu
-          onClick={(id) => fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId: id })}
+          onClick={(id) =>
+          fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId: id, query: staffQuery })
+          }
           title="Rater Group"
           items={raterGroups}
           className="col-span-2"
@@ -97,7 +98,7 @@ const RaterSelection = ({
             renderHeader={renderHeader}
             loading={loading}
             columns={columns}
-            dataSource={staffForRatee || []}
+            dataSource={staffForRater || []}
             selectedRowKeys={selectedRows?.map((el) => el.id)}
             onRowSelectionChange={(_, rows) => {
               setSelectedRows(rows);
@@ -128,7 +129,7 @@ const RaterSelection = ({
 RaterSelection.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchStaffForRater: PropTypes.func.isRequired,
-  staffForRatee: PropTypes.arrayOf(PropTypes.object).isRequired,
+  staffForRater: PropTypes.arrayOf(PropTypes.object).isRequired,
   fetchRaterGroups: PropTypes.func.isRequired,
   raterGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
 };

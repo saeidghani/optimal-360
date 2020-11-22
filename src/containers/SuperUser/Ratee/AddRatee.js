@@ -11,9 +11,9 @@ class AddRatee extends Component {
     return fetchRateeMissionCriticals({ surveyGroupId, rateeId });
   };
 
-  fetchStaffs = async ({ surveyGroupId, query }) => {
-    const { fetchStaffs } = this.props;
-    await fetchStaffs({ surveyGroupId, query });
+  fetchStaff = ({ surveyGroupId, query }) => {
+    const { fetchStaff } = this.props;
+    return fetchStaff({ surveyGroupId, query });
   };
 
   setStaff = ({ surveyGroupId, rateeId }) => {
@@ -24,11 +24,6 @@ class AddRatee extends Component {
   fetchOrganizationId = ({ projectId }) => {
     const { fetchOrganizationId } = this.props;
     return fetchOrganizationId({ projectId });
-  }
-
-  clearRateeMissionCriticals = () => {
-    const { clearRateeMissionCriticals } = this.props;
-    return clearRateeMissionCriticals();
   }
 
   fetchStaffForRater = ({ surveyGroupId, rateeId, raterGroupId }) => {
@@ -42,16 +37,15 @@ class AddRatee extends Component {
   }
 
   render() {
-    const { loading, rateeMissionCriticals, staffs } = this.props;
+    const { loading, rateeMissionCriticals, staff } = this.props;
     return (
       <Layout
         fetchRateeMissionCriticals={this.fetchRateeMissionCriticals}
-        clearRateeMissionCriticals={this.clearRateeMissionCriticals}
         addMissionCriticalToRatee={this.addMissionCriticalToRatee}
-        fetchStaffs={this.fetchStaffs}
+        fetchStaff={this.fetchStaff}
         setStaff={this.setStaff}
         rateeMissionCriticals={rateeMissionCriticals}
-        staffs={staffs}
+        staff={staff}
         fetchOrganizationId={this.fetchOrganizationId}
         loading={loading}
       />
@@ -63,10 +57,9 @@ AddRatee.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchRateeMissionCriticals: PropTypes.func.isRequired,
   addMissionCriticalToRatee: PropTypes.func.isRequired,
-  clearRateeMissionCriticals: PropTypes.func.isRequired,
   rateeMissionCriticals: PropTypes.arrayOf(PropTypes.object).isRequired,
-  fetchStaffs: PropTypes.func.isRequired,
-  staffs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  fetchStaff: PropTypes.func.isRequired,
+  staff: PropTypes.arrayOf(PropTypes.object).isRequired,
   setStaff: PropTypes.func.isRequired,
   fetchOrganizationId: PropTypes.func.isRequired,
   fetchStaffForRater: PropTypes.func.isRequired,
@@ -77,13 +70,12 @@ AddRatee.defaultProps = {};
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
   rateeMissionCriticals: state.ratee.rateeMissionCriticals || [],
-  staffs: state.ratee.staffs || [],
+  staff: state.ratee.staff || [],
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchRateeMissionCriticals: dispatch.ratee.fetchRateeMissionCriticals,
-  clearRateeMissionCriticals: dispatch.ratee.clearRateeMissionCriticals,
-  fetchStaffs: dispatch.ratee.fetchStaffs,
+  fetchStaff: dispatch.ratee.fetchStaff,
   setStaff: dispatch.ratee.setStaff,
   fetchOrganizationId: dispatch.ratee.fetchOrganizationId,
   fetchStaffForRater: dispatch.ratee.fetchStaffForRater,

@@ -13,10 +13,9 @@ const AddRatee = ({
   loading,
   fetchRateeMissionCriticals,
   addMissionCriticalToRatee,
-  clearRateeMissionCriticals,
   rateeMissionCriticals,
-  fetchStaffs,
-  staffs,
+  fetchStaff,
+  staff,
   setStaff,
   fetchOrganizationId,
   // fetchStaffForRater,
@@ -36,10 +35,10 @@ const AddRatee = ({
 
   useEffect(() => {
     const staffQuery = stringify(parse({ q: parsedQuery.sq }));
-    fetchStaffs({ surveyGroupId, query: staffQuery });
+    fetchStaff({ surveyGroupId, query: staffQuery });
      // TODO clear staffs
     // fetchRateeMissionCriticals({ surveyGroupId, rateeId });
-  }, [query, fetchStaffs, parsedQuery.sq]);
+  }, [query, fetchStaff, parsedQuery.sq]);
 
   const handleClickAddNewStaff = useCallback(async () => {
     const organizationId = await fetchOrganizationId({ projectId });
@@ -75,8 +74,8 @@ const AddRatee = ({
                   loading={loading}
                   placeholder="Name of Staff"
                   options={
-                    staffs?.length > 0
-                    ? staffs.map(({ name, id }) => ({
+                    staff?.length > 0
+                    ? staff.map(({ name, id }) => ({
                       label: name,
                       value: name,
                       id,
@@ -85,10 +84,7 @@ const AddRatee = ({
                     : [{ label: 'no result found' }]
                   }
                   onSelect={handleSelectStaff}
-                  onChange={(text) => {
-                    setQuery({ sq: text });
-                    clearRateeMissionCriticals();
-                    }}
+                  onChange={(text) => setQuery({ sq: text })}
                   value={parsedQuery.sq}
                 />
               </span>
@@ -162,13 +158,11 @@ AddRatee.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchRateeMissionCriticals: PropTypes.func.isRequired,
   addMissionCriticalToRatee: PropTypes.func.isRequired,
-  clearRateeMissionCriticals: PropTypes.func.isRequired,
   rateeMissionCriticals: PropTypes.arrayOf(PropTypes.object).isRequired,
-  fetchStaffs: PropTypes.func.isRequired,
-  staffs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  fetchStaff: PropTypes.func.isRequired,
+  staff: PropTypes.arrayOf(PropTypes.object).isRequired,
   setStaff: PropTypes.func.isRequired,
   fetchOrganizationId: PropTypes.func.isRequired,
-  // fetchStaffForRater: PropTypes.func.isRequired,
 };
 
 AddRatee.defaultProps = {};

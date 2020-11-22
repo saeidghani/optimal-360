@@ -13,8 +13,8 @@ export default {
     individualReports: '',
     groupReports: '',
     rateeMissionCriticals: '',
-    staffs: '',
-    staffForRatee: '',
+    staff: '',
+    staffForRater: '',
     raterGroups: '',
   },
 
@@ -204,6 +204,7 @@ export default {
         }, dispatch.util.errorHandler,
       );
     },
+
     async fetchRateeMissionCriticals({ surveyGroupId, rateeId }) {
             return actionWapper(async () => {
               const res = await axios({
@@ -214,19 +215,22 @@ export default {
               return res;
             }, dispatch.util.errorHandler);
       },
+
      async clearRateeMissionCriticals() {
         this.fetchRateeMissionCriticals_reducer('');
       },
-      async fetchStaffs({ surveyGroupId, query }) {
+
+      async fetchStaff({ surveyGroupId, query }) {
         return actionWapper(async () => {
           const res = await axios({
             method: 'get',
             url: `/super-user/survey-groups/${surveyGroupId}/ratees${query}`,
           });
-          await this.fetchStaffs_reducer(res?.data?.data);
+          await this.fetchStaff_reducer(res?.data?.data);
           return res;
         }, dispatch.util.errorHandler);
       },
+
       async fetchOrganizationId({ projectId }) {
         return actionWapper(async () => {
           const res = await axios({
@@ -317,13 +321,13 @@ export default {
       ...state,
       rateeMissionCriticals: payload,
     }),
-    fetchStaffs_reducer: (state, payload) => ({
+    fetchStaff_reducer: (state, payload) => ({
       ...state,
-      staffs: payload,
+      staff: payload,
     }),
     fetchStaffForRater_reducer: (state, payload) => ({
        ...state,
-       staffForRatee: payload,
+       staffForRater: payload,
       }),
     fetchRaterGroups_reducer: (state, payload) => ({
       ...state,

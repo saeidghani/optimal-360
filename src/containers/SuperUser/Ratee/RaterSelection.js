@@ -9,20 +9,20 @@ class RaterSelection extends Component {
 
   fetchRaterGroups = ({ surveyGroupId }) => {
     const { fetchRaterGroups } = this.props;
-    fetchRaterGroups({ surveyGroupId });
+    return fetchRaterGroups({ surveyGroupId });
   };
 
-  fetchStaffForRater = ({ surveyGroupId, rateeId, raterGroupId, query = '' }) => {
+  fetchStaffForRater = ({ surveyGroupId, rateeId, raterGroupId, query }) => {
     const { fetchStaffForRater } = this.props;
-    fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId, query });
+    return fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId, query });
   };
 
   render() {
-    const { loading, staffForRatee, raterGroups } = this.props;
+    const { loading, staffForRater, raterGroups } = this.props;
     return (
       <Layout
         fetchStaffForRater={this.fetchStaffForRater}
-        staffForRatee={staffForRatee}
+        staffForRater={staffForRater}
         fetchRaterGroups={this.fetchRaterGroups}
         raterGroups={raterGroups}
         loading={loading}
@@ -34,7 +34,7 @@ class RaterSelection extends Component {
 RaterSelection.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchStaffForRater: PropTypes.func.isRequired,
-  staffForRatee: PropTypes.arrayOf(PropTypes.object).isRequired,
+  staffForRater: PropTypes.arrayOf(PropTypes.object).isRequired,
   fetchRaterGroups: PropTypes.func.isRequired,
   raterGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
@@ -43,7 +43,7 @@ RaterSelection.defaultProps = {};
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
-  staffForRatee: state.ratee.staffForRatee || [],
+  staffForRater: state.ratee.staffForRater || [],
   raterGroups: state.ratee.raterGroups || [],
 });
 
