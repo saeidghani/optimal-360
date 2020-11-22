@@ -393,7 +393,6 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
             setSurveyGroupModal(true);
             setSelectedSurveyGroupKey(key);
           }}
-          isFormDone={false}
           items={surveyGroups?.data}
           className="col-span-2"
         />

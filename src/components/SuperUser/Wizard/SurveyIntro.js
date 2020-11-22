@@ -73,7 +73,6 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
             setSurveyGroupModal(true);
             setSelectedSurveyGroupKey(key);
           }}
-          isFormDone={false}
           items={surveyGroups?.data}
           className="col-span-2"
         />

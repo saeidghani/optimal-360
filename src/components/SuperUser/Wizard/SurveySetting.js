@@ -265,7 +265,6 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
             setSurveyGroupModal(true);
             setSelectedSurveyGroupKey(key);
           }}
-          isFormDone={false}
           items={surveyGroups?.data}
           className="col-span-2"
         />
