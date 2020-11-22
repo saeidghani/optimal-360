@@ -23,24 +23,25 @@ import {
 } from '@ant-design/icons';
 
 const TextEditor = ({
-  placeholder,
-  value: editorValue,
-  onChange,
-  disabled,
-  options,
-  template,
-  data,
-  wrapperClassName,
-  className,
-  label,
-}) => {
+                      placeholder,
+                      value: editorValue,
+                      onChange,
+                      disabled,
+                      options,
+                      template,
+                      data,
+                      wrapperClassName,
+                      className,
+                      label,
+                      labelClass,
+                    }) => {
   const editorRef = React.useRef();
 
   const content = editorValue || template;
 
   return (
     <div className={`c-text-editor ${wrapperClassName}`}>
-      {label && <p className="font-normal text-body text-base leading-snug mb-3.5">{label}</p>}
+      {label && <p className={`leading-snug ${labelClass}`}>{label}</p>}
 
       <SunEditor
         className={`c-sun-editor ${className}`}
@@ -101,6 +102,7 @@ TextEditor.propTypes = {
   wrapperClassName: PropTypes.string,
   className: PropTypes.string,
   label: PropTypes.string,
+  labelClass: PropTypes.string,
 };
 
 TextEditor.defaultProps = {
@@ -113,6 +115,7 @@ TextEditor.defaultProps = {
   wrapperClassName: '',
   className: '',
   label: '',
+  labelClass: '',
 };
 
 export default TextEditor;
