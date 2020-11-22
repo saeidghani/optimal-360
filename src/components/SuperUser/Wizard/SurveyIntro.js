@@ -166,6 +166,7 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
                   <TextEditor
                     placeholder="Client Welcome Message"
                     label="Client Welcome Message"
+                    labelClass="font-normal text-body text-base leading-snug mb-3.5"
                     value={values.clientWelcomeMessage}
                     onChange={(val) => setFieldValue('clientWelcomeMessage', val)}
                   />
@@ -176,6 +177,7 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
                   <TextEditor
                     placeholder="Survey Message"
                     label="Survey Message"
+                    labelClass="font-normal text-body text-base leading-snug mb-3.5"
                     value={values.surveyMessage}
                     onChange={(val) => setFieldValue('surveyMessage', val)}
                     wrapperClassName="mt-18"

@@ -21,7 +21,6 @@ const LABELS = {
   contentPage: 'Content Page',
   competencyResults: 'Competency Results',
   clientCompetencyModel: 'Client Competency Model',
-  averageScoreByCompetency: 'Average Score by Competency',
   behaviorResults: 'Behavior Results',
   ratersInformation: 'Rates Information',
   developmentFeedbackComment: 'Feedback/Comments (Development Areas)',
@@ -31,7 +30,9 @@ const LABELS = {
   developmentPlan: 'Development Plan',
   competencyLevelAndAwareness: 'Competency Level and Awareness',
   notesPage: 'Notes Page',
+  addResponseDistribution: 'Add Response Distribution',
 
+  averageScoreByCompetency: 'Average Score by Competency',
   missionCriticalCompetenciesByParticipants: 'Mission Critical Competencies by Participants',
   surveyCompletionStatus: 'Survey Completion Status',
   participantGapAnalysis: 'Participant Gap Analysis',
@@ -172,7 +173,8 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
                 const path = dynamicMap.superUser.addRatee();
 
                 history.push(path);
-              } catch (error) {}
+              } catch (error) {
+              }
             }}
           >
             {({ values, handleSubmit }) => (
@@ -196,7 +198,8 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
                 </div>
 
                 <div className="grid grid-cols-12 mt-3">
-                  <div className="col-span-12 flex flex-row items-center bg-antgray-700 py-5 px-8.3">
+                  <div
+                    className="col-span-12 flex flex-row items-center bg-antgray-600 py-5 px-8.3 border-b border-antgray-900">
                     <Checkbox
                       className="flex flex-row items-center"
                       onChange={(value) => {
@@ -268,7 +271,8 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
                       }
                     }}
                     placeholder="Client Competency Model"
-                    label="Client Competency Model :"
+                    label="Client Competency Model:"
+                    labelClass="font-normal text-base leading-snug mb-3.5   font-medium text-heading"
                   />
 
                   <p className="w-full mt-12 text-base font-medium">Additional Report Setting:</p>
