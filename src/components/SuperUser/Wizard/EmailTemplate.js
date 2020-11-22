@@ -159,6 +159,7 @@ const EmailTemplate = ({ loading }) => {
             setEmailTemplate(val);
           }}
           options={{ minHeight: '500px' }}
+          labelClass="font-normal text-body text-base leading-snug mb-3.5"
         />
       </div>
     </MainLayout>
