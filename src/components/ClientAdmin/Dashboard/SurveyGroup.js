@@ -8,7 +8,7 @@ import OverallCompletion from './Helper/OverallCompletion';
 import RateCard from './Helper/RateCard';
 import DataTable from './Helper/DataTable';
 
-const TopLeadership = ({
+const SurveyGroup = ({
   loading,
   completionRate,
   summary,
@@ -20,7 +20,7 @@ const TopLeadership = ({
   fetchRaters,
 }) => {
   const [parsedQuery, query] = useQuery();
-  const surveyGroupId = parsedQuery?.surveyGroupId;
+  const { surveyGroupId } = parsedQuery || {};
   const viewBy = parsedQuery?.viewBy;
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const TopLeadership = ({
   );
 };
 
-TopLeadership.propTypes = {
+SurveyGroup.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchCompletionRate: PropTypes.func.isRequired,
   fetchSummary: PropTypes.func.isRequired,
@@ -86,11 +86,11 @@ TopLeadership.propTypes = {
   raters: PropTypes.shape({}),
 };
 
-TopLeadership.defaultProps = {
+SurveyGroup.defaultProps = {
   completionRate: {},
   summary: {},
   ratees: {},
   raters: {},
 };
 
-export default TopLeadership;
+export default SurveyGroup;
