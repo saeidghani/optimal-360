@@ -6,9 +6,7 @@ import Dropdown from '../../Common/Dropdown';
 import { useQuery } from '../../../hooks';
 
 import Layout from './Helper/Layout';
-import TopLeadership from './TopLeadership';
-import Managers from './Managers';
-import HighPotentials from './HighPotentials';
+import SurveyGroup from './SurveyGroup';
 
 const Dashboard = ({
   loading,
@@ -24,7 +22,7 @@ const Dashboard = ({
   fetchRaters,
 }) => {
   const [parsedQuery, , setQuery] = useQuery();
-  const { surveyGroupId, tab } = parsedQuery || {};
+  const { projectId, surveyGroupId } = parsedQuery || {};
 
   const { TabPane } = Tabs;
 
@@ -32,22 +30,36 @@ const Dashboard = ({
     fetchProjects('');
   }, []);
 
-  const surveyGroups = React.useMemo(
+  const projectsList = React.useMemo(
     () =>
-      ((projects?.data?.length > 0 && projects.data[0].surveyGroups) || []).map((el) => ({
-        title: el.surveyGroupName,
-        value: el.surveyGroupId,
-        label: el.surveyGroupName,
+      (projects?.data || []).map((el) => ({
+        title: el.projectName,
+        value: el.projectId,
+        label: el.projectName,
       })),
     [projects.timeStamp],
   );
 
-  const surveyGroupName =
-    surveyGroups?.find((group) => group.value?.toString() === surveyGroupId?.toString())?.title ||
-    '';
+  const surveyGroups = React.useMemo(
+    () =>
+      projects?.data?.find((project) => project?.projectId?.toString() === projectId?.toString())
+        ?.surveyGroups || [],
+    [projects.timeStamp, projectId],
+  );
+
+  React.useEffect(() => {
+    if (surveyGroups?.length > 0) setQuery({ surveyGroupId: surveyGroups[0]?.surveyGroupId });
+  }, [surveyGroups]);
+
+  const projectName = React.useMemo(
+    () =>
+      projectsList?.find((project) => project.value?.toString() === projectId?.toString())?.title ||
+      '',
+    [projects.timeStamp, projectId],
+  );
 
   const onTabChange = (key) => {
-    setQuery({ tab: key });
+    setQuery({ surveyGroupId: key, viewBy: '', page_number: '', page_size: '' });
   };
 
   return (
@@ -60,32 +72,28 @@ const Dashboard = ({
           showSearch={false}
           type="gray"
           placeholder="Leadership Development"
-          value={surveyGroupName}
-          handleChange={(val) => setQuery({ surveyGroupId: val })}
-          options={surveyGroups}
+          value={projectName}
+          handleChange={(val) => setQuery({ projectId: val })}
+          options={projectsList}
         />
       </div>
-      <Tabs defaultActiveKey={tab} onChange={onTabChange}>
-        <TabPane tab="Top Leadership" key="top-leadership">
-          <TopLeadership
-            loading={loading}
-            projects={projects}
-            completionRate={completionRate}
-            summary={summary}
-            ratees={ratees}
-            raters={raters}
-            fetchCompletionRate={fetchCompletionRate}
-            fetchSummary={fetchSummary}
-            fetchRatees={fetchRatees}
-            fetchRaters={fetchRaters}
-          />
-        </TabPane>
-        <TabPane tab="Managers" key="managers">
-          <Managers />
-        </TabPane>
-        <TabPane tab="High Potentials" key="high-potentials">
-          <HighPotentials />
-        </TabPane>
+      <Tabs defaultActiveKey={surveyGroupId} onChange={onTabChange}>
+        {surveyGroups?.map((group) => (
+          <TabPane key={group.surveyGroupId?.toString()} tab={group.surveyGroupName}>
+            <SurveyGroup
+              loading={loading}
+              projects={projects}
+              completionRate={completionRate}
+              summary={summary}
+              ratees={ratees}
+              raters={raters}
+              fetchCompletionRate={fetchCompletionRate}
+              fetchSummary={fetchSummary}
+              fetchRatees={fetchRatees}
+              fetchRaters={fetchRaters}
+            />
+          </TabPane>
+        ))}
       </Tabs>
     </Layout>
   );
@@ -99,9 +107,7 @@ Dashboard.propTypes = {
   fetchRatees: PropTypes.func.isRequired,
   fetchRaters: PropTypes.func.isRequired,
   projects: PropTypes.shape({
-    data: PropTypes.shape({
-      length: PropTypes.number,
-    }),
+    data: PropTypes.arrayOf(PropTypes.shape({})),
     timeStamp: PropTypes.number,
   }),
   completionRate: PropTypes.shape({
