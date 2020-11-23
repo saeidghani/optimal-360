@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 
-import { useQuery } from '../../../hooks/useQuery';
+import { useQuery, stringify } from '../../../hooks/useQuery';
 import { useSurveyGroup } from '../../../hooks';
 import { dynamicMap } from '../../../routes/RouteMap';
 
@@ -21,7 +21,6 @@ const LABELS = {
   contentPage: 'Content Page',
   competencyResults: 'Competency Results',
   clientCompetencyModel: 'Client Competency Model',
-  averageScoreByCompetency: 'Average Score by Competency',
   behaviorResults: 'Behavior Results',
   ratersInformation: 'Rates Information',
   developmentFeedbackComment: 'Feedback/Comments (Development Areas)',
@@ -31,7 +30,9 @@ const LABELS = {
   developmentPlan: 'Development Plan',
   competencyLevelAndAwareness: 'Competency Level and Awareness',
   notesPage: 'Notes Page',
+  addResponseDistribution: 'Add Response Distribution',
 
+  averageScoreByCompetency: 'Average Score by Competency',
   missionCriticalCompetenciesByParticipants: 'Mission Critical Competencies by Participants',
   surveyCompletionStatus: 'Survey Completion Status',
   participantGapAnalysis: 'Participant Gap Analysis',
@@ -51,7 +52,6 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
   const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
 
   const [surveyGroupModal, setSurveyGroupModal] = React.useState(false);
-  const [isFormDone, setIsFormDone] = React.useState(false);
   const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
 
   React.useEffect(() => {
@@ -68,63 +68,6 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
     if (surveyGroupId) fetchReports(surveyGroupId);
   }, [projectId, surveyGroupId, fetchReports]);
 
-  React.useEffect(() => {
-    const resetForm = async () => {
-      await fetchReports(surveyGroupId);
-
-      if (formRef?.current) {
-        // reset form state when surveyGroup changes
-        // happens when user decides to discard current settings and changes currentSurveyGroup
-        formRef.current.setTouched({});
-        formRef.current.setErrors({});
-        formRef.current.setValues({ ...formRef?.current?.values });
-      }
-    };
-
-    if (surveyGroupId) {
-      resetForm();
-    }
-
-    // eslint-disable-next-line
-  }, [fetchReports, surveyGroupId]);
-
-  React.useEffect(() => {
-    if (
-      isFormDone &&
-      selectedSurveyGroupKey &&
-      selectedSurveyGroupKey !== parsedQuery?.surveyGroupId
-    ) {
-      setQuery({ surveyGroupId: selectedSurveyGroupKey });
-      setIsFormDone(false);
-      setSurveyGroupModal(false);
-    }
-  }, [isFormDone, selectedSurveyGroupKey, setQuery, parsedQuery.surveyGroupId]);
-
-  React.useEffect(() => {
-    const validateForm = async () => {
-      try {
-        const errorObj = await formRef.current.validateForm(formRef?.current?.values);
-
-        if (errorObj && Object.values(errorObj).length > 0) {
-          throw errorObj;
-        } else {
-          setIsFormDone(true);
-        }
-      } catch (errorObj) {
-        formRef.current.setErrors(errorObj);
-        formRef.current.setTouched(errorObj);
-
-        if (selectedSurveyGroupKey !== parsedQuery?.surveyGroupId) setSurveyGroupModal(true);
-      }
-    };
-
-    if (selectedSurveyGroupKey && formRef?.current) {
-      validateForm(formRef?.current?.values);
-    }
-
-    // eslint-disable-next-line
-  }, [selectedSurveyGroupKey]);
-
   const { reportType = '' } = parsedQuery || {};
 
   return (
@@ -140,7 +83,13 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
 
       <ChangeSurveyGroupModal
         handleOk={() => {
-          setIsFormDone(true);
+          const path = dynamicMap.superUser.surveySettings();
+          const params = stringify({
+            projectId: parsedQuery.projectId,
+            surveyGroupId: selectedSurveyGroupKey,
+          });
+
+          history.push(`${path}${params}`);
         }}
         handleCancel={() => {
           setSelectedSurveyGroupKey('');
@@ -152,8 +101,10 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
 
       <div className="bg-white grid grid-cols-12 pl-15">
         <Menu
-          onClick={(key) => setSelectedSurveyGroupKey(key)}
-          isFormDone={isFormDone}
+          onClick={(key) => {
+            setSurveyGroupModal(true);
+            setSelectedSurveyGroupKey(key);
+          }}
           items={surveyGroups?.data}
           className="col-span-2"
         />
@@ -196,7 +147,7 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
                 </div>
 
                 <div className="grid grid-cols-12 mt-3">
-                  <div className="col-span-12 flex flex-row items-center bg-antgray-700 py-5 px-8.3">
+                  <div className="col-span-12 flex flex-row items-center bg-antgray-600 py-5 px-8.3 border-b border-antgray-900">
                     <Checkbox
                       className="flex flex-row items-center"
                       onChange={(value) => {
@@ -268,7 +219,8 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
                       }
                     }}
                     placeholder="Client Competency Model"
-                    label="Client Competency Model :"
+                    label="Client Competency Model:"
+                    labelClass="font-normal text-base leading-snug mb-3.5   font-medium text-heading"
                   />
 
                   <p className="w-full mt-12 text-base font-medium">Additional Report Setting:</p>

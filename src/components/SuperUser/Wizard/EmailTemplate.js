@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 import { notification } from 'antd';
+import moment from 'moment';
 
 import { useQuery } from '../../../hooks/useQuery';
 import * as TEMPLATES from './Helper/EmailTemplates';
@@ -22,12 +23,11 @@ const EmailTemplate = ({ loading }) => {
   const { search } = history?.location;
 
   const [error, setError] = React.useState(false);
-
-  const chosenTemplate = pascalize(template, { splitBy: '-' });
-
   const [emailTemplate, setEmailTemplate] = React.useState();
 
+  const chosenTemplate = pascalize(template, { splitBy: '-' });
   const templateKey = `${chosenTemplate}-${projectId}-${surveyGroupId}`;
+  const pageTitle = (template.charAt(0).toUpperCase() + template.slice(1)).replaceAll('-', ' ');
 
   React.useEffect(() => {
     const val = localStorage.getItem(templateKey);
@@ -35,14 +35,12 @@ const EmailTemplate = ({ loading }) => {
     setEmailTemplate(val || TEMPLATES[chosenTemplate] || TEMPLATES.reminderEmails);
   }, [templateKey, chosenTemplate]);
 
-  const pageTitle = (template.charAt(0).toUpperCase() + template.slice(1)).replaceAll('-', ' ');
-
   const addTag = (title) => {
     document.execCommand('insertText', false, `<% ${title} %>`);
   };
 
   const validateTableData = () => {
-    const table = document.querySelector('.text-editor-table');
+    const table = document.querySelector('#text-editor-table');
 
     if (!table) return false;
 
@@ -66,11 +64,19 @@ const EmailTemplate = ({ loading }) => {
         return errors.push('table cell cannot be empty');
       }
 
-      ['John Doe', 'Your Peer', 'DD / MM / YYYY', 'DD / MM / YYYY'].forEach((val) => {
-        if (cell.innerText === val) {
-          return errors.push(`${val} is not valid for table cell data`);
-        }
-      });
+      console.log(
+        cell.innerText,
+        cell.innerText.trim().replaceAll(' ', ''),
+        cell.classList.contains('date-td'),
+        moment(cell.innerText.trim().replaceAll(' ', ''), 'DD/MM/YYYY', true).isValid(),
+      );
+
+      if (
+        cell.classList.contains('date-td') &&
+        !moment(cell.innerText.trim().replaceAll(' ', ''), 'DD/MM/YYYY', true).isValid()
+      ) {
+        return errors.push(`${cell.innerText} is not a valid date format`);
+      }
     });
 
     if (errors.length > 0) {
@@ -159,6 +165,7 @@ const EmailTemplate = ({ loading }) => {
             setEmailTemplate(val);
           }}
           options={{ minHeight: '500px' }}
+          labelClass="font-normal text-body text-base leading-snug mb-3.5"
         />
       </div>
     </MainLayout>

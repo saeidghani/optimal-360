@@ -75,9 +75,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
   const [addCompetencyModal, setAddCompetencyModal] = React.useState(false);
   const [addQuestionModal, setAddQuestionModal] = React.useState(false);
 
-  const [isFormDone, setIsFormDone] = React.useState(false);
   const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
-
   const [selectedCluster, setSelectedCluster] = React.useState('');
   const [selectedCompetency, setSelectedCompetency] = React.useState('');
   const [selectedQuestion, setSelectedQuestion] = React.useState('');
@@ -105,60 +103,8 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
   };
 
   React.useEffect(() => {
-    if (
-      isFormDone &&
-      selectedSurveyGroupKey &&
-      selectedSurveyGroupKey !== parsedQuery?.surveyGroupId
-    ) {
-      setQuery({ surveyGroupId: selectedSurveyGroupKey });
-      setIsFormDone(false);
-      setSurveyGroupModal(false);
-    }
-  }, [isFormDone, selectedSurveyGroupKey, setQuery, parsedQuery.surveyGroupId]);
-
-  React.useEffect(() => {
-    const validateForm = async () => {
-      try {
-        const errorObj = await formRef.current.validateForm(formRef?.current?.values);
-
-        if (errorObj && Object.values(errorObj).length > 0) {
-          throw errorObj;
-        } else {
-          setIsFormDone(true);
-        }
-      } catch (errorObj) {
-        formRef.current.setErrors(errorObj);
-        formRef.current.setTouched(errorObj);
-
-        if (selectedSurveyGroupKey !== parsedQuery?.surveyGroupId) setSurveyGroupModal(true);
-      }
-    };
-
-    if (selectedSurveyGroupKey && formRef?.current) {
-      validateForm(formRef?.current?.values);
-    }
-
-    // eslint-disable-next-line
-  }, [selectedSurveyGroupKey]);
-
-  React.useEffect(() => {
-    const resetForm = async () => {
-      await fetchSurveyQuestions(surveyGroupId);
-
-      if (formRef?.current) {
-        // reset form state when surveyGroup changes
-        // happens when user decides to discard current settings and changes currentSurveyGroup
-        formRef.current.setTouched({});
-        formRef.current.setErrors({});
-      }
-    };
-
-    if (surveyGroupId) {
-      resetForm();
-    }
-
-    // eslint-disable-next-line
-  }, [fetchSurveyQuestions, surveyGroupId]);
+    if (surveyGroupId) fetchSurveyQuestions(surveyGroupId);
+  }, [surveyGroupId, fetchSurveyQuestions]);
 
   const onMenuClick = ({ clusterId, competencyId, questionId }) => {
     setSelectedCluster('');
@@ -315,28 +261,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                 newAddedItem: true,
               },
             ],
-      clusters:
-        clusters?.length > 0
-          ? clusters
-              .sort((a, b) => a.showOrder - b.showOrder)
-              .map((cluster) => ({
-                ...cluster,
-                competencies:
-                  cluster.competencies?.length > 0
-                    ? cluster.competencies
-                        .sort((a, b) => a.showOrder - b.showOrder)
-                        .map((competency) => ({
-                          ...competency,
-                          questions:
-                            competency?.length > 0
-                              ? competency.sort((a, b) => a.showOrder - b.showOrder)
-                              : [],
-                        }))
-                    : [],
-                index: cluster.showOrder,
-                name: cluster.name || cluster.label,
-              }))
-          : null,
+      clusters: clusters?.length > 0 ? clusters : [],
     };
 
     // eslint-disable-next-line
@@ -379,8 +304,6 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
     </div>
   );
 
-  console.log({ initialValues, persistedData, surveyQuestions });
-
   return (
     <MainLayout
       title="Super User"
@@ -394,7 +317,13 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
 
       <ChangeSurveyGroupModal
         handleOk={() => {
-          setIsFormDone(true);
+          const path = dynamicMap.superUser.surveySettings();
+          const params = stringify({
+            projectId: parsedQuery.projectId,
+            surveyGroupId: selectedSurveyGroupKey,
+          });
+
+          history.push(`${path}${params}`);
         }}
         handleCancel={() => {
           setSelectedSurveyGroupKey('');
@@ -439,8 +368,10 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
 
       <div className="bg-white grid grid-cols-12 pl-15">
         <Menu
-          onClick={(key) => setSelectedSurveyGroupKey(key)}
-          isFormDone={isFormDone}
+          onClick={(key) => {
+            setSurveyGroupModal(true);
+            setSelectedSurveyGroupKey(key);
+          }}
           items={surveyGroups?.data}
           className="col-span-2"
         />
@@ -469,6 +400,8 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
           >
             {({ values, errors, touched, handleSubmit }) => (
               <Form className="pr-28" onSubmit={handleSubmit}>
+                <pre>{console.log({ values })}</pre>
+
                 <h4 className="text-secondary text-lg mb-8 mt-17">Rating Scale</h4>
 
                 {values.ratingScales.map((row, i) => (

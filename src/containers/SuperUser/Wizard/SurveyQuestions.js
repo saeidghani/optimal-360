@@ -71,7 +71,6 @@ class SurveyQuestions extends React.Component {
 
     const newData = { ...data, clusters: newClusters, feedbacks: newFeedbacks };
 
-    console.log({ newData });
     return setSurveyQuestions(newData);
   };
 

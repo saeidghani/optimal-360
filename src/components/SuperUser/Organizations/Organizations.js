@@ -73,6 +73,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
         key: 'id',
         title: 'ID',
         sorter: true,
+        width: 200,
         sortOrder: getSortOrder('id'),
         render: (id, { logo }) => (
           <div className="flex items-center justify-between">

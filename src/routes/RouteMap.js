@@ -18,8 +18,9 @@ const superUser = {
 
   groupReports: 'new-project/reports/group-reports',
 
-  addRatee: 'participants/ratee/add/',
+  addRatee: 'participants/ratee/add',
   editRatee: 'participants/ratee/add/edit',
+  raterSelection: 'participants/ratee/raterSelection',
   rateesList: 'participants/ratee/add/step2',
 
   ratersList: 'participants/ratee',

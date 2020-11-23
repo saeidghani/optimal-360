@@ -119,26 +119,28 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
       {
         key: 'name',
         title: 'Survey Group',
-        render: (name, { project, id: surveyGroupId }) => (
-          <Button
-            className="pl-0"
-            onClick={() => {
-              const params = stringify({
-                projectId: project.id,
-                surveyGroupId,
-                tab: 'status-overview',
-                page_number: 1,
-                page_size: 10,
-              });
-              const path = `${dynamicMap.superUser.ratersList()}${params}`;
-              history.push(path);
-            }}
-            type="link"
-            textSize="sm"
-            text={name}
-            textClassName="underline text-primary-500"
-          />
-        ),
+        render: (name, { project, id: surveyGroupId, status }) => {
+          return status !== 'inactive' ? (
+            <Button
+              className="pl-0"
+              onClick={() => {
+                const params = stringify({
+                  projectId: project.id,
+                  surveyGroupId,
+                  tab: 'status-overview',
+                  page_number: 1,
+                  page_size: 10,
+                });
+                const path = `${dynamicMap.superUser.ratersList()}${params}`;
+                history.push(path);
+              }}
+              type="link"
+              textSize="sm"
+              text={name}
+              textClassName="underline text-primary-500"
+            />
+          ) : name;
+        },
         sorter: true,
         sortOrder: getSortOrder('name'),
       },
@@ -165,20 +167,22 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
       {
         key: 'id',
         width: 50,
-        render: (surveyGroupId, { project }) => (
-          <Button
-            onClick={() => {
-              const params = stringify({ surveyGroupId, projectId: project.id });
-              const path = `${dynamicMap.superUser.surveySettings()}${params}`;
+        render: (surveyGroupId, { project, status }) => {
+          return status === 'inactive' ? (
+            <Button
+              onClick={() => {
+                const params = stringify({ surveyGroupId, projectId: project.id });
+                const path = `${dynamicMap.superUser.surveySettings()}${params}`;
 
-              history.push(path);
-            }}
-            icon="EditOutlined"
-            type="link"
-            className="text-lg mr-7"
-            size="middle"
-          />
-        ),
+                history.push(path);
+              }}
+              icon="EditOutlined"
+              type="link"
+              className="text-lg mr-7"
+              size="middle"
+            />
+          ) : null;
+        },
       },
     ],
     // eslint-disable-next-line
@@ -191,6 +195,15 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
     const newItem = `${order}${sorter.columnKey}`;
 
     setQuery({ sort: newItem });
+  };
+
+  const sortLocally = (data) => {
+    const SortBy = parsedQuery?.sort?.substring(1);
+    if (SortBy) {
+      const sortOrder = parsedQuery.sort[0] === '+' ? 1 : -1;
+      return data.sort((a, b) => (a[SortBy] > b[SortBy] ? sortOrder : -sortOrder));
+    }
+    return data;
   };
 
   return (
@@ -207,7 +220,7 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
         selectedRowKeys={selectedRows?.map((el) => el.id.toString())}
         loading={loading}
         columns={columns}
-        dataSource={surveyGroups?.data || []}
+        dataSource={(surveyGroups?.data && sortLocally(surveyGroups?.data)) || []}
         renderHeader={renderHeader}
         pagination={false}
         onRowSelectionChange={(_, rows) => {
