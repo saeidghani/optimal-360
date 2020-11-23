@@ -197,6 +197,15 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
     setQuery({ sort: newItem });
   };
 
+  const sortLocally = (data) => {
+    const SortBy = parsedQuery?.sort?.substring(1);
+    if (SortBy) {
+      const sortOrder = parsedQuery.sort[0] === '+' ? 1 : -1;
+      return data.sort((a, b) => (a[SortBy] > b[SortBy] ? sortOrder : -sortOrder));
+    }
+    return data;
+  };
+
   return (
     <MainLayout
       titleClass="mb-6 mt-3"
@@ -211,7 +220,7 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
         selectedRowKeys={selectedRows?.map((el) => el.id.toString())}
         loading={loading}
         columns={columns}
-        dataSource={surveyGroups?.data || []}
+        dataSource={(surveyGroups?.data && sortLocally(surveyGroups?.data)) || []}
         renderHeader={renderHeader}
         pagination={false}
         onRowSelectionChange={(_, rows) => {
