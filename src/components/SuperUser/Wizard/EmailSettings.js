@@ -34,7 +34,16 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
           copyToAdmin: yup.bool(),
           template: yup.string(),
         })
-        .test('emailSettings', 'Date cannot be empty', (vals) => !(vals.selected && !vals.date)),
+        .test(
+          'emailSettings',
+          'Date cannot be empty',
+          ({ selected, date }) => !(selected && !date),
+        ),
+      // .test(
+      //   'emailSettings',
+      //   'Date cannot be in the past',
+      //   ({ selected, date }) => !(selected && date && moment(date).isBefore(moment(), 'day')),
+      // ),
     ),
   });
   const history = useHistory();
@@ -260,7 +269,7 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
 
                       <div className="col-span-2">
                         <Calendar
-                          onChange={(val) => updateForm(id, 'date', val)}
+                          onChange={(val) => updateForm(id, 'date', val || '')}
                           value={date}
                           disabled={!selected}
                           icon={!date}

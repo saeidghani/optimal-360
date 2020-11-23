@@ -23,31 +23,26 @@ const DragHandle = sortableHandle(() => (
 ));
 
 const SortableItem = sortableElement(
-  ({ value, touched, errors, handleFormChange, deleteFeedback }) => (
+  ({ value, touched, errors, handleFormChange, deleteFeedback, i }) => (
     <li className="grid grid-cols-12 gap-x-6 flex flex-row items-start my-6">
       <DragHandle />
 
       <Input
         placeholder="General"
         value={value.label}
-        name={`feedbacks[${value.index}].label`}
+        name={`feedbacks[${i}].label`}
         wrapperClassName="col-span-3"
         onChange={(e) => handleFormChange(e.target.value, value, 'feedbacks', 'label')}
-        errorMessage={
-          touched?.feedbacks?.[value.index]?.label && errors?.feedbacks?.[value.index]?.label
-        }
+        errorMessage={touched?.feedbacks?.[i]?.label && errors?.feedbacks?.[i]?.label}
       />
 
       <Input
-        name={`feedbacks[${value.index}].statement`}
+        name={`feedbacks[${i}].statement`}
         placeholder="Statement"
         value={value.statement}
         wrapperClassName="col-span-8"
         onChange={(e) => handleFormChange(e.target.value, value, 'feedbacks', 'statement')}
-        errorMessage={
-          touched?.feedbacks?.[value.index]?.statement &&
-          errors?.feedbacks?.[value.index]?.statement
-        }
+        errorMessage={touched?.feedbacks?.[i]?.statement && errors?.feedbacks?.[i]?.statement}
         suffix={
           <Button
             type="link"
@@ -94,6 +89,7 @@ const SortableFeedbacks = ({
               deleteFeedback={deleteFeedback}
               key={`item-${value.id}`}
               index={index}
+              i={index}
               value={value}
             />
           ))
