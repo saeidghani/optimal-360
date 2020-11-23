@@ -110,7 +110,7 @@ const OrganizationsStaff = ({
     {
       key: 'email',
       title: 'Email',
-      width: 220,
+      width: 340,
     },
     {
       key: 'password',
