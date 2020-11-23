@@ -55,8 +55,18 @@
     padding: 10px 16px;
   }
 
-  .ant-table-tbody > tr.ant-table-row > td , .ant-table-tbody > tr.ant-table-row > td > span {
+  .ant-table-tbody > tr.ant-table-row > td, .ant-table-tbody > tr.ant-table-row > td > span {
     color: #1BB7D9 !important;
   }
 }
 
+.row-dragging {
+  & {
+    display: inline-table;
+    padding: 0 17px;
+  }
+
+  & .dragHandler {
+    width: 48px;
+  }
+}
