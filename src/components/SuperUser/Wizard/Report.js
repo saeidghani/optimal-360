@@ -120,7 +120,7 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
               try {
                 await setReports({ surveyGroupId, ...values });
 
-                const path = dynamicMap.superUser.addRatee();
+                const path = dynamicMap.superUser.ratersList();
                 const params = stringify({
                   projectId: parsedQuery.projectId,
                   surveyGroupId,
