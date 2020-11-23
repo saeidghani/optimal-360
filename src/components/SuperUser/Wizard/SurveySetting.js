@@ -140,9 +140,18 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
   const surveySettingsStringified = JSON.stringify(surveySettings);
   const initialValues = React.useMemo(() => {
     return {
-      surveySetting,
+      surveySetting: {
+        startDate: surveySetting?.startDate || '',
+        endDate: surveySetting?.endDate || '',
+        raterInvalidation: surveySetting?.raterInvalidation || 0,
+        itemInvalidation: surveySetting?.itemInvalidation || 0,
+      },
       raterGroups: formatRaterGroupItems(raterGroups),
-      surveyModeInUserDashboard,
+      surveyModeInUserDashboard: {
+        individual: !!surveyModeInUserDashboard?.individual,
+        ratingGroup: !!surveyModeInUserDashboard?.ratingGroup,
+        allRatees: !!surveyModeInUserDashboard?.allRatees,
+      },
     };
 
     // eslint-disable-next-line
@@ -415,7 +424,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                     </p>
 
                     <Checkbox
-                      checked={values.surveyModeInUserDashboard.individual}
+                      checked={!!values.surveyModeInUserDashboard.individual}
                       onChange={(individual) =>
                         setFieldValue('surveyModeInUserDashboard', {
                           ...values.surveyModeInUserDashboard,
@@ -428,7 +437,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                     </Checkbox>
 
                     <Checkbox
-                      checked={values.surveyModeInUserDashboard.ratingGroup}
+                      checked={!!values.surveyModeInUserDashboard.ratingGroup}
                       onChange={(ratingGroup) =>
                         setFieldValue('surveyModeInUserDashboard', {
                           ...values.surveyModeInUserDashboard,
@@ -441,7 +450,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                     </Checkbox>
 
                     <Checkbox
-                      checked={values.surveyModeInUserDashboard.allRatees}
+                      checked={!!values.surveyModeInUserDashboard.allRatees}
                       onChange={(allRatees) =>
                         setFieldValue('surveyModeInUserDashboard', {
                           ...values.surveyModeInUserDashboard,
@@ -482,7 +491,11 @@ SurveySetting.propTypes = {
   loading: PropTypes.bool.isRequired,
   surveySettings: PropTypes.shape({
     raterGroups: PropTypes.arrayOf(PropTypes.object),
-    surveyModeInUserDashboard: PropTypes.shape({}),
+    surveyModeInUserDashboard: PropTypes.shape({
+      individual: PropTypes.bool,
+      ratingGroup: PropTypes.bool,
+      allRatees: PropTypes.bool,
+    }),
     surveySetting: PropTypes.shape({}),
   }),
 };

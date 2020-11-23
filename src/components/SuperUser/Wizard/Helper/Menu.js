@@ -18,8 +18,9 @@ const _Menu = ({ items, title, className, onClick }) => {
     >
       <Menu.Item className="text-base text-body font-medium font-sans block">{title}</Menu.Item>
 
-      {sortedArr.map(({ id, name }) => (
+      {sortedArr.map(({ id, name, status }) => (
         <Menu.Item
+          disabled={status !== 'inactive'}
           className="inline-flex items-center text-sm leading-5 capitalize text-antgray-100 my-2"
           onClick={({ key }) => onClick(key)}
           key={id}

@@ -64,13 +64,6 @@ const EmailTemplate = ({ loading }) => {
         return errors.push('table cell cannot be empty');
       }
 
-      console.log(
-        cell.innerText,
-        cell.innerText.trim().replaceAll(' ', ''),
-        cell.classList.contains('date-td'),
-        moment(cell.innerText.trim().replaceAll(' ', ''), 'DD/MM/YYYY', true).isValid(),
-      );
-
       if (
         cell.classList.contains('date-td') &&
         !moment(cell.innerText.trim().replaceAll(' ', ''), 'DD/MM/YYYY', true).isValid()
