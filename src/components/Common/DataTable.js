@@ -30,8 +30,8 @@ const SortableTable = ({
     {
       title: 'Sort',
       dataIndex: 'sort',
-      width: 30,
-      className: 'drag-visible',
+      width: 48,
+      className: 'drag-visible dragHandler',
       render: () => <DragHandle />,
     },
     {
