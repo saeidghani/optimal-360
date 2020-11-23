@@ -9,6 +9,7 @@ import SurveyPlatformLogin from '../containers/SurveyPlatform/Auth/Login';
 import SurveyPlatformForgotPassword from '../containers/SurveyPlatform/Auth/ForgotPassword';
 import SurveyPlatformWelcome from '../containers/SurveyPlatform/Welcome';
 import Information from '../containers/SurveyPlatform/Information';
+import Dashboard from '../containers/SurveyPlatform/Dashboard';
 import AllRatees from '../containers/SurveyPlatform/Managers/AllRatees';
 import Individual from '../containers/SurveyPlatform/Managers/Individual';
 import RateeGroup from '../containers/SurveyPlatform/Managers/RateeGroup';
@@ -32,6 +33,7 @@ const Routes = () => (
     <PrivateRoute path={map.surveyPlatform.welcome} exact component={SurveyPlatformWelcome} />
     <PrivateRoute path={map.surveyPlatform.information} exact component={Information} />
     <PrivateRoute path={map.surveyPlatform.referenceGuide} exact component={ReferenceGuide} />
+    <PrivateRoute path={map.surveyPlatform.dashboard} exact component={Dashboard} />
     <PrivateRoute path={map.surveyPlatform.allRateesList} exact component={AllRatees} />
     <PrivateRoute path={map.surveyPlatform.individualList} exact component={Individual} />
     <PrivateRoute path={map.surveyPlatform.rateeGroupList} exact component={RateeGroup} />

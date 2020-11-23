@@ -38,7 +38,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  login: dispatch.auth.login,
+  login: dispatch.surveyPlatform?.auth.login,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(_Login);

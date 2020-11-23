@@ -218,6 +218,7 @@ const AllRatees = ({ loading }) => {
           size="middle"
           className="md:grid grid-cols-8 md:mt-0"
           tableClassName="col-span-5 overflow-x-auto"
+          extraDetailsClassName="row-start-1 col-start-6 col-span-3"
           loading={loading}
           columns={columns}
           dataSource={dataSource}
@@ -229,7 +230,6 @@ const AllRatees = ({ loading }) => {
               <ExtraDetails />
             </div>
           }
-          extraDetailsClassName="row-start-1 col-start-6 col-span-3"
         />
       </div>
       <div className="md:flex justify-end">

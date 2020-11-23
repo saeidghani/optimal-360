@@ -51,6 +51,7 @@ const surveyPlatform = {
   welcome: 'welcome',
   information: 'information',
   referenceGuide: 'reference-guide',
+  dashboard: 'dashboard',
 
   allRateesList: 'managers/all-ratees',
   individualList: 'managers/individual',

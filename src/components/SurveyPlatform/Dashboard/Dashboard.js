@@ -5,23 +5,25 @@ import PropTypes from 'prop-types';
 import Dropdown from '../../Common/Dropdown';
 import { useQuery } from '../../../hooks';
 
-import Layout from './Helper/Layout';
+import Layout from '../Helper/Layout';
 import TopLeadership from './TopLeadership';
-import Managers from '../../SurveyPlatform/Dashboard/Managers';
-import HighPotentials from '../../SurveyPlatform/Dashboard/HighPotentials';
+import Managers from './Managers';
+import HighPotentials from './HighPotentials';
 
 const Dashboard = ({
   loading,
-  projects,
-  completionRate,
-  summary,
-  ratees,
-  raters,
   fetchProjects,
-  fetchCompletionRate,
-  fetchSummary,
-  fetchRatees,
-  fetchRaters,
+  fetchInfo,
+  fetchRelations,
+  fetchQuestions,
+  fetchFeedbacks,
+  postQuestionResponses,
+  postFeedbackResponses,
+  projects,
+  info,
+  relations,
+  questions,
+  feedbacks,
 }) => {
   const [parsedQuery, , setQuery] = useQuery();
   const { surveyGroupId, tab } = parsedQuery || {};
@@ -65,23 +67,26 @@ const Dashboard = ({
           options={surveyGroups}
         />
       </div>
-      <Tabs defaultActiveKey={tab} onChange={onTabChange}>
+      <Tabs className="button-tabs" defaultActiveKey="managers" onChange={onTabChange}>
         <TabPane tab="Top Leadership" key="top-leadership">
-          <TopLeadership
-            loading={loading}
-            projects={projects}
-            completionRate={completionRate}
-            summary={summary}
-            ratees={ratees}
-            raters={raters}
-            fetchCompletionRate={fetchCompletionRate}
-            fetchSummary={fetchSummary}
-            fetchRatees={fetchRatees}
-            fetchRaters={fetchRaters}
-          />
+          <TopLeadership />
         </TabPane>
         <TabPane tab="Managers" key="managers">
-          <Managers />
+          <Managers
+            loading={loading}
+            fetchProjects={fetchProjects}
+            fetchInfo={fetchInfo}
+            fetchRelations={fetchRelations}
+            fetchQuestions={fetchQuestions}
+            fetchFeedbacks={fetchFeedbacks}
+            postQuestionResponses={postQuestionResponses}
+            postFeedbackResponses={postFeedbackResponses}
+            projects={projects}
+            info={info}
+            relations={relations}
+            questions={questions}
+            feedbacks={feedbacks}
+          />
         </TabPane>
         <TabPane tab="High Potentials" key="high-potentials">
           <HighPotentials />
@@ -94,43 +99,30 @@ const Dashboard = ({
 Dashboard.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchProjects: PropTypes.func.isRequired,
-  fetchCompletionRate: PropTypes.func.isRequired,
-  fetchSummary: PropTypes.func.isRequired,
-  fetchRatees: PropTypes.func.isRequired,
-  fetchRaters: PropTypes.func.isRequired,
+  fetchInfo: PropTypes.func.isRequired,
+  fetchRelations: PropTypes.func.isRequired,
+  fetchQuestions: PropTypes.func.isRequired,
+  fetchFeedbacks: PropTypes.func.isRequired,
+  postQuestionResponses: PropTypes.func.isRequired,
+  postFeedbackResponses: PropTypes.func.isRequired,
   projects: PropTypes.shape({
     data: PropTypes.shape({
       length: PropTypes.number,
     }),
     timeStamp: PropTypes.number,
   }),
-  completionRate: PropTypes.shape({
-    totalRatees: PropTypes.string,
-    totalSurveySubmissionRate: PropTypes.string,
-    totalSurveyRate: PropTypes.string,
-    totalAnsweredRate: PropTypes.string,
-    totalQuestionRate: PropTypes.string,
-    raterGroups: PropTypes.arrayOf(
-      PropTypes.shape({
-        totalRaters: PropTypes.string.isRequired,
-        totalSubmissions: PropTypes.string.isRequired,
-        totalQuestions: PropTypes.string.isRequired,
-        totalAnswered: PropTypes.string.isRequired,
-        raterGroupName: PropTypes.string.isRequired,
-      }),
-    ),
-  }),
-  summary: PropTypes.shape({}),
-  ratees: PropTypes.shape({}),
-  raters: PropTypes.shape({}),
+  info: PropTypes.shape({}),
+  relations: PropTypes.shape({}),
+  questions: PropTypes.shape({}),
+  feedbacks: PropTypes.shape({}),
 };
 
 Dashboard.defaultProps = {
-  completionRate: {},
   projects: {},
-  summary: {},
-  ratees: {},
-  raters: {},
+  info: {},
+  relations: {},
+  questions: {},
+  feedbacks: {},
 };
 
 export default Dashboard;
