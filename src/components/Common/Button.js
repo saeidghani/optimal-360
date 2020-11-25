@@ -19,6 +19,7 @@ const _Button = ({
   text,
   href,
   textClassName,
+  iconClassName,
   textSize,
   disabled,
   danger,
@@ -68,7 +69,7 @@ const _Button = ({
         icon && typeof icon === 'object' ? (
           icon
         ) : RICON ? (
-          <RICON className="inline-flex" />
+          <RICON className={`${iconClassName} inline-flex`} />
         ) : null
       ) : null}
       {text ? (
@@ -80,7 +81,7 @@ const _Button = ({
         icon && typeof icon === 'object' ? (
           icon
         ) : RICON ? (
-          <RICON className="inline-flex" />
+          <RICON className={`${iconClassName} inline-flex`} />
         ) : null
       ) : null}
     </Button>
@@ -106,6 +107,7 @@ _Button.propTypes = {
   className: PropTypes.string,
   text: PropTypes.string,
   textClassName: PropTypes.string,
+  iconClassName: PropTypes.string,
   textSize: PropTypes.string,
   disabled: PropTypes.bool,
   danger: PropTypes.bool,
@@ -123,6 +125,7 @@ _Button.defaultProps = {
   light: false,
   className: '',
   textClassName: '',
+  iconClassName: '',
   textSize: 'lg',
   text: '',
   children: '',

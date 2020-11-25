@@ -392,7 +392,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                 await setSurveyQuestions({ ...values, surveyGroupId });
                 setPersistData('');
 
-                const path = dynamicMap.superUser.report();
+                const path = dynamicMap.superUser.ratersList();
 
                 history.push(`${path}${params}`);
               } catch (error) {}

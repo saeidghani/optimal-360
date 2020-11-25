@@ -16,7 +16,7 @@ import './assets/styles/bundle.less';
 import './assets/styles/bundle.css';
 
 const { persistor, store, dispatch } = configureStore();
-persistor.purge(); // Debug to clear persist
+// persistor.purge(); // Debug to clear persist
 
 const Root = () => (
   <Provider store={store}>

@@ -98,7 +98,7 @@ const EmailTemplate = ({ loading }) => {
         <p className="text-body text-xl mb-6">{pageTitle}</p>
 
         <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row">
+          <div className="inline-flex flex-row flex-wrap">
             <Button
               onClick={() => addTag('PROJECT_NAME')}
               size="middle"
