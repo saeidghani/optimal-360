@@ -12,6 +12,7 @@ import Result from './Result';
 import { Tabs } from 'antd';
 import MainLayout from '../../Common/Layout';
 import Dropdown from '../../Common/Dropdown';
+import ReportSetting from "./ReportSetting";
 
 const Ratee = (
   {
@@ -42,7 +43,29 @@ const Ratee = (
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
   const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
-  const [currentTab, setTab] = useTabs('tab', ['status-overview', 'status-details', 'raters-email', 'result']);
+  const allTabs = [
+    {
+      title: 'Status Overview',
+      key: 'status-overview',
+    },
+    {
+      title: 'Status Details',
+      key: 'status-details',
+    },
+    {
+      title: 'Raters Email',
+      key: 'raters-email',
+    },
+    {
+      title: 'Results',
+      key: 'result',
+    },
+    {
+      title: 'Report Setting',
+      key: 'report-setting',
+    },
+  ];
+  const [currentTab, setTab] = useTabs('tab', allTabs.map((eachTab) => eachTab.key));
   const { TabPane } = Tabs;
 
   const dropDownOptions = React.useMemo(
@@ -86,7 +109,7 @@ const Ratee = (
         onChange={tabChangeCallback}
         className="all-ratee-tabs"
       >
-        <TabPane tab="Status Overview" key="status-overview">
+        <TabPane tab={allTabs[0].title} key={allTabs[0].key}>
           <StatusOverview
             summary={summary}
             completionRate={completionRate}
@@ -95,7 +118,7 @@ const Ratee = (
             loading={loading}
           />
         </TabPane>
-        <TabPane tab="Status Details" key="status-details">
+        <TabPane tab={allTabs[1].title} key={allTabs[1].key}>
           <StatusDetails
             fetchStatusDetails={fetchStatusDetails}
             removeRateeRaters={removeRateeRaters}
@@ -106,7 +129,7 @@ const Ratee = (
             loading={loading}
           />
         </TabPane>
-        <TabPane tab="Raters Email" key="raters-email">
+        <TabPane tab={allTabs[2].title} key={allTabs[2].key}>
           <RatersEmail
             loading={loading}
             raters={raters}
@@ -117,7 +140,7 @@ const Ratee = (
             exportSurveyGroupRaters={exportSurveyGroupRaters}
           />
         </TabPane>
-        <TabPane tab="Results" key="result">
+        <TabPane tab={allTabs[3].title} key={allTabs[3].key}>
           <Result
             loading={loading}
             fetchIndividualReports={fetchIndividualReports}
@@ -125,6 +148,11 @@ const Ratee = (
             exportDemographicData={exportDemographicData}
             individualReports={individualReports}
             groupReports={groupReports}
+          />
+        </TabPane>
+        <TabPane tab={allTabs[4].title} key={allTabs[4].key}>
+          <ReportSetting
+            loading={loading}
           />
         </TabPane>
       </Tabs>
