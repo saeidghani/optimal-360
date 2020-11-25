@@ -124,8 +124,8 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
       {
         key: 'name',
         title: 'Survey Group',
-        render: (name, { project, id: surveyGroupId, status }) => {
-          return status !== 'inactive' ? (
+        render: (name, { project, id: surveyGroupId, stepsStatus }) => {
+          return stepsStatus ? (
             <Button
               className="pl-0"
               onClick={() => {
@@ -144,7 +144,9 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
               text={name}
               textClassName="underline text-primary-500"
             />
-          ) : name;
+          ) : (
+            name
+          );
         },
         sorter: (a, b) => a.name > b.name,
         sortOrder: getSortOrder('name'),
@@ -191,7 +193,7 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
       },
     ],
     // eslint-disable-next-line
-    [surveyGroups.timeStamp,parsedQuery?.sort],
+    [surveyGroups.timeStamp, parsedQuery?.sort],
   );
 
   const sort = (sorter) => {
@@ -221,11 +223,6 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
         pagination={false}
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
-        }}
-        rowClassName={({ deleted }) => {
-          if (deleted) {
-            return 'bg-antgray-100 bg-opacity-10 td-checkbox-visibility-0';
-          }
         }}
       />
     </MainLayout>

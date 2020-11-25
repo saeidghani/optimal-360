@@ -15,6 +15,103 @@ import Button from '../../Common/Button';
 import Loading from '../../Common/Loading';
 import TextEditor from '../../Common/TextEditor';
 
+const TAGS = {
+  raterVerificationEmail: [
+    {
+      title: 'Project Name',
+      value: 'PROJECT_NAME',
+    },
+    {
+      title: 'Rater',
+      value: 'RATER',
+    },
+    {
+      title: 'Sender',
+      value: 'SENDER',
+    },
+  ],
+  loginEmailSelf: [
+    {
+      title: 'Project Name',
+      value: 'PROJECT_NAME',
+    },
+    {
+      title: 'Rater',
+      value: 'RATER',
+    },
+    {
+      title: 'Sender',
+      value: 'SENDER',
+    },
+  ],
+  loginEmailOthers: [
+    {
+      title: 'Project Name',
+      value: 'PROJECT_NAME',
+    },
+    {
+      title: 'Rater',
+      value: 'RATER',
+    },
+    {
+      title: 'Sender',
+      value: 'SENDER',
+    },
+  ],
+  resetPasswordEmail: [
+    {
+      title: 'Project Name',
+      value: 'PROJECT_NAME',
+    },
+    {
+      title: 'Rater',
+      value: 'RATER',
+    },
+    {
+      title: 'Sender',
+      value: 'SENDER',
+    },
+  ],
+  reminderEmails: [
+    {
+      title: 'Project Name',
+      value: 'PROJECT_NAME',
+    },
+    {
+      title: 'Rater',
+      value: 'RATER',
+    },
+    {
+      title: 'Sender',
+      value: 'SENDER',
+    },
+    {
+      title: 'End Date',
+      value: 'END_DATE',
+    },
+    {
+      title: 'Rater Login Id',
+      value: 'RATER_LOGIN_ID',
+    },
+    {
+      title: 'password',
+      value: 'PASSWORD',
+    },
+    {
+      title: 'Survey Link',
+      value: 'SURVEY_LINK',
+    },
+    {
+      title: 'Relation Table Include Self',
+      value: 'RELATION_TABLE_INCLUDE_SELF',
+    },
+    {
+      title: 'Relation Table Exclude Self',
+      value: 'RELATION_TABLE_EXCLUDE_SELF',
+    },
+  ],
+};
+
 const EmailTemplate = ({ loading }) => {
   const [parsedQuery] = useQuery();
   const { projectId, surveyGroupId } = parsedQuery;
@@ -98,22 +195,17 @@ const EmailTemplate = ({ loading }) => {
         <p className="text-body text-xl mb-6">{pageTitle}</p>
 
         <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row">
-            <Button
-              onClick={() => addTag('PROJECT_NAME')}
-              size="middle"
-              text="Project Name"
-              textSize="base"
-              className="px-3  mr-3"
-            />
-            <Button
-              onClick={() => addTag('RATER')}
-              size="middle"
-              text="Rater"
-              textSize="base"
-              className="mr-3"
-            />
-            <Button onClick={() => addTag('SENDER')} size="middle" text="Sender" textSize="base" />
+          <div className="inline-flex flex-row flex-wrap">
+            {(TAGS[chosenTemplate] || TAGS.reminderEmails).map(({ title, value }) => (
+              <Button
+                key={value}
+                onClick={() => addTag(value)}
+                size="middle"
+                text={title}
+                textSize="base"
+                className="my-2 mr-3"
+              />
+            ))}
           </div>
 
           <div className="flex flex-row">

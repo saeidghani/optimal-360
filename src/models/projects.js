@@ -141,6 +141,8 @@ export default {
             data,
           });
 
+          await dispatch.projects.fetchSurveyGroups({ projectId });
+
           return res;
         },
         dispatch.util.errorHandler,
