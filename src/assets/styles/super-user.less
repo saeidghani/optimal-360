@@ -18,9 +18,10 @@
   border-bottom-color: @process-tail-color;
 }
 
-.borderless-tab .ant-tabs-top > .ant-tabs-nav::before{
+.borderless-tab .ant-tabs-top > .ant-tabs-nav::before {
   border: unset;
 }
+
 .td-gray {
   & {
     background-color: rgba(232, 234, 241, 0.75);
@@ -67,5 +68,34 @@
 
   & .dragHandler {
     width: 48px;
+  }
+}
+
+// Ratee.Report compoennt
+.checkbox-group-wrapper {
+  & {
+    margin-top: 20px;
+    margin-left: 40px;
+    margin-bottom: 10px;
+  }
+
+  & > label {
+    margin-bottom: 28px;
+  }
+
+  .ant-checkbox-indeterminate {
+
+  }
+}
+
+.checkbox-group-container {
+  & {
+    display: flex;
+    flex-direction: column;
+  }
+
+  label {
+    margin-bottom: 12px;
+    margin-left: 50px !important;
   }
 }
