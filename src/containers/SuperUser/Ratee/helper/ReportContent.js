@@ -54,22 +54,6 @@ const data = {
   },
 };
 const ReportContent = (loading) => {
-  const [parsedQuery, query, setQuery] = useQuery();
-  const [selectedRows, setSelectedRows] = React.useState([]);
-
-  const surveyGroupId = parsedQuery?.surveyGroupId;
-  const projectId = parsedQuery?.projectId;
-
-  const columns = React.useMemo(() => [
-    {
-      key: 'individual',
-      title: 'Rater Email',
-    },
-    {
-      key: 'group',
-      title: 'gro',
-    },
-  ]);
 
   return (
     <>
@@ -98,14 +82,14 @@ const ReportContent = (loading) => {
           </div>
         </div>
 
-
         <div className="flex">
-          {Object.entries(data).map(([title, fields], index) => (
+          {['individual', 'group'].map((category) => (
             <div className="flex flex-col w-1/2">
-              {Object.entries(data[title]).map(([title, fields]) => {
-                  if (LABELS[title]) {
+              {/* eslint-disable-next-line array-callback-return */}
+              {Object.entries(data[category]).map(([_title, fields]) => {
+                  if (LABELS[_title]) {
                     return (
-                      <div key={title} className={`checkbox-group-wrapper ${index === 1 && 'ml-0'}`}>
+                      <div key={_title} className={`checkbox-group-wrapper ${category === 'group' && 'ml-0'}`}>
                         <Checkbox
                           className="text-heading text-base"
                           indeterminate={() => {
@@ -115,12 +99,12 @@ const ReportContent = (loading) => {
                           checked={() => {
                           }}
                         >
-                          {LABELS[title]}
+                          {LABELS[_title]}
                         </Checkbox>
 
                         <CheckboxGroup
                           className="checkbox-group-container text-heading text-sm"
-                          options={(Object.entries(fields).filter(([label, value]) => LABELS[label])).map(([label]) => {
+                          options={(Object.entries(fields).filter(([label]) => LABELS[label])).map(([label]) => {
                             return ({
                               label: LABELS[label],
                               value: label,
