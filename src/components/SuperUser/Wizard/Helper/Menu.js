@@ -6,7 +6,7 @@ import { Menu } from 'antd';
 
 import { dynamicMap } from '../../../../routes/RouteMap';
 
-import { useQuery } from '../../../../hooks/useQuery';
+import { useQuery, stringify } from '../../../../hooks/useQuery';
 
 import Button from '../../../Common/Button';
 
@@ -20,35 +20,42 @@ const _Menu = ({ items, title, className, onClick }) => {
   // in order to keep menu items order consistent across renders
   const sortedArr = items?.sort((el1, el2) => el1.id - el2.id);
 
-  const inactiveSurveyGroupIds = [];
+  const fetchValidSurveyGroupId = (selectedId) => {
+    if (selectedId * 1 !== parsedQuery?.surveyGroupId * 1) return parsedQuery?.surveyGroupId;
 
-  sortedArr.forEach((el) => {
-    if (el.status === 'inactive') {
-      inactiveSurveyGroupIds.push(el.id);
+    const nextValidSurveyGroupId = sortedArr.find((el) => el.id * 1 !== selectedId * 1)?.id;
+    return nextValidSurveyGroupId;
+  };
+
+  const removeSurveyGroups = async (selectedId) => {
+    const validSurveyGroupId = fetchValidSurveyGroupId(selectedId);
+
+    await dispatch.projects.removeSurveyGroups({ projectId, surveyGroupIds: [selectedId] });
+
+    // if there is any alternative incative surveyGroupId (validSurveyGroupId) we
+    // can replace it with the currently selected inactive surveyGroupId
+    if (validSurveyGroupId) {
+      setQuery({ surveyGroupId: validSurveyGroupId });
     }
-  });
-
-  const fetchInactiveSurveyGroupId = (selectedId) => {
-    const isSelectedIdInactive = inactiveSurveyGroupIds.find((id) => id * 1 === selectedId * 1);
-
-    // if selectedId is an inactive survey group id
-    // but there isn't any other inactive survey group id present
-    // we cannot remove the currently selectedId
-    if (isSelectedIdInactive && inactiveSurveyGroupIds.length < 2) return '';
-
-    const inactiveSurveyGroupId = inactiveSurveyGroupIds.find((id) => id * 1 !== selectedId * 1);
-
-    // const firstSurveyGroupId = sortedArr.find((el) => el.id * 1 !== selectedId * 1);
-    // if (!isSelectedIdInactive) return firstSurveyGroupId;
-
-    return inactiveSurveyGroupId;
   };
 
   React.useEffect(() => {
-    if (inactiveSurveyGroupIds.length < 1) {
+    if (sortedArr.length === 0) {
       const path = dynamicMap.superUser.projectsList();
 
       history.replace(`${path}?status=active&page_size=10&page_number=1`);
+    } else {
+      const areAllSurveyGroupsSubmitted = sortedArr.every((el) => el.stepsStatus);
+
+      if (areAllSurveyGroupsSubmitted) {
+        const path = dynamicMap.superUser.ratersList();
+        const params = stringify({
+          projectId,
+          surveyGroupId,
+        });
+
+        history.replace(`${path}${params}`);
+      }
     }
 
     // eslint-disable-next-line
@@ -74,29 +81,19 @@ const _Menu = ({ items, title, className, onClick }) => {
         >
           <p>{name}</p>
 
-          {inactiveSurveyGroupIds.length > 0 ? (
-            <Button
-              onClick={async (e) => {
-                e.stopPropagation();
-                e.preventDefault();
+          <Button
+            onClick={async (e) => {
+              e.stopPropagation();
+              e.preventDefault();
 
-                const inactiveSurveyGroupId = fetchInactiveSurveyGroupId(id);
-
-                await dispatch.projects.removeSurveyGroups({ projectId, surveyGroupIds: [id] });
-
-                // if there is any alternative incative surveyGroupId (inactiveSurveyGroupId) we
-                // can replace it with the currently selected inactive surveyGroupId
-                if (inactiveSurveyGroupId) {
-                  setQuery({ surveyGroupId: inactiveSurveyGroupId });
-                }
-              }}
-              className="ml-auto text-lg text-antgray-100 text-opacity-50 px-0"
-              iconClassName="mx-0 mr-0"
-              icon="DeleteOutlined"
-              type="link"
-              textSize="xl"
-            />
-          ) : null}
+              removeSurveyGroups(id);
+            }}
+            className="ml-auto text-lg text-antgray-100 text-opacity-50 px-0"
+            iconClassName="mx-0 mr-0"
+            icon="DeleteOutlined"
+            type="link"
+            textSize="xl"
+          />
         </Menu.Item>
       ))}
     </Menu>

@@ -178,7 +178,11 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
           return status === 'inactive' ? (
             <Button
               onClick={() => {
-                const params = stringify({ surveyGroupId, projectId: project.id });
+                const params = stringify({
+                  surveyGroupId,
+                  projectId: project.id,
+                  wizardEditMode: true,
+                });
                 const path = `${dynamicMap.superUser.surveySettings()}${params}`;
 
                 history.push(path);
