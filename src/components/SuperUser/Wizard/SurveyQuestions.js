@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom';
 
 import { useQuery, useSurveyGroup, usePersist, useClusters } from '../../../hooks';
 import { stringify } from '../../../hooks/useQuery';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 import ChangeSurveyGroupModal from './Helper/ChangeSurveyGroupModal';
 import Menu from './Helper/Menu';
@@ -45,17 +46,17 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
   const schema = yup.object({
     ratingScales: yup.array(
       yup.object({
-        score: yup.number().required('score is required'),
-        description: yup.string().required('description is required'),
-        label: yup.string().required('label is required'),
+        score: yup.number().nullable().required('score is required'),
+        description: yup.string().nullable().required('description is required'),
+        label: yup.string().nullable().required('label is required'),
       }),
     ),
     clusters: yup.array(yup.object({})).min(1, 'You must specify at least one cluster item'),
     feedbacks: yup
       .array(
         yup.object({
-          label: yup.string().required('label is required'),
-          statement: yup.string().required('statement is required'),
+          label: yup.string().nullable().required('label is required'),
+          statement: yup.string().nullable().required('statement is required'),
           required: yup.bool().required('required is required'),
         }),
       )
@@ -74,16 +75,14 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
   const [addCompetencyModal, setAddCompetencyModal] = React.useState(false);
   const [addQuestionModal, setAddQuestionModal] = React.useState(false);
 
-  const [isFormDone, setIsFormDone] = React.useState(false);
   const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
-
   const [selectedCluster, setSelectedCluster] = React.useState('');
   const [selectedCompetency, setSelectedCompetency] = React.useState('');
   const [selectedQuestion, setSelectedQuestion] = React.useState('');
 
   const surveyQuestionsStringified = JSON.stringify(surveyQuestions);
 
-  const handleFormChange = (newVal, row, key, subKey) => {
+  const handleFeedbackChange = (newVal, row, key, subKey) => {
     const newValues = formRef.current.values[key].map((el) => {
       if (el.id === row.id) {
         return { ...el, [subKey]: newVal };
@@ -95,61 +94,17 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
     formRef.current.setValues({ ...formRef.current.values, [key]: newValues });
   };
 
-  React.useEffect(() => {
-    if (
-      isFormDone &&
-      selectedSurveyGroupKey &&
-      selectedSurveyGroupKey !== parsedQuery?.surveyGroupId
-    ) {
-      setQuery({ surveyGroupId: selectedSurveyGroupKey });
-      setIsFormDone(false);
-      setSurveyGroupModal(false);
-    }
-  }, [isFormDone, selectedSurveyGroupKey, setQuery, parsedQuery.surveyGroupId]);
+  const handleRatingScalesChange = (newVal, index, subKey) => {
+    const newValues = { ...formRef.current.values };
+
+    newValues.ratingScales[index][subKey] = newVal;
+
+    formRef.current.setValues({ ...newValues });
+  };
 
   React.useEffect(() => {
-    const validateForm = async () => {
-      try {
-        const errorObj = await formRef.current.validateForm(formRef?.current?.values);
-
-        if (errorObj && Object.values(errorObj).length > 0) {
-          throw errorObj;
-        } else {
-          setIsFormDone(true);
-        }
-      } catch (errorObj) {
-        formRef.current.setErrors(errorObj);
-        formRef.current.setTouched(errorObj);
-
-        if (selectedSurveyGroupKey !== parsedQuery?.surveyGroupId) setSurveyGroupModal(true);
-      }
-    };
-
-    if (selectedSurveyGroupKey && formRef?.current) {
-      validateForm(formRef?.current?.values);
-    }
-
-    // eslint-disable-next-line
-  }, [selectedSurveyGroupKey]);
-
-  React.useEffect(() => {
-    const resetForm = async () => {
-      await fetchSurveyQuestions(surveyGroupId);
-
-      if (formRef?.current) {
-        // reset form state when surveyGroup changes
-        // happens when user decides to discard current settings and changes currentSurveyGroup
-        formRef.current.setTouched({});
-        formRef.current.setErrors({});
-      }
-    };
-
-    if (surveyGroupId) {
-      resetForm();
-    }
-
-    // eslint-disable-next-line
-  }, [fetchSurveyQuestions, surveyGroupId]);
+    if (surveyGroupId) fetchSurveyQuestions(surveyGroupId);
+  }, [surveyGroupId, fetchSurveyQuestions]);
 
   const onMenuClick = ({ clusterId, competencyId, questionId }) => {
     setSelectedCluster('');
@@ -218,7 +173,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
 
     // creating a unique id
     const feedbackIds = feedbacks?.length > 0 ? feedbacks.map((el) => el.id * 1) : [1];
-    const id = feedbackIds.reduce((prevValue, currentValue) => prevValue + currentValue);
+    const id = feedbackIds.reduce((prevValue, currentValue) => prevValue + currentValue) + 1;
 
     const index = feedbacks.length;
     const showOrder =
@@ -243,7 +198,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
     const currentClusterId = _selectedCluster?.id;
 
     const oldClusters = [...formRef.current?.values?.clusters];
-    const newClusters = ClusterUtils.addItem(
+    const { clusters, id } = ClusterUtils.addItem(
       oldClusters,
       {
         clusterId: currentClusterId,
@@ -254,7 +209,9 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
       parsedQuery,
     );
 
-    setClusters(newClusters);
+    setClusters(clusters);
+
+    return id;
   };
 
   const onFeedbackSortEnd = ({ oldIndex, newIndex }) => {
@@ -290,8 +247,21 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
     return {
       ratingScales:
         surveyQuestions?.ratingScales?.length > 0 ? surveyQuestions.ratingScales : _ratingScales,
-      feedbacks: surveyQuestions?.feedbacks?.length > 0 ? surveyQuestions.feedbacks : [],
-      clusters: clusters.map((el) => ({ ...el, index: el.showOrder, name: el.name || el.label })),
+      feedbacks:
+        surveyQuestions?.feedbacks?.length > 0
+          ? surveyQuestions.feedbacks
+          : [
+              {
+                label: '',
+                statement: '',
+                required: false,
+                showOrder: 1,
+                index: 0,
+                id: 1,
+                newAddedItem: true,
+              },
+            ],
+      clusters: clusters?.length > 0 ? clusters : [],
     };
 
     // eslint-disable-next-line
@@ -347,7 +317,14 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
 
       <ChangeSurveyGroupModal
         handleOk={() => {
-          setIsFormDone(true);
+          const path = dynamicMap.superUser.surveySettings();
+          const params = stringify({
+            projectId: parsedQuery.projectId,
+            surveyGroupId: selectedSurveyGroupKey,
+            wizardEditMode: parsedQuery?.wizardEditMode,
+          });
+
+          history.push(`${path}${params}`);
         }}
         handleCancel={() => {
           setSelectedSurveyGroupKey('');
@@ -361,17 +338,10 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
         visible={addClusterModal}
         onCancel={() => setAddClusterModal(false)}
         onSave={(vals) => {
-          addItemToClusters(vals);
+          const clusterId = addItemToClusters(vals);
           setAddClusterModal(false);
-        }}
-      />
 
-      <AddQuestionModal
-        visible={addQuestionModal}
-        onCancel={() => setAddQuestionModal(false)}
-        onSave={(vals) => {
-          addItemToClusters(vals);
-          setAddQuestionModal(false);
+          setQuery({ clusterId });
         }}
       />
 
@@ -379,20 +349,41 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
         visible={addCompetencyModal}
         onCancel={() => setAddCompetencyModal(false)}
         onSave={(vals) => {
-          addItemToClusters(vals);
+          const competencyId = addItemToClusters(vals);
           setAddCompetencyModal(false);
+
+          setQuery({ competencyId });
+        }}
+      />
+
+      <AddQuestionModal
+        visible={addQuestionModal}
+        onCancel={() => setAddQuestionModal(false)}
+        onSave={(vals) => {
+          const questionId = addItemToClusters(vals);
+          setAddQuestionModal(false);
+
+          setQuery({ questionId });
         }}
       />
 
       <div className="bg-white grid grid-cols-12 pl-15">
-        <Menu
-          onClick={(key) => setSelectedSurveyGroupKey(key)}
-          isFormDone={isFormDone}
-          items={surveyGroups?.data}
-          className="col-span-2"
-        />
+        {!parsedQuery?.wizardEditMode ? (
+          <Menu
+            onClick={(key) => {
+              setSurveyGroupModal(true);
+              setSelectedSurveyGroupKey(key);
+            }}
+            items={surveyGroups?.data}
+            className="col-span-2"
+          />
+        ) : null}
 
-        <div className="px-6 py-5 col-start-3 col-span-10  ">
+        <div
+          className={`px-6 py-5 col-span-10 ${
+            parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
+          } `}
+        >
           <Steps currentPosition={3} />
 
           <Formik
@@ -403,12 +394,17 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
             onSubmit={async (values) => {
               try {
                 const { projectId } = parsedQuery;
-                const params = stringify({ projectId, surveyGroupId });
+                const params = stringify({
+                  projectId,
+                  surveyGroupId,
+                });
 
                 await setSurveyQuestions({ ...values, surveyGroupId });
                 setPersistData('');
 
-                history.push(`/super-user/new-project/report${params}`);
+                const path = dynamicMap.superUser.ratersList();
+
+                history.push(`${path}${params}`);
               } catch (error) {}
             }}
           >
@@ -425,9 +421,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                       value={row.label}
                       name={`ratingScales[${i}].label`}
                       wrapperClassName="col-span-3 mr-6"
-                      onChange={(e) =>
-                        handleFormChange(e.target.value, row, 'ratingScales', 'label')
-                      }
+                      onChange={(e) => handleRatingScalesChange(e.target.value, i, 'label')}
                       errorMessage={
                         touched?.ratingScales?.[i]?.label && errors?.ratingScales?.[i]?.label
                       }
@@ -436,9 +430,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                     <Input
                       value={row.description}
                       name={`ratingScales[${i}].description`}
-                      onChange={(e) =>
-                        handleFormChange(e.target.value, row, 'ratingScales', 'description')
-                      }
+                      onChange={(e) => handleRatingScalesChange(e.target.value, i, 'description')}
                       placeholder="Does not describe the person at all"
                       wrapperClassName="col-span-9"
                       errorMessage={
@@ -451,9 +443,10 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
 
                 <h4 className="text-secondary text-lg mt-8.5">Data Model</h4>
 
-                <div className="grid grid-cols-12 gap-x-8">
+                <div className="grid grid-cols-12 gap-x-8 mt-8">
                   <SecondaryMenu
                     title="ALL"
+                    titleClassName="text-body"
                     className="py-3 col-span-3 h-94 overflow-x-hidden overflow-y-auto"
                     items={values.clusters}
                     defaultClusterId={firstClusterItem.id}
@@ -510,6 +503,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                       />
                     ) : (
                       <DraggableTable
+                        tableClassName="clusters-table"
                         renderHeader={renderHeader}
                         onClusterEdit={(cluster) => setSelectedCluster(cluster)}
                         onClusterDelete={(cluster) => deleteCluster({ clusterId: cluster.id })}
@@ -553,7 +547,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                     touched={touched}
                     items={values.feedbacks}
                     onSortEnd={onFeedbackSortEnd}
-                    handleFormChange={handleFormChange}
+                    handleFormChange={handleFeedbackChange}
                     deleteFeedback={(feedback) => deleteFeedback(values.feedbacks, feedback)}
                   />
                 </div>
@@ -572,9 +566,12 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                       const params = stringify({
                         projectId: parsedQuery?.projectId,
                         surveyGroupId: parsedQuery?.surveyGroupId,
+                        wizardEditMode: parsedQuery?.wizardEditMode,
                       });
 
-                      history.push(`/super-user/new-project/survey-intro${params}`);
+                      const path = dynamicMap.superUser.surveyIntro();
+
+                      history.push(`${path}${params}`);
                     }}
                   />
 

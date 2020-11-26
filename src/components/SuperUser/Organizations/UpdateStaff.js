@@ -1,20 +1,23 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
-import MainLayout from '../../Common/Layout';
+import { useHistory, useParams } from 'react-router-dom';
 
+import { dynamicMap } from '../../../routes/RouteMap';
+
+import MainLayout from '../../Common/Layout';
 import Input from '../../Common/Input';
 import Button from '../../Common/Button';
-import { useHistory, useParams } from 'react-router-dom';
 
 const UpdateStaff = ({ fetchStaffDetails, staffDetails, setStaffDetails, loading }) => {
   const history = useHistory();
   const { organizationId, staffId } = useParams();
 
-  useEffect(() => {
-    fetchStaffDetails({ organizationId, staffId });
+  React.useEffect(() => {
+    if (organizationId && staffId) fetchStaffDetails({ organizationId, staffId });
   }, []);
+
   const schema = yup.object({
     name: yup.string().required('Organization Name field is required'),
     email: yup.string().email('email is not valid').required('email feild is required'),
@@ -23,6 +26,7 @@ const UpdateStaff = ({ fetchStaffDetails, staffDetails, setStaffDetails, loading
       .min(8, 'password must  be at least 8 characters long')
       .required('password field is required'),
   });
+
   return (
     <MainLayout
       titleClass="mt-3"
@@ -45,18 +49,16 @@ const UpdateStaff = ({ fetchStaffDetails, staffDetails, setStaffDetails, loading
               password: staffDetails?.data?.password || '',
             }}
             validationSchema={schema}
-            onSubmit={
-              async (values) => {
-                try {
-                  await setStaffDetails({ ...values, organizationId, staffId });
-                  history.push(`/super-user/organizations/${organizationId}/`);
-                } catch (error) {
-                }
-              }
-            }
-          >
-            {({ values, errors, touched, handleChange, handleSubmit, setFieldValue }) => (
+            onSubmit={async (values) => {
+              try {
+                await setStaffDetails({ ...values, organizationId, staffId });
 
+                const path = dynamicMap.superUser.organizationStaffList({ organizationId });
+                history.push(path);
+              } catch (error) {}
+            }}
+          >
+            {({ values, errors, touched, handleChange, handleSubmit }) => (
               <Form onSubmit={handleSubmit} className="w-full">
                 <Input
                   disabled={loading}
@@ -93,7 +95,8 @@ const UpdateStaff = ({ fetchStaffDetails, staffDetails, setStaffDetails, loading
                 <Button
                   loading={loading}
                   onClick={handleSubmit}
-                  text="Create"
+                  htmlType="submit"
+                  text="Save"
                   textSize="base"
                   className="ml-auto c-force-padding-y-px px-8 mt-6"
                 />
@@ -110,7 +113,13 @@ UpdateStaff.propTypes = {
   fetchStaffDetails: PropTypes.func.isRequired,
   setStaffDetails: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
-  staffDetails: PropTypes.shape({}),
+  staffDetails: PropTypes.shape({
+    data: PropTypes.shape({
+      name: PropTypes.string,
+      email: PropTypes.string,
+      password: PropTypes.string,
+    }),
+  }),
 };
 
 UpdateStaff.defaultProps = {

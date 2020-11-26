@@ -4,6 +4,14 @@
 //   background-color: @primary-color !important;
 // }
 
+.c-input-sm-placeholder {
+  input {
+    &::placeholder {
+      font-size: 12px !important;
+    }
+  }
+}
+
 .c-modal-sm-padding {
   .ant-modal-content {
     padding: 60px 30px 30px 30px !important;
@@ -76,12 +84,6 @@
   border-bottom: 1px solid lightgray;
 }
 
-.c-table-blue-bg {
-  .ant-table-title + .ant-table-container {
-    background-color: aliceblue;
-  }
-}
-
 .header-bg-white .ant-table-thead > tr > th {
   background: #fff;
 }
@@ -90,6 +92,7 @@
   .ant-table-title + .ant-table-container table > thead > tr {
     background-color: #fff !important;
   }
+
   .header-bg-white .ant-table-thead > tr > th {
     background: #fff !important;
   }
@@ -138,10 +141,10 @@
 
 //current step
 .c-step
-  > .ant-steps-item-process
-  > .ant-steps-item-container
-  > .ant-steps-item-content
-  > .ant-steps-item-title {
+> .ant-steps-item-process
+> .ant-steps-item-container
+> .ant-steps-item-content
+> .ant-steps-item-title {
   color: #8d98ba;
 }
 
@@ -155,10 +158,10 @@
 
 //waiting step
 .c-step
-  > .ant-steps-item-wait
-  > .ant-steps-item-container
-  > .ant-steps-item-content
-  > .ant-steps-item-title {
+> .ant-steps-item-wait
+> .ant-steps-item-container
+> .ant-steps-item-content
+> .ant-steps-item-title {
   color: #8d98ba;
 }
 
@@ -173,10 +176,10 @@
 
 // finished step
 .c-step
-  > .ant-steps-item-finish
-  > .ant-steps-item-container
-  > .ant-steps-item-content
-  > .ant-steps-item-title {
+> .ant-steps-item-finish
+> .ant-steps-item-container
+> .ant-steps-item-content
+> .ant-steps-item-title {
   color: #00d6a2;
 }
 
@@ -541,6 +544,26 @@
   }
 }
 
+.c-radio-primary {
+  .ant-radio-checked .ant-radio-inner {
+    border-color: #1BB7D9 !important;
+  }
+
+  .ant-radio-checked .ant-radio-inner:after {
+    background-color: #1BB7D9;
+  }
+
+  .ant-radio:hover .ant-radio-inner {
+    border-color: #1BB7D9;
+  }
+
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #1BB7D9;
+    border-color: #1BB7D9;
+  }
+}
+
+
 .ant-radio-checked .ant-radio-inner {
   border-color: #1890ff !important;
 }
@@ -599,10 +622,10 @@
 
 //current step
 .c-step
-  > .ant-steps-item-process
-  > .ant-steps-item-container
-  > .ant-steps-item-content
-  > .ant-steps-item-title {
+> .ant-steps-item-process
+> .ant-steps-item-container
+> .ant-steps-item-content
+> .ant-steps-item-title {
   color: #8d98ba;
 }
 
@@ -617,10 +640,10 @@
 
 //waiting step
 .c-step
-  > .ant-steps-item-wait
-  > .ant-steps-item-container
-  > .ant-steps-item-content
-  > .ant-steps-item-title {
+> .ant-steps-item-wait
+> .ant-steps-item-container
+> .ant-steps-item-content
+> .ant-steps-item-title {
   color: #8d98ba;
 }
 
@@ -635,10 +658,10 @@
 
 // finished step
 .c-step
-  > .ant-steps-item-finish
-  > .ant-steps-item-container
-  > .ant-steps-item-content
-  > .ant-steps-item-title {
+> .ant-steps-item-finish
+> .ant-steps-item-container
+> .ant-steps-item-content
+> .ant-steps-item-title {
   color: #00d6a2;
 }
 
@@ -1261,4 +1284,8 @@ td.ant-table-column-sort {
   .ant-table-selection-column .ant-checkbox-wrapper {
     visibility: hidden !important;
   }
+}
+
+.ant-input {
+  font-size: 12px !important;
 }

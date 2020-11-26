@@ -4,6 +4,8 @@ import { useHistory, useParams } from 'react-router-dom';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
 
+import { dynamicMap } from '../../../routes/RouteMap';
+
 import { generateNewPassword } from '../../../lib/utils';
 
 import MainLayout from '../../Common/Layout';
@@ -46,8 +48,11 @@ const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
             onSubmit={async (values) => {
               try {
                 await addNewOrganizationStaff({ ...values, organizationId });
-                history.push(`/super-user/organizations/${organizationId}/`);
-              } catch (error) {}
+
+                const path = dynamicMap.superUser.organizationStaffList({ organizationId });
+                history.push(path);
+              } catch (error) {
+              }
             }}
           >
             {({ values, errors, touched, handleChange, handleSubmit, setFieldValue }) => (

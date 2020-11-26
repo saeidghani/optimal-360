@@ -4,12 +4,13 @@ import { useParams, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
+import { dynamicMap } from '../../../routes/RouteMap';
+import { useQuery, stringify } from '../../../hooks/useQuery';
+
 import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import Tag from '../../Common/Tag';
-
-import { useQuery, stringify } from '../../../hooks/useQuery';
 
 const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loading }) => {
   const history = useHistory();
@@ -26,7 +27,7 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
 
   React.useEffect(() => {
     fetchSurveyGroups({ projectId, query });
-  }, [query, projectId, fetchSurveyGroups]);
+  }, [projectId, fetchSurveyGroups]);
 
   const renderHeader = React.useCallback(
     () => {
@@ -75,7 +76,7 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
 
           <div className="flex flex-row items-center">
             <Button
-              onClick={() => history.push('/super-user/organizations/new')}
+              onClick={() => history.push(dynamicMap.superUser.addOrganization())}
               size="middle"
               textSize="xs"
               text="New Organization"
@@ -84,11 +85,15 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
             />
 
             <Button
-              onClick={() => history.push('/super-user/new-project/project-info')}
+              onClick={() => {
+                const path = dynamicMap.superUser.editProject();
+                const params = stringify({ projectId });
+
+                history.push(`${path}${params}`);
+              }}
               size="middle"
               textSize="xs"
               text="Edit Project"
-              // textClassName="mr-2"
               type="gray"
               className="ml-3"
             />
@@ -110,21 +115,40 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
 
   const columns = React.useMemo(
     () => [
-      { key: 'id', title: 'ID', sorter: true, sortOrder: getSortOrder('id') },
+      {
+        key: 'id',
+        title: 'ID',
+        sorter: (a, b) => a.id - b.id,
+        sortOrder: getSortOrder('id'),
+      },
       {
         key: 'name',
         title: 'Survey Group',
-        render: (name, { project, surveyGroupId }) => (
-          <Button
-            className="pl-0"
-            onClick={() => history.push(`/super-user/participants/ratee?projectId=${project.id}&surveyGroupId=${surveyGroupId}`)}
-            type="link"
-            textSize="sm"
-            text={name}
-            textClassName="underline text-primary-500"
-          />
-        ),
-        sorter: true,
+        render: (name, { project, id: surveyGroupId, stepsStatus }) => {
+          return stepsStatus ? (
+            <Button
+              className="pl-0"
+              onClick={() => {
+                const params = stringify({
+                  projectId: project.id,
+                  surveyGroupId,
+                  tab: 'status-overview',
+                  page_number: 1,
+                  page_size: 10,
+                });
+                const path = `${dynamicMap.superUser.ratersList()}${params}`;
+                history.push(path);
+              }}
+              type="link"
+              textSize="sm"
+              text={name}
+              textClassName="underline text-primary-500"
+            />
+          ) : (
+            name
+          );
+        },
+        sorter: (a, b) => a.name > b.name,
         sortOrder: getSortOrder('name'),
       },
       {
@@ -150,22 +174,30 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
       {
         key: 'id',
         width: 50,
-        render: (surveyGroupId, { project }) => (
-          <Button
-            onClick={() => {
-              const params = stringify({ surveyGroupId, projectId: project.id });
-              history.push(`/super-user/new-project/survey-settings${params}`);
-            }}
-            icon="EditOutlined"
-            type="link"
-            className="text-lg mr-7"
-            size="middle"
-          />
-        ),
+        render: (surveyGroupId, { project, status }) => {
+          return status === 'inactive' ? (
+            <Button
+              onClick={() => {
+                const params = stringify({
+                  surveyGroupId,
+                  projectId: project.id,
+                  wizardEditMode: true,
+                });
+                const path = `${dynamicMap.superUser.surveySettings()}${params}`;
+
+                history.push(path);
+              }}
+              icon="EditOutlined"
+              type="link"
+              className="text-lg mr-7"
+              size="middle"
+            />
+          ) : null;
+        },
       },
     ],
     // eslint-disable-next-line
-    [surveyGroups.timeStamp],
+    [surveyGroups.timeStamp, parsedQuery?.sort],
   );
 
   const sort = (sorter) => {
@@ -195,11 +227,6 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
         pagination={false}
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
-        }}
-        rowClassName={({ deleted }) => {
-          if (deleted) {
-            return 'bg-antgray-100 bg-opacity-10 td-checkbox-visibility-0';
-          }
         }}
       />
     </MainLayout>

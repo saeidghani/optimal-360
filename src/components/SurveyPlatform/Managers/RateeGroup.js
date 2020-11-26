@@ -11,6 +11,7 @@ import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
 import SecondaryTabs from '../Helper/SecondaryTabs';
 import Modal from '../../Common/Modal';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 const RateeGroup = ({ loading }) => {
   const [submitModalVisible, setSubmitModalVisible] = React.useState(false);
@@ -32,7 +33,7 @@ const RateeGroup = ({ loading }) => {
       width: 100,
       render: (relationship) => (
         <div className="text-primary-500 h-full flex flex-col justify-start mb-auto">
-          <Link to="/survey-platform/managers/ratee-group/questions">
+          <Link to={dynamicMap.surveyPlatform.rateeGroupQuestions()}>
             <span className="text-primary-500">{relationship}</span>
           </Link>
         </div>
@@ -46,11 +47,8 @@ const RateeGroup = ({ loading }) => {
       render: (names) => (
         <div className="flex flex-col justify-between pt-2">
           {names.map((name, index) => (
-            <span
-              key={name.id}
-              className={`text-primary-500 ${names.length - 1 === index ? 'mb-1' : 'mb-10'}`}
-            >
-              <Link to="/survey-platform/managers/ratee-group/questions">{name.text}</Link>
+            <span key={name.id} className={`${names.length - 1 === index ? 'mb-1' : 'mb-10'}`}>
+              {name.text}
             </span>
           ))}
         </div>
@@ -185,10 +183,10 @@ const RateeGroup = ({ loading }) => {
       <Modal
         visible={submitModalVisible}
         handleOk={handleSubmitModalOk}
-        handleCancel={() => {}}
+        handleCancel={() => setSubmitModalVisible(false)}
         width={588}
         okText="Yes"
-        cancelText=""
+        cancelText="Cancel"
         okButtonProps={{ textClassName: 'px-4' }}
       >
         <div className="flex flex-col items-center">

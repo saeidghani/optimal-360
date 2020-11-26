@@ -6,7 +6,7 @@ import { Formik, Form } from 'formik';
 import Input from '../../Common/Input';
 import Button from '../../Common/Button';
 
-import AuthLayout from '../Helper/AuthLayout';
+import AuthLayout from './Helper/AuthLayout';
 
 const ForgotPassword = ({ loading, forgotPassword }) => {
   const schema = yup.object({

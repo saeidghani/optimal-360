@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 import { useQuery, stringify } from '../../../hooks/useQuery';
 import { useSurveyGroup } from '../../../hooks';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 import pascalize from '../../../lib/pascalize';
 
@@ -33,18 +34,26 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
           copyToAdmin: yup.bool(),
           template: yup.string(),
         })
-        .test('emailSettings', 'Date cannot be empty', (vals) => !(vals.selected && !vals.date)),
+        .test(
+          'emailSettings',
+          'Date cannot be empty',
+          ({ selected, date }) => !(selected && !date),
+        ),
+      // .test(
+      //   'emailSettings',
+      //   'Date cannot be in the past',
+      //   ({ selected, date }) => !(selected && date && moment(date).isBefore(moment(), 'day')),
+      // ),
     ),
   });
   const history = useHistory();
 
-  const [parsedQuery, , setQuery] = useQuery();
+  const [parsedQuery] = useQuery();
   const { search } = history?.location;
 
   const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
 
   const [surveyGroupModal, setSurveyGroupModal] = React.useState(false);
-  const [isFormDone, setIsFormDone] = React.useState(false);
   const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
 
   const { projectId } = parsedQuery;
@@ -82,45 +91,8 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
   ];
 
   React.useEffect(() => {
-    if (
-      isFormDone &&
-      selectedSurveyGroupKey &&
-      selectedSurveyGroupKey !== parsedQuery?.surveyGroupId
-    ) {
-      setQuery({ surveyGroupId: selectedSurveyGroupKey });
-      setIsFormDone(false);
-      setSurveyGroupModal(false);
-    }
-  }, [isFormDone, selectedSurveyGroupKey, setQuery, parsedQuery.surveyGroupId]);
-
-  React.useEffect(() => {
     if (surveyGroupId) fetchEmailSettings(surveyGroupId);
-  }, [projectId, surveyGroupId, fetchEmailSettings]);
-
-  React.useEffect(() => {
-    const validateForm = async () => {
-      try {
-        const errorObj = await formRef.current.validateForm(formRef?.current?.values);
-
-        if (errorObj && Object.values(errorObj).length > 0) {
-          throw errorObj;
-        } else {
-          setIsFormDone(true);
-        }
-      } catch (errorObj) {
-        formRef.current.setErrors(errorObj);
-        formRef.current.setTouched(errorObj);
-
-        if (selectedSurveyGroupKey !== parsedQuery?.surveyGroupId) setSurveyGroupModal(true);
-      }
-    };
-
-    if (selectedSurveyGroupKey && formRef?.current) {
-      validateForm(formRef?.current?.values);
-    }
-
-    // eslint-disable-next-line
-  }, [selectedSurveyGroupKey]);
+  }, [surveyGroupId, fetchEmailSettings]);
 
   const emailSettingsStringified = JSON.stringify(emailSettings);
 
@@ -137,12 +109,12 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
       key: 'button ',
       render: (_, { name }) => (
         <Button
-          onClick={async () => {
-            history.push(
-              `/super-user/new-project/email-settings/${name
-                .toLowerCase()
-                .replaceAll(' ', '-')}${search}`,
-            );
+          onClick={() => {
+            const path = dynamicMap.superUser.emailSettingsTemplate({
+              template: `${name.toLowerCase().replaceAll(' ', '-')}${search}`,
+            });
+
+            history.push(path);
           }}
           textSize="xs"
           ghost
@@ -186,26 +158,6 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
     localStorage.setItem(`emailSettings-${surveyGroupId}`, JSON.stringify(newValues.emailSettings));
   };
 
-  React.useEffect(() => {
-    const resetForm = async () => {
-      await fetchEmailSettings(surveyGroupId);
-
-      if (formRef?.current) {
-        // reset form state when surveyGroup changes
-        // happens when user decides to discard current settings and changes currentSurveyGroup
-        formRef.current.setTouched({});
-        formRef.current.setErrors({});
-        formRef.current.setValues({ ...formRef?.current?.values });
-      }
-    };
-
-    if (surveyGroupId) {
-      resetForm();
-    }
-
-    // eslint-disable-next-line
-  }, [fetchEmailSettings, surveyGroupId]);
-
   return (
     <MainLayout
       hasBreadCrumb
@@ -220,7 +172,10 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
 
         <ChangeSurveyGroupModal
           handleOk={() => {
-            setIsFormDone(true);
+            const path = dynamicMap.superUser.surveySettings();
+            const params = stringify({ projectId, surveyGroupId: selectedSurveyGroupKey });
+
+            history.push(`${path}${params}`);
           }}
           handleCancel={() => {
             setSelectedSurveyGroupKey('');
@@ -230,14 +185,22 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
           visible={surveyGroupModal}
         />
 
-        <Menu
-          onClick={(key) => setSelectedSurveyGroupKey(key)}
-          isFormDone={isFormDone}
-          items={surveyGroups?.data}
-          className="col-span-2"
-        />
+        {!parsedQuery?.wizardEditMode ? (
+          <Menu
+            onClick={(key) => {
+              setSurveyGroupModal(true);
+              setSelectedSurveyGroupKey(key);
+            }}
+            items={surveyGroups?.data}
+            className="col-span-2"
+          />
+        ) : null}
 
-        <div className="px-6 py-5 col-start-3 col-span-10">
+        <div
+          className={`px-6 py-5 col-span-10 ${
+            parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
+          } `}
+        >
           <Steps currentPosition={1} />
 
           <Formik
@@ -265,15 +228,25 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
                 }
               });
 
+              const params = stringify({
+                projectId: parsedQuery?.projectId,
+                surveyGroupId: parsedQuery?.surveyGroupId,
+                wizardEditMode: parsedQuery?.wizardEditMode,
+              });
+
               if (chosenTemplates.length > 0) {
                 try {
                   await setEmailSettings({ emailSettings: chosenTemplates, surveyGroupId });
                   localStorage.clear();
-                  history.push(`/super-user/new-project/survey-intro${search}`);
+
+                  const path = dynamicMap.superUser.surveyIntro();
+                  history.push(`${path}${params}`);
                 } catch (error) {}
               } else {
                 localStorage.clear();
-                history.push(`/super-user/new-project/survey-intro${search}`);
+
+                const path = dynamicMap.superUser.surveyIntro();
+                history.push(`${path}${params}`);
               }
             }}
           >
@@ -303,7 +276,7 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
 
                       <div className="col-span-2">
                         <Calendar
-                          onChange={(val) => updateForm(id, 'date', val)}
+                          onChange={(val) => updateForm(id, 'date', val || '')}
                           value={date}
                           disabled={!selected}
                           icon={!date}
@@ -384,9 +357,11 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
                       const params = stringify({
                         projectId: parsedQuery?.projectId,
                         surveyGroupId: parsedQuery?.surveyGroupId,
+                        wizardEditMode: parsedQuery?.wizardEditMode,
                       });
 
-                      history.push(`/super-user/new-project/survey-settings${params}`);
+                      const path = dynamicMap.superUser.surveySettings();
+                      history.push(`${path}${params}`);
                     }}
                   />
 

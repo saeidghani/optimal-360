@@ -27,6 +27,8 @@ export default {
     },
 
     async fetchSingleProject(projectId) {
+      if (!projectId) return this.fetchSingleProjects_reducer('');
+
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
@@ -95,8 +97,6 @@ export default {
             data: { projectIds },
           });
 
-          // await dispatch.projects.fetchProjects();
-
           return res;
         },
         dispatch.util.errorHandler,
@@ -112,8 +112,6 @@ export default {
             url: '/super-user/projects/status',
             data: { projectIds, status },
           });
-
-          // await dispatch.projects.fetchProjects();
 
           return res;
         },
@@ -143,6 +141,8 @@ export default {
             url: `/super-user/projects/${projectId}/survey-groups/remove`,
             data,
           });
+
+          await dispatch.projects.fetchSurveyGroups({ projectId });
 
           return res;
         },

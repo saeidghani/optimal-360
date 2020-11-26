@@ -7,13 +7,15 @@ import moment from 'moment';
 
 import { TeamOutlined } from '@ant-design/icons';
 
+import { dynamicMap } from '../../../routes/RouteMap';
+
+import { useQuery, stringify } from '../../../hooks/useQuery';
+
 import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import SearchBox from '../../Common/SearchBox';
 import Tag from '../../Common/Tag';
-
-import { useQuery } from '../../../hooks/useQuery';
 
 const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => {
   const [parsedQuery, query, setQuery] = useQuery();
@@ -116,7 +118,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
               size="middle"
               onClick={() => setQuery({ status: 'complete', page_number: 1 })}
               textSize="xs"
-              text="Complete Projects"
+              text="Completed Projects"
               light={parsedQuery?.status !== 'complete'}
               className=" px-3"
             />
@@ -135,10 +137,10 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
               text="New Organization"
               type="gray"
               className="mx-3 px-3"
-              onClick={() => history.push('/super-user/organizations/new')}
+              onClick={() => history.push(dynamicMap.superUser.addOrganization())}
             />
             <Button
-              onClick={() => history.push('/super-user/new-project/project-info')}
+              onClick={() => history.push(dynamicMap.superUser.projectInfo())}
               className="px-3"
               size="middle"
               textSize="xs"
@@ -184,10 +186,16 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
       {
         key: 'project',
         title: 'Project Name',
-        render: (project, { id }) => (
+        render: (project, { id: projectId }) => (
           <Button
             className="pl-0"
-            onClick={() => history.push(`/super-user/projects/${id}/survey-groups`)}
+            onClick={() =>
+              history.push(
+                dynamicMap.superUser.surveyGroupsList({
+                  projectId,
+                }),
+              )
+            }
             type="link"
             textSize="sm"
             text={project}
@@ -218,11 +226,16 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
             <Button
               size="middle"
               textSize="xs"
-              onClick={() => history.push(`/super-user/projects/${projectId}/set-admin`)}
+              onClick={() => history.push(dynamicMap.superUser.setAdmin({ projectId }))}
               text="Set Client Admin"
             />
             <Button
-              onClick={() => history.push('/super-user/new-project/project-info')}
+              onClick={() => {
+                const path = dynamicMap.superUser.projectInfo();
+                const params = stringify({ projectId });
+
+                history.push(`${path}${params}`);
+              }}
               icon="CopyOutlined"
               type="link"
               className="text-lg mr-7"

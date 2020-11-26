@@ -71,13 +71,14 @@ const _Input = ({
         id={name}
         placeholder={placeholder}
         suffix={
-          suffix || type === 'password' ? (
+          suffix ||
+          (type === 'password' ? (
             _type === 'password' ? (
               <EyeInvisibleOutlined onClick={() => setType('text')} />
             ) : (
               <EyeOutlined onClick={() => setType('password')} />
             )
-          ) : null
+          ) : null)
         }
         prefix={prefix}
         onPressEnter={onPressEnter}

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 
 import { useQuery, parse, stringify } from '../../../hooks/useQuery';
+import { dynamicMap } from '../../../routes/RouteMap';
 
 import MainLayout from '../../Common/Layout';
 
@@ -17,6 +18,8 @@ const ProjectInfo = ({
   loading,
   organizations,
   surveyGroups,
+  project,
+  fetchSingleProject,
   fetchOrganizations,
   fetchSurveyGroups,
   createProject,
@@ -37,6 +40,25 @@ const ProjectInfo = ({
     fetchSurveyGroups(surveyQuery);
   }, [query, fetchSurveyGroups, fetchOrganizations, parsedQuery.oq, parsedQuery.sq]);
 
+  React.useEffect(() => {
+    fetchSingleProject(parsedQuery.projectId);
+  }, [parsedQuery.projectId]);
+
+  const SurveyGroupRef = [
+    ...(surveyGroups?.data || []).map(({ name, id }) => ({
+      label: `B-${name}`,
+      value: `B-${name}`,
+      id,
+      key: `B-${id}`,
+    })),
+    ...(project?.data?.projectSurveyGroups || []).map(({ name, id }) => ({
+      label: `P-${name}`,
+      value: `P-${name}`,
+      id,
+      key: `P-${id}`,
+    })),
+  ];
+
   return (
     <MainLayout
       hasBreadCrumb={false}
@@ -48,28 +70,47 @@ const ProjectInfo = ({
         rounded-lg sm:px-16 px-4 sm:pb-10 sm:pt-12 py-6 bg-white"
       >
         <Formik
+          enableReinitialize
           initialValues={{
-            organization: {},
-            projectName: '',
-            surveyGroup: [],
+            organization: project?.data?.organization
+              ? { id: project.data.organization.id, value: project.data.organization.name }
+              : {},
+            projectName: project?.data?.name || '',
+            surveyGroup: (project?.data?.projectSurveyGroups || []).map(({ name, id }) => ({
+              label: `P-${name}`,
+              value: `P-${name}`,
+              id,
+              key: `P-${id}`,
+            })),
           }}
           validationSchema={schema}
           onSubmit={async ({ organization, projectName, surveyGroup }) => {
-            const projectSurveyGroupIds = surveyGroup?.map((el) => el.id);
+            const projectSurveyGroupIds = [];
+            const bankSurveyGroupIds = [];
+
+            surveyGroup.forEach((el) => {
+              if (el.label.startsWith('B-')) {
+                bankSurveyGroupIds.push(el.id);
+              } else {
+                projectSurveyGroupIds.push(el.id);
+              }
+            });
 
             try {
-              const { projectId } = await createProject({
+              const { projectId = parsedQuery.projectId } = await createProject({
                 organizationId: organization.id,
                 projectName,
-                projectSurveyGroupIds: [],
-                bankSurveyGroupIds: projectSurveyGroupIds,
+                projectSurveyGroupIds,
+                bankSurveyGroupIds,
               });
 
               const params = stringify({
                 projectId,
               });
 
-              history.replace(`/super-user/new-project/survey-settings${params}`);
+              const path = dynamicMap.superUser.surveySettings();
+
+              history.replace(`${path}${params}`);
             } catch (error) {}
           }}
         >
@@ -89,9 +130,9 @@ const ProjectInfo = ({
                 extrainfoText="Create New"
                 onSelect={(el) => {
                   setFieldValue('organization', el);
-                  setQuery(null);
+                  setQuery({ projectId: parsedQuery.projectId });
                 }}
-                extrainfoLink="#"
+                extrainfoLink={dynamicMap.superUser.addOrganization()}
                 placeholder="Name of Organization"
                 options={
                   organizations?.data?.length > 0
@@ -129,20 +170,11 @@ const ProjectInfo = ({
                 extrainfoText="Create New"
                 onSelect={(val) => {
                   setFieldValue('surveyGroup', [...values.surveyGroup, val]);
-                  setQuery(null);
+                  setQuery({ projectId: parsedQuery.projectId });
                 }}
-                extrainfoLink="#"
+                extrainfoLink={dynamicMap.superUser.bankSurveyGroups()}
                 placeholder="Search"
-                options={
-                  surveyGroups?.data?.length > 0
-                    ? surveyGroups.data.map(({ name, id }) => ({
-                        label: name,
-                        value: name,
-                        id,
-                        key: id,
-                      }))
-                    : []
-                }
+                options={SurveyGroupRef}
                 onChange={(txt) => setQuery({ sq: txt })}
                 value={parsedQuery.sq}
                 errorMessage={touched.surveyGroup && errors.surveyGroup}
@@ -189,8 +221,12 @@ ProjectInfo.propTypes = {
   fetchOrganizations: PropTypes.func.isRequired,
   fetchSurveyGroups: PropTypes.func.isRequired,
   createProject: PropTypes.func.isRequired,
+  fetchSingleProject: PropTypes.func.isRequired,
   organizations: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
+  }),
+  project: PropTypes.shape({
+    data: PropTypes.shape(),
   }),
   surveyGroups: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
@@ -205,6 +241,9 @@ ProjectInfo.propTypes = {
 ProjectInfo.defaultProps = {
   organizations: {
     data: [],
+  },
+  project: {
+    data: {},
   },
   surveyGroups: {
     data: [],

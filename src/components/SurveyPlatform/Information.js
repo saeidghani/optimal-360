@@ -10,6 +10,7 @@ import Dropdown from '../Common/Dropdown';
 import Button from '../Common/Button';
 import RadioGroup from '../Common/RadioGroup';
 import Input from '../Common/Input';
+import { dynamicMap } from '../../routes/RouteMap';
 
 const Information = ({ loading }) => {
   const [gender, setGender] = React.useState('2');
@@ -88,7 +89,7 @@ const Information = ({ loading }) => {
   };
 
   const handleSubmit = () => {
-    history.push('/survey-platform/managers/all-ratees');
+    history.push(dynamicMap.surveyPlatform.allRateesList());
   };
 
   return (
@@ -101,7 +102,7 @@ const Information = ({ loading }) => {
         The information on this page is optional for you to fill;
       </p>
       <p className="text-gray-500 mt-8 text-base text-body opacity-75 font-normal leading-6">
-        information from this page would help us in research purposes where no individual
+        Information from this page would help us in research purposes where no individual
         information will be identified nor disclosed. We highly encourage your participation in our
         research.
       </p>

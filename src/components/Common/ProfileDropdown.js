@@ -15,11 +15,20 @@ const ProfileDropdown = ({ title, options, src, iconClassName }) => {
               className={`flex items-center ${option.itemClassName ? option.itemClassName : ''}`}
             >
               {option.icon && <div className={`mr-2 ${iconClassName}`}>{option.icon}</div>}
-              <Link to={option.href}>
-                <span className={`${option.titleClassName ? option.titleClassName : ''}`}>
+              {option.onClick ? (
+                <span
+                  onClick={option.onClick}
+                  className={`${option.titleClassName ? option.titleClassName : ''}`}
+                >
                   {option.title}
                 </span>
-              </Link>
+              ) : (
+                <Link to={option.href}>
+                  <span className={`${option.titleClassName ? option.titleClassName : ''}`}>
+                    {option.title}
+                  </span>
+                </Link>
+              )}
             </Menu.Item>
           ))
         : null}
@@ -49,6 +58,7 @@ ProfileDropdown.propTypes = {
       icon: PropTypes.node,
       itemClassName: PropTypes.string,
       href: PropTypes.string,
+      onClick: PropTypes.func,
     }),
   ).isRequired,
   src: PropTypes.string,

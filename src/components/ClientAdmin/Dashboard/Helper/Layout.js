@@ -11,13 +11,15 @@ import {
   FacebookOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-
 import { Avatar } from 'antd';
-import ProfileDropdown from '../../Common/ProfileDropdown';
-import BreadCrumb from '../../Common/BreadCrumb';
 
-import budgetLogo from '../../../assets/images/budgetLogo.png';
-import optimal360Logo from '../../../assets/images/optimal360Logo.png';
+import ProfileDropdown from '../../../Common/ProfileDropdown';
+import BreadCrumb from '../../../Common/BreadCrumb';
+
+import { dynamicMap } from '../../../../routes/RouteMap';
+
+import budgetLogo from '../../../../assets/images/budgetLogo.png';
+import optimal360Logo from '../../../../assets/images/optimal360Logo.png';
 
 const Layout = ({
   children,
@@ -28,7 +30,7 @@ const Layout = ({
   headerClassName,
   heading,
 }) => {
-  const dropdownOptions = [
+  const profileDropdownOptions = [
     {
       key: 1,
       title: 'Anthony Hardy',
@@ -37,18 +39,20 @@ const Layout = ({
       itemClassName: 'md:hidden',
       href: '',
     },
-    { key: 2, title: 'Home', icon: <HomeOutlined />, href: '/client-admin/dashboard' },
+    { key: 2, title: 'Home', icon: <HomeOutlined />, href: dynamicMap.clientAdmin.dashboard() },
     {
       key: 3,
       title: 'Customer Support',
       icon: <MailOutlined />,
-      href: '/client-admin/customer-support',
+      href: '#',
+      // eslint-disable-next-line no-undef
+      onClick: () => alert('coming soon'),
     },
     {
       key: 4,
       title: 'Guides',
       icon: <QuestionCircleOutlined />,
-      href: '/client-admin/reference-guide',
+      href: dynamicMap.clientAdmin.referenceGuide(),
     },
   ];
 
@@ -65,25 +69,33 @@ const Layout = ({
         <div className="lg:ml-16">
           <img src={budgetLogo} className="w-24 lg:w-32" alt="" />
         </div>
-        <Link to="/client-admin/dashboard">
+        <Link to={dynamicMap.clientAdmin.dashboard()}>
           <div className="flex justify-between items-center text-base">
             <HomeOutlined />
             <span className="ml-2 text-xs lg:text-base">Home</span>
           </div>
         </Link>
         <Link to="#">
-          <div className="flex justify-between items-center text-gray-500 text-base">
+          <div
+            /* eslint-disable-next-line no-undef */
+            onClick={() => alert('coming soon')}
+            className="flex justify-between items-center text-gray-500 text-base"
+          >
             <MailOutlined />
             <span className="ml-2 text-xs lg:text-base">Customer Support</span>
           </div>
         </Link>
-        <Link to="/client-admin/reference-guide">
+        <Link to={dynamicMap.clientAdmin.referenceGuide()}>
           <div className="flex justify-between items-center text-gray-500 text-base">
             <QuestionCircleOutlined />
             <span className="ml-2 text-xs lg:text-base">Guides</span>
           </div>
         </Link>
-        <ProfileDropdown title="Anthony Hardy" options={dropdownOptions} iconClassName="pb-1" />
+        <ProfileDropdown
+          title="Anthony Hardy"
+          options={profileDropdownOptions}
+          iconClassName="pb-1"
+        />
       </div>
       <div className="flex items-center md:hidden px-6 pt-6">
         <div className="flex items-center">
@@ -91,7 +103,7 @@ const Layout = ({
           <span className="ml-3">{title}</span>
         </div>
         <img src={budgetLogo} className="ml-auto pr-2" alt="" />
-        <ProfileDropdown title="Anthony Hardy" options={dropdownOptions} />
+        <ProfileDropdown title="Anthony Hardy" options={profileDropdownOptions} />
       </div>
       <div
         className={`flex flex-col py-6 px-4 mt-8 mb-40 sm:mt-5
