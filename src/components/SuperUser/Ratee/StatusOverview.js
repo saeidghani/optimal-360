@@ -334,7 +334,7 @@ const CompletionRate = React.memo(({
         <Progress percentage={parseInt((totalAnswered / totalQuestions) * 100, 10)} />
       </div>
       <div>
-        <h2 className="text-center">{raterGroupName}</h2>
+        <h2 className="text-center capitalize">{raterGroupName}</h2>
       </div>
     </div>
   </div>
