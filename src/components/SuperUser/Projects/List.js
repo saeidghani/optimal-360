@@ -118,7 +118,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
               size="middle"
               onClick={() => setQuery({ status: 'complete', page_number: 1 })}
               textSize="xs"
-              text="Complete Projects"
+              text="Completed Projects"
               light={parsedQuery?.status !== 'complete'}
               className=" px-3"
             />

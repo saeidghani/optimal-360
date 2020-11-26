@@ -6,9 +6,9 @@ import Modal from '../../../Common/Modal';
 const ChangeSurveyGroupModal = ({ visible, currentSurveyGroup, handleOk, handleCancel }) => (
   <Modal
     okText="Discard These Settings"
-    cancelText="Countinue"
+    cancelText="Continue"
     visible={visible}
-    cancelButtonText="Countinue"
+    cancelButtonText="Continue"
     okButtonText="Discard These Settings"
     handleOk={handleOk}
     handleCancel={handleCancel}
