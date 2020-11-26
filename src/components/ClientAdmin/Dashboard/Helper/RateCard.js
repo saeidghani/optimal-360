@@ -28,7 +28,7 @@ const RateCard = ({
         <Progress subClassName="text-black text-xl" percentage={avg} />
       </div>
       <div>
-        <h2 className="text-center">{raterGroupName}</h2>
+        <h2 className="text-center capitalize">{raterGroupName}</h2>
       </div>
     </div>
   );
