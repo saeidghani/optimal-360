@@ -108,6 +108,16 @@ const OrganizationsStaff = ({
       width: 324,
     },
     {
+      key: 'department',
+      title: 'Department',
+      width: 220,
+    },
+    {
+      key: 'jobDesignation',
+      title: 'Job Designation',
+      width: 220,
+    },
+    {
       key: 'email',
       title: 'Email',
       width: 340,
@@ -115,6 +125,7 @@ const OrganizationsStaff = ({
     {
       key: 'password',
       title: 'Password',
+      render: (password) => (<span className="whitespace-pre">{password}</span>),
     },
     {
       key: 'edit',

@@ -78,13 +78,13 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
-    async setStaffDetails({ organizationId, staffId, name, email, password }) {
+    async setStaffDetails({ organizationId, staffId, name, email, password, department, jobDesignation }) {
       return actionWapper(
         async () => {
           const res = await axios({
             method: 'put',
             url: `/super-user/organizations/${organizationId}/staffs/${staffId}`,
-            data: { name, email, password },
+            data: { name, email, password, department, jobDesignation },
           });
 
           await this.fetchStaffDetails_reducer(res?.data);
@@ -95,13 +95,13 @@ export default {
       );
     },
 
-    async addNewOrganizationStaff({ organizationId, name, email, password }) {
+    async addNewOrganizationStaff({ organizationId, name, email, password, department, jobDesignation }) {
       return actionWapper(
         async () => {
           const res = await axios({
             method: 'post',
             url: `/super-user/organizations/${organizationId}/staffs`,
-            data: { name, email, password },
+            data: { name, email, password, department, jobDesignation },
           });
 
           return res;
