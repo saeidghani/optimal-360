@@ -36,14 +36,13 @@ const ReportSetting = ({
         className="relative contents"
         tabBarStyle={{ color: '#262626' }}
       >
-        <TabPane tab={allTabs[0].title} key={allTabs[0].key} />
-        <TabPane tab={allTabs[1].title} key={allTabs[1].key} />
+        <TabPane tab={allTabs[0].title} key={allTabs[0].key}>
+          <ReportContent loading={loading} />
+        </TabPane>
+        <TabPane tab={allTabs[1].title} key={allTabs[1].key}>
+          <PastResult loading={loading} />
+        </TabPane>
       </Tabs>
-      {currentTab === allTabs[0].key ? (
-        <ReportContent loading={loading} />
-      ) : (
-        <PastResult loading={loading} />
-      )}
     </div>
   );
 };
