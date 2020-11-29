@@ -9,6 +9,9 @@ import PastResult from '../../../containers/SuperUser/Ratee/helper/PastResult';
 
 const ReportSetting = ({
                          loading,
+                         reportSetting,
+                         fetchReportSetting,
+                         setReportSetting,
                        }) => {
   const allTabs = [
     {
@@ -29,7 +32,7 @@ const ReportSetting = ({
   }
 
   return (
-    <div className="p-6 mt-5 bg-white rounded-lg shadow borderless-tab">
+    <div className="p-6 mt-5 bg-white rounded-lg shadow borderless-tab min-h-screen	">
       <Tabs
         defaultActiveKey={currentTab}
         onChange={tabChangeCallback}
@@ -37,10 +40,18 @@ const ReportSetting = ({
         tabBarStyle={{ color: '#262626' }}
       >
         <TabPane tab={allTabs[0].title} key={allTabs[0].key}>
-          <ReportContent loading={loading} />
+          <ReportContent
+            loading={loading}
+            reportSetting={reportSetting}
+            fetchReportSetting={fetchReportSetting}
+            setReportSetting={setReportSetting}
+          />
+
         </TabPane>
         <TabPane tab={allTabs[1].title} key={allTabs[1].key}>
-          <PastResult loading={loading} />
+          <PastResult
+            loading={loading}
+          />
         </TabPane>
       </Tabs>
     </div>
@@ -49,8 +60,13 @@ const ReportSetting = ({
 
 ReportSetting.propTypes = {
   loading: PropTypes.bool.isRequired,
+  reportSetting: PropTypes.shape({}),
+  fetchReportSetting: PropTypes.func.isRequired,
+  setReportSetting: PropTypes.func.isRequired,
 };
 
-ReportSetting.defaultProps = {};
+ReportSetting.defaultProps = {
+  reportSetting: {},
+};
 
 export default ReportSetting;

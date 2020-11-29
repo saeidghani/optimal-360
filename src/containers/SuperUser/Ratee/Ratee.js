@@ -95,6 +95,19 @@ class Ratee extends Component {
     return exportDemographicData(query);
   };
 
+// reports
+  fetchReportSetting = (query) => {
+    const { fetchReportSetting } = this.props;
+
+    return fetchReportSetting(query);
+  };
+
+  setReportSetting = (query) => {
+    const { setReportSetting } = this.props;
+
+    return setReportSetting(query);
+  };
+
   render() {
     const {
       loading,
@@ -105,6 +118,7 @@ class Ratee extends Component {
       emailOptions,
       individualReports,
       groupReports,
+      reportSetting
     } = this.props;
 
     return (
@@ -131,6 +145,10 @@ class Ratee extends Component {
         exportDemographicData={this.exportDemographicData}
         groupReports={groupReports}
         individualReports={individualReports}
+        // reports
+        fetchReportSetting={this.fetchReportSetting}
+        setReportSetting={this.setReportSetting}
+        reportSetting={reportSetting}
       />
     );
   }
@@ -159,6 +177,11 @@ Ratee.propTypes = {
   emailOptions: PropTypes.shape({}),
   individualReports: PropTypes.shape({}),
   groupReports: PropTypes.shape({}),
+
+  fetchReportSetting: PropTypes.func.isRequired,
+  setReportSetting: PropTypes.func.isRequired,
+  reportSetting: PropTypes.shape({}),
+
 };
 
 Ratee.defaultProps = {
@@ -169,6 +192,7 @@ Ratee.defaultProps = {
   emailOptions: {},
   individualReports: {},
   groupReports: {},
+  reportSetting: {},
 };
 
 const mapStateToProps = (state) => ({
@@ -180,6 +204,7 @@ const mapStateToProps = (state) => ({
   emailOptions: state.ratee?.emailOptions || {},
   individualReports: state.ratee?.individualReports || {},
   groupReports: state.ratee?.groupReports || {},
+  reportSetting: state.ratee?.reportSetting || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -197,6 +222,8 @@ const mapDispatchToProps = (dispatch) => ({
   fetchIndividualReports: dispatch.ratee.fetchIndividualReports,
   fetchGroupReports: dispatch.ratee.fetchGroupReports,
   exportDemographicData: dispatch.ratee.exportDemographicData,
+  fetchReportSetting: dispatch.ratee.fetchReportSetting,
+  setReportSetting: dispatch.ratee.setReportSetting,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Ratee);

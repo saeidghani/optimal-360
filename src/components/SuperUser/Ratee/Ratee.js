@@ -12,7 +12,7 @@ import Result from './Result';
 import { Tabs } from 'antd';
 import MainLayout from '../../Common/Layout';
 import Dropdown from '../../Common/Dropdown';
-import ReportSetting from "./ReportSetting";
+import ReportSetting from './ReportSetting';
 
 const Ratee = (
   {
@@ -38,6 +38,10 @@ const Ratee = (
     exportDemographicData,
     individualReports,
     groupReports,
+    // reports
+    reportSetting,
+    fetchReportSetting,
+    setReportSetting,
   },
 ) => {
   const history = useHistory();
@@ -153,6 +157,9 @@ const Ratee = (
         <TabPane tab={allTabs[4].title} key={allTabs[4].key}>
           <ReportSetting
             loading={loading}
+            reportSetting={reportSetting}
+            fetchReportSetting={fetchReportSetting}
+            setReportSetting={setReportSetting}
           />
         </TabPane>
       </Tabs>
@@ -184,6 +191,9 @@ Ratee.propTypes = {
   exportDemographicData: PropTypes.func.isRequired,
   individualReports: PropTypes.shape({}),
   groupReports: PropTypes.shape({}),
+  reportSetting: PropTypes.shape({}),
+  fetchReportSetting: PropTypes.func.isRequired,
+  setReportSetting: PropTypes.func.isRequired,
 };
 
 Ratee.defaultProps = {
@@ -192,6 +202,9 @@ Ratee.defaultProps = {
   statusDetails: {},
   raters: {},
   emailOptions: {},
+  groupReports: {},
+  individualReports: {},
+  reportSetting: {},
 };
 
 export default Ratee;

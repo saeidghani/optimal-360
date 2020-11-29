@@ -16,6 +16,7 @@ export default {
     staff: '',
     staffForRater: '',
     raterGroups: '',
+    reportSetting: '',
   },
 
   effects: (dispatch) => ({
@@ -206,42 +207,42 @@ export default {
     },
 
     async fetchRateeMissionCriticals({ surveyGroupId, rateeId }) {
-            return actionWapper(async () => {
-              const res = await axios({
-                method: 'get',
-                url: `/super-user/survey-groups/${surveyGroupId}/ratees/${rateeId}/mission-criticals`,
-              });
-              await this.fetchRateeMissionCriticals_reducer(res?.data?.data);
-              return res;
-            }, dispatch.util.errorHandler);
-      },
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/survey-groups/${surveyGroupId}/ratees/${rateeId}/mission-criticals`,
+        });
+        await this.fetchRateeMissionCriticals_reducer(res?.data?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
 
-     async clearRateeMissionCriticals() {
-        this.fetchRateeMissionCriticals_reducer('');
-      },
+    async clearRateeMissionCriticals() {
+      this.fetchRateeMissionCriticals_reducer('');
+    },
 
-      async fetchStaff({ surveyGroupId, query }) {
-        return actionWapper(async () => {
-          const res = await axios({
-            method: 'get',
-            url: `/super-user/survey-groups/${surveyGroupId}/ratees${query}`,
-          });
-          await this.fetchStaff_reducer(res?.data?.data);
-          return res;
-        }, dispatch.util.errorHandler);
-      },
+    async fetchStaff({ surveyGroupId, query }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/survey-groups/${surveyGroupId}/ratees${query}`,
+        });
+        await this.fetchStaff_reducer(res?.data?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
 
-      async fetchOrganizationId({ projectId }) {
-        return actionWapper(async () => {
-          const res = await axios({
-            method: 'get',
-            url: `/super-user/projects/${projectId}`,
-          });
-          return res?.data?.data?.organization?.id;
-        }, dispatch.util.errorHandler);
-      },
-      async addMissionCriticalToRatee({ surveyGroupId, rateeId, competencyIds }) {
-        return actionWapper(async () => {
+    async fetchOrganizationId({ projectId }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/projects/${projectId}`,
+        });
+        return res?.data?.data?.organization?.id;
+      }, dispatch.util.errorHandler);
+    },
+    async addMissionCriticalToRatee({ surveyGroupId, rateeId, competencyIds }) {
+      return actionWapper(async () => {
           const res = await axios({
             method: 'post',
             url: `/super-user/survey-groups/${surveyGroupId}/ratees/${rateeId}/mission-criticals`,
@@ -253,27 +254,27 @@ export default {
     },
     async setStaff({ surveyGroupId, rateeId }) {
       return actionWapper(async () => {
-        const res = await axios({
-          method: 'post',
-          url: `/super-user/survey-groups/${surveyGroupId}/ratees`,
-          data: { rateeId },
-        });
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/ratees`,
+            data: { rateeId },
+          });
 
-        return res;
-      },
-       dispatch.util.errorHandler,
-       dispatch.util.alert);
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert);
     },
     async fetchRaterGroups({ surveyGroupId }) {
       return actionWapper(async () => {
-        const res = await axios({
-          method: 'get',
-          url: `/super-user/survey-groups/${surveyGroupId}/rater-groups`,
-        });
-        await this.fetchRaterGroups_reducer(res?.data?.data);
-        return res;
-      },
-       dispatch.util.errorHandler);
+          const res = await axios({
+            method: 'get',
+            url: `/super-user/survey-groups/${surveyGroupId}/rater-groups`,
+          });
+          await this.fetchRaterGroups_reducer(res?.data?.data);
+          return res;
+        },
+        dispatch.util.errorHandler);
     },
     async fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId, query }) {
       return actionWapper(async () => {
@@ -286,6 +287,30 @@ export default {
         await this.fetchStaffForRater_reducer(res?.data?.data);
       }, dispatch.util.errorHandler);
     },
+    async fetchReportSetting({ surveyGroupId }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          // eslint-disable-next-line max-len
+          url: `/super-user/survey-groups/${surveyGroupId}/report-setting`,
+        });
+
+        await this.fetchReportSetting_reducer(res?.data?.data);
+      }, dispatch.util.errorHandler);
+    },
+    async setReportSetting({ surveyGroupId, groupReport, individualReport }) {
+      return actionWapper(async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/ratees`,
+            data: { groupReport, individualReport },
+          });
+
+          return res;
+        },
+        dispatch.util.errorHandler);
+    },
+
   }),
 
   reducers: {
@@ -326,12 +351,16 @@ export default {
       staff: payload,
     }),
     fetchStaffForRater_reducer: (state, payload) => ({
-       ...state,
-       staffForRater: payload,
-      }),
+      ...state,
+      staffForRater: payload,
+    }),
     fetchRaterGroups_reducer: (state, payload) => ({
       ...state,
       raterGroups: payload,
-      }),
-    },
+    }),
+    fetchReportSetting_reducer: (state, payload) => ({
+      ...state,
+      reportSetting: payload,
+    }),
+  },
 };
