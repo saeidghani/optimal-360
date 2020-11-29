@@ -23,6 +23,10 @@ export default {
           data: payload,
         });
 
+        await dispatch.projects.fetchSurveyGroups({
+          projectId: res?.data?.data?.projectId,
+        });
+
         return res;
       }, dispatch.util.errorHandler);
     },

@@ -20,6 +20,7 @@ const _Input = ({
   wrapperClassName,
   size,
   disabled,
+  fixedHeightForErrorMessage,
   errorMessage,
   inputStyles,
   onPressEnter,
@@ -84,7 +85,7 @@ const _Input = ({
         onPressEnter={onPressEnter}
       />
 
-      <p className="text-red-500 h-5 mt-1">{errorMessage}</p>
+      <p className={`text-red-500 ${fixedHeightForErrorMessage && 'h-5'} mt-1`}>{errorMessage}</p>
     </div>
   );
 };
@@ -104,6 +105,7 @@ _Input.propTypes = {
   size: PropTypes.string,
   value: PropTypes.string,
   disabled: PropTypes.bool,
+  fixedHeightForErrorMessage: PropTypes.bool,
   errorMessage: PropTypes.string,
   inputStyles: PropTypes.shape({}),
   onExtraInfoLinkClick: PropTypes.func,
@@ -124,6 +126,7 @@ _Input.defaultProps = {
   value: '',
   errorMessage: '',
   disabled: false,
+  fixedHeightForErrorMessage: true,
   inputStyles: {},
   onExtraInfoLinkClick: () => {},
   onPressEnter: () => {},

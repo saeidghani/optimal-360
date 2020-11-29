@@ -9,7 +9,8 @@ export default {
     surveyGroups: '',
     clientAdmin: '',
     project: '',
-    groupReports: '',
+    clusterBenchmarks: '',
+    competencyBenchmarks: '',
   },
 
   effects: (dispatch) => ({
@@ -151,14 +152,51 @@ export default {
       );
     },
 
-    async fetchGroupReports(projectId) {
+    async fetchClusterBenchmarks(surveyGroupId) {
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
-          url: `/super-user/projects/${projectId}/results/group-reports`,
+          url: `/super-user/survey-groups/${surveyGroupId}/clusters-benchmark`,
         });
 
-        this.fetchGroupReports_reducer(res?.data);
+        this.fetchClusterBenchmarks_reducer(res?.data);
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async setClusterBenchmarks({ surveyGroupId, ...data }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: `/super-user/survey-groups/${surveyGroupId}/clusters-benchmark`,
+          data,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async fetchCompetencyBenchmarks(surveyGroupId) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/survey-groups/${surveyGroupId}/competencies-benchmark`,
+        });
+
+        this.fetchCompetencyBenchmarks_reducer(res?.data);
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async setCompetencyBenchmarks({ surveyGroupId, ...data }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: `/super-user/survey-groups/${surveyGroupId}/competencies-benchmark`,
+          data,
+        });
 
         return res;
       }, dispatch.util.errorHandler);
@@ -186,9 +224,14 @@ export default {
       surveyGroups: payload,
     }),
 
-    fetchGroupReports_reducer: (state, payload) => ({
+    fetchClusterBenchmarks_reducer: (state, payload) => ({
       ...state,
-      groupReports: payload,
+      clusterBenchmarks: payload,
+    }),
+
+    fetchCompetencyBenchmarks_reducer: (state, payload) => ({
+      ...state,
+      competencyBenchmarks: payload,
     }),
   },
 };

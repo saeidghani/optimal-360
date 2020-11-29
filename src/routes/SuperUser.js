@@ -16,9 +16,10 @@ import Organizations from '../containers/SuperUser/Organizations/Organizations';
 import OrganizationsStaff from '../containers/SuperUser/Organizations/OrganizationsStaff';
 import OrganizationsNewStaff from '../containers/SuperUser/Organizations/OrganizationsNewStaff';
 import NewOrganizations from '../containers/SuperUser/Organizations/NewOrganizations';
-import GroupReports from '../containers/SuperUser/SurveyGroups/GroupReports';
 import Rates from '../containers/SuperUser/Ratee/Ratee';
 import OrganizationsUpdateStaff from '../containers/SuperUser/Organizations/UpdateStaff';
+
+import GroupReports from '../containers/SuperUser/SurveyGroups/GroupReports';
 
 import EditProject from '../containers/SuperUser/Wizard/EditProject';
 import ProjectInfo from '../containers/SuperUser/Wizard/ProjectInfo';

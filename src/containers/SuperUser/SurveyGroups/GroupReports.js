@@ -7,20 +7,42 @@ import Layout from '../../../components/SuperUser/SurveyGroups/GroupReports';
 class GroupReports extends Component {
   state = {};
 
-  fetchGroupReports = (projectId) => {
-    const { fetchGroupReports } = this.props;
+  fetchClusterBenchmarks = (surveyGroupId) => {
+    const { fetchClusterBenchmarks } = this.props;
 
-    return fetchGroupReports(projectId);
+    return fetchClusterBenchmarks(surveyGroupId);
+  };
+
+  fetchCompetencyBenchmarks = (surveyGroupId) => {
+    const { fetchCompetencyBenchmarks } = this.props;
+
+    return fetchCompetencyBenchmarks(surveyGroupId);
+  };
+
+  setClusterBenchmarks = (data) => {
+    const { setClusterBenchmarks } = this.props;
+
+    return setClusterBenchmarks(data);
+  };
+
+  setCompetencyBenchmarks = (data) => {
+    const { setCompetencyBenchmarks } = this.props;
+
+    return setCompetencyBenchmarks(data);
   };
 
   render() {
-    const { loading, groupReports } = this.props;
+    const { loading, clusterBenchmarks, competencyBenchmarks } = this.props;
 
     return (
       <Layout
         loading={loading}
-        groupReports={groupReports}
-        fetchGroupReports={this.fetchGroupReports}
+        clusterBenchmarks={clusterBenchmarks}
+        competencyBenchmarks={competencyBenchmarks}
+        fetchClusterBenchmarks={this.fetchClusterBenchmarks}
+        setClusterBenchmarks={this.setClusterBenchmarks}
+        fetchCompetencyBenchmarks={this.fetchCompetencyBenchmarks}
+        setCompetencyBenchmarks={this.setCompetencyBenchmarks}
       />
     );
   }
@@ -28,23 +50,34 @@ class GroupReports extends Component {
 
 GroupReports.propTypes = {
   loading: PropTypes.bool.isRequired,
-  fetchGroupReports: PropTypes.func.isRequired,
-  groupReports: PropTypes.shape({
+  fetchClusterBenchmarks: PropTypes.func.isRequired,
+  setClusterBenchmarks: PropTypes.func.isRequired,
+  fetchCompetencyBenchmarks: PropTypes.func.isRequired,
+  setCompetencyBenchmarks: PropTypes.func.isRequired,
+  clusterBenchmarks: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.object),
+  }),
+  competencyBenchmarks: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
   }),
 };
 
 GroupReports.defaultProps = {
-  groupReports: {},
+  clusterBenchmarks: {},
+  competencyBenchmarks: {},
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
-  groupReports: state.projects.groupReports || {},
+  clusterBenchmarks: state.projects.clusterBenchmarks || {},
+  competencyBenchmarks: state.projects.competencyBenchmarks || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchGroupReports: dispatch.projects.fetchGroupReports,
+  fetchClusterBenchmarks: dispatch.projects.fetchClusterBenchmarks,
+  setClusterBenchmarks: dispatch.projects.setClusterBenchmarks,
+  fetchCompetencyBenchmarks: dispatch.projects.fetchCompetencyBenchmarks,
+  setCompetencyBenchmarks: dispatch.projects.setCompetencyBenchmarks,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GroupReports);

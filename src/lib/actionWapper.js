@@ -5,9 +5,10 @@ const wrapper = (fn, errorHandler, notify) => {
         console.log('res', res);
       }
 
-      if (res?.data?.message && notify) {
-        notify({ message: res.data.message, type: 'success' });
-      }
+      // https://www.notion.so/agencywolfe/Remove-successful-messages-7d463dcab3cc4f67bbad450fb5ea9c70
+      // if (res?.data?.message && notify) {
+      //   notify({ message: res.data.message, type: 'success' });
+      // }
 
       return res;
     })
