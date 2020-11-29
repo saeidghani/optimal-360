@@ -146,57 +146,68 @@ const ReportContent = ({
           <Form onSubmit={handleSubmit}>
             {values?.individualReport ? (
               <>
+
                 <div
-                  className="col-span-12 flex flex-row items-center bg-antgray-600 py-5 px-8.3 border-b border-t border-antgray-900"
+                  className="grid grid-flow-col grid-cols-2 md:grid-rows-1 report-content-page"
+                  style={{ gridTemplateRows: 'auto auto' }}
                 >
                   {['individualReport', 'groupReport'].map((category) => (
-                    <div className="w-full" key={category}>
-                      <Checkbox
-                        className="flex flex-row items-center text-antgray-100"
-                        onChange={() => {
-                          handleChangeLevel1(category);
-                        }}
-                        checked={isLevel1Selected(category)}
+                    <>
+                      <div
+                        className="items-center bg-antgray-600 py-5 px-8.3 border-b border-t border-antgray-900"
                       >
-                        Report content: Individual
-                      </Checkbox>
-                    </div>
+                        <div className="w-full" key={category}>
+                          <Checkbox
+                            className="flex flex-row items-center text-antgray-100"
+                            onChange={() => {
+                              handleChangeLevel1(category);
+                            }}
+                            checked={isLevel1Selected(category)}
+                          >
+                            Report content: Individual
+                          </Checkbox>
+                        </div>
+                      </div>
+
+
+                      <div className="flex">
+                        <div className="flex flex-col" key={category}>
+                          {Object.entries(values[category]).map(([_title, fields]) => (
+                              <div key={_title} className={`checkbox-group-wrapper ${category === 'group' && 'ml-0'}`}>
+                                <Checkbox
+                                  className="text-heading text-base"
+                                  indeterminate={!Object.values(values[category][_title]).every((a) => a === Object.values(values[category][_title])[0])}
+                                  onChange={() => {
+                                    handleChangeLevel2(category, _title);
+                                  }}
+                                  checked={Object.values(values[category][_title]).every((a) => a === true)}
+                                >
+                                  {LABELS[_title]}
+                                </Checkbox>
+
+                                <CheckboxGroup
+                                  className="text-heading text-sm"
+                                  options={(Object.entries(fields).filter(([label]) => LABELS[label])).map(([label]) => ({
+                                    label: LABELS[label],
+                                    value: label,
+                                  }))}
+                                  value={Object.entries(fields).filter(([_, value]) => (value === true)).map(([aa, _]) => aa)}
+                                  onChange={(selectedArray) => {
+                                    handleChangeLevel3(selectedArray, category, _title);
+                                  }}
+                                />
+                              </div>
+                            ),
+                          )}
+                        </div>
+                      </div>
+                    </>
+
                   ))}
+
                 </div>
 
-                <div className="flex">
-                  {['individualReport', 'groupReport'].map((category) => (
-                    <div className="flex flex-col w-1/2" key={category}>
-                      {Object.entries(values[category]).map(([_title, fields]) => (
-                          <div key={_title} className={`checkbox-group-wrapper ${category === 'group' && 'ml-0'}`}>
-                            <Checkbox
-                              className="text-heading text-base"
-                              indeterminate={!Object.values(values[category][_title]).every((a) => a === Object.values(values[category][_title])[0])}
-                              onChange={() => {
-                                handleChangeLevel2(category, _title);
-                              }}
-                              checked={Object.values(values[category][_title]).every((a) => a === true)}
-                            >
-                              {LABELS[_title]}
-                            </Checkbox>
 
-                            <CheckboxGroup
-                              className="checkbox-group-container text-heading text-sm"
-                              options={(Object.entries(fields).filter(([label]) => LABELS[label])).map(([label]) => ({
-                                label: LABELS[label],
-                                value: label,
-                              }))}
-                              value={Object.entries(fields).filter(([_, value]) => (value === true)).map(([aa, _]) => aa)}
-                              onChange={(selectedArray) => {
-                                handleChangeLevel3(selectedArray, category, _title);
-                              }}
-                            />
-                          </div>
-                        ),
-                      )}
-                    </div>
-                  ))}
-                </div>
               </>
             ) : <Spin className="block m-auto" />}
           </Form>

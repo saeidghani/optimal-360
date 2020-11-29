@@ -72,30 +72,36 @@
 }
 
 // Ratee.Report compoennt
-.checkbox-group-wrapper {
-  & {
-    margin-top: 20px;
-    margin-left: 40px;
-    margin-bottom: 10px;
+.report-content-page {
+  .checkbox-group-wrapper {
+    & {
+      margin-top: 20px;
+      margin-left: 40px;
+      margin-bottom: 10px;
+    }
+
+    & > label {
+      margin-bottom: 28px;
+    }
   }
 
-  & > label {
-    margin-bottom: 28px;
+  .ant-checkbox + span {
+    padding-left: 30px;
   }
 
-  .ant-checkbox-indeterminate {
+  .ant-checkbox-group {
+    & {
+      display: flex;
+      flex-direction: column;
+    }
 
-  }
-}
+    label {
+      margin-bottom: 12px;
+      margin-left: 48px !important;
+    }
 
-.checkbox-group-container {
-  & {
-    display: flex;
-    flex-direction: column;
-  }
-
-  label {
-    margin-bottom: 12px;
-    margin-left: 50px !important;
+    .ant-checkbox + span {
+      padding-left: 20px;
+    }
   }
 }
