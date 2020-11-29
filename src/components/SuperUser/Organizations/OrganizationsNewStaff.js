@@ -23,6 +23,9 @@ const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
       .string()
       .min(8, 'password must  be at least 8 characters long')
       .required('password field is required'),
+    department: yup.string().required('Department field is required'),
+    jobDesignation: yup.string().required('Job Designation field is required'),
+
   });
   return (
     <MainLayout
@@ -43,6 +46,8 @@ const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
               name: '',
               email: '',
               password: '',
+              department: '',
+              jobDesignation: '',
             }}
             validationSchema={schema}
             onSubmit={async (values) => {
@@ -95,6 +100,26 @@ const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
                     setFieldValue('password', newPassword);
                   }}
                   errorMessage={touched.password && errors.password}
+                />
+                <Input
+                  disabled={loading}
+                  onChange={handleChange}
+                  value={values.department}
+                  name="department"
+                  labelText="Department"
+                  placeholder="IT"
+                  wrapperClassName="mb-2"
+                  errorMessage={touched.department && errors.department}
+                />
+                <Input
+                  disabled={loading}
+                  onChange={handleChange}
+                  value={values.jobDesignation}
+                  name="jobDesignation"
+                  labelText="Job Designation"
+                  placeholder="Executive"
+                  wrapperClassName="mb-2"
+                  errorMessage={touched.jobDesignation && errors.jobDesignation}
                 />
                 <Button
                   loading={loading}
