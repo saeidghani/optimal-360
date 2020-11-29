@@ -1,7 +1,6 @@
 import axios from '../lib/api';
 import actionWapper from '../lib/actionWapper';
 
-
 export default {
   namespace: 'ratee',
 
@@ -364,12 +363,10 @@ export default {
       const { changedLog } = state.ratee;
       const changedRaterGroups = changedLog.filter((item) => item.isChanged);
       changedRaterGroups.map(({ selectedItems, defaultItems }) => {
-        console.log({ selectedItems, defaultItems });
         const differenceAdd =
         selectedItems.filter((item) => !defaultItems.find((el) => el.id === item.id));
         const differenceRemove =
         defaultItems.filter((item) => !selectedItems.find((el) => el.id === item.id));
-        console.log('d', differenceAdd);
         differenceRemove.map((item) => obj.removeRelations.push(item.relationId));
         differenceAdd.map((item) =>
         obj.addRelations.push({ raterId: item.id, raterGroupId: item.raterGroupId }));

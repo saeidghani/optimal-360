@@ -42,7 +42,6 @@ const RaterSelection = ({
       fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId, query: staffQuery });
     }
   }, [raterGroupId, staffQuery]);
-  console.log(staffForRater);
   const renderHeader = React.useCallback(
     () => {
       return (
