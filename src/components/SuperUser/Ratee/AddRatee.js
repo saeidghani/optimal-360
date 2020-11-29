@@ -13,9 +13,8 @@ const AddRatee = ({
   loading,
   fetchRateeMissionCriticals,
   addMissionCriticalToRatee,
-  clearRateeMissionCriticals,
   rateeMissionCriticals,
-  fetchStaffs,
+  fetchStaff,
   staffs,
   setStaff,
   fetchOrganizationId,
@@ -35,14 +34,9 @@ const AddRatee = ({
 
   useEffect(() => {
     const staffQuery = stringify(parse({ q: parsedQuery.sq }));
-    fetchStaffs({ surveyGroupId, query: staffQuery });
+    fetchStaff({ surveyGroupId, query: staffQuery });
      // TODO clear staffs
-<<<<<<< Updated upstream
-    // fetchRateeMissionCriticals({ surveyGroupId, rateeId });
-  }, [query, fetchStaffs, parsedQuery.sq]);
-=======
   }, [query, fetchStaff, parsedQuery.sq]);
->>>>>>> Stashed changes
 
   const handleClickAddNewStaff = useCallback(async () => {
     const organizationId = await fetchOrganizationId({ projectId });
@@ -90,7 +84,6 @@ const AddRatee = ({
                   onSelect={handleSelectStaff}
                   onChange={(text) => {
                     setQuery({ sq: text });
-                    clearRateeMissionCriticals();
                     }}
                   value={parsedQuery.sq}
                 />
@@ -167,13 +160,11 @@ AddRatee.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchRateeMissionCriticals: PropTypes.func.isRequired,
   addMissionCriticalToRatee: PropTypes.func.isRequired,
-  clearRateeMissionCriticals: PropTypes.func.isRequired,
   rateeMissionCriticals: PropTypes.arrayOf(PropTypes.object).isRequired,
-  fetchStaffs: PropTypes.func.isRequired,
+  fetchStaff: PropTypes.func.isRequired,
   staffs: PropTypes.arrayOf(PropTypes.object).isRequired,
   setStaff: PropTypes.func.isRequired,
   fetchOrganizationId: PropTypes.func.isRequired,
-  // fetchStaffForRater: PropTypes.func.isRequired,
 };
 
 AddRatee.defaultProps = {};

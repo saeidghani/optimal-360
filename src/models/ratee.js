@@ -14,12 +14,7 @@ export default {
     individualReports: '',
     groupReports: '',
     rateeMissionCriticals: '',
-<<<<<<< Updated upstream
-    staffs: '',
-    staffForRatee: '',
-=======
     staff: '',
->>>>>>> Stashed changes
     raterGroups: '',
     staffForRater: '',
     selectedRaters: [],
@@ -227,49 +222,8 @@ export default {
       }, dispatch.util.errorHandler,
       );
     },
+
     async fetchRateeMissionCriticals({ surveyGroupId, rateeId }) {
-<<<<<<< Updated upstream
-            return actionWapper(async () => {
-              const res = await axios({
-                method: 'get',
-                url: `/super-user/survey-groups/${surveyGroupId}/ratees/${rateeId}/mission-criticals`,
-              });
-              await this.fetchRateeMissionCriticals_reducer(res?.data?.data);
-              return res;
-            }, dispatch.util.errorHandler);
-      },
-     async clearRateeMissionCriticals() {
-        this.fetchRateeMissionCriticals_reducer('');
-      },
-      async fetchStaffs({ surveyGroupId, query }) {
-        return actionWapper(async () => {
-          const res = await axios({
-            method: 'get',
-            url: `/super-user/survey-groups/${surveyGroupId}/ratees${query}`,
-          });
-          await this.fetchStaffs_reducer(res?.data?.data);
-          return res;
-        }, dispatch.util.errorHandler);
-      },
-      async fetchOrganizationId({ projectId }) {
-        return actionWapper(async () => {
-          const res = await axios({
-            method: 'get',
-            url: `/super-user/projects/${projectId}`,
-          });
-          return res?.data?.data?.organization?.id;
-        }, dispatch.util.errorHandler);
-      },
-      async addMissionCriticalToRatee({ surveyGroupId, rateeId, competencyIds }) {
-        return actionWapper(async () => {
-          const res = await axios({
-            method: 'post',
-            url: `/super-user/survey-groups/${surveyGroupId}/ratees/${rateeId}/mission-criticals`,
-            data: { competencyIds },
-          });
-          return res;
-        }, dispatch.util.errorHandler,
-=======
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
@@ -310,7 +264,6 @@ export default {
         });
         return res;
       }, dispatch.util.errorHandler,
->>>>>>> Stashed changes
         dispatch.util.alert);
     },
 
@@ -367,7 +320,7 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
-    async fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId, query }, state) {
+    async fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId, query }) {
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
@@ -429,6 +382,7 @@ export default {
           url: `/super-user/survey-groups/${surveyGroupId}/ratees/${rateeId}/relations`,
           data: obj,
         });
+        this.fetchStaffAndSetToStorage_reducer('');
         return res;
       }, dispatch.util.errorHandler,
       dispatch.util.alert);
@@ -477,27 +431,17 @@ export default {
       ...state,
       rateeMissionCriticals: payload,
     }),
-<<<<<<< Updated upstream
-    fetchStaffs_reducer: (state, payload) => ({
-=======
 
     fetchStaff_reducer: (state, payload) => ({
->>>>>>> Stashed changes
       ...state,
       staffs: payload,
     }),
 
     fetchStaffForRater_reducer: (state, payload) => ({
-<<<<<<< Updated upstream
-       ...state,
-       staffForRatee: payload,
-      }),
-=======
       ...state,
       staffForRater: payload,
     }),
 
->>>>>>> Stashed changes
     fetchRaterGroups_reducer: (state, payload) => ({
       ...state,
       raterGroups: payload,

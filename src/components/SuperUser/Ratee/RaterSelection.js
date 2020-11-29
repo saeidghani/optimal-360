@@ -13,7 +13,7 @@ import { useQuery, parse, stringify } from '../../../hooks/useQuery';
 const RaterSelection = ({
   loading,
   fetchStaffForRater,
-  staffForRatee,
+  staffForRater,
   fetchRaterGroups,
   raterGroups,
   setSelectedRaters,
@@ -24,36 +24,25 @@ const RaterSelection = ({
   const history = useHistory();
   const surveyGroupId = parsedQuery?.surveyGroupId;
   const rateeId = parsedQuery?.rateeId;
-<<<<<<< Updated upstream
-  const raterGroupId = raterGroups[0]?.id?.toString();
-  const defaultSelectedRows = staffForRatee?.filter((el) => el.relationId);
-  const staffQuery = stringify(parse({ q: parsedQuery.sq }));
-=======
   const projectId = parsedQuery?.projectId;
   const raterGroupId = parsedQuery?.raterGroupId?.toString() || raterGroups[0]?.id?.toString();
   const currentRaterGroupChangeLog = changedLog.find((el) => el.raterGroupId == raterGroupId);
   const defaultSelected = currentRaterGroupChangeLog?.isChanged
   ? currentRaterGroupChangeLog.selectedItems : currentRaterGroupChangeLog?.defaultItems;
   const staffQuery = stringify(parse({ q: parsedQuery.sq })) || '';
->>>>>>> Stashed changes
 
   useEffect(() => {
      fetchRaterGroups({ surveyGroupId, rateeId });
-     setQuery({ raterGroupId: null });
-  }, [submitRaters]);
+    //  setQuery({ raterGroupId: null });
+  }, [fetchRaterGroups]);
 
   useEffect(() => {
-<<<<<<< Updated upstream
-    setSelectedRows(defaultSelectedRows);
-  }, [staffForRatee]);
-=======
     if (raterGroupId) {
       setQuery({ raterGroupId });
       fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId, query: staffQuery });
     }
   }, [raterGroupId, staffQuery]);
->>>>>>> Stashed changes
-
+  console.log(staffForRater);
   const renderHeader = React.useCallback(
     () => {
       return (
@@ -104,20 +93,12 @@ const RaterSelection = ({
       headerClassName="pl-21"
       childrenPadding={false}
     >
-<<<<<<< Updated upstream
-      {/* <Loading visible={loading} /> */}
-
-      <div className="bg-white grid grid-cols-12 pl-15">
-        <Menu
-          onClick={(id) => fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId: id })}
-=======
       <div className="bg-white grid grid-cols-12 pl-15">
         <Menu
           onClick={(id) => {
             fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId: id, query: staffQuery });
             setQuery({ raterGroupId: id });
           }}
->>>>>>> Stashed changes
           title="Rater Group"
           items={raterGroups}
           className="col-span-2"
@@ -132,13 +113,8 @@ const RaterSelection = ({
             renderHeader={renderHeader}
             loading={loading}
             columns={columns}
-<<<<<<< Updated upstream
-            dataSource={staffForRatee || []}
-            selectedRowKeys={selectedRows?.map((el) => el.id)}
-=======
             dataSource={staffForRater || []}
             selectedRowKeys={defaultSelected?.map((el) => el.id)}
->>>>>>> Stashed changes
             onRowSelectionChange={(_, rows) => {
               setSelectedRaters({ rows, raterGpId: raterGroupId });
             }}
@@ -175,14 +151,12 @@ const RaterSelection = ({
 RaterSelection.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchStaffForRater: PropTypes.func.isRequired,
-  staffForRatee: PropTypes.arrayOf(PropTypes.object).isRequired,
+  staffForRater: PropTypes.arrayOf(PropTypes.object).isRequired,
   fetchRaterGroups: PropTypes.func.isRequired,
   raterGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
-  selectedRaters: PropTypes.arrayOf(PropTypes.object).isRequired,
   setSelectedRaters: PropTypes.func.isRequired,
   submitRaters: PropTypes.func.isRequired,
   changedLog: PropTypes.arrayOf(PropTypes.object).isRequired,
-  // setCurrentRaterGroup: PropTypes.func.isRequired,
 };
 
 RaterSelection.defaultProps = {};
