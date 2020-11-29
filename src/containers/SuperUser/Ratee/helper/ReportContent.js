@@ -70,8 +70,9 @@ const ReportContent = ({
   ]);
 
   const isLevel1Selected = (category) => {
+    const { values } = formRef.current;
     let selectedAll = true;
-    Object.entries(formRef?.current?.values?.[category] || []).forEach(([key, value]) => {
+    Object.entries(values[category] || []).forEach(([key, value]) => {
       if (Object.values(value).includes(false)) {
         selectedAll = false;
       }
@@ -97,6 +98,41 @@ const ReportContent = ({
     return newObj;
   }, [reportSetting]);
 
+  const handleChangeLevel1 = (category) => {
+    const stack = [];
+    const { values, setValues } = formRef.current;
+    Object.entries(values?.[category]).forEach(([key, value]) => {
+      stack.push(...Object.values(value));
+    });
+    const changeTo = stack.includes(false);
+    const newValues = { ...values };
+    Object.entries(values?.[category]).forEach(([key, value]) => {
+      Object.entries(value).forEach(([key3, value3]) => {
+        newValues[category][key][key3] = changeTo;
+      });
+    });
+    setValues({ ...newValues });
+  };
+
+  const handleChangeLevel2 = (category, _title) => {
+    const { values, setValues } = formRef.current;
+    const newValue = { ...values };
+    const changeTo = !Object.values(values[category][_title]).every((a) => a === true);
+    Object.entries(values[category][_title]).forEach(([key]) => {
+      newValue[category][_title][key] = changeTo;
+    });
+    setValues({ ...values, ...newValue });
+  };
+
+  const handleChangeLevel3 = (selectedArray, category, _title) => {
+    const { values, setValues } = formRef.current;
+    const newValue = { ...values };
+    Object.entries(values[category][_title]).forEach(([property]) => {
+      newValue[category][_title][property] = selectedArray.includes(property);
+    });
+    setValues({ ...newValue });
+  };
+
   return (
     <>
       <Formik
@@ -118,18 +154,7 @@ const ReportContent = ({
                       <Checkbox
                         className="flex flex-row items-center text-antgray-100"
                         onChange={() => {
-                          const stack = [];
-                          Object.entries(values?.[category]).forEach(([key, value]) => {
-                            stack.push(...Object.values(value));
-                          });
-                          const selectTo = stack.includes(false);
-                          const newValues = { ...values };
-                          Object.entries(values?.[category]).forEach(([key, value]) => {
-                            Object.entries(value).forEach(([key3, value3]) => {
-                              newValues[category][key][key3] = selectTo;
-                            });
-                          });
-                          formRef.current.setValues({ ...newValues });
+                          handleChangeLevel1(category);
                         }}
                         checked={isLevel1Selected(category)}
                       >
@@ -143,39 +168,30 @@ const ReportContent = ({
                   {['individualReport', 'groupReport'].map((category) => (
                     <div className="flex flex-col w-1/2" key={category}>
                       {Object.entries(values[category]).map(([_title, fields]) => (
-                        <div key={_title} className={`checkbox-group-wrapper ${category === 'group' && 'ml-0'}`}>
-                          <Checkbox
-                            className="text-heading text-base"
-                            indeterminate={!Object.values(values[category][_title]).every((a) => a === Object.values(values[category][_title])[0])}
-                            onChange={() => {
-                                const newValue = { ...values };
-                                const changeTo = !Object.values(values[category][_title]).every((a) => a === true);
-                                Object.entries(values[category][_title]).forEach(([key]) => {
-                                  newValue[category][_title][key] = changeTo;
-                                });
-                                formRef.current.setValues({ ...values, ...newValue });
+                          <div key={_title} className={`checkbox-group-wrapper ${category === 'group' && 'ml-0'}`}>
+                            <Checkbox
+                              className="text-heading text-base"
+                              indeterminate={!Object.values(values[category][_title]).every((a) => a === Object.values(values[category][_title])[0])}
+                              onChange={() => {
+                                handleChangeLevel2(category, _title);
                               }}
-                            checked={Object.values(values[category][_title]).every((a) => a === true)}
-                          >
-                            {LABELS[_title]}
-                          </Checkbox>
+                              checked={Object.values(values[category][_title]).every((a) => a === true)}
+                            >
+                              {LABELS[_title]}
+                            </Checkbox>
 
-                          <CheckboxGroup
-                            className="checkbox-group-container text-heading text-sm"
-                            options={(Object.entries(fields).filter(([label]) => LABELS[label])).map(([label]) => ({
+                            <CheckboxGroup
+                              className="checkbox-group-container text-heading text-sm"
+                              options={(Object.entries(fields).filter(([label]) => LABELS[label])).map(([label]) => ({
                                 label: LABELS[label],
                                 value: label,
                               }))}
-                            value={Object.entries(fields).filter(([_, value]) => (value === true)).map(([aa, _]) => aa)}
-                            onChange={(selectedArray) => {
-                                const newValue = { ...values };
-                                Object.entries(values[category][_title]).forEach(([property]) => {
-                                  newValue[category][_title][property] = selectedArray.includes(property);
-                                });
-                                formRef.current.setValues({ ...newValue });
+                              value={Object.entries(fields).filter(([_, value]) => (value === true)).map(([aa, _]) => aa)}
+                              onChange={(selectedArray) => {
+                                handleChangeLevel3(selectedArray, category, _title);
                               }}
-                          />
-                        </div>
+                            />
+                          </div>
                         ),
                       )}
                     </div>
