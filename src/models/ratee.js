@@ -311,6 +311,24 @@ export default {
         dispatch.util.errorHandler,
         dispatch.util.alert);
     },
+    async importClientCompetencyModel({ file, surveyGroupId }) {
+      // eslint-disable-next-line no-undef
+      const data = new FormData();
+      data.append('excel', file);
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/client-competency-model/import`,
+            data,
+          });
+
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
+    },
 
   }),
 

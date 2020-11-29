@@ -108,6 +108,12 @@ class Ratee extends Component {
     return setReportSetting(query);
   };
 
+  importClientCompetencyModel = (query) => {
+    const { importClientCompetencyModel } = this.props;
+
+    return importClientCompetencyModel(query);
+  };
+
   render() {
     const {
       loading,
@@ -149,6 +155,7 @@ class Ratee extends Component {
         fetchReportSetting={this.fetchReportSetting}
         setReportSetting={this.setReportSetting}
         reportSetting={reportSetting}
+        importClientCompetencyModel={this.importClientCompetencyModel}
       />
     );
   }
@@ -181,6 +188,7 @@ Ratee.propTypes = {
   fetchReportSetting: PropTypes.func.isRequired,
   setReportSetting: PropTypes.func.isRequired,
   reportSetting: PropTypes.shape({}),
+  importClientCompetencyModel: PropTypes.func.isRequired,
 
 };
 
@@ -224,6 +232,7 @@ const mapDispatchToProps = (dispatch) => ({
   exportDemographicData: dispatch.ratee.exportDemographicData,
   fetchReportSetting: dispatch.ratee.fetchReportSetting,
   setReportSetting: dispatch.ratee.setReportSetting,
+  importClientCompetencyModel: dispatch.ratee.importClientCompetencyModel,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Ratee);

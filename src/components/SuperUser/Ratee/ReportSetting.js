@@ -12,6 +12,7 @@ const ReportSetting = ({
                          reportSetting,
                          fetchReportSetting,
                          setReportSetting,
+                         importClientCompetencyModel,
                        }) => {
   const allTabs = [
     {
@@ -32,7 +33,7 @@ const ReportSetting = ({
   }
 
   return (
-    <div className="p-6 mt-5 bg-white rounded-lg shadow borderless-tab min-h-screen	">
+    <div className="p-6 mt-5 bg-white rounded-lg shadow borderless-tab min-h-screen">
       <Tabs
         defaultActiveKey={currentTab}
         onChange={tabChangeCallback}
@@ -45,6 +46,7 @@ const ReportSetting = ({
             reportSetting={reportSetting}
             fetchReportSetting={fetchReportSetting}
             setReportSetting={setReportSetting}
+            importClientCompetencyModel={importClientCompetencyModel}
           />
 
         </TabPane>
@@ -63,6 +65,7 @@ ReportSetting.propTypes = {
   reportSetting: PropTypes.shape({}),
   fetchReportSetting: PropTypes.func.isRequired,
   setReportSetting: PropTypes.func.isRequired,
+  importClientCompetencyModel: PropTypes.func.isRequired,
 };
 
 ReportSetting.defaultProps = {

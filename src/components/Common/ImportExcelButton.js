@@ -17,7 +17,7 @@ const ImportExcelButton = ({
                              ...other
                            }) => (
   <Upload
-    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, .xlsx"
     beforeUpload={beforeUpload}
     showUploadList={false}
     className={className}

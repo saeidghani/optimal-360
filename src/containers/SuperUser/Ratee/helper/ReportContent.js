@@ -6,6 +6,7 @@ import { useQuery } from '../../../../hooks';
 import { Form, Formik } from 'formik';
 import { Checkbox, Spin, Divider } from 'antd';
 import Button from '../../../../components/Common/Button';
+import ImportExcelButton from '../../../../components/Common/ImportExcelButton';
 
 const CheckboxGroup = Checkbox.Group;
 const LABELS = {
@@ -58,6 +59,7 @@ const ReportContent = ({
                          reportSetting,
                          fetchReportSetting,
                          setReportSetting,
+                         importClientCompetencyModel,
                        }) => {
   const [parsedQuery] = useQuery();
 
@@ -217,14 +219,20 @@ const ReportContent = ({
             </div>
             <Divider />
             <div className="flex justify-end">
-              <Button
-                loading={loading}
+              <ImportExcelButton
                 type="primary"
-                ghost
-                className="mr-5"
+                textClassName="font-normal text-md leading-6"
+                className="mr-5 flex justify-center items-center"
+                size="large"
                 textSize="md"
-                href="/"
-                text="Import Excel client competency model"
+                ghost
+                icon=""
+                loading={loading}
+                buttonText="Import Excel client competency model"
+                beforeUpload={(file) => {
+                  importClientCompetencyModel({ file, surveyGroupId });
+                  return false;
+                }}
               />
               <Button
                 loading={loading}
@@ -246,6 +254,7 @@ ReportContent.propTypes = {
   reportSetting: PropTypes.shape({}),
   fetchReportSetting: PropTypes.func.isRequired,
   setReportSetting: PropTypes.func.isRequired,
+  importClientCompetencyModel: PropTypes.func.isRequired,
 
 };
 

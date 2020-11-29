@@ -42,6 +42,7 @@ const Ratee = (
     reportSetting,
     fetchReportSetting,
     setReportSetting,
+    importClientCompetencyModel,
   },
 ) => {
   const history = useHistory();
@@ -160,6 +161,7 @@ const Ratee = (
             reportSetting={reportSetting}
             fetchReportSetting={fetchReportSetting}
             setReportSetting={setReportSetting}
+            importClientCompetencyModel={importClientCompetencyModel}
           />
         </TabPane>
       </Tabs>
@@ -194,6 +196,7 @@ Ratee.propTypes = {
   reportSetting: PropTypes.shape({}),
   fetchReportSetting: PropTypes.func.isRequired,
   setReportSetting: PropTypes.func.isRequired,
+  importClientCompetencyModel: PropTypes.func.isRequired,
 };
 
 Ratee.defaultProps = {
