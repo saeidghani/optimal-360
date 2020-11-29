@@ -4,10 +4,12 @@ import PropTypes from 'prop-types';
 import { useQuery } from '../../../../hooks';
 
 import { Form, Formik } from 'formik';
-import { Checkbox, Spin } from 'antd';
+import { Checkbox, Spin, Divider } from 'antd';
+import Button from '../../../../components/Common/Button';
 
 const CheckboxGroup = Checkbox.Group;
 const LABELS = {
+  individualReport: 'Report content: Individual',
   introduction: 'INTRODUCTION',
   aboutTheOptimalReport: 'About the Optimal360 Report',
   theCompetencyModel: 'The Competency Model',
@@ -33,6 +35,7 @@ const LABELS = {
   appendix: 'APPENDIX',
   competencyModelDefinitions: 'Competency Model – Competency Definitions',
 
+  groupReport: 'Report content: Group',
   ratersAndCompletionRate: 'RATERS AND COMPLETION RATE',
   surveyCompletionStatus: 'Survey Completion Status',
   missionCriticalCompteneciesResults: 'MISSION CRITICAL COMPETENCIES RESULTS',
@@ -56,7 +59,7 @@ const ReportContent = ({
                          fetchReportSetting,
                          setReportSetting,
                        }) => {
-  const [parsedQuery, query, setQuery] = useQuery();
+  const [parsedQuery] = useQuery();
 
   const surveyGroupId = parsedQuery?.surveyGroupId;
 
@@ -139,77 +142,98 @@ const ReportContent = ({
         innerRef={formRef}
         enableReinitialize
         initialValues={data}
-        onSubmit={async (values) => {
+        onSubmit={(values) => {
+          const newObj = { individualReport: {}, groupReport: {} };
+          Object.entries(values).forEach(([key, val]) => {
+            Object.entries(val).forEach(([key2, val2]) => {
+              newObj[key] = { ...newObj[key], ...val2 };
+            });
+          });
+          console.log(newObj);
+          setReportSetting({
+            reports: values,
+            surveyGroupId,
+          });
         }}
       >
         {({ values, handleSubmit }) => (
           <Form onSubmit={handleSubmit}>
-            {values?.individualReport ? (
-              <>
-
-                <div
-                  className="grid grid-flow-col grid-cols-2 md:grid-rows-1 report-content-page"
-                  style={{ gridTemplateRows: 'auto auto' }}
-                >
-                  {['individualReport', 'groupReport'].map((category) => (
-                    <>
-                      <div
-                        className="items-center bg-antgray-600 py-5 px-8.3 border-b border-t border-antgray-900"
+            <div
+              className="grid grid-flow-col grid-cols-2 md:grid-rows-1 report-content-page "
+              style={{ gridTemplateRows: 'auto auto' }}
+            >
+              {values?.individualReport ? Object.entries(values).reverse().map(([category, val]) => (
+                <>
+                  <div
+                    className="items-center bg-antgray-600 py-5 px-8.3 border-b border-t border-antgray-900"
+                  >
+                    <div className="w-full" key={category}>
+                      <Checkbox
+                        className="flex flex-row items-center text-antgray-100"
+                        onChange={() => {
+                          handleChangeLevel1(category);
+                        }}
+                        checked={isLevel1Selected(category)}
                       >
-                        <div className="w-full" key={category}>
-                          <Checkbox
-                            className="flex flex-row items-center text-antgray-100"
-                            onChange={() => {
-                              handleChangeLevel1(category);
-                            }}
-                            checked={isLevel1Selected(category)}
-                          >
-                            Report content: Individual
-                          </Checkbox>
-                        </div>
-                      </div>
+                        {LABELS[category]}
+                      </Checkbox>
+                    </div>
+                  </div>
 
+                  <div className="flex">
+                    <div className="flex flex-col" key={category}>
+                      {Object.entries(values[category]).map(([_title, fields]) => (
+                          <div key={_title} className={`checkbox-group-wrapper ${category === 'groupReport' && 'ml-0'}`}>
+                            <Checkbox
+                              className="text-heading text-base"
+                              indeterminate={!Object.values(values[category][_title]).every((a) => a === Object.values(values[category][_title])[0])}
+                              onChange={() => {
+                                handleChangeLevel2(category, _title);
+                              }}
+                              checked={Object.values(values[category][_title]).every((a) => a === true)}
+                            >
+                              {LABELS[_title]}
+                            </Checkbox>
 
-                      <div className="flex">
-                        <div className="flex flex-col" key={category}>
-                          {Object.entries(values[category]).map(([_title, fields]) => (
-                              <div key={_title} className={`checkbox-group-wrapper ${category === 'group' && 'ml-0'}`}>
-                                <Checkbox
-                                  className="text-heading text-base"
-                                  indeterminate={!Object.values(values[category][_title]).every((a) => a === Object.values(values[category][_title])[0])}
-                                  onChange={() => {
-                                    handleChangeLevel2(category, _title);
-                                  }}
-                                  checked={Object.values(values[category][_title]).every((a) => a === true)}
-                                >
-                                  {LABELS[_title]}
-                                </Checkbox>
+                            <CheckboxGroup
+                              className="text-heading text-sm"
+                              options={(Object.entries(fields).filter(([label]) => LABELS[label])).map(([label]) => ({
+                                label: LABELS[label],
+                                value: label,
+                              }))}
+                              value={Object.entries(fields).filter(([_, value]) => (value === true)).map(([aa, _]) => aa)}
+                              onChange={(selectedArray) => {
+                                handleChangeLevel3(selectedArray, category, _title);
+                              }}
+                            />
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  </div>
+                </>
+              )) : <Spin className="block m-auto" />}
 
-                                <CheckboxGroup
-                                  className="text-heading text-sm"
-                                  options={(Object.entries(fields).filter(([label]) => LABELS[label])).map(([label]) => ({
-                                    label: LABELS[label],
-                                    value: label,
-                                  }))}
-                                  value={Object.entries(fields).filter(([_, value]) => (value === true)).map(([aa, _]) => aa)}
-                                  onChange={(selectedArray) => {
-                                    handleChangeLevel3(selectedArray, category, _title);
-                                  }}
-                                />
-                              </div>
-                            ),
-                          )}
-                        </div>
-                      </div>
-                    </>
-
-                  ))}
-
-                </div>
-
-
-              </>
-            ) : <Spin className="block m-auto" />}
+            </div>
+            <Divider />
+            <div className="flex justify-end">
+              <Button
+                loading={loading}
+                type="primary"
+                ghost
+                className="mr-5"
+                textSize="md"
+                href="/"
+                text="Import Excel client competency model"
+              />
+              <Button
+                loading={loading}
+                className=""
+                text="Submit"
+                onClick={handleSubmit}
+                htmlType="submit"
+              />
+            </div>
           </Form>
         )}
       </Formik>

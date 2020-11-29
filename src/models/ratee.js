@@ -298,17 +298,18 @@ export default {
         await this.fetchReportSetting_reducer(res?.data?.data);
       }, dispatch.util.errorHandler);
     },
-    async setReportSetting({ surveyGroupId, groupReport, individualReport }) {
+    async setReportSetting({ surveyGroupId, reports }) {
       return actionWapper(async () => {
           const res = await axios({
             method: 'post',
-            url: `/super-user/survey-groups/${surveyGroupId}/ratees`,
-            data: { groupReport, individualReport },
+            url: `/super-user/survey-groups/${surveyGroupId}/report-setting`,
+            data: { ...reports },
           });
 
           return res;
         },
-        dispatch.util.errorHandler);
+        dispatch.util.errorHandler,
+        dispatch.util.alert);
     },
 
   }),
