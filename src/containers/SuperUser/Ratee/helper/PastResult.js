@@ -18,6 +18,9 @@ const PastResult = ({
   const [parsedQuery] = useQuery();
 
   // which Competency assigned new value:
+  // format: competencyId:{pastCompetencyId - pastCompetencyName - pastCompetencyYear} []
+  // for submitting form we want competencyId and pastCompetencyId,
+  // but because of label we store all in this format. may not the best solution but it works currently!
   const [selectedPastResult, setSelectedPastResult] = React.useState({});
   // temporary Competency typed value:
   const [inputtedPastResult, setInputtedPastResult] = React.useState({});
