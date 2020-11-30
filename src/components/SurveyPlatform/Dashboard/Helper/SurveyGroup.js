@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 import moment from 'moment';
 
-import Progress from '../../Common/Progress';
-import { useQuery } from '../../../hooks';
-import graphIcon from '../../../assets/images/graph-icon.svg';
+import Progress from '../../../Common/Progress';
+import { useQuery } from '../../../../hooks';
+import graphIcon from '../../../../assets/images/graph-icon.svg';
 
-import DataTable from './Helper/DataTable';
+import DataTable from './DataTable';
 
 const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations }) => {
   const [parsedQuery, , setQuery] = useQuery();
