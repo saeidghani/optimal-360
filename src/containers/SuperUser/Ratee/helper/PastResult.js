@@ -51,7 +51,7 @@ const PastResult = ({
 
     if (_pastResultOptions.length > 0) {
       options = (_pastResultOptions?.filter((each) => (
-          `${each.pastCompetencyId}${each.pastCompetencyName.toLowerCase()}${each.pastCompetencyYear}`
+          `${each.pastCompetencyId}${each?.pastCompetencyName?.toLowerCase()}${each.pastCompetencyYear}`
         ).includes(askingValue))
       ).map(({ pastCompetencyId, pastCompetencyName, pastCompetencyYear }) => ({
         value: `${pastCompetencyId} - ${pastCompetencyName} - ${pastCompetencyYear}`,

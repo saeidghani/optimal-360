@@ -75,7 +75,7 @@ const ReportContent = ({
   ]);
 
   const isLevel1Selected = (category) => {
-    const { values } = formRef.current;
+    const { values } = formRef.current || [];
     let selectedAll = true;
     Object.entries(values[category] || []).forEach(([key, value]) => {
       if (Object.values(value).includes(false)) {
