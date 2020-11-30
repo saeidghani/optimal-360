@@ -160,13 +160,13 @@ const ReportContent = ({
         {({ values, handleSubmit }) => (
           <Form onSubmit={handleSubmit}>
             <div
-              className="grid grid-flow-col grid-cols-2 md:grid-rows-1 report-content-page "
+              className="grid grid-flow-col grid-cols-2 md:grid-rows-1"
               style={{ gridTemplateRows: 'auto auto' }}
             >
               {values?.individualReport ? Object.entries(values).reverse().map(([category, val]) => (
                 <>
                   <div
-                    className="items-center bg-antgray-600 py-5 px-8.3 border-b border-t border-antgray-900"
+                    className="items-center bg-antgray-600 py-4 px-8.3 border-b border-t border-antgray-900 mt-1"
                   >
                     <div className="w-full" key={category}>
                       <Checkbox

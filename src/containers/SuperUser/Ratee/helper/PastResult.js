@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { useQuery } from '../../../../hooks';
+
 import Table from '../../../../components/Common/Table';
 import AutoComplete from '../../../../components/Common/AutoComplete';
 import Button from '../../../../components/Common/Button';
@@ -15,8 +17,10 @@ const PastResult = ({
                     }) => {
   const [parsedQuery] = useQuery();
 
-  const [selectedPastResult, setSelectedPastResult] = React.useState({}); // which Competency assigned new value
-  const [inputtedPastResult, setInputtedPastResult] = React.useState({}); // temporary Competency typing value
+  // which Competency assigned new value:
+  const [selectedPastResult, setSelectedPastResult] = React.useState({});
+  // temporary Competency typed value:
+  const [inputtedPastResult, setInputtedPastResult] = React.useState({});
 
   const surveyGroupId = parsedQuery?.surveyGroupId;
   const _pastResultOptions = pastResultOptions?.data || [];
@@ -37,9 +41,10 @@ const PastResult = ({
 
   const getOptions = (competencyId) => {
     let options;
-    const askingValue = inputtedPastResult[competencyId]?.replaceAll('-', '')
+    const askingValue = inputtedPastResult[competencyId]
+      ?.replaceAll('-', '')
       .replaceAll(' ', '')
-      .toLowerCase();
+      .toLowerCase(); // avoid this characters on searching
 
     if (_pastResultOptions.length > 0) {
       options = (_pastResultOptions?.filter((each) => (
@@ -56,17 +61,19 @@ const PastResult = ({
     return options;
   };
 
-  const getAutoCompleteValue = (competencyId, rowPastCompetencyId, rowPastCompetencyName, rowPastCompetencyYear) => {
-    const value = inputtedPastResult[competencyId] ||
-      (inputtedPastResult[competencyId] !== '' && (
-          selectedPastResult[competencyId] ||
-          (rowPastCompetencyId ? `${rowPastCompetencyId} - ${rowPastCompetencyName} - ${rowPastCompetencyYear}` : ''))
-      );
-    return value;
+  const getValue = (competencyId, rowPastCompetencyId, rowPastCompetencyName, rowPastCompetencyYear) => {
+    return inputtedPastResult[competencyId] || (
+      inputtedPastResult[competencyId] !== '' && (
+        selectedPastResult[competencyId] || (
+          rowPastCompetencyId ?
+            `${rowPastCompetencyId} - ${rowPastCompetencyName} - ${rowPastCompetencyYear}` :
+            ''
+        )
+      )
+    );
   };
 
   const handleSelect = (competencyId, item) => {
-    console.log(item);
     // delete its input
     const newInput = { ...inputtedPastResult };
     delete newInput[competencyId];
@@ -76,7 +83,6 @@ const PastResult = ({
   };
 
   const handleChange = (competencyId, textValue) => {
-    console.log(textValue?.toLowerCase());
     // // unSelect it
     const newSelect = { ...selectedPastResult };
     delete newSelect[competencyId];
@@ -90,7 +96,6 @@ const PastResult = ({
       competencyId: parseInt(competencyId, 10),
       pastCompetencyId: parseInt(label.split(' -')[0], 10),
     }));
-    console.log(selectedPastResults);
     setPastResult({ selectedPastResults, surveyGroupId });
   };
 
@@ -98,30 +103,34 @@ const PastResult = ({
     {
       key: 'competencyName',
       title: 'Current Competency',
-      width: 200,
+      width: 500,
+      render: (id, _, index) => (
+        <span>{index + 1}. {id}</span>
+      ),
     },
     {
       key: 'competencyId',
       title: 'Past Competency',
-      width: 200,
+      width: 500,
       render: (competencyId, {
         pastCompetencyId: rowPastCompetencyId,
         pastCompetencyName: rowPastCompetencyName,
         pastCompetencyYear: rowPastCompetencyYear,
       }) => (
-        <AutoComplete
-          size="middle"
-          loading={loading}
-          placeholder="Inspiring & Motivating Others"
-          options={getOptions(competencyId)}
-          onSelect={(item) => {
-            handleSelect(competencyId, item);
-          }}
-          onChange={(textValue) => {
-            handleChange(competencyId, textValue);
-          }}
-          value={getAutoCompleteValue(competencyId, rowPastCompetencyId, rowPastCompetencyName, rowPastCompetencyYear)}
-        />
+        <div className="autocomplete-container">
+          <AutoComplete
+            loading={loading}
+            placeholder="Inspiring & Motivating Others"
+            options={getOptions(competencyId)}
+            onSelect={(item) => {
+              handleSelect(competencyId, item);
+            }}
+            onChange={(textValue) => {
+              handleChange(competencyId, textValue);
+            }}
+            value={getValue(competencyId, rowPastCompetencyId, rowPastCompetencyName, rowPastCompetencyYear)}
+          />
+        </div>
       ),
     },
   ]);
@@ -130,7 +139,8 @@ const PastResult = ({
     <>
       <Table
         size="middle"
-        className="c-table-white-head  pt-0 bg-white"
+        className="c-table-white-head bg-white"
+        renderHeader={() => (<span style={{ marginTop: '-8px', display: 'block' }} />)}
         loading={loading}
         columns={columns}
         dataSource={pastResult?.data || []}
@@ -144,7 +154,7 @@ const PastResult = ({
         onClick={handleSubmit}
         text="Submit"
         textSize="16px"
-        className="ml-auto c-force-padding-y-px px-7 w-full sm:w-auto"
+        className="ml-auto c-force-padding-y-px px-7 w-full sm:w-auto mt-20"
       />
     </>
   );

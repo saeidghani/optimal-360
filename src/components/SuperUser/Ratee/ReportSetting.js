@@ -38,7 +38,7 @@ const ReportSetting = ({
   }
 
   return (
-    <div className="p-6 mt-5 bg-white rounded-lg shadow borderless-tab">
+    <div className="p-6 mt-5 bg-white rounded-lg shadow borderless-tab report-setting-page">
       <Tabs
         defaultActiveKey={currentTab}
         onChange={tabChangeCallback}
