@@ -15,15 +15,13 @@ const PastResult = ({
                       pastResultOptions,
                       pastResult,
                     }) => {
-  const [parsedQuery, query, setQuery] = useQuery();
+  const [parsedQuery] = useQuery();
   const [selectedPastResult, setSelectedPastResult] = React.useState({});
   const [inputtedPastResult, setInputtedPastResult] = React.useState({});
   const surveyGroupId = parsedQuery?.surveyGroupId;
-  const projectId = parsedQuery?.projectId;
 
   React.useEffect(() => {
-    const params = stringify({ q: parsedQuery.sq });
-    fetchPastResultOptions({ surveyGroupId, query: '' });
+    fetchPastResultOptions({ surveyGroupId });
   }, [
     fetchPastResultOptions,
     surveyGroupId,
@@ -35,11 +33,56 @@ const PastResult = ({
     fetchPastResult,
     surveyGroupId,
   ]);
+
   const _pastResultOptions = React.useMemo(
     () => (pastResultOptions?.data || []).map((item) => ({ ...item })),
     // eslint-disable-next-line
     [pastResultOptions.timeStamp],
   );
+
+  const getOptions = (competencyId) => {
+    const options = _pastResultOptions.length > 0
+      ? (
+        _pastResultOptions?.filter((each) => (`${each.pastCompetencyId}${each.pastCompetencyName.toLowerCase()}${each.pastCompetencyYear}`)
+          .includes(inputtedPastResult[competencyId]?.replaceAll('-', '').replaceAll(' ', '').toLowerCase()))
+      ).map(({ pastCompetencyId, pastCompetencyName, pastCompetencyYear }) => ({
+        value: `${pastCompetencyId} - ${pastCompetencyName} - ${pastCompetencyYear}`,
+        pastCompetencyId,
+        key: pastCompetencyId,
+      }))
+      : [{ label: 'no result found' }];
+    return options;
+  };
+
+  const getAutoCompleteValue = (competencyId, rowPastCompetencyId, rowPastCompetencyName, rowPastCompetencyYear) => {
+    const value = inputtedPastResult[competencyId] ||
+      (inputtedPastResult[competencyId] !== '' && (
+          selectedPastResult[competencyId] ||
+          (rowPastCompetencyId ? `${rowPastCompetencyId} - ${rowPastCompetencyName} - ${rowPastCompetencyYear}` : ''))
+      );
+    return value;
+  };
+
+  const handleSelect = (competencyId, item) => {
+    console.log(item);
+    // delete its input
+    const newInput = { ...inputtedPastResult };
+    delete newInput[competencyId];
+    setInputtedPastResult(newInput);
+    // select it
+    setSelectedPastResult({ ...selectedPastResult, [competencyId]: item.value });
+  };
+
+  const handleChange = (competencyId, textValue) => {
+    console.log(textValue?.toLowerCase());
+    // // unSelect it
+    const newSelect = { ...selectedPastResult };
+    delete newSelect[competencyId];
+    setSelectedPastResult(newSelect);
+    // set New Value
+    setInputtedPastResult({ ...inputtedPastResult, [competencyId]: textValue });
+  };
+
   const columns = React.useMemo(() => [
     {
       key: 'competencyName',
@@ -54,53 +97,21 @@ const PastResult = ({
         pastCompetencyId: rowPastCompetencyId,
         pastCompetencyName: rowPastCompetencyName,
         pastCompetencyYear: rowPastCompetencyYear,
-      }) => {
-        const options = _pastResultOptions.length > 0
-          ? (
-            _pastResultOptions?.filter((each) => (`${each.pastCompetencyId}${each.pastCompetencyName.toLowerCase()}${each.pastCompetencyYear}`)
-              .includes(inputtedPastResult[competencyId]?.replaceAll('-', '').replaceAll(' ', '').toLowerCase()))
-          ).map(({ pastCompetencyId, pastCompetencyName, pastCompetencyYear }) => ({
-            label: `${pastCompetencyId} - ${pastCompetencyName} - ${pastCompetencyYear}`,
-            value: `${pastCompetencyId} - ${pastCompetencyName} - ${pastCompetencyYear}`,
-            pastCompetencyId,
-            key: pastCompetencyId,
-          }))
-          : [{ label: 'no result found' }];
-
-        return (
-          <AutoComplete
-            size="middle"
-            loading={loading}
-            placeholder="Inspiring & Motivating Others"
-            options={options}
-            onSelect={(a) => {
-              console.log(a);
-              // delete its input
-              const newInput = { ...inputtedPastResult };
-              delete newInput[competencyId];
-              setInputtedPastResult(newInput);
-              // select it
-              setSelectedPastResult({ ...selectedPastResult, [competencyId]: a.label });
-            }}
-            onChange={(value) => {
-              console.log(value?.toLowerCase());
-              // // unSelect it
-              const newSelect = { ...selectedPastResult };
-              delete newSelect[competencyId];
-              setSelectedPastResult(newSelect);
-              // set New Value
-              setInputtedPastResult({ ...inputtedPastResult, [competencyId]: value });
-            }}
-            value={inputtedPastResult[competencyId] ||
-            (inputtedPastResult[competencyId] !== '' && (
-                selectedPastResult[competencyId] ||
-                (rowPastCompetencyId ? `${rowPastCompetencyId} - ${rowPastCompetencyName} - ${rowPastCompetencyYear}` : ''))
-            )
-            }
-          />
-        );
-      }
-      ,
+      }) => (
+        <AutoComplete
+          size="middle"
+          loading={loading}
+          placeholder="Inspiring & Motivating Others"
+          options={getOptions(competencyId)}
+          onSelect={(item) => {
+            handleSelect(competencyId, item);
+          }}
+          onChange={(textValue) => {
+            handleChange(competencyId, textValue);
+          }}
+          value={getAutoCompleteValue(competencyId, rowPastCompetencyId, rowPastCompetencyName, rowPastCompetencyYear)}
+        />
+      ),
     },
   ]);
 

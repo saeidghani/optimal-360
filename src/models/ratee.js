@@ -331,7 +331,7 @@ export default {
         dispatch.util.alert,
       );
     },
-    async fetchPastResultOptions({ surveyGroupId, query }) {
+    async fetchPastResultOptions({ surveyGroupId, query = '' }) {
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
