@@ -107,7 +107,7 @@ const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
                   value={values.department}
                   name="department"
                   labelText="Department"
-                  placeholder="IT"
+                  placeholder="Department"
                   wrapperClassName="mb-2"
                   errorMessage={touched.department && errors.department}
                 />
@@ -117,7 +117,7 @@ const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
                   value={values.jobDesignation}
                   name="jobDesignation"
                   labelText="Job Designation"
-                  placeholder="Executive"
+                  placeholder="Job Designation"
                   wrapperClassName="mb-2"
                   errorMessage={touched.jobDesignation && errors.jobDesignation}
                 />
