@@ -7,8 +7,8 @@ import Input from '../../Common/Input';
 import Checkbox from '../../Common/Checkbox';
 import Button from '../../Common/Button';
 
-import Shape from '../Helper/AnimatedShape';
-import AuthLayout from '../Helper/AuthLayout';
+import Shape from './Helper/AnimatedShape';
+import AuthLayout from './Helper/AuthLayout';
 import { dynamicMap } from '../../../routes/RouteMap';
 
 const Login = ({ login, loading }) => {

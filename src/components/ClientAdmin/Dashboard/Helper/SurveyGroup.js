@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import { useQuery } from '../../../hooks';
+import { useQuery } from '../../../../hooks';
 
-import ViewByButtons from './Helper/ViewByButtons';
-import OverallCompletion from './Helper/OverallCompletion';
-import RateCard from './Helper/RateCard';
-import DataTable from './Helper/DataTable';
+import ViewByButtons from './ViewByButtons';
+import OverallCompletion from './OverallCompletion';
+import RateCard from './RateCard';
+import DataTable from './DataTable';
 
 const SurveyGroup = ({
   loading,
