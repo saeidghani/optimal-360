@@ -43,6 +43,11 @@ const Ratee = (
     fetchReportSetting,
     setReportSetting,
     importClientCompetencyModel,
+    fetchPastResultOptions,
+    fetchPastResult,
+    setPastResult,
+    pastResultOptions,
+    pastResult,
   },
 ) => {
   const history = useHistory();
@@ -162,6 +167,11 @@ const Ratee = (
             fetchReportSetting={fetchReportSetting}
             setReportSetting={setReportSetting}
             importClientCompetencyModel={importClientCompetencyModel}
+            fetchPastResultOptions={fetchPastResultOptions}
+            fetchPastResult={fetchPastResult}
+            setPastResult={setPastResult}
+            pastResultOptions={pastResultOptions}
+            pastResult={pastResult}
           />
         </TabPane>
       </Tabs>
@@ -197,6 +207,11 @@ Ratee.propTypes = {
   fetchReportSetting: PropTypes.func.isRequired,
   setReportSetting: PropTypes.func.isRequired,
   importClientCompetencyModel: PropTypes.func.isRequired,
+  fetchPastResultOptions: PropTypes.func.isRequired,
+  fetchPastResult: PropTypes.func.isRequired,
+  setPastResult: PropTypes.func.isRequired,
+  pastResultOptions: PropTypes.shape({}),
+  pastResult: PropTypes.shape({}),
 };
 
 Ratee.defaultProps = {
@@ -208,6 +223,8 @@ Ratee.defaultProps = {
   groupReports: {},
   individualReports: {},
   reportSetting: {},
+  pastResultOptions: {},
+  pastResult: {},
 };
 
 export default Ratee;

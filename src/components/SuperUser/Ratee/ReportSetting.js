@@ -13,6 +13,11 @@ const ReportSetting = ({
                          fetchReportSetting,
                          setReportSetting,
                          importClientCompetencyModel,
+                         fetchPastResultOptions,
+                         fetchPastResult,
+                         setPastResult,
+                         pastResultOptions,
+                         pastResult,
                        }) => {
   const allTabs = [
     {
@@ -53,6 +58,11 @@ const ReportSetting = ({
         <TabPane tab={allTabs[1].title} key={allTabs[1].key}>
           <PastResult
             loading={loading}
+            fetchPastResultOptions={fetchPastResultOptions}
+            fetchPastResult={fetchPastResult}
+            setPastResult={setPastResult}
+            pastResultOptions={pastResultOptions}
+            pastResult={pastResult}
           />
         </TabPane>
       </Tabs>
@@ -66,10 +76,17 @@ ReportSetting.propTypes = {
   fetchReportSetting: PropTypes.func.isRequired,
   setReportSetting: PropTypes.func.isRequired,
   importClientCompetencyModel: PropTypes.func.isRequired,
+  fetchPastResultOptions: PropTypes.func.isRequired,
+  fetchPastResult: PropTypes.func.isRequired,
+  setPastResult: PropTypes.func.isRequired,
+  pastResultOptions: PropTypes.shape({}),
+  pastResult: PropTypes.shape({}),
 };
 
 ReportSetting.defaultProps = {
   reportSetting: {},
+  pastResultOptions: {},
+  pastResult: {},
 };
 
 export default ReportSetting;

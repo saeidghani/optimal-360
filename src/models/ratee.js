@@ -17,6 +17,8 @@ export default {
     staffForRater: '',
     raterGroups: '',
     reportSetting: '',
+    pastResultOptions: '',
+    pastResult: '',
   },
 
   effects: (dispatch) => ({
@@ -329,7 +331,41 @@ export default {
         dispatch.util.alert,
       );
     },
+    async fetchPastResultOptions({ surveyGroupId, query }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          // eslint-disable-next-line max-len
+          url: `/super-user/survey-groups/${surveyGroupId}/past-result-options${query}`,
+        });
 
+        await this.fetchPastResultOptions_reducer(res?.data);
+      }, dispatch.util.errorHandler);
+    },
+    async fetchPastResult({ surveyGroupId }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          // eslint-disable-next-line max-len
+          url: `/super-user/survey-groups/${surveyGroupId}/past-result`,
+        });
+
+        await this.fetchPastResult_reducer(res?.data);
+      }, dispatch.util.errorHandler);
+    },
+    async setPastResult({ surveyGroupId, reports }) {
+      return actionWapper(async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/past-result`,
+            data: { ...reports },
+          });
+
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert);
+    },
   }),
 
   reducers: {
@@ -380,6 +416,14 @@ export default {
     fetchReportSetting_reducer: (state, payload) => ({
       ...state,
       reportSetting: payload,
+    }),
+    fetchPastResultOptions_reducer: (state, payload) => ({
+      ...state,
+      pastResultOptions: payload,
+    }),
+    fetchPastResult_reducer: (state, payload) => ({
+      ...state,
+      pastResult: payload,
     }),
   },
 };

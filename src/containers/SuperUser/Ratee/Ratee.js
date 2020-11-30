@@ -114,6 +114,24 @@ class Ratee extends Component {
     return importClientCompetencyModel(query);
   };
 
+  fetchPastResultOptions = (query) => {
+    const { fetchPastResultOptions } = this.props;
+
+    return fetchPastResultOptions(query);
+  };
+
+  fetchPastResult = (query) => {
+    const { fetchPastResult } = this.props;
+
+    return fetchPastResult(query);
+  };
+
+  setPastResult = (query) => {
+    const { setPastResult } = this.props;
+
+    return setPastResult(query);
+  };
+
   render() {
     const {
       loading,
@@ -124,7 +142,9 @@ class Ratee extends Component {
       emailOptions,
       individualReports,
       groupReports,
-      reportSetting
+      reportSetting,
+      pastResultOptions,
+      pastResult,
     } = this.props;
 
     return (
@@ -156,6 +176,11 @@ class Ratee extends Component {
         setReportSetting={this.setReportSetting}
         reportSetting={reportSetting}
         importClientCompetencyModel={this.importClientCompetencyModel}
+        fetchPastResultOptions={this.fetchPastResultOptions}
+        fetchPastResult={this.fetchPastResult}
+        setPastResult={this.setPastResult}
+        pastResultOptions={pastResultOptions}
+        pastResult={pastResult}
       />
     );
   }
@@ -189,6 +214,11 @@ Ratee.propTypes = {
   setReportSetting: PropTypes.func.isRequired,
   reportSetting: PropTypes.shape({}),
   importClientCompetencyModel: PropTypes.func.isRequired,
+  pastResultOptions: PropTypes.shape({}),
+  pastResult: PropTypes.shape({}),
+  fetchPastResultOptions: PropTypes.func.isRequired,
+  fetchPastResult: PropTypes.func.isRequired,
+  setPastResult: PropTypes.func.isRequired,
 
 };
 
@@ -201,6 +231,8 @@ Ratee.defaultProps = {
   individualReports: {},
   groupReports: {},
   reportSetting: {},
+  pastResultOptions: {},
+  pastResult: {},
 };
 
 const mapStateToProps = (state) => ({
@@ -213,6 +245,8 @@ const mapStateToProps = (state) => ({
   individualReports: state.ratee?.individualReports || {},
   groupReports: state.ratee?.groupReports || {},
   reportSetting: state.ratee?.reportSetting || {},
+  pastResultOptions: state.ratee?.pastResultOptions || {},
+  pastResult: state.ratee?.pastResult || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -233,6 +267,9 @@ const mapDispatchToProps = (dispatch) => ({
   fetchReportSetting: dispatch.ratee.fetchReportSetting,
   setReportSetting: dispatch.ratee.setReportSetting,
   importClientCompetencyModel: dispatch.ratee.importClientCompetencyModel,
+  fetchPastResultOptions: dispatch.ratee.fetchPastResultOptions,
+  fetchPastResult: dispatch.ratee.fetchPastResult,
+  setPastResult: dispatch.ratee.setPastResult,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Ratee);
