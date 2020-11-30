@@ -34,16 +34,10 @@ const PastResult = ({
     surveyGroupId,
   ]);
 
-  const _pastResultOptions = React.useMemo(
-    () => (pastResultOptions?.data || []).map((item) => ({ ...item })),
-    // eslint-disable-next-line
-    [pastResultOptions.timeStamp],
-  );
-
   const getOptions = (competencyId) => {
-    const options = _pastResultOptions.length > 0
+    const options = pastResultOptions?.data || [].length > 0
       ? (
-        _pastResultOptions?.filter((each) => (`${each.pastCompetencyId}${each.pastCompetencyName.toLowerCase()}${each.pastCompetencyYear}`)
+        (pastResultOptions?.data || [])?.filter((each) => (`${each.pastCompetencyId}${each.pastCompetencyName.toLowerCase()}${each.pastCompetencyYear}`)
           .includes(inputtedPastResult[competencyId]?.replaceAll('-', '').replaceAll(' ', '').toLowerCase()))
       ).map(({ pastCompetencyId, pastCompetencyName, pastCompetencyYear }) => ({
         value: `${pastCompetencyId} - ${pastCompetencyName} - ${pastCompetencyYear}`,
