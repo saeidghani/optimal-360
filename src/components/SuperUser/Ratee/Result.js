@@ -1,9 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
-
+import { CloseOutlined } from '@ant-design/icons';
+import { Form, Formik } from 'formik';
 import { useHistory } from 'react-router-dom';
-import { useQuery } from '../../../hooks';
+
+import { dynamicMap } from '../../../routes/RouteMap';
+
+import { useQuery, stringify } from '../../../hooks/useQuery';
 
 import Table from '../../Common/Table';
 import Progress from '../../Common/Progress';
@@ -11,17 +15,15 @@ import Button from '../../Common/Button';
 import Modal from '../../Common/Modal';
 import Checkbox from '../../Common/Checkbox';
 import SearchBox from '../../Common/SearchBox';
-import { CloseOutlined } from '@ant-design/icons';
-import { Form, Formik } from 'formik';
 
 const Result = ({
-                  loading,
-                  fetchIndividualReports,
-                  fetchGroupReports,
-                  exportDemographicData,
-                  individualReports,
-                  groupReports,
-                }) => {
+  loading,
+  fetchIndividualReports,
+  fetchGroupReports,
+  exportDemographicData,
+  individualReports,
+  groupReports,
+}) => {
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
 
@@ -96,13 +98,15 @@ const Result = ({
           <TabPane tab="Group Report" key="group" />
         </Tabs>
         <div className="flex flex-row ">
-          {resultBy === 'individual' && (<SearchBox
-            className="text-xs"
-            placeholder="SEARCH"
-            loading={loading}
-            onSearch={(val) => setQuery({ q: val })}
-            onPressEnter={(e) => setQuery({ q: e.target.value })}
-          />)}
+          {resultBy === 'individual' && (
+            <SearchBox
+              className="text-xs"
+              placeholder="SEARCH"
+              loading={loading}
+              onSearch={(val) => setQuery({ q: val })}
+              onPressEnter={(e) => setQuery({ q: e.target.value })}
+            />
+          )}
           <Button
             size="middle"
             textSize="xs"
@@ -110,7 +114,15 @@ const Result = ({
             textClassName="mr-2"
             className="ml-3"
             type="gray"
-            onClick={() => history.push('/super-user/new-project/reports/group-reports')}
+            onClick={() => {
+              const path = dynamicMap.superUser.groupReports({ surveyGroupId });
+              const params = stringify({
+                projectId: parsedQuery?.projectId,
+                surveyGroupId,
+              });
+
+              history.push(`${path}${params}`);
+            }}
           />
         </div>
       </div>
@@ -155,7 +167,9 @@ const Result = ({
       ),
       width: 100,
       render: (_, { totalSubmissions, totalRaters }) => (
-        <div>{totalSubmissions}/{totalRaters}</div>
+        <div>
+          {totalSubmissions}/{totalRaters}
+        </div>
       ),
     },
     {
@@ -167,9 +181,7 @@ const Result = ({
         </div>
       ),
       width: 100,
-      render: (minMet) => (
-        <div className={`${minMet && 'opacity-50'}`}>Min. Met</div>
-      ),
+      render: (minMet) => <div className={`${minMet && 'opacity-50'}`}>Min. Met</div>,
     },
     {
       key: 'criticalCompetencyData',
@@ -206,7 +218,6 @@ const Result = ({
           ) : (
             <CloseOutlined className="text-base ml-2 text-red-500" />
           )}
-
         </div>
       ),
     },
@@ -221,11 +232,7 @@ const Result = ({
       width: 100,
       render: (reportAvailable) => (
         <div className="w-16 flex-inline items-center justify-start">
-          {reportAvailable ? (
-            <span>Yes</span>
-          ) : (
-            <span className="text-red">No</span>
-          )}
+          {reportAvailable ? <span>Yes</span> : <span className="text-red">No</span>}
         </div>
       ),
     },
@@ -273,8 +280,14 @@ const Result = ({
           sex: false,
         }}
         onSubmit={(values) => {
-          const fields = Object.entries(values).filter(([_, item]) => item === true).map((item) => item[0]);
-          exportDemographicData({ fields, surveyGroupId, rateeIds: selectedRows?.map((el) => el.rateeId) });
+          const fields = Object.entries(values)
+            .filter(([_, item]) => item === true)
+            .map((item) => item[0]);
+          exportDemographicData({
+            fields,
+            surveyGroupId,
+            rateeIds: selectedRows?.map((el) => el.rateeId),
+          });
           setVisible(false);
         }}
       >
@@ -356,7 +369,8 @@ const Result = ({
                     name="checked"
                     value="a44"
                     className="block mb-3"
-                    labelClass="text-sm">
+                    labelClass="text-sm"
+                  >
                     Job Level
                   </Checkbox>
                 </div>
@@ -393,7 +407,8 @@ const Result = ({
                     checked={values.highestEducation}
                     name="checked"
                     className="block mb-3"
-                    labelClass="text-sm">
+                    labelClass="text-sm"
+                  >
                     Highest education attained
                   </Checkbox>
                 </div>
@@ -409,7 +424,9 @@ const Result = ({
         onTableChange={({ sorter }) => sort(sorter)}
         loading={loading}
         columns={resultBy === 'individual' ? individualColumns : groupColumns}
-        dataSource={(resultBy === 'individual' ? individualReports?.data : groupReports?.data) || []}
+        dataSource={
+          (resultBy === 'individual' ? individualReports?.data : groupReports?.data) || []
+        }
         renderHeader={renderHeader}
         onPageSizeChange={(size) => {
           setQuery({ page_size: size, page_number: 1 });
@@ -426,11 +443,16 @@ const Result = ({
           });
         }}
         rowKey={resultBy === 'individual' ? 'rateeId' : 'id'}
-        selectedRowKeys={selectedRows?.map((el) => (resultBy === 'individual' ? el.rateeId : el.id))}
+        selectedRowKeys={selectedRows?.map((el) => {
+          return resultBy === 'individual' ? el.rateeId : el.id;
+        })}
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
         }}
-        totalRecordSize={(resultBy === 'individual' ? individualReports : groupReports)?.metaData?.pagination?.totalRecords}
+        totalRecordSize={
+          (resultBy === 'individual' ? individualReports : groupReports)?.metaData?.pagination
+            ?.totalRecords
+        }
       />
     </>
   );
@@ -442,19 +464,21 @@ Result.propTypes = {
   fetchGroupReports: PropTypes.func.isRequired,
   exportDemographicData: PropTypes.func.isRequired,
   individualReports: PropTypes.shape({
-    data: PropTypes.arrayOf(PropTypes.shape({
-      surveyGroupId: PropTypes.string,
-      rateeId: PropTypes.string,
-      rateeName: PropTypes.string,
-      minMet: PropTypes.bool,
-      totalRaters: PropTypes.string,
-      totalSubmissions: PropTypes.string,
-      totalQuestions: PropTypes.string,
-      totalAnswered: PropTypes.string,
-      criticalCompetencyData: false,
-      previosResults: PropTypes.bool,
-      reportAvailable: PropTypes.bool,
-    })),
+    data: PropTypes.arrayOf(
+      PropTypes.shape({
+        surveyGroupId: PropTypes.string,
+        rateeId: PropTypes.string,
+        rateeName: PropTypes.string,
+        minMet: PropTypes.bool,
+        totalRaters: PropTypes.string,
+        totalSubmissions: PropTypes.string,
+        totalQuestions: PropTypes.string,
+        totalAnswered: PropTypes.string,
+        criticalCompetencyData: false,
+        previosResults: PropTypes.bool,
+        reportAvailable: PropTypes.bool,
+      }),
+    ),
     metaData: PropTypes.shape({
       pagination: PropTypes.shape({
         pageNumber: PropTypes.string,
@@ -465,11 +489,13 @@ Result.propTypes = {
     timeStamp: PropTypes.number,
   }),
   groupReports: PropTypes.shape({
-    data: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number,
-      name: PropTypes.string,
-      reportAvailable: PropTypes.bool,
-    })),
+    data: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+        reportAvailable: PropTypes.bool,
+      }),
+    ),
     metaData: PropTypes.shape({
       pagination: PropTypes.shape({
         pageNumber: PropTypes.string,

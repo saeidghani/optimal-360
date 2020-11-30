@@ -177,6 +177,40 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
+    async importClusterBenchmark({ surveyGroupId, file }) {
+      // eslint-disable-next-line no-undef
+      const data = new FormData();
+      data.append('excel', file);
+
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/clusters-benchmark/import`,
+            data,
+          });
+
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
+    },
+
+    async exportClusterBenchmark(surveyGroupId) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/survey-groups/${surveyGroupId}/clusters-benchmark/export`,
+          responseType: 'blob',
+        });
+
+        dispatch.util.saveFile({ blob: res.data, filename: `cluster-benchmark-${surveyGroupId}` });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
     async fetchCompetencyBenchmarks(surveyGroupId) {
       return actionWapper(async () => {
         const res = await axios({
@@ -196,6 +230,43 @@ export default {
           method: 'post',
           url: `/super-user/survey-groups/${surveyGroupId}/competencies-benchmark`,
           data,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async importCompetencyBenchmark({ surveyGroupId, file }) {
+      // eslint-disable-next-line no-undef
+      const data = new FormData();
+      data.append('excel', file);
+
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/competencies-benchmark/import`,
+            data,
+          });
+
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
+    },
+
+    async exportCompetencyBenchmark(surveyGroupId) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/survey-groups/${surveyGroupId}/competencies-benchmark/export`,
+          responseType: 'blob',
+        });
+
+        dispatch.util.saveFile({
+          blob: res.data,
+          filename: `competency-benchmark-${surveyGroupId}`,
         });
 
         return res;

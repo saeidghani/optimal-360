@@ -1,11 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useHistory, useParams } from 'react-router-dom';
 
-import { useQuery } from '../../../hooks/useQuery';
+import { dynamicMap } from '../../../routes/RouteMap';
+
+import { useQuery, stringify } from '../../../hooks/useQuery';
 
 import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
+import ImportExcelButton from '../../Common/ImportExcelButton';
 import InputNumber from '../../Common/InputNumber';
 
 const GroupReports = ({
@@ -14,12 +18,17 @@ const GroupReports = ({
   competencyBenchmarks,
   fetchClusterBenchmarks,
   setClusterBenchmarks,
+  importClusterBenchmark,
+  exportClusterBenchmark,
   fetchCompetencyBenchmarks,
   setCompetencyBenchmarks,
+  importCompetencyBenchmark,
+  exportCompetencyBenchmark,
 }) => {
+  const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const { surveyGroupId } = parsedQuery;
+  const { surveyGroupId } = useParams();
 
   React.useEffect(() => {
     if (surveyGroupId) {
@@ -77,20 +86,33 @@ const GroupReports = ({
             textSize="xs"
             text="Export Excel File"
             textClassName="mr-2"
-            className="ml-3"
+            className="mr-3"
             type="gray"
             icon="FileExcelOutlined"
             iconPosition="right"
+            onClick={async () => {
+              try {
+                if (parsedQuery?.benchmarkType === 'competency') {
+                  await exportCompetencyBenchmark(surveyGroupId);
+                } else {
+                  await exportClusterBenchmark(surveyGroupId);
+                }
+              } catch (err) {}
+            }}
           />
-          <Button
-            size="middle"
-            textSize="xs"
-            text="Import Excel File"
-            textClassName="mr-2"
-            className="ml-3"
-            type="gray"
-            icon="FileExcelOutlined"
-            iconPosition="right"
+
+          <ImportExcelButton
+            beforeUpload={async (file) => {
+              try {
+                if (parsedQuery?.benchmarkType === 'competency') {
+                  await importCompetencyBenchmark({ surveyGroupId, file });
+                } else {
+                  await importClusterBenchmark({ surveyGroupId, file });
+                }
+              } catch (err) {}
+
+              return false;
+            }}
           />
         </div>
       </div>
@@ -103,7 +125,20 @@ const GroupReports = ({
   const renderFooter = React.useCallback(
     () => (
       <div className="flex justify-end">
-        <Button className="w-24.5 h-9.5" type="link" text="Cancel" />
+        <Button
+          onClick={() => {
+            const path = dynamicMap.superUser.ratersList();
+            const params = stringify({
+              projectId: parsedQuery?.projectId,
+              surveyGroupId,
+            });
+
+            history.replace(`${path}${params}`);
+          }}
+          className="w-24.5 h-9.5"
+          type="link"
+          text="Cancel"
+        />
 
         <Button
           disabled={
@@ -114,7 +149,7 @@ const GroupReports = ({
           onClick={async () => {
             const benchmarks = selectedRows.map((row) => ({
               id: row.id,
-              externalBenchmark: row.externalBenchmark,
+              externalBenchmark: parseFloat(row.externalBenchmark.toFixed(2)),
               surveyGroupId: row.surveyGroupId,
               ...(row.clusterId && { clusterId: row.clusterId }),
             }));
@@ -122,8 +157,12 @@ const GroupReports = ({
             try {
               if (parsedQuery?.benchmarkType === 'competency') {
                 await setCompetencyBenchmarks({ surveyGroupId, benchmarks });
+
+                setSelectedRows([]);
               } else {
                 await setClusterBenchmarks({ surveyGroupId, benchmarks });
+
+                setSelectedRows([]);
               }
             } catch (err) {}
           }}
@@ -158,6 +197,8 @@ const GroupReports = ({
 
     setTableData(newData);
   };
+
+  const tableDataStringified = JSON.stringify({ tableData });
 
   const columns = React.useMemo(
     () => [
@@ -196,7 +237,9 @@ const GroupReports = ({
         ),
       },
     ],
-    [JSON.stringify({ tableData }), selectedRows?.length, query],
+
+    // eslint-disable-next-line
+    [tableDataStringified, selectedRows?.length, query],
   );
 
   return (
@@ -222,8 +265,12 @@ GroupReports.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchClusterBenchmarks: PropTypes.func.isRequired,
   setClusterBenchmarks: PropTypes.func.isRequired,
+  importClusterBenchmark: PropTypes.func.isRequired,
+  exportClusterBenchmark: PropTypes.func.isRequired,
   fetchCompetencyBenchmarks: PropTypes.func.isRequired,
   setCompetencyBenchmarks: PropTypes.func.isRequired,
+  importCompetencyBenchmark: PropTypes.func.isRequired,
+  exportCompetencyBenchmark: PropTypes.func.isRequired,
   clusterBenchmarks: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
   }),
