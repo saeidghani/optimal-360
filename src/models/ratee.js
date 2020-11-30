@@ -353,12 +353,12 @@ export default {
         await this.fetchPastResult_reducer(res?.data);
       }, dispatch.util.errorHandler);
     },
-    async setPastResult({ surveyGroupId, reports }) {
+    async setPastResult({ surveyGroupId, selectedPastResults }) {
       return actionWapper(async () => {
           const res = await axios({
             method: 'post',
             url: `/super-user/survey-groups/${surveyGroupId}/past-result`,
-            data: { ...reports },
+            data: { selectedPastResults },
           });
 
           return res;

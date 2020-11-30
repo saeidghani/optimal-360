@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'formik';
 import { useQuery } from '../../../../hooks';
 import Table from '../../../../components/Common/Table';
 import AutoComplete from '../../../../components/Common/AutoComplete';
-import { dynamicMap } from '../../../../routes/RouteMap';
-import { stringify } from '../../../../hooks/useQuery';
+import Button from '../../../../components/Common/Button';
 
 const PastResult = ({
                       loading,
@@ -16,9 +14,12 @@ const PastResult = ({
                       pastResult,
                     }) => {
   const [parsedQuery] = useQuery();
-  const [selectedPastResult, setSelectedPastResult] = React.useState({});
-  const [inputtedPastResult, setInputtedPastResult] = React.useState({});
+
+  const [selectedPastResult, setSelectedPastResult] = React.useState({}); // which Competency assigned new value
+  const [inputtedPastResult, setInputtedPastResult] = React.useState({}); // temporary Competency typing value
+
   const surveyGroupId = parsedQuery?.surveyGroupId;
+  const _pastResultOptions = pastResultOptions?.data || [];
 
   React.useEffect(() => {
     fetchPastResultOptions({ surveyGroupId });
@@ -35,16 +36,23 @@ const PastResult = ({
   ]);
 
   const getOptions = (competencyId) => {
-    const options = pastResultOptions?.data || [].length > 0
-      ? (
-        (pastResultOptions?.data || [])?.filter((each) => (`${each.pastCompetencyId}${each.pastCompetencyName.toLowerCase()}${each.pastCompetencyYear}`)
-          .includes(inputtedPastResult[competencyId]?.replaceAll('-', '').replaceAll(' ', '').toLowerCase()))
+    let options;
+    const askingValue = inputtedPastResult[competencyId]?.replaceAll('-', '')
+      .replaceAll(' ', '')
+      .toLowerCase();
+
+    if (_pastResultOptions.length > 0) {
+      options = (_pastResultOptions?.filter((each) => (
+          `${each.pastCompetencyId}${each.pastCompetencyName.toLowerCase()}${each.pastCompetencyYear}`
+        ).includes(askingValue))
       ).map(({ pastCompetencyId, pastCompetencyName, pastCompetencyYear }) => ({
         value: `${pastCompetencyId} - ${pastCompetencyName} - ${pastCompetencyYear}`,
-        pastCompetencyId,
         key: pastCompetencyId,
-      }))
-      : [{ label: 'no result found' }];
+      }));
+    } else {
+      options = [{ label: 'no result found' }];
+    }
+
     return options;
   };
 
@@ -75,6 +83,15 @@ const PastResult = ({
     setSelectedPastResult(newSelect);
     // set New Value
     setInputtedPastResult({ ...inputtedPastResult, [competencyId]: textValue });
+  };
+
+  const handleSubmit = () => {
+    const selectedPastResults = Object.entries(selectedPastResult).map(([competencyId, label]) => ({
+      competencyId: parseInt(competencyId, 10),
+      pastCompetencyId: parseInt(label.split(' -')[0], 10),
+    }));
+    console.log(selectedPastResults);
+    setPastResult({ selectedPastResults, surveyGroupId });
   };
 
   const columns = React.useMemo(() => [
@@ -110,11 +127,10 @@ const PastResult = ({
   ]);
 
   return (
-    <div>
-
+    <>
       <Table
         size="middle"
-        className="c-table-white-head p-6 mt-5 bg-white rounded-lg shadow"
+        className="c-table-white-head  pt-0 bg-white"
         loading={loading}
         columns={columns}
         dataSource={pastResult?.data || []}
@@ -123,15 +139,14 @@ const PastResult = ({
         pagination={false}
       />
 
-      <button onClick={() => {
-        console.log('pastResultOptions', pastResultOptions);
-        console.log('inputtedPastResult', inputtedPastResult);
-        console.log('selectedPastResult', selectedPastResult);
-      }}
-      >
-        aaaaa
-      </button>
-    </div>
+      <Button
+        loading={loading}
+        onClick={handleSubmit}
+        text="Submit"
+        textSize="16px"
+        className="ml-auto c-force-padding-y-px px-7 w-full sm:w-auto"
+      />
+    </>
   );
 };
 
