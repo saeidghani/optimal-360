@@ -151,7 +151,6 @@ const ReportContent = ({
               newObj[key] = { ...newObj[key], ...val2 };
             });
           });
-          console.log(newObj);
           setReportSetting({
             reports: values,
             surveyGroupId,

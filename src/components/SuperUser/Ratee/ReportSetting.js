@@ -33,7 +33,7 @@ const ReportSetting = ({
   }
 
   return (
-    <div className="p-6 mt-5 bg-white rounded-lg shadow borderless-tab min-h-screen">
+    <div className="p-6 mt-5 bg-white rounded-lg shadow borderless-tab">
       <Tabs
         defaultActiveKey={currentTab}
         onChange={tabChangeCallback}
