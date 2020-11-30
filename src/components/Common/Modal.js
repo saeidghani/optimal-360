@@ -19,6 +19,7 @@ const _Modal = ({
   okText,
   cancelText,
   width,
+  closable,
   ...props
 }) => (
   <Modal
@@ -27,7 +28,7 @@ const _Modal = ({
     centered
     title={title}
     visible={visible}
-    closable={false}
+    closable={closable}
     onCancel={handleCancel}
     width={width}
     footer={
@@ -58,6 +59,7 @@ const _Modal = ({
 
 _Modal.propTypes = {
   visible: PropTypes.bool,
+  closable: PropTypes.bool,
   title: PropTypes.string,
   handleCancel: PropTypes.func.isRequired,
   handleOk: PropTypes.func.isRequired,
@@ -75,6 +77,7 @@ _Modal.propTypes = {
 
 _Modal.defaultProps = {
   visible: false,
+  closable: false,
   children: '',
   footer: '',
   title: '',

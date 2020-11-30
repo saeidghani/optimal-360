@@ -3,6 +3,7 @@ import { Tabs } from 'antd';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { FileTextOutlined, CheckOutlined } from '@ant-design/icons';
+import Cookies from 'js-cookie';
 
 import Layout from '../../Common/SurveyPlatformLayout';
 import Modal from '../../Common/Modal';
@@ -11,7 +12,7 @@ import Dropdown from '../../Common/Dropdown';
 import { useQuery } from '../../../hooks';
 import { dynamicMap } from '../../../routes/RouteMap';
 
-import SurveyGroup from './SurveyGroup';
+import SurveyGroup from './Helper/SurveyGroup';
 import Welcome from './Helper/Welcome';
 
 const Dashboard = ({
@@ -27,12 +28,23 @@ const Dashboard = ({
   const [submitModalVisible, setSubmitModalVisible] = React.useState(false);
   const [thankYouModalVisible, setThankYouModalVisible] = React.useState(false);
   const [welcomeModalVisible, setWelcomeModalVisible] = React.useState(false);
+  const [isNotFirstTimeVisit, setIsNotFirstTimeVisit] = React.useState(false);
 
   const history = useHistory();
   const [parsedQuery, , setQuery] = useQuery();
   const { projectId, surveyGroupId, surveyMode } = parsedQuery || {};
 
   const { TabPane } = Tabs;
+
+  useEffect(() => {
+    const notFirstTimeVisit = Cookies.get('notFirstTimeVisit');
+    if (notFirstTimeVisit) {
+      setIsNotFirstTimeVisit(true);
+    }
+    return () => {
+      if (!notFirstTimeVisit) Cookies.set('notFirstTimeVisit', true);
+    };
+  }, []);
 
   useEffect(() => {
     fetchProjects('');
@@ -51,7 +63,8 @@ const Dashboard = ({
   React.useEffect(() => {
     if (!projectId && projectsList?.length > 0) {
       setQuery({ projectId: projectsList[0]?.value });
-      setWelcomeModalVisible(true);
+      const notFirstTimeVisit = Cookies.get('notFirstTimeVisit');
+      if (!notFirstTimeVisit) setWelcomeModalVisible(true);
     }
   }, [projectId, projectsList]);
 
@@ -78,7 +91,7 @@ const Dashboard = ({
   const onTabChange = (key) => {
     setQuery({ surveyGroupId: key, viewBy: '', page_number: '', page_size: '' });
     fetchInfo({ surveyGroupId: key });
-    setWelcomeModalVisible(true);
+    if (!isNotFirstTimeVisit) setWelcomeModalVisible(true);
   };
 
   const handleContinue = () => {
@@ -144,10 +157,10 @@ const Dashboard = ({
         visible={welcomeModalVisible}
         handleCancel={() => setWelcomeModalVisible(false)}
         handleOk={handleWelcomeModalOk}
-        okText="Next"
+        okText=""
         width={1220}
-        closable={false}
-        className="welcome-modal relative"
+        closable
+        className="relative"
         footerClassName=""
         okButtonProps={{ className: 'px-6' }}
       >
