@@ -16,7 +16,7 @@ const superUser = {
   surveyQuestions: 'new-project/survey-questions',
   report: 'new-project/report',
 
-  groupReports: 'new-project/reports/group-reports',
+  groupReports: 'new-project/reports/:surveyGroupId/group-reports',
 
   addRatee: 'participants/ratee/add',
   editRatee: 'participants/ratee/add/edit',

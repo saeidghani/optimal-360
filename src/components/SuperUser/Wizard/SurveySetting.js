@@ -151,6 +151,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
         individual: !!surveyModeInUserDashboard?.individual,
         ratingGroup: !!surveyModeInUserDashboard?.ratingGroup,
         allRatees: !!surveyModeInUserDashboard?.allRatees,
+        ...(surveyModeInUserDashboard.id && { id: surveyModeInUserDashboard.id }),
       },
     };
 
