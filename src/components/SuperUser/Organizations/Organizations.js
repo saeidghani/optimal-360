@@ -120,7 +120,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
       },
     ],
     // eslint-disable-next-line
-    [],
+    [parsedQuery?.sort],
   );
 
   const sort = (sorter) => {

@@ -78,7 +78,7 @@ const Models = ({
           <div className="flex items-center">
             <Button
               className="flex items-center mr-3.5"
-              text="Export Exel File"
+              text="Export Excel File"
               icon="FileExcelOutlined"
               size="middle"
               textSize="xs"

@@ -27,7 +27,7 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
 
   React.useEffect(() => {
     fetchSurveyGroups({ projectId, query });
-  }, [query, projectId, fetchSurveyGroups]);
+  }, [projectId, fetchSurveyGroups]);
 
   const renderHeader = React.useCallback(
     () => {
@@ -115,12 +115,17 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
 
   const columns = React.useMemo(
     () => [
-      { key: 'id', title: 'ID', sorter: true, sortOrder: getSortOrder('id') },
+      {
+        key: 'id',
+        title: 'ID',
+        sorter: (a, b) => a.id - b.id,
+        sortOrder: getSortOrder('id'),
+      },
       {
         key: 'name',
         title: 'Survey Group',
-        render: (name, { project, id: surveyGroupId, status }) => {
-          return status !== 'inactive' ? (
+        render: (name, { project, id: surveyGroupId, stepsStatus }) => {
+          return stepsStatus ? (
             <Button
               className="pl-0"
               onClick={() => {
@@ -139,9 +144,11 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
               text={name}
               textClassName="underline text-primary-500"
             />
-          ) : name;
+          ) : (
+            name
+          );
         },
-        sorter: true,
+        sorter: (a, b) => a.name > b.name,
         sortOrder: getSortOrder('name'),
       },
       {
@@ -171,7 +178,11 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
           return status === 'inactive' ? (
             <Button
               onClick={() => {
-                const params = stringify({ surveyGroupId, projectId: project.id });
+                const params = stringify({
+                  surveyGroupId,
+                  projectId: project.id,
+                  wizardEditMode: true,
+                });
                 const path = `${dynamicMap.superUser.surveySettings()}${params}`;
 
                 history.push(path);
@@ -186,7 +197,7 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
       },
     ],
     // eslint-disable-next-line
-    [surveyGroups.timeStamp],
+    [surveyGroups.timeStamp, parsedQuery?.sort],
   );
 
   const sort = (sorter) => {
@@ -195,15 +206,6 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
     const newItem = `${order}${sorter.columnKey}`;
 
     setQuery({ sort: newItem });
-  };
-
-  const sortLocally = (data) => {
-    const SortBy = parsedQuery?.sort?.substring(1);
-    if (SortBy) {
-      const sortOrder = parsedQuery.sort[0] === '+' ? 1 : -1;
-      return data.sort((a, b) => (a[SortBy] > b[SortBy] ? sortOrder : -sortOrder));
-    }
-    return data;
   };
 
   return (
@@ -220,16 +222,11 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
         selectedRowKeys={selectedRows?.map((el) => el.id.toString())}
         loading={loading}
         columns={columns}
-        dataSource={(surveyGroups?.data && sortLocally(surveyGroups?.data)) || []}
+        dataSource={surveyGroups?.data || []}
         renderHeader={renderHeader}
         pagination={false}
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
-        }}
-        rowClassName={({ deleted }) => {
-          if (deleted) {
-            return 'bg-antgray-100 bg-opacity-10 td-checkbox-visibility-0';
-          }
         }}
       />
     </MainLayout>

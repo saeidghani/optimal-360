@@ -55,7 +55,11 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
       <ChangeSurveyGroupModal
         handleOk={() => {
           const path = dynamicMap.superUser.surveySettings();
-          const params = stringify({ projectId, surveyGroupId: selectedSurveyGroupKey });
+          const params = stringify({
+            projectId,
+            surveyGroupId: selectedSurveyGroupKey,
+            wizardEditMode: parsedQuery?.wizardEditMode,
+          });
 
           history.push(`${path}${params}`);
         }}
@@ -68,16 +72,22 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
       />
 
       <div className="bg-white grid grid-cols-12 pl-15">
-        <Menu
-          onClick={(key) => {
-            setSurveyGroupModal(true);
-            setSelectedSurveyGroupKey(key);
-          }}
-          items={surveyGroups?.data}
-          className="col-span-2"
-        />
+        {!parsedQuery?.wizardEditMode ? (
+          <Menu
+            onClick={(key) => {
+              setSurveyGroupModal(true);
+              setSelectedSurveyGroupKey(key);
+            }}
+            items={surveyGroups?.data}
+            className="col-span-2"
+          />
+        ) : null}
 
-        <div className="px-6 py-5 col-start-3 col-span-10  ">
+        <div
+          className={`px-6 py-5 col-span-10 ${
+            parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
+          } `}
+        >
           <Steps currentPosition={2} />
 
           <Formik
@@ -140,6 +150,7 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
                         const params = stringify({
                           projectId: parsedQuery?.projectId,
                           surveyGroupId: parsedQuery?.surveyGroupId,
+                          wizardEditMode: parsedQuery?.wizardEditMode,
                         });
 
                         const path = dynamicMap.superUser.emailSettings();

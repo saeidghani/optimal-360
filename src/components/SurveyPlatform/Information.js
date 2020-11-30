@@ -140,7 +140,7 @@ const Information = ({ loading, fetchProfile, updateProfile, profile }) => {
         The information on this page is optional for you to fill;
       </p>
       <p className="text-gray-500 mt-8 text-base text-body opacity-75 font-normal leading-6">
-        information from this page would help us in research purposes where no individual
+        Information from this page would help us in research purposes where no individual
         information will be identified nor disclosed. We highly encourage your participation in our
         research.
       </p>

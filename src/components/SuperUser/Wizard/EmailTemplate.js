@@ -64,13 +64,6 @@ const EmailTemplate = ({ loading }) => {
         return errors.push('table cell cannot be empty');
       }
 
-      console.log(
-        cell.innerText,
-        cell.innerText.trim().replaceAll(' ', ''),
-        cell.classList.contains('date-td'),
-        moment(cell.innerText.trim().replaceAll(' ', ''), 'DD/MM/YYYY', true).isValid(),
-      );
-
       if (
         cell.classList.contains('date-td') &&
         !moment(cell.innerText.trim().replaceAll(' ', ''), 'DD/MM/YYYY', true).isValid()
@@ -105,7 +98,7 @@ const EmailTemplate = ({ loading }) => {
         <p className="text-body text-xl mb-6">{pageTitle}</p>
 
         <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row">
+          <div className="inline-flex flex-row flex-wrap">
             <Button
               onClick={() => addTag('PROJECT_NAME')}
               size="middle"

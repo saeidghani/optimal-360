@@ -321,6 +321,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
           const params = stringify({
             projectId: parsedQuery.projectId,
             surveyGroupId: selectedSurveyGroupKey,
+            wizardEditMode: parsedQuery?.wizardEditMode,
           });
 
           history.push(`${path}${params}`);
@@ -367,16 +368,22 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
       />
 
       <div className="bg-white grid grid-cols-12 pl-15">
-        <Menu
-          onClick={(key) => {
-            setSurveyGroupModal(true);
-            setSelectedSurveyGroupKey(key);
-          }}
-          items={surveyGroups?.data}
-          className="col-span-2"
-        />
+        {!parsedQuery?.wizardEditMode ? (
+          <Menu
+            onClick={(key) => {
+              setSurveyGroupModal(true);
+              setSelectedSurveyGroupKey(key);
+            }}
+            items={surveyGroups?.data}
+            className="col-span-2"
+          />
+        ) : null}
 
-        <div className="px-6 py-5 col-start-3 col-span-10  ">
+        <div
+          className={`px-6 py-5 col-span-10 ${
+            parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
+          } `}
+        >
           <Steps currentPosition={3} />
 
           <Formik
@@ -387,12 +394,15 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
             onSubmit={async (values) => {
               try {
                 const { projectId } = parsedQuery;
-                const params = stringify({ projectId, surveyGroupId });
+                const params = stringify({
+                  projectId,
+                  surveyGroupId,
+                });
 
                 await setSurveyQuestions({ ...values, surveyGroupId });
                 setPersistData('');
 
-                const path = dynamicMap.superUser.report();
+                const path = dynamicMap.superUser.ratersList();
 
                 history.push(`${path}${params}`);
               } catch (error) {}
@@ -400,8 +410,6 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
           >
             {({ values, errors, touched, handleSubmit }) => (
               <Form className="pr-28" onSubmit={handleSubmit}>
-                <pre>{console.log({ values })}</pre>
-
                 <h4 className="text-secondary text-lg mb-8 mt-17">Rating Scale</h4>
 
                 {values.ratingScales.map((row, i) => (
@@ -558,6 +566,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
                       const params = stringify({
                         projectId: parsedQuery?.projectId,
                         surveyGroupId: parsedQuery?.surveyGroupId,
+                        wizardEditMode: parsedQuery?.wizardEditMode,
                       });
 
                       const path = dynamicMap.superUser.surveyIntro();

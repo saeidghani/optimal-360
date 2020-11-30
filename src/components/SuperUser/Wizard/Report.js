@@ -120,10 +120,14 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
               try {
                 await setReports({ surveyGroupId, ...values });
 
-                const path = dynamicMap.superUser.addRatee();
-
-                history.push(path);
-              } catch (error) {}
+                const path = dynamicMap.superUser.ratersList();
+                const params = stringify({
+                  projectId: parsedQuery.projectId,
+                  surveyGroupId,
+                });
+                history.push(`${path}${params}`);
+              } catch (error) {
+              }
             }}
           >
             {({ values, handleSubmit }) => (
@@ -147,7 +151,8 @@ const Report = ({ reports, fetchReports, setReports, loading }) => {
                 </div>
 
                 <div className="grid grid-cols-12 mt-3">
-                  <div className="col-span-12 flex flex-row items-center bg-antgray-600 py-5 px-8.3 border-b border-antgray-900">
+                  <div
+                    className="col-span-12 flex flex-row items-center bg-antgray-600 py-5 px-8.3 border-b border-antgray-900">
                     <Checkbox
                       className="flex flex-row items-center"
                       onChange={(value) => {
