@@ -3,7 +3,7 @@ import React from 'react';
 import SuccessIcon from '../../../assets/images/success-purple.svg';
 
 import Button from '../../Common/Button';
-import AuthLayout from '../Helper/AuthLayout';
+import AuthLayout from './Helper/AuthLayout';
 import { dynamicMap } from '../../../routes/RouteMap';
 
 const Success = () => (

@@ -25,32 +25,14 @@ class Dashboard extends Component {
     return fetchRelations(surveyGroupId);
   };
 
-  fetchQuestions = async (surveyGroupId) => {
-    const { fetchQuestions } = this.props;
+  submitResponses = async (surveyGroupId) => {
+    const { submitResponses } = this.props;
 
-    return fetchQuestions(surveyGroupId);
-  };
-
-  postQuestionResponses = async (data) => {
-    const { postQuestionResponses } = this.props;
-
-    return postQuestionResponses(data);
-  };
-
-  fetchFeedbacks = async (surveyGroupId) => {
-    const { fetchFeedbacks } = this.props;
-
-    return fetchFeedbacks(surveyGroupId);
-  };
-
-  postFeedbackResponses = async (data) => {
-    const { postFeedbackResponses } = this.props;
-
-    return postFeedbackResponses(data);
+    return submitResponses(surveyGroupId);
   };
 
   render() {
-    const { loading, projects, info, relations, questions, feedbacks } = this.props;
+    const { loading, projects, info, relations } = this.props;
 
     return (
       <Layout
@@ -58,15 +40,10 @@ class Dashboard extends Component {
         fetchProjects={this.fetchProjects}
         fetchInfo={this.fetchInfo}
         fetchRelations={this.fetchRelations}
-        fetchQuestions={this.fetchQuestions}
-        fetchFeedbacks={this.fetchFeedbacks}
-        postQuestionResponses={this.postQuestionResponses}
-        postFeedbackResponses={this.postFeedbackResponses}
+        submitResponses={this.submitResponses}
         projects={projects}
         info={info}
         relations={relations}
-        questions={questions}
-        feedbacks={feedbacks}
       />
     );
   }
@@ -77,23 +54,16 @@ Dashboard.propTypes = {
   fetchProjects: PropTypes.func.isRequired,
   fetchInfo: PropTypes.func.isRequired,
   fetchRelations: PropTypes.func.isRequired,
-  fetchQuestions: PropTypes.func.isRequired,
-  fetchFeedbacks: PropTypes.func.isRequired,
-  postQuestionResponses: PropTypes.func.isRequired,
-  postFeedbackResponses: PropTypes.func.isRequired,
+  submitResponses: PropTypes.func.isRequired,
   projects: PropTypes.shape({}),
   info: PropTypes.shape({}),
   relations: PropTypes.shape({}),
-  questions: PropTypes.shape({}),
-  feedbacks: PropTypes.shape({}),
 };
 
 Dashboard.defaultProps = {
   projects: {},
   info: {},
   relations: {},
-  questions: {},
-  feedbacks: {},
 };
 
 const mapStateToProps = (state) => ({
@@ -101,18 +71,13 @@ const mapStateToProps = (state) => ({
   projects: state.surveyPlatform?.projects || {},
   info: state.surveyPlatform?.info || {},
   relations: state.surveyPlatform?.relations || {},
-  questions: state.surveyPlatform?.questions || {},
-  feedbacks: state.surveyPlatform?.feedbacks || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchProjects: dispatch.surveyPlatform?.fetchProjects,
   fetchInfo: dispatch.surveyPlatform?.fetchInfo,
   fetchRelations: dispatch.surveyPlatform?.fetchRelations,
-  fetchQuestions: dispatch.surveyPlatform?.fetchQuestions,
-  fetchFeedbacks: dispatch.surveyPlatform?.fetchFeedbacks,
-  postQuestionResponses: dispatch.surveyPlatform?.postQuestionResponses,
-  postFeedbackResponses: dispatch.surveyPlatform?.postFeedbackResponses,
+  submitResponses: dispatch.surveyPlatform?.submitResponses,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

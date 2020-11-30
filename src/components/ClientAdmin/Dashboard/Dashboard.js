@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Dropdown from '../../Common/Dropdown';
 import { useQuery } from '../../../hooks';
 
-import Layout from './Helper/Layout';
+import ClientAdminLayout from '../../Common/ClientAdminLayout';
 import SurveyGroup from './SurveyGroup';
 
 const Dashboard = ({
@@ -63,7 +63,7 @@ const Dashboard = ({
   };
 
   return (
-    <Layout>
+    <ClientAdminLayout>
       <div className="grid grid-cols-12 mb-10 mt-8">
         <div className="col-start-1 col-span-6 text-base text-body mb-3">Select Project</div>
         <Dropdown
@@ -95,7 +95,7 @@ const Dashboard = ({
           </TabPane>
         ))}
       </Tabs>
-    </Layout>
+    </ClientAdminLayout>
   );
 };
 

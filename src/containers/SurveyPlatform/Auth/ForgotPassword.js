@@ -40,7 +40,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  forgotPassword: dispatch.surveyPlatform?.auth.forgotPassword,
+  forgotPassword: dispatch.surveyPlatform?.forgotPassword,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassword);

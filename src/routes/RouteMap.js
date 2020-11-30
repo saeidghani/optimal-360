@@ -49,20 +49,17 @@ const surveyPlatform = {
   login: 'login',
   forgotPassword: 'forgot-password',
 
-  welcome: 'welcome',
   information: 'information',
   referenceGuide: 'reference-guide',
   dashboard: 'dashboard',
 
-  allRateesList: 'managers/all-ratees',
-  individualList: 'managers/individual',
-  rateeGroupList: 'managers/ratee-group',
-  allRateesQuestions: 'managers/all-ratees/questions',
-  individualQuestions: 'managers/individual/questions',
-  rateeGroupQuestions: 'managers/ratee-group/questions',
-  rateeGroupQuestions2: 'managers/ratee-group/questions/:id',
+  allRateesQuestions: 'all-ratees/surveyGroup/:surveyGroupId/questions/:questionNumber',
+  individualQuestions: 'individual/surveyGroup/:surveyGroupId/questions/:questionNumber',
+  rateeGroupQuestions: 'ratee-group/surveyGroup/:surveyGroupId/questions/:questionNumber',
 
-  ratersDetails: 'rater-details',
+  allRateesFeedbacks: 'allRatees/surveyGroup/:surveyGroupId/feedbacks/:feedbackNumber',
+  individualFeedbacks: 'individual/surveyGroup/:surveyGroupId/feedbacks/:feedbackNumber',
+  rateeGroupFeedbacks: 'rateeGroup/surveyGroup/:surveyGroupId/feedbacks/:feedbackNumber',
 };
 
 const ref = { ...{ superUser }, ...{ clientAdmin }, ...{ surveyPlatform } };
