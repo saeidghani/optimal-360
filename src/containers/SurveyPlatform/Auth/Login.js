@@ -14,7 +14,7 @@ class _Login extends Component {
 
     const { prevPath } = parse(window.location.search);
 
-    const newPath = prevPath || '/survey-platform/welcome';
+    const newPath = prevPath || '/survey-platform/dashboard';
 
     await login({ username: email, password, rememberMe });
 
@@ -38,7 +38,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  login: dispatch.auth.login,
+  login: dispatch.surveyPlatform?.login,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(_Login);

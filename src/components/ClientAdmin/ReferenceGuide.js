@@ -6,7 +6,7 @@ import Button from '../Common/Button';
 
 import { dynamicMap } from '../../routes/RouteMap';
 
-import Layout from './Dashboard/Helper/Layout';
+import ClientAdminLayout from '../Common/ClientAdminLayout';
 
 const ReferenceGuide = () => {
   const ReferenceGuideCards = [
@@ -84,7 +84,7 @@ const ReferenceGuide = () => {
   ];
 
   return (
-    <Layout heading="Reference Guide">
+    <ClientAdminLayout heading="Reference Guide">
       <span className="mt-10 text-primary-500 text-base font-semibold">Reference Guide</span>
       <p className="text-antgray-100 mt-4">
         You have been nominated in the multi-rater feedback project: 360-feedback survey. You have
@@ -226,7 +226,7 @@ const ReferenceGuide = () => {
           href={dynamicMap.clientAdmin.dashboard()}
         />
       </div>
-    </Layout>
+    </ClientAdminLayout>
   );
 };
 
