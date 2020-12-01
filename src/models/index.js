@@ -6,3 +6,4 @@ export { default as bank } from './bank'; // eslint-disable-line
 export { default as wizard } from './wizard'; // eslint-disable-line
 export { default as ratee } from './ratee'; // eslint-disable-line
 export { default as clientAdmin } from './clientAdmin'; // eslint-disable-line
+export { default as surveyPlatform } from './surveyPlatform'; // eslint-disable-line

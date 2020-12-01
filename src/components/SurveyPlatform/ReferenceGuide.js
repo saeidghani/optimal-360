@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { QuestionOutlined, SaveOutlined } from '@ant-design/icons';
 
-import Layout from './Helper/Layout';
+import Layout from '../Common/SurveyPlatformLayout';
 
 import Button from '../Common/Button';
 import Table from '../Common/Table';
