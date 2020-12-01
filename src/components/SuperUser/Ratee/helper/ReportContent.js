@@ -162,7 +162,7 @@ const ReportContent = ({
             className="grid grid-flow-col grid-cols-2 md:grid-rows-1"
             style={{ gridTemplateRows: 'auto auto' }}
           >
-            {values?.individualReport ? Object.entries(values).reverse().map(([category, val]) => (
+            {values?.individualReport ? Object.entries(values).reverse().map(([category, val], index) => (
               <>
                 <div
                   className="items-center bg-antgray-600 py-4 px-8.3 border-b border-t border-antgray-900 mt-1"
@@ -180,7 +180,7 @@ const ReportContent = ({
                   </div>
                 </div>
 
-                <div className="flex">
+                <div className={`flex ${index === 0 && 'border-r border-solid border-gray-50'}`}>
                   <div className="flex flex-col" key={category}>
                     {Object.entries(values[category]).map(([_title, fields]) => (
                         <div key={_title} className={`checkbox-group-wrapper ${category === 'groupReport' && 'ml-0'}`}>
@@ -215,7 +215,7 @@ const ReportContent = ({
             )) : <Spin className="block m-auto" />}
 
           </div>
-          <Divider />
+          <Divider className="mt-0" />
           <div className="flex justify-end">
             <ImportExcelButton
               type="primary"
