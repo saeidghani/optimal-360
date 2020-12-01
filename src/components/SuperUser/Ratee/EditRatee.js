@@ -56,7 +56,7 @@ const EditRatee = ({
   const handleClickNextStep = useCallback(async () => {
       const competencyIds = selectedRows.map((item) => item.competencyId);
       await addMissionCriticalToRatee({ surveyGroupId, rateeId, competencyIds });
-      const params = stringify({ surveyGroupId, rateeId });
+      const params = stringify({ surveyGroupId, rateeId, projectId });
       const path = `${dynamicMap.superUser.raterSelection()}${params}`;
       history.push(path);
     }, [selectedRows],
@@ -67,18 +67,20 @@ const EditRatee = ({
       hasBreadCrumb
       title="Super User"
       titleClass="mb-6 mt-3"
-      contentClass="py-6"
+      contentClass="pt-6"
       headerClassName="pl-21"
       childrenPadding={false}
     >
       <Loading visible={loading} />
       <div className="bg-white p-6 grid grid-cols-12  min-h-full">
         <div className="px-6 py-5 col-start-2 col-span-10">
-          <Steps className="block" steps={['Ratee Details', 'Rater Selection']} currentPosition={0} />
+          <div className="w-2/6">
+            <Steps steps={['Ratee Details', 'Rater Selection']} currentPosition={0} />
+          </div>
           <Table
             size="middle"
             renderHeader={renderHeader}
-            className="p-6 mt-5 bg-white rounded-lg"
+            className="p-6 mt-5 bg-white rounded-lg max-w-screen-xl"
             loading={loading}
             columns={columns}
             dataSource={rateeMissionCriticals}
@@ -89,7 +91,7 @@ const EditRatee = ({
             }}
             pagination={false}
           />
-          <div className="pt-23.5 pb-22 flex justify-end">
+          <div className="pt-23.5 pb-22 flex justify-end max-w-screen-xl">
             <Button
               className="w-24.5 h-9.5"
               type="link"
