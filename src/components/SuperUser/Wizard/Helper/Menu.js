@@ -1,18 +1,69 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { Menu } from 'antd';
 
-import { useQuery } from '../../../../hooks/useQuery';
+import { dynamicMap } from '../../../../routes/RouteMap';
+
+import { useQuery, stringify } from '../../../../hooks/useQuery';
+
+import Button from '../../../Common/Button';
 
 const _Menu = ({ items, title, className, onClick }) => {
-  const [parsedQuery] = useQuery();
+  const history = useHistory();
+  const [parsedQuery, , setQuery] = useQuery();
+  const { projectId, surveyGroupId } = parsedQuery;
 
-  const sortedArr = items?.sort((el1, el2) => el1.id - el2.id);
+  const dispatch = useDispatch();
+
   // in order to keep menu items order consistent across renders
+  const sortedArr = items?.sort((el1, el2) => el1.id - el2.id);
+
+  const fetchValidSurveyGroupId = (selectedId) => {
+    if (selectedId * 1 !== parsedQuery?.surveyGroupId * 1) return parsedQuery?.surveyGroupId;
+
+    const nextValidSurveyGroupId = sortedArr.find((el) => el.id * 1 !== selectedId * 1)?.id;
+    return nextValidSurveyGroupId;
+  };
+
+  const removeSurveyGroups = async (selectedId) => {
+    const validSurveyGroupId = fetchValidSurveyGroupId(selectedId);
+
+    await dispatch.projects.removeSurveyGroups({ projectId, surveyGroupIds: [selectedId] });
+
+    // if there is any alternative incative surveyGroupId (validSurveyGroupId) we
+    // can replace it with the currently selected inactive surveyGroupId
+    if (validSurveyGroupId) {
+      setQuery({ surveyGroupId: validSurveyGroupId });
+    }
+  };
+
+  React.useEffect(() => {
+    if (sortedArr.length === 0) {
+      const path = dynamicMap.superUser.projectsList();
+
+      history.replace(`${path}?status=active&page_size=10&page_number=1`);
+    } else {
+      const areAllSurveyGroupsSubmitted = sortedArr.every((el) => el.stepsStatus);
+
+      if (areAllSurveyGroupsSubmitted) {
+        const path = dynamicMap.superUser.ratersList();
+        const params = stringify({
+          projectId,
+          surveyGroupId,
+        });
+
+        history.replace(`${path}${params}`);
+      }
+    }
+
+    // eslint-disable-next-line
+  }, [JSON.stringify({ sortedArr })]);
 
   return (
     <Menu
-      selectedKeys={[parsedQuery?.surveyGroupId]}
+      selectedKeys={[surveyGroupId]}
       mode="inline"
       className={`c-wizard-menu px-3 py-5 ${className}`}
     >
@@ -21,11 +72,28 @@ const _Menu = ({ items, title, className, onClick }) => {
       {sortedArr.map(({ id, name, status }) => (
         <Menu.Item
           disabled={status !== 'inactive'}
-          className="inline-flex items-center text-sm leading-5 capitalize text-antgray-100 my-2"
-          onClick={({ key }) => onClick(key)}
+          className="flex flex-row justify-between items-center text-sm
+          leading-5 capitalize text-antgray-100 my-2"
+          onClick={({ key }) => {
+            if (key * 1 !== surveyGroupId * 1) onClick(key);
+          }}
           key={id}
         >
-          {name}
+          <p>{name}</p>
+
+          <Button
+            onClick={async (e) => {
+              e.stopPropagation();
+              e.preventDefault();
+
+              removeSurveyGroups(id);
+            }}
+            className="ml-auto text-lg text-antgray-100 text-opacity-50 px-0"
+            iconClassName="mx-0 mr-0"
+            icon="DeleteOutlined"
+            type="link"
+            textSize="xl"
+          />
         </Menu.Item>
       ))}
     </Menu>

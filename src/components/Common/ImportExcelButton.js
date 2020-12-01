@@ -17,9 +17,12 @@ const ImportExcelButton = ({
                              ...other
                            }) => (
   <Upload
-    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, .xlsx"
+    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
     beforeUpload={beforeUpload}
     showUploadList={false}
+    customRequest={() => {
+      // override default 'POST' method from antd/Upload
+    }}
     className={className}
   >
     <Button

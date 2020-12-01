@@ -83,8 +83,6 @@ class SurveyGroups extends React.Component {
 
     const newData = this.formatData(data);
 
-    console.log({ newData });
-
     return addSurveyGroup(newData);
   };
 

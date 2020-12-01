@@ -3,10 +3,10 @@ import { Tabs } from 'antd';
 import PropTypes from 'prop-types';
 
 import Dropdown from '../../Common/Dropdown';
+import Layout from '../../Common/ClientAdminLayout';
 import { useQuery } from '../../../hooks';
 
-import Layout from './Helper/Layout';
-import SurveyGroup from './SurveyGroup';
+import SurveyGroup from './Helper/SurveyGroup';
 
 const Dashboard = ({
   loading,
@@ -40,6 +40,12 @@ const Dashboard = ({
     [projects.timeStamp],
   );
 
+  React.useEffect(() => {
+    if (!projectId && projectsList?.length > 0) {
+      setQuery({ projectId: projectsList[0]?.value });
+    }
+  }, [projectId, projectsList]);
+
   const surveyGroups = React.useMemo(
     () =>
       projects?.data?.find((project) => project?.projectId?.toString() === projectId?.toString())
@@ -48,7 +54,9 @@ const Dashboard = ({
   );
 
   React.useEffect(() => {
-    if (surveyGroups?.length > 0) setQuery({ surveyGroupId: surveyGroups[0]?.surveyGroupId });
+    if (!surveyGroupId && surveyGroups?.length > 0) {
+      setQuery({ surveyGroupId: surveyGroups[0]?.surveyGroupId });
+    }
   }, [surveyGroups]);
 
   const projectName = React.useMemo(

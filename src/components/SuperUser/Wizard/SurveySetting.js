@@ -62,7 +62,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
 
   const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
 
-  const [, query, setQuery] = useQuery();
+  const [parsedQuery, query, setQuery] = useQuery();
 
   const formRef = React.useRef();
   const history = useHistory();
@@ -151,6 +151,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
         individual: !!surveyModeInUserDashboard?.individual,
         ratingGroup: !!surveyModeInUserDashboard?.ratingGroup,
         allRatees: !!surveyModeInUserDashboard?.allRatees,
+        ...(surveyModeInUserDashboard.id && { id: surveyModeInUserDashboard.id }),
       },
     };
 
@@ -269,16 +270,22 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
           visible={surveyGroupModal}
         />
 
-        <Menu
-          onClick={(key) => {
-            setSurveyGroupModal(true);
-            setSelectedSurveyGroupKey(key);
-          }}
-          items={surveyGroups?.data}
-          className="col-span-2"
-        />
+        {!parsedQuery?.wizardEditMode ? (
+          <Menu
+            onClick={(key) => {
+              setSurveyGroupModal(true);
+              setSelectedSurveyGroupKey(key);
+            }}
+            items={surveyGroups?.data}
+            className="col-span-2"
+          />
+        ) : null}
 
-        <div className="px-6 py-5 col-start-3 col-span-10">
+        <div
+          className={`px-6 py-5 col-span-10 ${
+            parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
+          } `}
+        >
           <Steps currentPosition={0} />
 
           <Formik

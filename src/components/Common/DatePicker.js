@@ -46,7 +46,7 @@ _DatePicker.defaultProps = {
   wrapperClassName: '',
   label: '',
   errorMessage: '',
-  placeholder: 'select date',
+  placeholder: 'Select Date',
   size: 'middle',
   value: '',
 };

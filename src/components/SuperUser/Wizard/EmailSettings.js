@@ -185,16 +185,22 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
           visible={surveyGroupModal}
         />
 
-        <Menu
-          onClick={(key) => {
-            setSurveyGroupModal(true);
-            setSelectedSurveyGroupKey(key);
-          }}
-          items={surveyGroups?.data}
-          className="col-span-2"
-        />
+        {!parsedQuery?.wizardEditMode ? (
+          <Menu
+            onClick={(key) => {
+              setSurveyGroupModal(true);
+              setSelectedSurveyGroupKey(key);
+            }}
+            items={surveyGroups?.data}
+            className="col-span-2"
+          />
+        ) : null}
 
-        <div className="px-6 py-5 col-start-3 col-span-10">
+        <div
+          className={`px-6 py-5 col-span-10 ${
+            parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
+          } `}
+        >
           <Steps currentPosition={1} />
 
           <Formik
@@ -225,6 +231,7 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
               const params = stringify({
                 projectId: parsedQuery?.projectId,
                 surveyGroupId: parsedQuery?.surveyGroupId,
+                wizardEditMode: parsedQuery?.wizardEditMode,
               });
 
               if (chosenTemplates.length > 0) {
@@ -350,6 +357,7 @@ const EmailSettings = ({ emailSettings, fetchEmailSettings, setEmailSettings, lo
                       const params = stringify({
                         projectId: parsedQuery?.projectId,
                         surveyGroupId: parsedQuery?.surveyGroupId,
+                        wizardEditMode: parsedQuery?.wizardEditMode,
                       });
 
                       const path = dynamicMap.superUser.surveySettings();

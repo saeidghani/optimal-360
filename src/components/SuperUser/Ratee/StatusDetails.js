@@ -133,7 +133,7 @@ const StatusDetails = (
           <Button
             size="middle"
             textSize="xs"
-            text="Export Exel File"
+            text="Export Excel File"
             textClassName="mr-2"
             className="ml-3 mr-3"
             type="gray"
