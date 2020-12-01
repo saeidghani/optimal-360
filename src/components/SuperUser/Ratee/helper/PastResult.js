@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import { useQuery } from '../../../../hooks';
 
-import Table from '../../../../components/Common/Table';
-import AutoComplete from '../../../../components/Common/AutoComplete';
-import Button from '../../../../components/Common/Button';
+import Table from '../../../Common/Table';
+import AutoComplete from '../../../Common/AutoComplete';
+import Button from '../../../Common/Button';
 
 const PastResult = ({
                       loading,

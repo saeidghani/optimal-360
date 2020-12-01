@@ -4,8 +4,8 @@ import { Tabs } from 'antd';
 
 import { useTabs } from '../../../hooks';
 
-import ReportContent from '../../../containers/SuperUser/Ratee/helper/ReportContent';
-import PastResult from '../../../containers/SuperUser/Ratee/helper/PastResult';
+import ReportContent from './helper/ReportContent';
+import PastResult from './helper/PastResult';
 
 const ReportSetting = ({
                          loading,

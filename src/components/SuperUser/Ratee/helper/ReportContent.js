@@ -5,8 +5,8 @@ import { useQuery } from '../../../../hooks';
 
 import { Form, Formik } from 'formik';
 import { Checkbox, Spin, Divider } from 'antd';
-import Button from '../../../../components/Common/Button';
-import ImportExcelButton from '../../../../components/Common/ImportExcelButton';
+import Button from '../../../Common/Button';
+import ImportExcelButton from '../../../Common/ImportExcelButton';
 
 const CheckboxGroup = Checkbox.Group;
 const LABELS = {
