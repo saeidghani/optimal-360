@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment'
 import { useSelector, useDispatch } from 'react-redux';
 import { useQuery } from './useQuery';
 
@@ -17,12 +18,12 @@ const useSurveyGroup = () => {
     const sortedArr = surveyGroups?.data?.sort((el1, el2) => el1.id - el2.id) || [];
 
     const firstValidSurveyGroupId =
-      sortedArr?.length > 0 ? sortedArr.find((el) => el.status === 'inactive')?.id : '';
+      sortedArr?.length > 0 ? sortedArr.find((el) => !el.stepsStatus || !moment(el.startDate).isBefore())?.id : '';
 
-    const isURLSurveyGroupValid = !!sortedArr.find(
-      (el) =>
-        el.id?.toString() === parsedQuery?.surveyGroupId?.toString() && el.status === 'inactive',
-    );
+      const isURLSurveyGroupValid = !!sortedArr.find(
+        (el) =>
+          el.id?.toString() === parsedQuery?.surveyGroupId?.toString() && el.stepsStatus && !moment(el.startDate).isBefore(),
+      );
 
     if (
       !isURLSurveyGroupValid &&
