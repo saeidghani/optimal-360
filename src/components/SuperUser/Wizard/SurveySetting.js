@@ -26,12 +26,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
     surveySetting: yup.object({
       startDate: yup.string().required('Start Date Cannot Be Empty').nullable(),
       endDate: yup.string().required('End Date Cannot Be Empty').nullable(),
-      raterInvalidation: yup
-        .number()
-        .nullable()
-        .moreThan(0, 'Rates Invalidation Must Be Greater Than 0')
-        .required('Rates Invalidation Cannot Be Empty'),
-      itemInvalidation: yup
+      itemCaution: yup
         .number()
         .nullable()
         .moreThan(0, 'Rates Invalidation Must Be Greater Than 0')
@@ -73,8 +68,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
     surveySetting = {
       startDate: '',
       endDate: '',
-      raterInvalidation: 0,
-      itemInvalidation: 0,
+      itemCaution: 0,
     },
     raterGroups = [],
     surveyModeInUserDashboard = {
@@ -143,8 +137,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
       surveySetting: {
         startDate: surveySetting?.startDate || '',
         endDate: surveySetting?.endDate || '',
-        raterInvalidation: surveySetting?.raterInvalidation || 0,
-        itemInvalidation: surveySetting?.itemInvalidation || 0,
+        itemCaution: surveySetting?.itemCaution || 0,
       },
       raterGroups: formatRaterGroupItems(raterGroups),
       surveyModeInUserDashboard: {
@@ -244,6 +237,11 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
       ),
     },
   ];
+
+  console.log({
+    surveySettings,
+    initialValues,
+  });
 
   return (
     <MainLayout
@@ -367,36 +365,17 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                     <div className="flex flex-row justify-between items-center">
                       <InputNumber
                         size="large"
-                        wrapperClassName="mr-12"
-                        className="w-full"
-                        label="Rates Invalidation"
-                        value={values.surveySetting.raterInvalidation}
-                        onChange={(raterInvalidation) =>
+                        className="w-1/2"
+                        label="Item Caution"
+                        value={values.surveySetting.itemCaution}
+                        onChange={(itemCaution) =>
                           setFieldValue('surveySetting', {
                             ...values.surveySetting,
-                            raterInvalidation,
+                            itemCaution,
                           })
                         }
                         errorMessage={
-                          touched.surveySetting?.raterInvalidation &&
-                          errors.surveySetting?.raterInvalidation
-                        }
-                      />
-
-                      <InputNumber
-                        size="large"
-                        className="w-full"
-                        label="Item Invalidation"
-                        value={values.surveySetting.itemInvalidation}
-                        onChange={(itemInvalidation) =>
-                          setFieldValue('surveySetting', {
-                            ...values.surveySetting,
-                            itemInvalidation,
-                          })
-                        }
-                        errorMessage={
-                          touched.surveySetting?.itemInvalidation &&
-                          errors.surveySetting?.itemInvalidation
+                          touched.surveySetting?.itemCaution && errors.surveySetting?.itemCaution
                         }
                       />
                     </div>

@@ -7,22 +7,28 @@ import Layout from '../../../components/SuperUser/Wizard/EmailSettings';
 class EmailSettings extends React.Component {
   state = {};
 
-  fetchEmailSettings = async (surveyGroupId) => {
+  fetchEmailSettings = (surveyGroupId) => {
     const { fetchEmailSettings } = this.props;
 
-    await fetchEmailSettings(surveyGroupId);
+    return fetchEmailSettings(surveyGroupId);
   };
 
-  fetchSurveyGroups = async (projectId) => {
+  fetchSurveyGroups = (projectId) => {
     const { fetchSurveyGroups } = this.props;
 
-    await fetchSurveyGroups({ projectId });
+    return fetchSurveyGroups({ projectId });
   };
 
-  setEmailSettings = async (data) => {
+  setEmailSettings = (data) => {
     const { setEmailSettings } = this.props;
 
     return setEmailSettings(data);
+  };
+
+  setEmailSettingsData = (data) => {
+    const { setEmailSettingsData } = this.props;
+
+    return setEmailSettingsData(data);
   };
 
   render() {
@@ -35,6 +41,7 @@ class EmailSettings extends React.Component {
         fetchEmailSettings={this.fetchEmailSettings}
         fetchSurveyGroups={this.fetchSurveyGroups}
         setEmailSettings={this.setEmailSettings}
+        setEmailSettingsData={this.setEmailSettingsData}
         loading={loading}
       />
     );
@@ -45,25 +52,27 @@ EmailSettings.propTypes = {
   fetchEmailSettings: PropTypes.func.isRequired,
   fetchSurveyGroups: PropTypes.func.isRequired,
   setEmailSettings: PropTypes.func.isRequired,
+  setEmailSettingsData: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
-  emailSettings: PropTypes.arrayOf(PropTypes.object),
+  emailSettings: PropTypes.shape({}),
   surveyGroups: PropTypes.shape({}),
 };
 
 EmailSettings.defaultProps = {
-  emailSettings: [],
+  emailSettings: {},
   surveyGroups: {},
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
-  emailSettings: state.wizard?.emailSettings?.emailSettings || [],
+  emailSettings: state.wizard?.emailSettings || {},
   surveyGroups: state.projects?.surveyGroups || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchEmailSettings: dispatch.wizard.fetchEmailSettings,
   setEmailSettings: dispatch.wizard.setEmailSettings,
+  setEmailSettingsData: dispatch.wizard.setEmailSettingsData,
   fetchSurveyGroups: dispatch.projects.fetchSurveyGroups,
 });
 

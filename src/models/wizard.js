@@ -75,11 +75,16 @@ export default {
           data: payload,
         });
 
+        // need to clean up emailsettings field of store for wizard's next step
+        await this.fetchEmailSettings_reducer('');
+
         return res;
       }, dispatch.util.errorHandler);
     },
 
     async fetchEmailSettings(surveyGroupId) {
+      if (!surveyGroupId) return this.fetchEmailSettings_reducer('');
+
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
@@ -99,8 +104,14 @@ export default {
           data: payload,
         });
 
+        await this.fetchEmailSettings_reducer('');
+
         return res;
       }, dispatch.util.errorHandler);
+    },
+
+    setEmailSettingsData(data) {
+      this.fetchEmailSettings_reducer(data);
     },
 
     async setSelectedEmailTemplates(template) {
