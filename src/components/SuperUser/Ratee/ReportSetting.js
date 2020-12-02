@@ -4,8 +4,8 @@ import { Tabs } from 'antd';
 
 import { useTabs } from '../../../hooks';
 
-import ReportContent from './helper/ReportContent';
-import PastResult from './helper/PastResult';
+import ReportContent from './Helper/ReportContent';
+import PastResult from './Helper/PastResult';
 
 const ReportSetting = ({
                          loading,
