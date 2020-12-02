@@ -39,6 +39,8 @@ const Result = ({
   const projectId = parsedQuery?.projectId;
   const resultBy = parsedQuery?.resultBy || 'individual';
 
+  // TODO: use useTabs hook
+
   function tabChangeCallback(key) {
     setQuery({ resultBy: key });
   }
@@ -87,7 +89,7 @@ const Result = ({
         <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
       </div>
     ) : (
-      <div className="flex justify-between items-center result-tabs">
+      <div className="flex justify-between items-center borderless-tab">
         <Tabs
           defaultActiveKey={resultBy || 'individual'}
           onChange={tabChangeCallback}
