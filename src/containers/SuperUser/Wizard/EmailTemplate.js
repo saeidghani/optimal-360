@@ -4,26 +4,45 @@ import { connect } from 'react-redux';
 
 import Layout from '../../../components/SuperUser/Wizard/EmailTemplate';
 
-class ProjectInfo extends Component {
+class EmailTemplate extends Component {
   state = {};
 
-  render() {
-    const { loading } = this.props;
+  setEmailSettingsData = (data) => {
+    const { setEmailSettingsData } = this.props;
 
-    return <Layout loading={loading} />;
+    return setEmailSettingsData(data);
+  };
+
+  render() {
+    const { loading, emailSettings } = this.props;
+
+    return (
+      <Layout
+        emailSettings={emailSettings}
+        loading={loading}
+        setEmailSettingsData={this.setEmailSettingsData}
+      />
+    );
   }
 }
 
-ProjectInfo.propTypes = {
+EmailTemplate.propTypes = {
   loading: PropTypes.bool.isRequired,
+  setEmailSettingsData: PropTypes.func.isRequired,
+  emailSettings: PropTypes.shape({}),
 };
 
-ProjectInfo.defaultProps = {};
+EmailTemplate.defaultProps = {
+  emailSettings: {},
+};
 
 const mapStateToProps = (state) => ({
+  emailSettings: state.wizard?.emailSettings || {},
   loading: state.loading.global || false,
 });
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = (dispatch) => ({
+  setEmailSettingsData: dispatch.wizard.setEmailSettingsData,
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectInfo);
+export default connect(mapStateToProps, mapDispatchToProps)(EmailTemplate);

@@ -23,18 +23,18 @@ import {
 } from '@ant-design/icons';
 
 const TextEditor = ({
-                      placeholder,
-                      value: editorValue,
-                      onChange,
-                      disabled,
-                      options,
-                      template,
-                      data,
-                      wrapperClassName,
-                      className,
-                      label,
-                      labelClass,
-                    }) => {
+  placeholder,
+  value: editorValue,
+  onChange,
+  disabled,
+  options,
+  template,
+  data,
+  wrapperClassName,
+  className,
+  label,
+  labelClass,
+}) => {
   const editorRef = React.useRef();
 
   const content = editorValue || template;
@@ -66,7 +66,6 @@ const TextEditor = ({
             indent: renderToString(<AlignLeftOutlined />),
             // blockquote: renderToString(<AlignLeftOutlined />),
             link: renderToString(<LinkOutlined />),
-            image: renderToString(<FileImageOutlined />),
             table: renderToString(<TableOutlined />),
             paragraph_style: renderToString(<FormatPainterOutlined />),
             fullScreen: renderToString(<FullscreenOutlined />),
@@ -81,7 +80,8 @@ const TextEditor = ({
             ['outdent', 'indent'],
             ['blockquote'],
             ['link'],
-            ['image', 'table', 'paragraphStyle', 'horizontalRule', 'removeFormat'],
+            ['table', 'paragraphStyle', 'horizontalRule', 'removeFormat'],
+            // ['image', 'table', 'paragraphStyle', 'horizontalRule', 'removeFormat'],
             ['fullScreen'],
           ],
           ...options,

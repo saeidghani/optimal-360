@@ -1,86 +1,43 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
-import { notification } from 'antd';
-import moment from 'moment';
 
-import { useQuery } from '../../../hooks/useQuery';
-import * as TEMPLATES from './Helper/EmailTemplates';
+import { useQuery, stringify } from '../../../hooks/useQuery';
 import { dynamicMap } from '../../../routes/RouteMap';
-
-import pascalize from '../../../lib/pascalize';
 
 import MainLayout from '../../Common/Layout';
 import Button from '../../Common/Button';
 import Loading from '../../Common/Loading';
 import TextEditor from '../../Common/TextEditor';
+import TextArea from '../../Common/TextArea';
 
-const EmailTemplate = ({ loading }) => {
+const EmailTemplate = ({ loading, emailSettings, setEmailSettingsData }) => {
   const [parsedQuery] = useQuery();
   const { projectId, surveyGroupId } = parsedQuery;
-  const { template } = useParams();
+
+  const params = useParams();
   const history = useHistory();
-  const { search } = history?.location;
 
-  const [error, setError] = React.useState(false);
-  const [emailTemplate, setEmailTemplate] = React.useState();
+  const selectedEmailTemplateIndex = emailSettings?.emailTemplates?.findIndex(
+    (el) => el.id * 1 === params?.id * 1 && el.name === params?.name,
+  );
+  const selectedEmailTemplate = emailSettings?.emailTemplates?.[selectedEmailTemplateIndex];
 
-  const chosenTemplate = pascalize(template, { splitBy: '-' });
-  const templateKey = `${chosenTemplate}-${projectId}-${surveyGroupId}`;
-  const pageTitle = (template.charAt(0).toUpperCase() + template.slice(1)).replaceAll('-', ' ');
+  const [emailSettingsCopy, setEmailSettingsCopy] = React.useState(emailSettings);
 
   React.useEffect(() => {
-    const val = localStorage.getItem(templateKey);
-
-    setEmailTemplate(val || TEMPLATES[chosenTemplate] || TEMPLATES.reminderEmails);
-  }, [templateKey, chosenTemplate]);
+    setEmailSettingsCopy({ ...emailSettings });
+  }, [JSON.stringify(emailSettings)]);
 
   const addTag = (title) => {
     document.execCommand('insertText', false, `<% ${title} %>`);
   };
 
-  const validateTableData = () => {
-    const table = document.querySelector('#text-editor-table');
+  const updateTemplate = (key, value) => {
+    const newValues = { ...emailSettings };
+    newValues.emailTemplates[selectedEmailTemplateIndex][key] = value;
 
-    if (!table) return false;
-
-    const cells = table.querySelectorAll('td');
-
-    const notify = (description) => {
-      notification.error({
-        message: 'Invalid table data',
-        description,
-      });
-    };
-
-    const errors = [];
-
-    cells.forEach((cell) => {
-      if (
-        !cell.innerText ||
-        typeof cell.innerText !== 'string' ||
-        cell.innerText.trim().length < 1
-      ) {
-        return errors.push('table cell cannot be empty');
-      }
-
-      if (
-        cell.classList.contains('date-td') &&
-        !moment(cell.innerText.trim().replaceAll(' ', ''), 'DD/MM/YYYY', true).isValid()
-      ) {
-        return errors.push(`${cell.innerText} is not a valid date format`);
-      }
-    });
-
-    if (errors.length > 0) {
-      setError(true);
-
-      errors.forEach((description) => notify(description));
-      return true;
-    }
-
-    setError(false);
-    return false;
+    setEmailSettingsCopy({ ...newValues });
   };
 
   return (
@@ -95,7 +52,7 @@ const EmailTemplate = ({ loading }) => {
       <Loading visible={loading} />
 
       <div className="bg-white pl-21 pr-6 py-12">
-        <p className="text-body text-xl mb-6">{pageTitle}</p>
+        <p className="text-body text-xl mb-6">{selectedEmailTemplate?.name}</p>
 
         <div className="flex flex-row justify-between items-center">
           <div className="inline-flex flex-row flex-wrap">
@@ -120,8 +77,9 @@ const EmailTemplate = ({ loading }) => {
             <Button
               onClick={() => {
                 const path = dynamicMap.superUser.emailSettings();
+                const newParams = stringify({ projectId, surveyGroupId });
 
-                history.replace(`${path}${search}`);
+                history.replace(`${path}${newParams}`);
               }}
               className="w-24.5 h-9.5"
               size="middle"
@@ -130,33 +88,38 @@ const EmailTemplate = ({ loading }) => {
               text="Cancel"
             />
             <Button
-              disabled={!!error}
               className="w-24.5 h-9.5"
               size="middle"
               text="Save"
-              onClick={() => {
-                // validateTableData returns true if there aren't any errors
-                if (!validateTableData(emailTemplate)) {
-                  localStorage.setItem(templateKey, emailTemplate);
+              onClick={async () => {
+                const path = dynamicMap.superUser.emailSettings();
+                const newParams = stringify({ projectId, surveyGroupId });
 
-                  const path = dynamicMap.superUser.emailSettings();
+                await setEmailSettingsData({ ...emailSettingsCopy });
 
-                  history.replace(`${path}${search}`);
-                }
+                history.replace(`${path}${newParams}`);
               }}
               textSize="base"
             />
           </div>
         </div>
 
-        <TextEditor
-          wrapperClassName="my-12"
-          value={emailTemplate}
-          onChange={(val) => {
-            setError(false);
+        <TextArea
+          name="Email Subject"
+          value={selectedEmailTemplate?.subject}
+          onChange={(e) => updateTemplate('subject', e.target.value)}
+          label="Email Subject"
+          placeholder="Email Subject"
+          errorMessage={selectedEmailTemplate?.subject ? '' : 'Email Subject Cannot be Empty'}
+          wrapperClassName="my-6"
+          labelClassName="text-base"
+        />
 
-            setEmailTemplate(val);
-          }}
+        <TextEditor
+          label="Email Body"
+          wrapperClassName="my-12"
+          value={selectedEmailTemplate?.template}
+          onChange={(val) => updateTemplate('template', val)}
           options={{ minHeight: '500px' }}
           labelClass="font-normal text-body text-base leading-snug mb-3.5"
         />
@@ -167,6 +130,18 @@ const EmailTemplate = ({ loading }) => {
 
 EmailTemplate.propTypes = {
   loading: PropTypes.bool.isRequired,
+  setEmailSettingsData: PropTypes.func.isRequired,
+  emailSettings: PropTypes.shape({
+    emailSettings: PropTypes.arrayOf(PropTypes.object),
+    emailTemplates: PropTypes.arrayOf(PropTypes.object),
+  }),
+};
+
+EmailTemplate.defaultProps = {
+  emailSettings: {
+    emailSettings: [],
+    emailTemplates: [],
+  },
 };
 
 export default EmailTemplate;
