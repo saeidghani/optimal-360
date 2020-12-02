@@ -50,17 +50,6 @@ const EmailSettings = ({
   const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
 
   React.useEffect(() => {
-    const cleanup = async () => {
-      // calling fetchEmailSettings() with no id , will clean up the field in redux store
-      await fetchEmailSettings();
-    };
-
-    return cleanup;
-  }, []);
-
-  React.useEffect(() => {
-    console.log({ surveyGroupId, emailSettings });
-
     if (
       (surveyGroupId && !emailSettings) ||
       (emailSettings &&
