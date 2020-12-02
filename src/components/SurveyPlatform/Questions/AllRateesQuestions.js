@@ -40,7 +40,7 @@ const AllRateesQuestions = ({
         relationIds += `relation_ids[]=${relationId}&`;
         allRelationValues = {
           ...allRelationValues,
-          [relationId]: null,
+          [relationId]: '',
         };
       });
       setRelationValues(allRelationValues);
@@ -52,16 +52,24 @@ const AllRateesQuestions = ({
     const row = {};
     // eslint-disable-next-line no-unused-expressions
     questions?.data?.options?.forEach(({ label, score }) => {
-      row[label] = { value: score };
+      if (score !== 0) row[label] = { value: score };
     });
     const rows = [];
     // eslint-disable-next-line no-unused-expressions
-    relations?.data?.forEach(({ relationId, rateeName }) => {
+    relations?.data?.forEach(({ relationId, rateeName, raterGroupName }) => {
       const newRow = {
         ...row,
         key: relationId,
         describesThisPerson: rateeName,
       };
+      if (raterGroupName === 'self') {
+        // eslint-disable-next-line no-unused-expressions
+        Object.keys(newRow)?.forEach((key) => {
+          if (newRow[key]?.value?.toString() === '0') {
+            delete newRow[key];
+          }
+        });
+      }
       rows.push(newRow);
     });
     return rows;
@@ -74,7 +82,7 @@ const AllRateesQuestions = ({
       if (questions?.data?.question?.required && !relationValues[key]) return;
       const response = {
         relationId: key * 1,
-        responseScore: relationValues[key] === null ? relationValues[key] : relationValues[key] * 1,
+        responseScore: relationValues[key] === '' ? null : relationValues[key] * 1,
       };
       // eslint-disable-next-line no-unused-expressions
       questions?.data?.responses.forEach((res) => {
