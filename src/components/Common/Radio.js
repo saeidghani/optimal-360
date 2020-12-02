@@ -18,7 +18,7 @@ _Radio.propTypes = {
   defaultValue: PropTypes.string,
   className: PropTypes.string,
   title: PropTypes.string,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   checked: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
 };
@@ -28,6 +28,7 @@ _Radio.defaultProps = {
   className: '',
   title: '',
   checked: false,
+  value: '',
 };
 
 export default _Radio;

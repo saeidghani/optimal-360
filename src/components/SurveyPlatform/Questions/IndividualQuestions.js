@@ -37,24 +37,34 @@ const IndividualQuestions = ({
         relationIds: `relation_ids[]=${relationId}`,
       });
     }
-    setRelationValues({ [relationId]: null });
+    setRelationValues({ [relationId]: '' });
   }, [fetchQuestions, surveyGroupId, questionNumber, relationId]);
 
   const dataSource = React.useMemo(() => {
     const rows = [];
-    const rateeName =
-      relations?.data?.find(
-        (relation) => relation?.relationId?.toString() === relationId?.toString(),
-      )?.rateeName || '';
-    const row = {
-      key: relationId,
-      describesThisPerson: rateeName,
-    };
+    const row = {};
     // eslint-disable-next-line no-unused-expressions
     questions?.data?.options?.forEach(({ label, score }) => {
       row[label] = { value: score };
     });
-    rows.push(row);
+    const currentRelation =
+      relations?.data?.find(
+        (relation) => relation?.relationId?.toString() === relationId?.toString(),
+      ) || {};
+    const newRow = {
+      ...row,
+      key: `${relationId}`,
+      describesThisPerson: currentRelation?.rateeName,
+    };
+    if (currentRelation?.raterGroupName === 'self') {
+      // eslint-disable-next-line no-unused-expressions
+      Object.keys(newRow)?.forEach((key) => {
+        if (newRow[key]?.value?.toString() === '0') {
+          delete newRow[key];
+        }
+      });
+    }
+    rows.push(newRow);
     return rows;
   }, [relations.timeStamp, questions.timeStamp]);
 
@@ -64,8 +74,7 @@ const IndividualQuestions = ({
     // eslint-disable-next-line no-unused-expressions
     Object.keys(relationValues)?.forEach((key) => {
       response.relationId = key * 1;
-      response.responseScore =
-        relationValues[key] === null ? relationValues[key] : relationValues[key] * 1;
+      response.responseScore = relationValues[key] === '' ? null : relationValues[key] * 1;
       // eslint-disable-next-line no-unused-expressions
       questions?.data?.responses.forEach((res) => {
         if (res?.relationId?.toString() === key?.toString()) {
