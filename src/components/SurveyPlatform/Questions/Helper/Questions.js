@@ -183,15 +183,19 @@ const Questions = ({
       ),
       width: 100,
       render: (item, { key }) => (
-        <span className="red-radio">
-          <Radio
-            onChange={(e) => onSetRelationValues(e, item, key)}
-            value={relationValues[key]}
-            checked={relationValues[key] === item?.value}
-            className="pl-8"
-            radioClassName="pl-8"
-          />
-        </span>
+        <React.Fragment>
+          {item && (
+            <span className="red-radio">
+              <Radio
+                onChange={(e) => onSetRelationValues(e, item, key)}
+                value={relationValues[key]}
+                checked={relationValues[key] === item?.value}
+                className="pl-8"
+                radioClassName="pl-8"
+              />
+            </span>
+          )}
+        </React.Fragment>
       ),
     },
   ]);
