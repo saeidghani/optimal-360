@@ -11,7 +11,7 @@ const superUser = {
   projectInfo: 'new-project/project-info',
   surveySettings: 'new-project/survey-settings',
   emailSettings: 'new-project/email-settings',
-  emailSettingsTemplate: 'new-project/email-settings/:template',
+  emailSettingsTemplate: 'new-project/email-settings/:id/:name',
   surveyIntro: 'new-project/survey-intro',
   surveyQuestions: 'new-project/survey-questions',
   report: 'new-project/report',

@@ -18,7 +18,7 @@
   border-bottom-color: @process-tail-color;
 }
 
-.result-tabs .ant-tabs-top > .ant-tabs-nav::before {
+.borderless-tab .ant-tabs-top > .ant-tabs-nav::before {
   border: unset;
 }
 
@@ -103,4 +103,54 @@
   input {
     text-align: center !important;
   }
+}
+
+// Ratee.ReportSetting component
+.report-setting-page {
+  // Report content
+  label {
+    width: fit-content;
+  }
+
+  .checkbox-group-wrapper {
+    & {
+      margin-top: 20px;
+      margin-left: 40px;
+      margin-bottom: 10px;
+    }
+
+    & > label {
+      margin-bottom: 28px;
+    }
+  }
+
+  .ant-checkbox + span {
+    padding-left: 30px;
+  }
+
+  .ant-checkbox-group {
+    & {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 12px;
+      margin-left: 48px !important;
+    }
+
+    .ant-checkbox + span {
+      padding-left: 20px;
+    }
+  }
+
+  // past result
+  .ant-table-thead tr {
+    height: 56px;
+  }
+
+  .autocomplete-container {
+    max-width: 388px;
+  }
+
 }

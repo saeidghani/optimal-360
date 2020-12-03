@@ -174,13 +174,13 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
       {
         key: 'id',
         width: 50,
-        render: (surveyGroupId, { project, status }) => {
-          return status === 'inactive' ? (
+        render: (surveyGroupId, el) => {
+          return !el.stepsStatus || !moment(el.startDate).isBefore() ? (
             <Button
               onClick={() => {
                 const params = stringify({
                   surveyGroupId,
-                  projectId: project.id,
+                  projectId: el.project.id,
                   wizardEditMode: true,
                 });
                 const path = `${dynamicMap.superUser.surveySettings()}${params}`;

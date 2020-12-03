@@ -233,6 +233,8 @@ const GroupReports = ({
             errorMessage={value ? '' : 'value cannot be empty'}
             formatter={(newVal) => `${newVal}`}
             parser={(newVal) => newVal.replace('', '')}
+            precision={2}
+            step={0.01}
           />
         ),
       },

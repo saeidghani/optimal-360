@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Menu } from 'antd';
@@ -19,6 +20,8 @@ const _Menu = ({ items, title, className, onClick }) => {
 
   // in order to keep menu items order consistent across renders
   const sortedArr = items?.sort((el1, el2) => el1.id - el2.id);
+
+  const isSurveyGroupEditable = (el) => !el.stepsStatus || !moment(el.startDate).isBefore();
 
   const fetchValidSurveyGroupId = (selectedId) => {
     if (selectedId * 1 !== parsedQuery?.surveyGroupId * 1) return parsedQuery?.surveyGroupId;
@@ -45,9 +48,9 @@ const _Menu = ({ items, title, className, onClick }) => {
 
       history.replace(`${path}?status=active&page_size=10&page_number=1`);
     } else {
-      const areAllSurveyGroupsSubmitted = sortedArr.every((el) => el.stepsStatus);
+      const editableSurveyGroup = sortedArr.find(isSurveyGroupEditable);
 
-      if (areAllSurveyGroupsSubmitted) {
+      if (!editableSurveyGroup) {
         const path = dynamicMap.superUser.ratersList();
         const params = stringify({
           projectId,
@@ -69,24 +72,24 @@ const _Menu = ({ items, title, className, onClick }) => {
     >
       <Menu.Item className="text-base text-body font-medium font-sans block">{title}</Menu.Item>
 
-      {sortedArr.map(({ id, name, status }) => (
+      {sortedArr.map((el) => (
         <Menu.Item
-          disabled={status !== 'inactive'}
+          disabled={!isSurveyGroupEditable(el)}
           className="flex flex-row justify-between items-center text-sm
           leading-5 capitalize text-antgray-100 my-2"
           onClick={({ key }) => {
             if (key * 1 !== surveyGroupId * 1) onClick(key);
           }}
-          key={id}
+          key={el.id}
         >
-          <p>{name}</p>
+          <p>{el.name}</p>
 
           <Button
             onClick={async (e) => {
               e.stopPropagation();
               e.preventDefault();
 
-              removeSurveyGroups(id);
+              removeSurveyGroups(el.id);
             }}
             className="ml-auto text-lg text-antgray-100 text-opacity-50 px-0"
             iconClassName="mx-0 mr-0"

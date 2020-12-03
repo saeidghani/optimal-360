@@ -223,11 +223,9 @@ Dashboard.propTypes = {
     timeStamp: PropTypes.number,
   }),
   info: PropTypes.shape({
-    data: PropTypes.arrayOf(
-      PropTypes.shape({
-        surveyIntro: PropTypes.string,
-      }),
-    ),
+    data: PropTypes.shape({
+      surveyIntro: PropTypes.shape({}),
+    }),
   }),
   relations: PropTypes.shape({}),
 };
