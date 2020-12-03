@@ -36,7 +36,7 @@ class _Login extends Component {
 
     await login({ username: email, password, rememberMe });
 
-    setTimeout(() => window.location.replace(newPath), 4000);
+    setTimeout(() => window.location.replace(newPath), 2000);
   };
 
   render() {
