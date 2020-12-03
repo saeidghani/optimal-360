@@ -19,14 +19,21 @@ class List extends Component {
     return removeSurveyGroups({ projectId, surveyGroupIds });
   };
 
+  changeStatusOfSurveyGroups = (data) => {
+    const { changeStatusOfSurveyGroups } = this.props;
+
+    return changeStatusOfSurveyGroups(data);
+  };
+
   render() {
     const { loading, surveyGroups } = this.props;
 
     return (
       <Layout
         fetchSurveyGroups={this.fetchSurveyGroups}
-        surveyGroups={surveyGroups}
         removeSurveyGroups={this.removeSurveyGroups}
+        changeStatusOfSurveyGroups={this.changeStatusOfSurveyGroups}
+        surveyGroups={surveyGroups}
         loading={loading}
       />
     );
@@ -37,6 +44,7 @@ List.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchSurveyGroups: PropTypes.func.isRequired,
   removeSurveyGroups: PropTypes.func.isRequired,
+  changeStatusOfSurveyGroups: PropTypes.func.isRequired,
   surveyGroups: PropTypes.shape({}),
 };
 
@@ -52,6 +60,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchSurveyGroups: dispatch.projects.fetchSurveyGroups,
   removeSurveyGroups: dispatch.projects.removeSurveyGroups,
+  changeStatusOfSurveyGroups: dispatch.projects.changeStatusOfSurveyGroups,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(List);

@@ -12,7 +12,13 @@ import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import Tag from '../../Common/Tag';
 
-const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loading }) => {
+const SurveyGroups = ({
+  fetchSurveyGroups,
+  changeStatusOfSurveyGroups,
+  removeSurveyGroups,
+  surveyGroups,
+  loading,
+}) => {
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
 
@@ -33,6 +39,11 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
     () => {
       const selectedRowsIds = selectedRows?.length > 0 ? selectedRows.map((el) => el.id) : [];
 
+      const areAllSelectedSGsInactive = selectedRows.every((el) => el.status === 'inactive');
+      const areAllSelectedSGsActiveOrComplete = selectedRows.every(
+        (el) => el.status === 'active' || el.status === 'complete',
+      );
+
       return selectedRows && selectedRows?.length > 0 ? (
         <div className="flex flex-row items-center">
           <Button
@@ -47,6 +58,24 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
             text-primary-500 bg-primary-500 bg-opacity-8 w-8 h-8 mr-3"
             icon="DeleteOutlined"
           />
+
+          {areAllSelectedSGsInactive || areAllSelectedSGsActiveOrComplete ? (
+            <Button
+              onClick={async () => {
+                await changeStatusOfSurveyGroups({
+                  projectId,
+                  surveyGroupIds: selectedRowsIds,
+                  status: areAllSelectedSGsInactive ? 'active' : 'inactive',
+                });
+
+                setSelectedRows([]);
+              }}
+              size="middle"
+              className="mr-3"
+              textSize="xs"
+              text={areAllSelectedSGsInactive ? 'Activate' : 'Deactivate'}
+            />
+          ) : null}
 
           <Button
             // onClick={async () => {
@@ -238,6 +267,7 @@ SurveyGroups.propTypes = {
   surveyGroups: PropTypes.shape({}),
   fetchSurveyGroups: PropTypes.func.isRequired,
   removeSurveyGroups: PropTypes.func.isRequired,
+  changeStatusOfSurveyGroups: PropTypes.func.isRequired,
 };
 
 SurveyGroups.defaultProps = {

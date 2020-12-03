@@ -73,6 +73,8 @@ export default {
             data,
           });
 
+          await dispatch.bank.fetchSurveyGroups('?page_size=10&page_number=1');
+
           return res;
         },
         dispatch.util.errorHandler,

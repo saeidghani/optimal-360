@@ -69,7 +69,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
             icon="DeleteOutlined"
           />
 
-          <Button
+          {/* <Button
             onClick={async () => {
               await changeStatusOfProjects(
                 selectedRowsIds,
@@ -89,7 +89,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
                 ? 'Deactivate'
                 : 'Activate'
             }
-          />
+          /> */}
 
           <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
         </div>
