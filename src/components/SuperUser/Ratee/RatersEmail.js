@@ -1,11 +1,12 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-
 import PropTypes from 'prop-types';
+
+import moment from 'moment';
+import { useQuery, useRateeSurveyGroup } from '../../../hooks';
+
 import Table from '../../Common/Table';
 import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
-import { useQuery } from '../../../hooks';
 
 const RatersEmail = ({
                        loading,
@@ -18,9 +19,11 @@ const RatersEmail = ({
                      }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const [, , surveyGroupId, surveyGroupObject] = useRateeSurveyGroup();
+
   const pageNumber = parsedQuery?.page_number || 1;
   const pageSize = parsedQuery?.page_size || 10;
-  const surveyGroupId = parsedQuery?.surveyGroupId;
+  const isNotPastEndDate = !moment(surveyGroupObject.endDate).isBefore();
 
   React.useEffect(() => {
     fetchRaters({ query, surveyGroupId });
@@ -140,6 +143,7 @@ const RatersEmail = ({
           page_number,
         });
       }}
+      rowSelection={isNotPastEndDate}
       selectedRowKeys={selectedRows?.map((el) => el.raterId)}
       onRowSelectionChange={(_, rows) => {
         setSelectedRows(rows);
