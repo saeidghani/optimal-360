@@ -190,7 +190,7 @@ const StatusDetails = (
               textSize="xs"
               type="link"
               className="ml-2 p-0 h-6 w-6"
-              icon={'EditOutlined'}
+              icon="EditOutlined"
             />
           </div>
         </div>
