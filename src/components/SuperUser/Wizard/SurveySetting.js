@@ -238,11 +238,6 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
     },
   ];
 
-  console.log({
-    surveySettings,
-    initialValues,
-  });
-
   return (
     <MainLayout
       hasBreadCrumb

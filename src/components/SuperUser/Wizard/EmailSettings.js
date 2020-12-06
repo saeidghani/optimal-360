@@ -78,6 +78,7 @@ const EmailSettings = ({
             const params = stringify({
               projectId,
               surveyGroupId,
+              wizardEditMode: parsedQuery?.wizardEditMode,
             });
 
             history.push(`${path}${params}`);

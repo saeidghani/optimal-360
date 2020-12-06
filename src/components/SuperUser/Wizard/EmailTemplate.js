@@ -93,7 +93,11 @@ const EmailTemplate = ({ loading, emailSettings, setEmailSettingsData }) => {
               text="Save"
               onClick={async () => {
                 const path = dynamicMap.superUser.emailSettings();
-                const newParams = stringify({ projectId, surveyGroupId });
+                const newParams = stringify({
+                  projectId,
+                  surveyGroupId,
+                  wizardEditMode: parsedQuery?.wizardEditMode,
+                });
 
                 await setEmailSettingsData({ ...emailSettingsCopy });
 
