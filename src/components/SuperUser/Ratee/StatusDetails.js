@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useHistory } from 'react-router-dom';
-import { useQuery } from '../../../hooks';
+import { useQuery, useRateeSurveyGroup } from '../../../hooks';
 import { stringify } from '../../../hooks/useQuery';
 
 import { dynamicMap } from '../../../routes/RouteMap';
@@ -27,13 +27,12 @@ const StatusDetails = (
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const [, , surveyGroupId, surveyGroupObject] = useRateeSurveyGroup();
 
   const viewBy = parsedQuery?.viewBy || 'raters';
   const pageNumber = parsedQuery?.page_number || 1;
   const pageSize = parsedQuery?.page_size || 10;
-  const surveyGroupId = parsedQuery?.surveyGroupId;
   const projectId = parsedQuery?.projectId;
-
   const fetch = () => {
     fetchStatusDetails({ query, surveyGroupId });
   };
@@ -191,7 +190,7 @@ const StatusDetails = (
               textSize="xs"
               type="link"
               className="ml-2 p-0 h-6 w-6"
-              icon={"EditOutlined"}
+              icon={'EditOutlined'}
             />
           </div>
         </div>
