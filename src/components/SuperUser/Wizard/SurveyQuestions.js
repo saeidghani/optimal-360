@@ -134,20 +134,20 @@ const SurveyQuestionsList = ({
 
         history.push(`${path}`);
       } else if (isEverySurveyGroupSubmitted) {
+        const path = dynamicMap.superUser.ratersList();
         const params = stringify({
           projectId,
           surveyGroupId,
         });
 
-        const path = dynamicMap.superUser.ratersList();
         history.push(`${path}${params}`);
       } else if (editableSurveyGroup) {
+        const path = dynamicMap.superUser.surveySettings();
         const params = stringify({
           projectId,
           surveyGroupId: editableSurveyGroup.id,
         });
 
-        const path = dynamicMap.superUser.surveySettings();
         history.push(`${path}${params}`);
       }
     } catch (error) {}
@@ -293,20 +293,7 @@ const SurveyQuestionsList = ({
     return {
       ratingScales:
         surveyQuestions?.ratingScales?.length > 0 ? surveyQuestions.ratingScales : _ratingScales,
-      feedbacks:
-        surveyQuestions?.feedbacks?.length > 0
-          ? surveyQuestions.feedbacks
-          : [
-              {
-                label: '',
-                statement: '',
-                required: false,
-                showOrder: 1,
-                index: 0,
-                id: 1,
-                newAddedItem: true,
-              },
-            ],
+      feedbacks: surveyQuestions?.feedbacks?.length > 0 ? surveyQuestions.feedbacks : [],
       clusters: clusters?.length > 0 ? clusters : [],
     };
 

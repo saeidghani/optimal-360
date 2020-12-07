@@ -224,20 +224,7 @@ const SurveyGroupCluster = ({
     return {
       name: surveyGroupInfo?.name,
       clusters: clusters.map((el) => ({ ...el, index: el.showOrder, name: el.name || el.label })),
-      feedbacks:
-        surveyGroupInfo?.feedbacks?.length > 0
-          ? surveyGroupInfo.feedbacks
-          : [
-              {
-                label: '',
-                statement: '',
-                required: false,
-                showOrder: 1,
-                index: 0,
-                id: 1,
-                newAddedItem: true,
-              },
-            ],
+      feedbacks: surveyGroupInfo?.feedbacks?.length > 0 ? surveyGroupInfo.feedbacks : [],
     };
     // eslint-disable-next-line
   }, [query, JSON.stringify(surveyGroupInfo)]);

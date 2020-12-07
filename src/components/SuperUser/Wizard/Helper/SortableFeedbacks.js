@@ -11,6 +11,7 @@ import Checkbox from '../../../Common/Checkbox';
 
 const DragHandle = sortableHandle(() => (
   <Button
+    onClick={() => {}}
     className="col-span-1 h-10"
     type="link"
     icon={
