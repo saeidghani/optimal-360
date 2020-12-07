@@ -7,10 +7,16 @@ import Layout from '../../../components/SuperUser/Wizard/SurveyQuestions';
 class SurveyQuestions extends React.Component {
   state = {};
 
-  fetchSurveyQuestions = async (surveyGroupId) => {
+  fetchSurveyGroups = (projectId) => {
+    const { fetchSurveyGroups } = this.props;
+
+    return fetchSurveyGroups({ projectId });
+  };
+
+  fetchSurveyQuestions = (surveyGroupId) => {
     const { fetchSurveyQuestions } = this.props;
 
-    await fetchSurveyQuestions(surveyGroupId);
+    return fetchSurveyQuestions(surveyGroupId);
   };
 
   setSurveyQuestions = async (data) => {
@@ -80,6 +86,7 @@ class SurveyQuestions extends React.Component {
     return (
       <Layout
         surveyQuestions={surveyQuestions}
+        fetchSurveyGroups={this.fetchSurveyGroups}
         fetchSurveyQuestions={this.fetchSurveyQuestions}
         setSurveyQuestions={this.setSurveyQuestions}
         loading={loading}
@@ -89,6 +96,7 @@ class SurveyQuestions extends React.Component {
 }
 
 SurveyQuestions.propTypes = {
+  fetchSurveyGroups: PropTypes.func.isRequired,
   fetchSurveyQuestions: PropTypes.func.isRequired,
   setSurveyQuestions: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
@@ -105,6 +113,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  fetchSurveyGroups: dispatch.projects.fetchSurveyGroups,
   fetchSurveyQuestions: dispatch.wizard.fetchSurveyQuestions,
   setSurveyQuestions: dispatch.wizard.setSurveyQuestions,
 });

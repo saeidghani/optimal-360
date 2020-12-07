@@ -39,15 +39,13 @@ const SurveyGroupCluster = ({
   const schema = yup.object({
     name: yup.string().nullable().required('Survey group name is required'),
     clusters: yup.array(yup.object({})).min(1, 'You must specify at least one cluster item'),
-    feedbacks: yup
-      .array(
-        yup.object({
-          label: yup.string().nullable().required('label is required'),
-          statement: yup.string().nullable().required('statement is required'),
-          required: yup.bool().required('required is required'),
-        }),
-      )
-      .min(1, 'You must specify at least one feedback item'),
+    feedbacks: yup.array(
+      yup.object({
+        label: yup.string().nullable().required('label is required'),
+        statement: yup.string().nullable().required('statement is required'),
+        required: yup.bool().required('required is required'),
+      }),
+    ),
   });
 
   const history = useHistory();
