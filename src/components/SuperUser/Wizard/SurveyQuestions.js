@@ -129,24 +129,11 @@ const SurveyQuestionsList = ({
           !moment(startDate).isBefore(),
       );
 
-      // console.log({
-      //   surveyGroups,
-      //   newSurveyGroups,
-      //   isEverySurveyGroupSubmitted,
-      //   editableSurveyGroup,
-      //   parsedQuery,
-      // });
+      if (parsedQuery?.wizardEditMode) {
+        const path = dynamicMap.superUser.surveyGroupsList({ projectId });
 
-      // if (parsedQuery?.wizardEditMode) {
-      //   const params = stringify({
-      //     projectId,
-      //     surveyGroupId,
-      //   });
-
-      //   const path = dynamicMap.superUser.ratersList();
-      //   history.push(`${path}${params}`);
-      // } else if (isEverySurveyGroupSubmitted) {
-      if (isEverySurveyGroupSubmitted) {
+        history.push(`${path}`);
+      } else if (isEverySurveyGroupSubmitted) {
         const params = stringify({
           projectId,
           surveyGroupId,
