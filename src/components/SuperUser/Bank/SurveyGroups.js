@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 import { dynamicMap } from '../../../routes/RouteMap';
 
-import { useQuery } from '../../../hooks';
+import { useQuery, parse } from '../../../hooks/useQuery';
 
 import * as ClusterUtils from '../../../lib/Wizard/clusterUtils';
 
@@ -329,7 +329,12 @@ const SurveyGroupCluster = ({
                   await addSurveyGroup(values);
                 }
 
-                history.push(dynamicMap.superUser.bankModels());
+                const nextPath =
+                  history.location.search && parse(history.location.search).prevUrl
+                    ? parse(history.location.search).prevUrl
+                    : dynamicMap.superUser.bankModels();
+
+                history.push(nextPath);
               } catch (err) {}
             }}
           >

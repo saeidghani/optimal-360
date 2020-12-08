@@ -6,6 +6,8 @@ import { useHistory } from 'react-router-dom';
 
 import { dynamicMap } from '../../../routes/RouteMap';
 
+import { parse } from '../../../hooks/useQuery';
+
 import MainLayout from '../../Common/Layout';
 import Input from '../../Common/Input';
 import Button from '../../Common/Button';
@@ -43,7 +45,12 @@ const NewOrganizations = ({ addNewOrganization, loading }) => {
               try {
                 await addNewOrganization(values);
 
-                history.push(dynamicMap.superUser.organizationsList());
+                const nextPath =
+                  history.location.search && parse(history.location.search).prevUrl
+                    ? parse(history.location.search).prevUrl
+                    : dynamicMap.superUser.organizationsList();
+
+                history.push(nextPath);
               } catch (error) {}
             }}
           >

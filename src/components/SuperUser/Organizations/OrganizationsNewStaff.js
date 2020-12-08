@@ -4,6 +4,8 @@ import { useHistory, useParams } from 'react-router-dom';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
 
+import { parse } from '../../../hooks/useQuery';
+
 import { dynamicMap } from '../../../routes/RouteMap';
 
 import { generateNewPassword } from '../../../lib/utils';
@@ -25,8 +27,8 @@ const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
       .required('password field is required'),
     department: yup.string().required('Department field is required'),
     jobDesignation: yup.string().required('Job Designation field is required'),
-
   });
+
   return (
     <MainLayout
       titleClass="mt-3"
@@ -54,10 +56,13 @@ const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
               try {
                 await addNewOrganizationStaff({ ...values, organizationId });
 
-                const path = dynamicMap.superUser.organizationStaffList({ organizationId });
-                history.push(path);
-              } catch (error) {
-              }
+                const nextPath =
+                  history.location.search && parse(history.location.search).prevUrl
+                    ? parse(history.location.search).prevUrl
+                    : dynamicMap.superUser.organizationStaffList({ organizationId });
+
+                history.push(nextPath);
+              } catch (error) {}
             }}
           >
             {({ values, errors, touched, handleChange, handleSubmit, setFieldValue }) => (
