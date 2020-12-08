@@ -72,7 +72,7 @@ const SurveyQuestionsList = ({
   const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
   const [persistedData, setPersistData] = usePersist();
   const [surveyQuestions, firstClusterItem, _selectedCluster, _selectedCompetency] = useClusters();
-  const [parsedQuery, query, setQuery] = useQuery();
+  const [parsedQuery, , setQuery] = useQuery();
 
   const [surveyGroupModal, setSurveyGroupModal] = React.useState(false);
   const [addClusterModal, setAddClusterModal] = React.useState(false);
@@ -290,6 +290,7 @@ const SurveyQuestionsList = ({
   const initialValues = React.useMemo(() => {
     const clusters =
       persistedData?.data?.length > 0 ? persistedData.data : surveyQuestions.clusters || [];
+
     return {
       ratingScales:
         surveyQuestions?.ratingScales?.length > 0 ? surveyQuestions.ratingScales : _ratingScales,
@@ -298,7 +299,7 @@ const SurveyQuestionsList = ({
     };
 
     // eslint-disable-next-line
-  }, [query, surveyQuestionsStringified]);
+  }, [parsedQuery?.surveyGroupId, surveyQuestionsStringified]);
 
   const renderHeader = () => (
     <div
