@@ -28,6 +28,7 @@ const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
     department: yup.string().required('Department field is required'),
     jobDesignation: yup.string().required('Job Designation field is required'),
   });
+
   return (
     <MainLayout
       titleClass="mt-3"
