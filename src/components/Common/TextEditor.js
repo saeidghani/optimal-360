@@ -33,6 +33,7 @@ const TextEditor = ({
   wrapperClassName,
   className,
   label,
+  labelClass,
 }) => {
   const editorRef = React.useRef();
 
@@ -40,10 +41,10 @@ const TextEditor = ({
 
   return (
     <div className={`c-text-editor ${wrapperClassName}`}>
-      {label && <p className="font-normal text-body text-base leading-snug mb-3.5">{label}</p>}
+      {label && <p className={`leading-snug ${labelClass}`}>{label}</p>}
 
       <SunEditor
-        className={` ${className}`}
+        className={`c-sun-editor ${className}`}
         ref={editorRef}
         enable={!disabled}
         onChange={onChange}
@@ -65,7 +66,6 @@ const TextEditor = ({
             indent: renderToString(<AlignLeftOutlined />),
             // blockquote: renderToString(<AlignLeftOutlined />),
             link: renderToString(<LinkOutlined />),
-            image: renderToString(<FileImageOutlined />),
             table: renderToString(<TableOutlined />),
             paragraph_style: renderToString(<FormatPainterOutlined />),
             fullScreen: renderToString(<FullscreenOutlined />),
@@ -80,7 +80,8 @@ const TextEditor = ({
             ['outdent', 'indent'],
             ['blockquote'],
             ['link'],
-            ['image', 'table', 'paragraphStyle', 'horizontalRule', 'removeFormat'],
+            ['table', 'paragraphStyle', 'horizontalRule', 'removeFormat'],
+            // ['image', 'table', 'paragraphStyle', 'horizontalRule', 'removeFormat'],
             ['fullScreen'],
           ],
           ...options,
@@ -101,6 +102,7 @@ TextEditor.propTypes = {
   wrapperClassName: PropTypes.string,
   className: PropTypes.string,
   label: PropTypes.string,
+  labelClass: PropTypes.string,
 };
 
 TextEditor.defaultProps = {
@@ -113,6 +115,7 @@ TextEditor.defaultProps = {
   wrapperClassName: '',
   className: '',
   label: '',
+  labelClass: '',
 };
 
 export default TextEditor;

@@ -12,7 +12,13 @@ import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import Tag from '../../Common/Tag';
 
-const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loading }) => {
+const SurveyGroups = ({
+  fetchSurveyGroups,
+  changeStatusOfSurveyGroups,
+  removeSurveyGroups,
+  surveyGroups,
+  loading,
+}) => {
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
 
@@ -27,11 +33,16 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
 
   React.useEffect(() => {
     fetchSurveyGroups({ projectId, query });
-  }, [query, projectId, fetchSurveyGroups]);
+  }, [projectId, fetchSurveyGroups]);
 
   const renderHeader = React.useCallback(
     () => {
       const selectedRowsIds = selectedRows?.length > 0 ? selectedRows.map((el) => el.id) : [];
+
+      const areAllSelectedSGsInactive = selectedRows.every((el) => el.status === 'inactive');
+      const areAllSelectedSGsActiveOrComplete = selectedRows.every(
+        (el) => el.status === 'active' || el.status === 'complete',
+      );
 
       return selectedRows && selectedRows?.length > 0 ? (
         <div className="flex flex-row items-center">
@@ -47,6 +58,24 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
             text-primary-500 bg-primary-500 bg-opacity-8 w-8 h-8 mr-3"
             icon="DeleteOutlined"
           />
+
+          {areAllSelectedSGsInactive || areAllSelectedSGsActiveOrComplete ? (
+            <Button
+              onClick={async () => {
+                await changeStatusOfSurveyGroups({
+                  projectId,
+                  surveyGroupIds: selectedRowsIds,
+                  status: areAllSelectedSGsInactive ? 'active' : 'inactive',
+                });
+
+                setSelectedRows([]);
+              }}
+              size="middle"
+              className="mr-3"
+              textSize="xs"
+              text={areAllSelectedSGsInactive ? 'Activate' : 'Deactivate'}
+            />
+          ) : null}
 
           <Button
             // onClick={async () => {
@@ -85,7 +114,12 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
             />
 
             <Button
-              onClick={() => history.push(dynamicMap.superUser.projectInfo())}
+              onClick={() => {
+                const path = dynamicMap.superUser.editProject();
+                const params = stringify({ projectId });
+
+                history.push(`${path}${params}`);
+              }}
               size="middle"
               textSize="xs"
               text="Edit Project"
@@ -110,26 +144,40 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
 
   const columns = React.useMemo(
     () => [
-      { key: 'id', title: 'ID', sorter: true, sortOrder: getSortOrder('id') },
+      {
+        key: 'id',
+        title: 'ID',
+        sorter: (a, b) => a.id - b.id,
+        sortOrder: getSortOrder('id'),
+      },
       {
         key: 'name',
         title: 'Survey Group',
-        render: (name, { project, surveyGroupId }) => (
-          <Button
-            className="pl-0"
-            onClick={() => {
-              const params = stringify({ projectId: project.id, surveyGroupId });
-              const path = `${history.push(dynamicMap.superUser.ratersList())}${params}`;
-
-              history.push(path);
-            }}
-            type="link"
-            textSize="sm"
-            text={name}
-            textClassName="underline text-primary-500"
-          />
-        ),
-        sorter: true,
+        render: (name, { project, id: surveyGroupId, stepsStatus }) => {
+          return stepsStatus ? (
+            <Button
+              className="pl-0"
+              onClick={() => {
+                const params = stringify({
+                  projectId: project.id,
+                  surveyGroupId,
+                  tab: 'status-overview',
+                  page_number: 1,
+                  page_size: 10,
+                });
+                const path = `${dynamicMap.superUser.ratersList()}${params}`;
+                history.push(path);
+              }}
+              type="link"
+              textSize="sm"
+              text={name}
+              textClassName="underline text-primary-500"
+            />
+          ) : (
+            name
+          );
+        },
+        sorter: (a, b) => a.name > b.name,
         sortOrder: getSortOrder('name'),
       },
       {
@@ -155,24 +203,30 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
       {
         key: 'id',
         width: 50,
-        render: (surveyGroupId, { project }) => (
-          <Button
-            onClick={() => {
-              const params = stringify({ surveyGroupId, projectId: project.id });
-              const path = `${dynamicMap.superUser.surveySettings()}${params}`;
+        render: (surveyGroupId, el) => {
+          return !el.stepsStatus || !moment(el.startDate).isBefore() ? (
+            <Button
+              onClick={() => {
+                const params = stringify({
+                  surveyGroupId,
+                  projectId: el.project.id,
+                  wizardEditMode: true,
+                });
+                const path = `${dynamicMap.superUser.surveySettings()}${params}`;
 
-              history.push(path);
-            }}
-            icon="EditOutlined"
-            type="link"
-            className="text-lg mr-7"
-            size="middle"
-          />
-        ),
+                history.push(path);
+              }}
+              icon="EditOutlined"
+              type="link"
+              className="text-lg mr-7"
+              size="middle"
+            />
+          ) : null;
+        },
       },
     ],
     // eslint-disable-next-line
-    [surveyGroups.timeStamp],
+    [surveyGroups.timeStamp, parsedQuery?.sort],
   );
 
   const sort = (sorter) => {
@@ -203,11 +257,6 @@ const SurveyGroups = ({ fetchSurveyGroups, removeSurveyGroups, surveyGroups, loa
         onRowSelectionChange={(_, rows) => {
           setSelectedRows(rows);
         }}
-        rowClassName={({ deleted }) => {
-          if (deleted) {
-            return 'bg-antgray-100 bg-opacity-10 td-checkbox-visibility-0';
-          }
-        }}
       />
     </MainLayout>
   );
@@ -218,6 +267,7 @@ SurveyGroups.propTypes = {
   surveyGroups: PropTypes.shape({}),
   fetchSurveyGroups: PropTypes.func.isRequired,
   removeSurveyGroups: PropTypes.func.isRequired,
+  changeStatusOfSurveyGroups: PropTypes.func.isRequired,
 };
 
 SurveyGroups.defaultProps = {

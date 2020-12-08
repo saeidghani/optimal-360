@@ -7,8 +7,10 @@ import Input from '../../Common/Input';
 import Checkbox from '../../Common/Checkbox';
 import Button from '../../Common/Button';
 
-import Shape from '../Helper/AnimatedShape';
-import AuthLayout from '../Helper/AuthLayout';
+import { dynamicMap } from '../../../routes/RouteMap';
+
+import Shape from './Helper/AnimatedShape';
+import AuthLayout from './Helper/AuthLayout';
 
 const Login = ({ login, loading }) => {
   const schema = yup.object({
@@ -61,6 +63,7 @@ const Login = ({ login, loading }) => {
                 />
 
                 <Input
+                  inputClass="c-input-sm-placeholder h-10 py-0"
                   value={values.password}
                   disabled={loading}
                   onChange={handleChange}
@@ -70,7 +73,7 @@ const Login = ({ login, loading }) => {
                   labelText="Password"
                   placeholder="Password"
                   extrainfoText="Forgot Password?"
-                  extrainfoLink="/forgot-password"
+                  extrainfoLink={dynamicMap.clientAdmin.forgotPassword()}
                   errorMessage={touched.password && errors.password}
                   onPressEnter={handleSubmit}
                 />

@@ -17,7 +17,7 @@ const _Progress = ({
   } else {
     strokeColor = '#fec456'; // orenge above 50
   }
-  if (percentage === 100) {
+  if (status === 'sub' || percentage === 100) {
     strokeColor = '#00D6A2'; // teal color on 100
   }
 
@@ -26,7 +26,7 @@ const _Progress = ({
       <Progress
         // flex-row-reverse so the percentage stands behinde the bar
         className={`flex flex-row-reverse items-center w-full ${className}`}
-        percent={percentage}
+        percent={status === 'sub' ? 100 : percentage}
         status={status}
         type={type}
         strokeColor={strokeColor}

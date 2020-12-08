@@ -2,13 +2,11 @@ import React from 'react';
 import { TeamOutlined } from '@ant-design/icons';
 
 import Progress from '../Common/Progress';
-import ButtonsGroup from './Helper/ButtonsGroup';
 import Button from '../Common/Button';
 
-import Layout from './Helper/Layout';
-import './Helper/bubble.css';
+import { dynamicMap } from '../../routes/RouteMap';
 
-// import peopleIcon from '../../assets/images/people-outline.svg';
+import Layout from '../Common/ClientAdminLayout';
 
 const ReferenceGuide = () => {
   const ReferenceGuideCards = [
@@ -149,11 +147,26 @@ const ReferenceGuide = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-6 mt-10 gap-10">
         <div className="md:col-span-2 bg-white py-6 px-12 rounded-md">
-          <ButtonsGroup
-            activeButtonKey=""
-            wrapperClassName="flex-col justify-between px-10"
-            buttonClassName="mb-4 sm:mr-0"
-          />
+          <div className="grid grid-cols-6 overflow-auto mt-4">
+            <div
+              className="mb-4 sm:mr-0 mr-4 col-start-2 col-span-4
+            border border-solid border-gray-500 text-center py-2 px-2 bg-white w-full"
+            >
+              View Ratee Summary
+            </div>
+            <div
+              className="mb-4 sm:mr-0 mr-4 col-start-2 col-span-4
+            border border-solid border-gray-500 text-center py-2 px-2 bg-white w-full"
+            >
+              View Ratee Details
+            </div>
+            <div
+              className="mb-4 sm:mr-0 mr-4 col-start-2 col-span-4 text-center py-2 px-2
+            text-white bg-primary-500 w-full"
+            >
+              View Rater Details
+            </div>
+          </div>
           <p className="mt-4 text-center md:text-left">
             Go to the Main Dashboard (Overview) Also to move between Competency sets using these
             tabs
@@ -161,10 +174,10 @@ const ReferenceGuide = () => {
         </div>
         <div className="md:col-span-4 bg-white p-4 md:p-8 rounded-md">
           <span className="text-base pl-4">Participant’s raters’ group</span>
-          <div className="grid md:grid-cols-5 gap-x-6 md:gap-x-10 mt-8">
+          <div className="bubble-talk grid md:grid-cols-5 gap-x-6 md:gap-x-10 mt-8">
             <div
-              className="hidden bubble bubble-top w-4/5 mb-6 ml-10
-             col-start-3 col-span-3 md:block"
+              className="hidden bubble bubble-top mb-10 ml-32
+             col-start-3 col-span-2 md:block"
             >
               Minimum number of submissions required by the rater group for report production where
               applicable
@@ -186,10 +199,10 @@ const ReferenceGuide = () => {
               </div>
             ))}
             <div
-              className="hidden w-4/5 md:block bubble bubble-bottom col-start-1 col-span-2 mt-6"
+              className="hidden w-4/5 md:block bubble bubble-bottom col-start-1 col-span-2 mt-8 mr-24"
               style={{ transform: 'rotate(180deg)' }}
             >
-              <p style={{ transform: 'rotate(180deg)' }}>Names of participants raters</p>
+              <p style={{ transform: 'rotate(180deg)' }}>Names of participants raters!!!</p>
             </div>
 
             <div className="block bubble bubble-right row-start-2 h-20 md:mb-6 md:hidden">
@@ -210,7 +223,7 @@ const ReferenceGuide = () => {
           className="c-force-padding-y-px"
           textSize="sm"
           text="Ok, Got it!"
-          href="/client-admin/dashboard"
+          href={dynamicMap.clientAdmin.dashboard()}
         />
       </div>
     </Layout>

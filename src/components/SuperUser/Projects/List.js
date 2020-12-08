@@ -9,7 +9,7 @@ import { TeamOutlined } from '@ant-design/icons';
 
 import { dynamicMap } from '../../../routes/RouteMap';
 
-import { useQuery } from '../../../hooks/useQuery';
+import { useQuery, stringify } from '../../../hooks/useQuery';
 
 import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
@@ -69,7 +69,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
             icon="DeleteOutlined"
           />
 
-          <Button
+          {/* <Button
             onClick={async () => {
               await changeStatusOfProjects(
                 selectedRowsIds,
@@ -89,7 +89,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
                 ? 'Deactivate'
                 : 'Activate'
             }
-          />
+          /> */}
 
           <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
         </div>
@@ -118,7 +118,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
               size="middle"
               onClick={() => setQuery({ status: 'complete', page_number: 1 })}
               textSize="xs"
-              text="Complete Projects"
+              text="Completed Projects"
               light={parsedQuery?.status !== 'complete'}
               className=" px-3"
             />
@@ -230,7 +230,12 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
               text="Set Client Admin"
             />
             <Button
-              onClick={() => history.push(dynamicMap.superUser.projectInfo())}
+              onClick={() => {
+                const path = dynamicMap.superUser.projectInfo();
+                const params = stringify({ projectId });
+
+                history.push(`${path}${params}`);
+              }}
               icon="CopyOutlined"
               type="link"
               className="text-lg mr-7"

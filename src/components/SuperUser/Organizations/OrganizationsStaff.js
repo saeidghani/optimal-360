@@ -13,13 +13,13 @@ import Button from '../../Common/Button';
 import ImportExcelButton from '../../Common/ImportExcelButton';
 
 const OrganizationsStaff = ({
-  importStaff,
-  organizationsInfo,
-  staff,
-  fetchOrganizationsInfo,
-  fetchOrganizationsStaff,
-  loading,
-}) => {
+                              importStaff,
+                              organizationsInfo,
+                              staff,
+                              fetchOrganizationsInfo,
+                              fetchOrganizationsStaff,
+                              loading,
+                            }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const { organizationId } = useParams();
@@ -99,23 +99,38 @@ const OrganizationsStaff = ({
       key: 'id',
       title: 'ID',
       sorter: true,
+      width: 196,
       sortOrder: getSortOrder('id'),
     },
     {
       key: 'name',
       title: 'Name',
+      width: 324,
+    },
+    {
+      key: 'department',
+      title: 'Department',
+      width: 220,
+    },
+    {
+      key: 'jobDesignation',
+      title: 'Job Designation',
+      width: 220,
     },
     {
       key: 'email',
       title: 'Email',
+      width: 340,
     },
     {
       key: 'password',
       title: 'Password',
+      render: (password) => (<span className="whitespace-pre">{password}</span>),
     },
     {
       key: 'edit',
       title: '',
+      width: 50,
       render: (_, { id: staffId }) => (
         <Button
           size="middle"

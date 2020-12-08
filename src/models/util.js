@@ -62,7 +62,10 @@ export default {
         let platform = 'super-user';
         if (window.location.pathname.includes('client-admin')) platform = 'client-admin';
         if (window.location.pathname.includes('survey-platform')) platform = 'survey-platform';
-        return window.location.replace(`/${platform}/login`);
+
+        if (window.location.pathname !== `/${platform}/login`) {
+          return window.location.replace(`/${platform}/login`);
+        }
       }
 
       const sendAlert = ({ message, description }) => {

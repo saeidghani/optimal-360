@@ -18,6 +18,139 @@
   border-bottom-color: @process-tail-color;
 }
 
-.result-tabs  .ant-tabs-top > .ant-tabs-nav::before{
+.borderless-tab .ant-tabs-top > .ant-tabs-nav::before {
   border: unset;
+}
+
+.td-gray {
+  & {
+    background-color: rgba(232, 234, 241, 0.75);
+    color: #8d98ba;
+  }
+
+  &.ant-table-row-selected td {
+    background-color: rgba(232, 234, 241, 1) !important;
+  }
+
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #8d98ba;
+    border: unset;
+  }
+
+  .ant-checkbox-inner {
+    border-color: rgba(141, 152, 186, var(--bg-opacity));
+  }
+
+  .ant-progress-circle path:nth-child(2) {
+    stroke: #8d98ba !important;
+  }
+}
+
+.clusters-table {
+  .ant-table-title + .ant-table-container {
+    background-color: aliceblue;
+  }
+
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td,
+  .ant-table tfoot > tr > th,
+  .ant-table tfoot > tr > td {
+    padding: 10px 16px;
+  }
+
+  .ant-table-tbody > tr.ant-table-row > td,
+  .ant-table-tbody > tr.ant-table-row > td > span {
+    color: #1bb7d9 !important;
+  }
+}
+
+.row-dragging {
+  & {
+    display: inline-table;
+    padding: 0 17px;
+  }
+
+  & .dragHandler {
+    width: 48px;
+  }
+}
+
+.ant-menu-item .anticon,
+.ant-menu-submenu-title .anticon {
+  margin-right: 0px;
+
+  font-size: 1em !important;
+}
+
+.ant-input-lg[name='password'] {
+  font-size: 12px !important;
+}
+
+.ant-table-row-selected {
+  td {
+    background-color: #e1ffff !important;
+  }
+}
+
+.c-table-selection-lg {
+  .ant-table-selection-column {
+    padding-left: 22px !important;
+    padding-right: 72px !important;
+  }
+}
+
+.c-input-number-text-center {
+  input {
+    text-align: center !important;
+  }
+}
+
+// Ratee.ReportSetting component
+.report-setting-page {
+  // Report content
+  label {
+    width: fit-content;
+  }
+
+  .checkbox-group-wrapper {
+    & {
+      margin-top: 20px;
+      margin-left: 40px;
+      margin-bottom: 10px;
+    }
+
+    & > label {
+      margin-bottom: 28px;
+    }
+  }
+
+  .ant-checkbox + span {
+    padding-left: 30px;
+  }
+
+  .ant-checkbox-group {
+    & {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 12px;
+      margin-left: 48px !important;
+    }
+
+    .ant-checkbox + span {
+      padding-left: 20px;
+    }
+  }
+
+  // past result
+  .ant-table-thead tr {
+    height: 56px;
+  }
+
+  .autocomplete-container {
+    max-width: 388px;
+  }
+
 }

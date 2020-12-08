@@ -90,7 +90,7 @@ const _Table = ({
         <div className={`flex flex-row justify-between items-center mt-10 ${paginationClassName}`}>
           <div className="flex flex-row items-center justify-between">
             <p className="text-sm text-antgray-100 whitespace-no-wrap">
-              Number of results per page
+              Number of Results per Page
             </p>
 
             <Dropdown
@@ -127,7 +127,7 @@ _Table.propTypes = {
       PropTypes.string,
       PropTypes.shape({
         key: PropTypes.string,
-        title: PropTypes.oneOfType([PropTypes.element,PropTypes.string]),
+        title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
         sorter: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
       }),
     ]),
@@ -147,7 +147,7 @@ _Table.propTypes = {
   onPaginationChange: PropTypes.func,
   onRowSelectionChange: PropTypes.func,
   totalRecordSize: PropTypes.number,
-  selectedRowKeys: PropTypes.arrayOf(PropTypes.string),
+  selectedRowKeys: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
   onRowClick: PropTypes.func,
   onTableChange: PropTypes.func,
   size: PropTypes.string,

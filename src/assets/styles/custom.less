@@ -4,6 +4,14 @@
 //   background-color: @primary-color !important;
 // }
 
+.c-input-sm-placeholder {
+  input {
+    &::placeholder {
+      font-size: 12px !important;
+    }
+  }
+}
+
 .c-modal-sm-padding {
   .ant-modal-content {
     padding: 60px 30px 30px 30px !important;
@@ -76,12 +84,6 @@
   border-bottom: 1px solid lightgray;
 }
 
-.c-table-blue-bg {
-  .ant-table-title + .ant-table-container {
-    background-color: aliceblue;
-  }
-}
-
 .header-bg-white .ant-table-thead > tr > th {
   background: #fff;
 }
@@ -90,6 +92,7 @@
   .ant-table-title + .ant-table-container table > thead > tr {
     background-color: #fff !important;
   }
+
   .header-bg-white .ant-table-thead > tr > th {
     background: #fff !important;
   }
@@ -522,22 +525,22 @@
   display: inline-flex !important;
 }
 
-.c-radio-red {
+.c-radio-primary {
   .ant-radio-checked .ant-radio-inner {
-    border-color: red !important;
+    border-color: #1bb7d9 !important;
   }
 
   .ant-radio-checked .ant-radio-inner:after {
-    background-color: red;
+    background-color: #1bb7d9;
   }
 
   .ant-radio:hover .ant-radio-inner {
-    border-color: red;
+    border-color: #1bb7d9;
   }
 
   .ant-checkbox-checked .ant-checkbox-inner {
-    background-color: red;
-    border-color: red;
+    background-color: #1bb7d9;
+    border-color: #1bb7d9;
   }
 }
 
@@ -1263,6 +1266,6 @@ td.ant-table-column-sort {
   }
 }
 
-.ant-input {
-  font-size: 12px !important;
-}
+// .ant-input {
+//   font-size: 12px !important;
+// }

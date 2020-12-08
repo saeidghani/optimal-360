@@ -2,17 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { QuestionOutlined, SaveOutlined } from '@ant-design/icons';
 
-import Layout from './Helper/Layout';
+import Layout from '../Common/SurveyPlatformLayout';
 
 import Button from '../Common/Button';
 import Table from '../Common/Table';
 import Radio from '../Common/RadioGroup';
 import TextArea from '../Common/TextArea';
+import { dynamicMap } from '../../routes/RouteMap';
 
 const ReferenceGuide = ({ loading }) => {
   const [comment, setComment] = React.useState('');
-  const [isClear, setIsClear] = React.useState(1);
-  const [items, setItems] = React.useState({});
+  const items = {
+    101: '4',
+    102: '3',
+    103: '2',
+    104: '1',
+  };
 
   const columns = React.useMemo(() => [
     {
@@ -28,12 +33,7 @@ const ReferenceGuide = ({ loading }) => {
       ),
       width: 100,
       render: (itm) => (
-        <Radio
-          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
-          items={itm.options}
-          value={items[itm.id]}
-          className="pl-5"
-        />
+        <Radio className="c-radio-primary pl-5" items={itm.options} value={items[itm.id]} />
       ),
     },
     {
@@ -49,12 +49,7 @@ const ReferenceGuide = ({ loading }) => {
       ),
       width: 100,
       render: (itm) => (
-        <Radio
-          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
-          items={itm.options}
-          value={items[itm.id]}
-          className="pl-5"
-        />
+        <Radio className="c-radio-primary pl-5" items={itm.options} value={items[itm.id]} />
       ),
     },
     {
@@ -70,12 +65,7 @@ const ReferenceGuide = ({ loading }) => {
       ),
       width: 100,
       render: (itm) => (
-        <Radio
-          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
-          items={itm.options}
-          value={items[itm.id]}
-          className="pl-5"
-        />
+        <Radio className="c-radio-primary pl-5" items={itm.options} value={items[itm.id]} />
       ),
     },
     {
@@ -91,12 +81,7 @@ const ReferenceGuide = ({ loading }) => {
       ),
       width: 100,
       render: (itm) => (
-        <Radio
-          onChange={(e) => setItems({ ...items, [itm.id]: e.target.value })}
-          items={itm.options}
-          value={items[itm.id]}
-          className="pl-5"
-        />
+        <Radio className="c-radio-primary pl-5" items={itm.options} value={items[itm.id]} />
       ),
     },
   ]);
@@ -104,31 +89,31 @@ const ReferenceGuide = ({ loading }) => {
   const dataSource = [
     {
       key: '1',
-      notAtAll: { id: '101', options: [{ title: '', value: '1' }] },
-      notMuch: { id: '101', options: [{ title: '', value: '2' }] },
-      somewhat: { id: '101', options: [{ title: '', value: '3' }] },
-      most: { id: '101', options: [{ title: '', value: '4' }] },
+      notAtAll: { id: '101', options: [{ title: '', value: '1', disabled: true }] },
+      notMuch: { id: '101', options: [{ title: '', value: '2', disabled: true }] },
+      somewhat: { id: '101', options: [{ title: '', value: '3', disabled: true }] },
+      most: { id: '101', options: [{ title: '', value: '4', disabled: true }] },
     },
     {
       key: '2',
-      notAtAll: { id: '102', options: [{ title: '', value: '1' }] },
-      notMuch: { id: '102', options: [{ title: '', value: '2' }] },
-      somewhat: { id: '102', options: [{ title: '', value: '3' }] },
-      most: { id: '102', options: [{ title: '', value: '4' }] },
+      notAtAll: { id: '102', options: [{ title: '', value: '1', disabled: true }] },
+      notMuch: { id: '102', options: [{ title: '', value: '2', disabled: true }] },
+      somewhat: { id: '102', options: [{ title: '', value: '3', disabled: true }] },
+      most: { id: '102', options: [{ title: '', value: '4', disabled: true }] },
     },
     {
       key: '3',
-      notAtAll: { id: '103', options: [{ title: '', value: '1' }] },
-      notMuch: { id: '103', options: [{ title: '', value: '2' }] },
-      somewhat: { id: '103', options: [{ title: '', value: '3' }] },
-      most: { id: '103', options: [{ title: '', value: '4' }] },
+      notAtAll: { id: '103', options: [{ title: '', value: '1', disabled: true }] },
+      notMuch: { id: '103', options: [{ title: '', value: '2', disabled: true }] },
+      somewhat: { id: '103', options: [{ title: '', value: '3', disabled: true }] },
+      most: { id: '103', options: [{ title: '', value: '4', disabled: true }] },
     },
     {
       key: '4',
-      notAtAll: { id: '104', options: [{ title: '', value: '1' }] },
-      notMuch: { id: '104', options: [{ title: '', value: '2' }] },
-      somewhat: { id: '104', options: [{ title: '', value: '3' }] },
-      most: { id: '104', options: [{ title: '', value: '4' }] },
+      notAtAll: { id: '104', options: [{ title: '', value: '1', disabled: true }] },
+      notMuch: { id: '104', options: [{ title: '', value: '2', disabled: true }] },
+      somewhat: { id: '104', options: [{ title: '', value: '3', disabled: true }] },
+      most: { id: '104', options: [{ title: '', value: '4', disabled: true }] },
     },
   ];
 
@@ -227,12 +212,12 @@ const ReferenceGuide = ({ loading }) => {
             />
           </div>
           <Radio
+            className="c-radio-primary"
             items={[
-              { title: '', value: 1 },
-              { title: '', value: 2 },
+              { title: '', value: 1, disabled: true },
+              { title: '', value: 2, disabled: true },
             ]}
-            value={isClear}
-            onChange={(e) => setIsClear(e.target.value)}
+            value={1}
           />
         </div>
         <p
@@ -296,7 +281,7 @@ const ReferenceGuide = ({ loading }) => {
         <Button
           className="c-force-padding-y-px mt-16 shadow-none w-full px-5 md:w-auto md:border-none"
           text="Ok, Got it!"
-          href="/survey-platform/managers/ratee-group/questions/2"
+          href={dynamicMap.surveyPlatform.rateeGroupQuestions2({ id: '2' })}
         />
       </div>
     </Layout>

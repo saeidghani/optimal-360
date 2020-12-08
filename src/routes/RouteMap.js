@@ -11,18 +11,19 @@ const superUser = {
   projectInfo: 'new-project/project-info',
   surveySettings: 'new-project/survey-settings',
   emailSettings: 'new-project/email-settings',
-  emailSettingsTemplate: 'new-project/email-settings/:template',
+  emailSettingsTemplate: 'new-project/email-settings/:id/:name',
   surveyIntro: 'new-project/survey-intro',
   surveyQuestions: 'new-project/survey-questions',
   report: 'new-project/report',
 
-  groupReports: 'new-project/reports/group-reports',
+  groupReports: 'new-project/reports/:surveyGroupId/group-reports',
 
-  addRatee: 'participants/ratee/add/',
+  addRatee: 'participants/ratee/add',
   editRatee: 'participants/ratee/add/edit',
+  raterSelection: 'participants/ratee/raterSelection',
   rateesList: 'participants/ratee/add/step2',
 
-  ratersList: 'participants/ratee/:tab?',
+  ratersList: 'participants/ratee',
 
   organizationsList: 'organizations',
   addOrganizationStaff: 'organizations/:organizationId/new-staff',
@@ -41,11 +42,6 @@ const clientAdmin = {
 
   dashboard: 'dashboard',
 
-  participantSummary: 'participant-summary',
-  participantDetails: 'participant-details',
-
-  ratersDetails: 'rater-details',
-
   referenceGuide: 'reference-guide',
 };
 
@@ -53,13 +49,17 @@ const surveyPlatform = {
   login: 'login',
   forgotPassword: 'forgot-password',
 
-  welcome: 'welcome',
   information: 'information',
   referenceGuide: 'reference-guide',
+  dashboard: 'dashboard',
 
-  mangars: 'managers',
+  allRateesQuestions: 'all-ratees/surveyGroup/:surveyGroupId/questions/:questionNumber',
+  individualQuestions: 'individual/surveyGroup/:surveyGroupId/questions/:questionNumber',
+  rateeGroupQuestions: 'ratee-group/surveyGroup/:surveyGroupId/questions/:questionNumber',
 
-  ratersDetails: 'rater-details',
+  allRateesFeedbacks: 'allRatees/surveyGroup/:surveyGroupId/feedbacks/:feedbackNumber',
+  individualFeedbacks: 'individual/surveyGroup/:surveyGroupId/feedbacks/:feedbackNumber',
+  rateeGroupFeedbacks: 'rateeGroup/surveyGroup/:surveyGroupId/feedbacks/:feedbackNumber',
 };
 
 const ref = { ...{ superUser }, ...{ clientAdmin }, ...{ surveyPlatform } };

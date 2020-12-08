@@ -61,20 +61,24 @@ const AddFeedbackModal = ({ visible, onSave, onCancel }) => {
               <div className="col-span-6">
                 <AutoComplete
                   labelText="Statement Type"
-                  onSelect={(item) => setFieldValue('statementType', item.value)}
+                  onSelect={(item) => setFieldValue('statementType', item.value.toLowerCase())}
                   placeholder="Search"
                   options={['positive', 'negative'].map((val, i) => ({
-                    label: val,
+                    label: val.charAt(0).toUpperCase() + val.slice(1),
                     value: val,
                     key: i,
                   }))}
                   onChange={() => {}}
-                  value={values.statementType}
+                  value={
+                    values.statementType
+                      ? values.statementType.charAt(0).toUpperCase() + values.statementType.slice(1)
+                      : ''
+                  }
                   errorMessage={touched.statementType && errors.statementType}
                 />
               </div>
 
-              <div className="col-span-12 my-5">
+              <div className="col-span-12 mt-2">
                 <Input
                   labelText="Question Statement"
                   name="statement"
@@ -86,7 +90,7 @@ const AddFeedbackModal = ({ visible, onSave, onCancel }) => {
                 />
               </div>
 
-              <div className="col-span-12 mt-5">
+              <div className="col-span-12">
                 <Checkbox
                   checked={values.required}
                   onChange={(required) => setFieldValue('required', required)}

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 // import PropTypes from 'prop-types';
 
 import PropTypes from 'prop-types';
@@ -7,25 +7,33 @@ import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
 import { useQuery } from '../../../hooks';
 
-const RatersEmail = ({ loading, fetchRaters, raters, fetchEmailOptions, emailOptions }) => {
+const RatersEmail = ({
+                       loading,
+                       fetchRaters,
+                       raters,
+                       fetchEmailOptions,
+                       emailOptions,
+                       exportSurveyGroupRaters,
+                       sendEmail,
+                     }) => {
   const [parsedQuery, query, setQuery] = useQuery();
-  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const pageNumber = parsedQuery?.page_number || 1;
+  const pageSize = parsedQuery?.page_size || 10;
   const surveyGroupId = parsedQuery?.surveyGroupId;
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchRaters({ query, surveyGroupId });
     setSelectedRows([]);
   }, [
     fetchRaters,
     surveyGroupId,
-    parsedQuery.page_size,
+    pageSize,
+    pageNumber,
     parsedQuery.q,
-    parsedQuery.page_number,
     parsedQuery.sort,
   ]);
-  useEffect(() => {
+  React.useEffect(() => {
     fetchEmailOptions({ surveyGroupId });
   }, [fetchEmailOptions, surveyGroupId]);
 
@@ -34,6 +42,7 @@ const RatersEmail = ({ loading, fetchRaters, raters, fetchEmailOptions, emailOpt
       <div className="flex flex-row items-center">
         {(emailOptions?.data || []).map(({ id, name }) => (
           <Button
+            key={id}
             size="middle"
             textSize="xs"
             text={name}
@@ -41,9 +50,15 @@ const RatersEmail = ({ loading, fetchRaters, raters, fetchEmailOptions, emailOpt
             className="ml-3"
             icon="FileExcelOutlined"
             iconPosition="right"
+            onClick={() => {
+              sendEmail({
+                surveyGroupId,
+                emailOptionId: id,
+                raterIds: selectedRows?.map((el) => el.raterId),
+              });
+            }}
           />
-        ))
-        }
+        ))}
         <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
       </div>
     ) : (
@@ -59,12 +74,15 @@ const RatersEmail = ({ loading, fetchRaters, raters, fetchEmailOptions, emailOpt
           <Button
             size="middle"
             textSize="xs"
-            text="Export Exel File"
+            text="Export Excel File"
             textClassName="mr-2"
             className="ml-3"
             type="gray"
             icon="FileExcelOutlined"
             iconPosition="right"
+            onClick={() => {
+              exportSurveyGroupRaters({ surveyGroupId });
+            }}
           />
         </div>
       </div>
@@ -110,9 +128,6 @@ const RatersEmail = ({ loading, fetchRaters, raters, fetchEmailOptions, emailOpt
       rowKey="raterId"
       renderHeader={renderHeader}
       onPageSizeChange={(size) => {
-        console.log('new size', size);
-
-        setPageSize(size);
         setQuery({ page_size: size, page_number: 1 });
       }}
       pageSize={pageSize * 1}
@@ -137,6 +152,8 @@ const RatersEmail = ({ loading, fetchRaters, raters, fetchEmailOptions, emailOpt
 RatersEmail.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchRaters: PropTypes.func.isRequired,
+  exportSurveyGroupRaters: PropTypes.func.isRequired,
+  sendEmail: PropTypes.func.isRequired,
   raters: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
     metaData: PropTypes.shape({

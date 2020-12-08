@@ -25,6 +25,8 @@ const UpdateStaff = ({ fetchStaffDetails, staffDetails, setStaffDetails, loading
       .string()
       .min(8, 'password must  be at least 8 characters long')
       .required('password field is required'),
+    department: yup.string().required('Department field is required'),
+    jobDesignation: yup.string().required('Job Designation field is required'),
   });
 
   return (
@@ -46,6 +48,8 @@ const UpdateStaff = ({ fetchStaffDetails, staffDetails, setStaffDetails, loading
             initialValues={{
               name: staffDetails?.data?.name || '',
               email: staffDetails?.data?.email || '',
+              department: staffDetails?.data?.department || '',
+              jobDesignation: staffDetails?.data?.jobDesignation || '',
               password: staffDetails?.data?.password || '',
             }}
             validationSchema={schema}
@@ -55,7 +59,8 @@ const UpdateStaff = ({ fetchStaffDetails, staffDetails, setStaffDetails, loading
 
                 const path = dynamicMap.superUser.organizationStaffList({ organizationId });
                 history.push(path);
-              } catch (error) {}
+              } catch (error) {
+              }
             }}
           >
             {({ values, errors, touched, handleChange, handleSubmit }) => (
@@ -92,10 +97,31 @@ const UpdateStaff = ({ fetchStaffDetails, staffDetails, setStaffDetails, loading
                   extrainfoLink="#"
                   errorMessage={touched.password && errors.password}
                 />
+                <Input
+                  disabled={loading}
+                  onChange={handleChange}
+                  value={values.department}
+                  name="department"
+                  labelText="Department"
+                  placeholder="IT"
+                  wrapperClassName="mb-2"
+                  errorMessage={touched.department && errors.department}
+                />
+                <Input
+                  disabled={loading}
+                  onChange={handleChange}
+                  value={values.jobDesignation}
+                  name="jobDesignation"
+                  labelText="Job Designation"
+                  placeholder="Executive"
+                  wrapperClassName="mb-2"
+                  errorMessage={touched.jobDesignation && errors.jobDesignation}
+                />
                 <Button
                   loading={loading}
                   onClick={handleSubmit}
-                  text="Create"
+                  htmlType="submit"
+                  text="Save"
                   textSize="base"
                   className="ml-auto c-force-padding-y-px px-8 mt-6"
                 />
@@ -117,6 +143,8 @@ UpdateStaff.propTypes = {
       name: PropTypes.string,
       email: PropTypes.string,
       password: PropTypes.string,
+      department: PropTypes.string,
+      jobDesignation: PropTypes.string,
     }),
   }),
 };

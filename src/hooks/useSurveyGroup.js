@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
 import { useQuery } from './useQuery';
 
@@ -16,18 +17,23 @@ const useSurveyGroup = () => {
   React.useEffect(() => {
     const sortedArr = surveyGroups?.data?.sort((el1, el2) => el1.id - el2.id) || [];
 
-    const firstSurveyGroupId = sortedArr?.length > 0 ? sortedArr[0].id : '';
+    const firstValidSurveyGroupId =
+      sortedArr?.length > 0
+        ? sortedArr.find((el) => !el.stepsStatus || !moment(el.startDate).isBefore())?.id
+        : '';
 
     const isURLSurveyGroupValid = !!sortedArr.find(
-      (el) => el.id?.toString() === parsedQuery?.surveyGroupId?.toString(),
+      (el) =>
+        el.id?.toString() === parsedQuery?.surveyGroupId?.toString() &&
+        (!el.stepsStatus || !moment(el.startDate).isBefore()),
     );
 
     if (
       !isURLSurveyGroupValid &&
-      firstSurveyGroupId &&
-      firstSurveyGroupId !== parsedQuery?.surveyGroupId
+      firstValidSurveyGroupId &&
+      firstValidSurveyGroupId !== parsedQuery?.surveyGroupId
     ) {
-      setQuery({ surveyGroupId: firstSurveyGroupId });
+      setQuery({ surveyGroupId: firstValidSurveyGroupId });
     }
     // eslint-disable-next-line
   }, [JSON.stringify(surveyGroups.data)]);

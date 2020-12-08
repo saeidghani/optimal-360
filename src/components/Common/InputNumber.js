@@ -15,11 +15,18 @@ const _InputNumber = ({
   min,
   max,
   errorMessage,
+  fixedHeightForErrorMessage,
+  disabled,
+  precision,
+  step,
 }) => (
   <div className={`w-full ${wrapperClassName}`}>
     {label ? <p className="text-heading2 text-sm font-normal mb-4">{label}</p> : null}
 
     <InputNumber
+      disabled={disabled}
+      precision={precision}
+      step={step}
       name={name}
       className={`text-xs text-body ${className}`}
       value={(value || 0).toString()}
@@ -31,7 +38,7 @@ const _InputNumber = ({
       size={size}
     />
 
-    <p className="text-red-500 h-5">{errorMessage}</p>
+    <p className={`text-red-500 ${fixedHeightForErrorMessage && 'h-5'}`}>{errorMessage}</p>
   </div>
 );
 
@@ -48,6 +55,10 @@ _InputNumber.propTypes = {
   parser: PropTypes.func,
   min: PropTypes.number,
   max: PropTypes.number,
+  disabled: PropTypes.bool,
+  fixedHeightForErrorMessage: PropTypes.bool,
+  precision: PropTypes.number,
+  step: PropTypes.number,
 };
 
 _InputNumber.defaultProps = {
@@ -62,6 +73,10 @@ _InputNumber.defaultProps = {
   max: 100,
   formatter: (value) => `${value}%`,
   parser: (value) => value.replace('%', ''),
+  disabled: false,
+  fixedHeightForErrorMessage: true,
+  precision: 0,
+  step: 1,
 };
 
 export default _InputNumber;

@@ -31,7 +31,7 @@ const _TextArea = ({
       value={value}
       onChange={onChange}
       onPressEnter={onPressEnter}
-      className={`resize-none hover:bg-antgray-700 bg-antgray-700 p-5 ${className}`}
+      className={`resize-none focus:bg-antgray-700  hover:bg-antgray-700 bg-antgray-700 p-5 ${className}`}
       rows={rows}
     />
 

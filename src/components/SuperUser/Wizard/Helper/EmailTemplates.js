@@ -1,22 +1,3 @@
-const tableTemplate = () => {
-  return `
-       <table>
-        <tbody class="text-editor-table">
-          <tr>
-            ${['Name', 'Relationship', 'Start Date', 'End Date'].map((txt) => `<td>${txt}</td>`)}
-          </tr>
-
-          <tr>
-           
-           ${['John Doe', 'Your Peer', 'DD / MM / YYYY', 'DD / MM / YYYY'].map(
-             (txt) => `<td >${txt}</td>`,
-           )}
-          </tr>
-
-        </tbody>
-      </table>`.replaceAll(',', '');
-};
-
 const raterVerificationEmail = `
       <p> <% PROJECT_NAME %> : Please verify your rater </p>
       <br />
@@ -25,7 +6,7 @@ const raterVerificationEmail = `
       <p> Dear <% RATER %> , </p>
       <br />
       <p> You have been nominated to provide leadership competency feedback on the following individual(s): </p>
-      <br /> <br />  ${tableTemplate()} <br /><br />
+      <br /> <br />  <% RELATION_TABLE %> <br /><br />
       <p> Please verify the name of the individual(s) who has/have nominated you as a rater and the respective work relationship(s).
       Should there be any problems with the information, please notify your in-house HR team immediately. </p>
       <br />
@@ -66,7 +47,7 @@ const loginEmailOthers = `
        <p> Dear <% RATER %> , </p>
        <br />
        <p> You have been nominated to provide leadership competency feedback on the following individual(s): </p>
-       <br /> <br /> ${tableTemplate()} <br /><br />
+       <br /> <br /> <% RELATION_TABLE %> <br /><br />
        <p> Please complete and submit the survey by <% END_DATE %>. </p>
        <br />
        <p> To access the survey, we recommend that you upgrade to the most recent version of your browser. </p>
@@ -87,7 +68,7 @@ const reminderEmails = `
        <p> Dear <% RATER %> , </p>
        <br />
        <p> You have been nominated to provide leadership competency feedback on the following individual(s): </p>
-       <br /> <br /> ${tableTemplate()} <br /><br />
+       <br /> <br /> <% RELATION_TABLE %> <br /><br />
        <p> Please complete and submit the survey by <% END_DATE %>. </p>
        <br />
        <p> To access the survey, we recommend that you upgrade to the most recent version of your browser. </p>
@@ -108,7 +89,7 @@ const resetPasswordEmail = `
        <p> Dear <% RATER %> , </p>
        <br />
        <p> You have been nominated to provide leadership competency feedback on the following individual(s): </p>
-       <br /> <br /> ${tableTemplate()} <br /><br /> 
+       <br /> <br /> <% RELATION_TABLE %> <br /><br /> 
        <p> Please complete and submit the survey by <% END_DATE %>. </p>
        <br />
        <p> To access the survey, we recommend that you upgrade to the most recent version of your browser. </p>

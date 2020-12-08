@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 import { dynamicMap } from '../../../routes/RouteMap';
 
-import { useQuery } from '../../../hooks';
+import { useQuery, parse } from '../../../hooks/useQuery';
 
 import * as ClusterUtils from '../../../lib/Wizard/clusterUtils';
 
@@ -27,7 +27,7 @@ import Button from '../../Common/Button';
 import DraggableTable from '../../Common/DataTable';
 import Loading from '../../Common/Loading';
 
-const SurveyQuestionsList = ({
+const SurveyGroupCluster = ({
   surveyGroupInfo,
   fetchSurveyGroupInfo,
   setSurveyGroupInfo,
@@ -37,17 +37,15 @@ const SurveyQuestionsList = ({
   const formRef = React.useRef();
 
   const schema = yup.object({
-    name: yup.string().required('Survey group name is required'),
+    name: yup.string().nullable().required('Survey group name is required'),
     clusters: yup.array(yup.object({})).min(1, 'You must specify at least one cluster item'),
-    feedbacks: yup
-      .array(
-        yup.object({
-          label: yup.string().required('label is required'),
-          statement: yup.string().required('statement is required'),
-          required: yup.bool().required('required is required'),
-        }),
-      )
-      .min(1, 'You must specify at least one feedback item'),
+    feedbacks: yup.array(
+      yup.object({
+        label: yup.string().nullable().required('label is required'),
+        statement: yup.string().nullable().required('statement is required'),
+        required: yup.bool().required('required is required'),
+      }),
+    ),
   });
 
   const history = useHistory();
@@ -74,6 +72,10 @@ const SurveyQuestionsList = ({
     _selectedCluster?.competencies?.length > 0
       ? _selectedCluster.competencies.find((el) => el.id * 1 === parsedQuery.competencyId * 1)
       : {};
+
+  React.useEffect(() => {
+    setQuery({ clusterId: null, competencyId: null, questionId: null });
+  }, [history.location.pathname]);
 
   const handleFormChange = (newVal, row, key, subKey) => {
     const newValues = formRef.current.values[key].map((el) => {
@@ -151,7 +153,7 @@ const SurveyQuestionsList = ({
 
     // creating a unique id
     const feedbackIds = feedbacks?.length > 0 ? feedbacks.map((el) => el.id * 1) : [1];
-    const id = feedbackIds.reduce((prevValue, currentValue) => prevValue + currentValue);
+    const id = feedbackIds.reduce((prevValue, currentValue) => prevValue + currentValue) + 1;
     const index = feedbacks.length;
     const showOrder =
       feedbacks?.length > 0 ? Math.max(...feedbacks.map((el) => el.showOrder * 1)) + 1 : 1;
@@ -175,7 +177,7 @@ const SurveyQuestionsList = ({
     const currentClusterId = _selectedCluster?.id;
     const oldClusters = [...formRef.current?.values?.clusters];
 
-    const newClusters = ClusterUtils.addItem(
+    const { clusters, id } = ClusterUtils.addItem(
       oldClusters,
       {
         clusterId: currentClusterId,
@@ -186,7 +188,9 @@ const SurveyQuestionsList = ({
       parsedQuery,
     );
 
-    setClusters(newClusters);
+    setClusters(clusters);
+
+    return id;
   };
 
   const onFeedbackSortEnd = ({ oldIndex, newIndex }) => {
@@ -278,8 +282,10 @@ const SurveyQuestionsList = ({
         visible={addClusterModal}
         onCancel={() => setAddClusterModal(false)}
         onSave={(vals) => {
-          addItemToClusters(vals);
+          const clusterId = addItemToClusters(vals);
           setAddClusterModal(false);
+
+          setQuery({ clusterId });
         }}
       />
 
@@ -287,8 +293,10 @@ const SurveyQuestionsList = ({
         visible={addCompetencyModal}
         onCancel={() => setAddCompetencyModal(false)}
         onSave={(vals) => {
-          addItemToClusters(vals);
+          const competencyId = addItemToClusters(vals);
           setAddCompetencyModal(false);
+
+          setQuery({ competencyId });
         }}
       />
 
@@ -296,8 +304,10 @@ const SurveyQuestionsList = ({
         visible={addQuestionModal}
         onCancel={() => setAddQuestionModal(false)}
         onSave={(vals) => {
-          addItemToClusters(vals);
+          const questionId = addItemToClusters(vals);
           setAddQuestionModal(false);
+
+          setQuery({ questionId });
         }}
       />
 
@@ -319,7 +329,12 @@ const SurveyQuestionsList = ({
                   await addSurveyGroup(values);
                 }
 
-                history.push(dynamicMap.superUser.organizationsList());
+                const nextPath =
+                  history.location.search && parse(history.location.search).prevUrl
+                    ? parse(history.location.search).prevUrl
+                    : dynamicMap.superUser.bankModels();
+
+                history.push(nextPath);
               } catch (err) {}
             }}
           >
@@ -339,9 +354,10 @@ const SurveyQuestionsList = ({
 
                 <h4 className="text-secondary text-lg mt-8.5">Data Model</h4>
 
-                <div className="grid grid-cols-12 gap-x-8">
+                <div className="grid grid-cols-12 gap-x-8 mt-8">
                   <SecondaryMenu
                     title="ALL"
+                    titleClassName="text-body"
                     className="py-3 col-span-3 h-94 overflow-x-hidden overflow-y-auto"
                     items={values.clusters}
                     defaultClusterId={firstClusterItem.id}
@@ -398,6 +414,7 @@ const SurveyQuestionsList = ({
                       />
                     ) : (
                       <DraggableTable
+                        tableClassName="clusters-table"
                         renderHeader={renderHeader}
                         onClusterEdit={(cluster) => setSelectedCluster(cluster)}
                         onClusterDelete={(cluster) => deleteCluster({ clusterId: cluster.id })}
@@ -461,7 +478,7 @@ const SurveyQuestionsList = ({
 
                   <Button
                     className="w-24.5 h-9.5"
-                    text="Next"
+                    text="Save"
                     textSize="base"
                     onClick={handleSubmit}
                   />
@@ -475,7 +492,7 @@ const SurveyQuestionsList = ({
   );
 };
 
-SurveyQuestionsList.propTypes = {
+SurveyGroupCluster.propTypes = {
   fetchSurveyGroupInfo: PropTypes.func.isRequired,
   addSurveyGroup: PropTypes.func.isRequired,
   setSurveyGroupInfo: PropTypes.func.isRequired,
@@ -506,8 +523,8 @@ SurveyQuestionsList.propTypes = {
   }),
 };
 
-SurveyQuestionsList.defaultProps = {
+SurveyGroupCluster.defaultProps = {
   surveyGroupInfo: {},
 };
 
-export default SurveyQuestionsList;
+export default SurveyGroupCluster;

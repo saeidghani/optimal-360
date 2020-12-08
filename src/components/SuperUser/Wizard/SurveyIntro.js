@@ -31,73 +31,15 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
     surveyMessage: yup.string().required('survey message is required'),
   });
 
-  const [parsedQuery, , setQuery] = useQuery();
+  const [parsedQuery] = useQuery();
   const { projectId } = parsedQuery;
 
-  React.useEffect(() => {
-    const resetForm = async () => {
-      await fetchSurveyIntro(surveyGroupId);
-
-      if (formRef?.current) {
-        // reset form state when surveyGroup changes
-        // happens when user decides to discard current settings and changes currentSurveyGroup
-        formRef.current.setTouched({});
-        formRef.current.setErrors({});
-        formRef.current.setValues({ ...formRef?.current?.values });
-      }
-    };
-
-    if (surveyGroupId) {
-      resetForm();
-    }
-
-    // eslint-disable-next-line
-  }, [fetchSurveyIntro, surveyGroupId]);
-
   const [surveyGroupModal, setSurveyGroupModal] = React.useState(false);
-  const [isFormDone, setIsFormDone] = React.useState(false);
   const [selectedSurveyGroupKey, setSelectedSurveyGroupKey] = React.useState('');
 
   React.useEffect(() => {
     if (surveyGroupId) fetchSurveyIntro(surveyGroupId);
-  }, [projectId, surveyGroupId, fetchSurveyIntro]);
-
-  React.useEffect(() => {
-    if (
-      isFormDone &&
-      selectedSurveyGroupKey &&
-      selectedSurveyGroupKey !== parsedQuery?.surveyGroupId
-    ) {
-      setQuery({ surveyGroupId: selectedSurveyGroupKey });
-      setIsFormDone(false);
-      setSurveyGroupModal(false);
-    }
-  }, [isFormDone, selectedSurveyGroupKey, setQuery, parsedQuery.surveyGroupId]);
-
-  React.useEffect(() => {
-    const validateForm = async () => {
-      try {
-        const errorObj = await formRef.current.validateForm(formRef?.current?.values);
-
-        if (errorObj && Object.values(errorObj).length > 0) {
-          throw errorObj;
-        } else {
-          setIsFormDone(true);
-        }
-      } catch (errorObj) {
-        formRef.current.setErrors(errorObj);
-        formRef.current.setTouched(errorObj);
-
-        if (selectedSurveyGroupKey !== parsedQuery?.surveyGroupId) setSurveyGroupModal(true);
-      }
-    };
-
-    if (selectedSurveyGroupKey && formRef?.current) {
-      validateForm(formRef?.current?.values);
-    }
-
-    // eslint-disable-next-line
-  }, [selectedSurveyGroupKey]);
+  }, [surveyGroupId, fetchSurveyIntro]);
 
   return (
     <MainLayout
@@ -112,7 +54,14 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
 
       <ChangeSurveyGroupModal
         handleOk={() => {
-          setIsFormDone(true);
+          const path = dynamicMap.superUser.surveySettings();
+          const params = stringify({
+            projectId,
+            surveyGroupId: selectedSurveyGroupKey,
+            wizardEditMode: parsedQuery?.wizardEditMode,
+          });
+
+          history.push(`${path}${params}`);
         }}
         handleCancel={() => {
           setSelectedSurveyGroupKey('');
@@ -123,14 +72,22 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
       />
 
       <div className="bg-white grid grid-cols-12 pl-15">
-        <Menu
-          onClick={(key) => setSelectedSurveyGroupKey(key)}
-          isFormDone={isFormDone}
-          items={surveyGroups?.data}
-          className="col-span-2"
-        />
+        {!parsedQuery?.wizardEditMode ? (
+          <Menu
+            onClick={(key) => {
+              setSurveyGroupModal(true);
+              setSelectedSurveyGroupKey(key);
+            }}
+            items={surveyGroups?.data}
+            className="col-span-2"
+          />
+        ) : null}
 
-        <div className="px-6 py-5 col-start-3 col-span-10  ">
+        <div
+          className={`px-6 py-5 col-span-10 ${
+            parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
+          } `}
+        >
           <Steps currentPosition={2} />
 
           <Formik
@@ -155,6 +112,7 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
                   originalFile={surveyIntro?.clientPicture}
                   setFile={(file) => setFieldValue('clientPicture', file)}
                   file={values.clientPicture}
+                  className="w-24.5 h-9.5"
                 />
                 {touched.clientPicture && errors.clientPicture && (
                   <p className="ml-2 text-red-500 py-2">{errors.clientPicture}</p>
@@ -164,6 +122,7 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
                   <TextEditor
                     placeholder="Client Welcome Message"
                     label="Client Welcome Message"
+                    labelClass="font-normal text-body text-base leading-snug mb-3.5"
                     value={values.clientWelcomeMessage}
                     onChange={(val) => setFieldValue('clientWelcomeMessage', val)}
                   />
@@ -174,6 +133,7 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
                   <TextEditor
                     placeholder="Survey Message"
                     label="Survey Message"
+                    labelClass="font-normal text-body text-base leading-snug mb-3.5"
                     value={values.surveyMessage}
                     onChange={(val) => setFieldValue('surveyMessage', val)}
                     wrapperClassName="mt-18"
@@ -190,6 +150,7 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
                         const params = stringify({
                           projectId: parsedQuery?.projectId,
                           surveyGroupId: parsedQuery?.surveyGroupId,
+                          wizardEditMode: parsedQuery?.wizardEditMode,
                         });
 
                         const path = dynamicMap.superUser.emailSettings();

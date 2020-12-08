@@ -9,6 +9,8 @@ export default {
     surveyGroups: '',
     clientAdmin: '',
     project: '',
+    clusterBenchmarks: '',
+    competencyBenchmarks: '',
   },
 
   effects: (dispatch) => ({
@@ -26,6 +28,8 @@ export default {
     },
 
     async fetchSingleProject(projectId) {
+      if (!projectId) return this.fetchSingleProjects_reducer('');
+
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
@@ -94,8 +98,6 @@ export default {
             data: { projectIds },
           });
 
-          // await dispatch.projects.fetchProjects();
-
           return res;
         },
         dispatch.util.errorHandler,
@@ -111,8 +113,6 @@ export default {
             url: '/super-user/projects/status',
             data: { projectIds, status },
           });
-
-          // await dispatch.projects.fetchProjects();
 
           return res;
         },
@@ -143,6 +143,151 @@ export default {
             data,
           });
 
+          await dispatch.projects.fetchSurveyGroups({ projectId });
+
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
+    },
+
+    async fetchClusterBenchmarks(surveyGroupId) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/survey-groups/${surveyGroupId}/clusters-benchmark`,
+        });
+
+        this.fetchClusterBenchmarks_reducer(res?.data);
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async setClusterBenchmarks({ surveyGroupId, ...data }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: `/super-user/survey-groups/${surveyGroupId}/clusters-benchmark`,
+          data,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async importClusterBenchmark({ surveyGroupId, file }) {
+      // eslint-disable-next-line no-undef
+      const data = new FormData();
+      data.append('excel', file);
+
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/clusters-benchmark/import`,
+            data,
+          });
+
+          await dispatch.projects.fetchClusterBenchmarks(surveyGroupId);
+
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
+    },
+
+    async exportClusterBenchmark(surveyGroupId) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/survey-groups/${surveyGroupId}/clusters-benchmark/export`,
+          responseType: 'blob',
+        });
+
+        dispatch.util.saveFile({ blob: res.data, filename: `cluster-benchmark-${surveyGroupId}` });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async fetchCompetencyBenchmarks(surveyGroupId) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/survey-groups/${surveyGroupId}/competencies-benchmark`,
+        });
+
+        this.fetchCompetencyBenchmarks_reducer(res?.data);
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async setCompetencyBenchmarks({ surveyGroupId, ...data }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: `/super-user/survey-groups/${surveyGroupId}/competencies-benchmark`,
+          data,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async importCompetencyBenchmark({ surveyGroupId, file }) {
+      // eslint-disable-next-line no-undef
+      const data = new FormData();
+      data.append('excel', file);
+
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/competencies-benchmark/import`,
+            data,
+          });
+
+          await dispatch.projects.fetchCompetencyBenchmarks(surveyGroupId);
+
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
+    },
+
+    async exportCompetencyBenchmark(surveyGroupId) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/survey-groups/${surveyGroupId}/competencies-benchmark/export`,
+          responseType: 'blob',
+        });
+
+        dispatch.util.saveFile({
+          blob: res.data,
+          filename: `competency-benchmark-${surveyGroupId}`,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async changeStatusOfSurveyGroups({ projectId, ...data }) {
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'patch',
+            url: `/super-user/projects/${projectId}/survey-groups/status`,
+            data,
+          });
+
+          await dispatch.projects.fetchSurveyGroups({ projectId });
+
           return res;
         },
         dispatch.util.errorHandler,
@@ -170,6 +315,16 @@ export default {
     fetchSurveyGroups_reducer: (state, payload) => ({
       ...state,
       surveyGroups: payload,
+    }),
+
+    fetchClusterBenchmarks_reducer: (state, payload) => ({
+      ...state,
+      clusterBenchmarks: payload,
+    }),
+
+    fetchCompetencyBenchmarks_reducer: (state, payload) => ({
+      ...state,
+      competencyBenchmarks: payload,
     }),
   },
 };

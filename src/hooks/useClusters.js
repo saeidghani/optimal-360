@@ -15,7 +15,7 @@ const useClusters = () => {
   const [, , surveyGroupId] = useSurveyGroup();
 
   React.useEffect(() => {
-    if (surveyGroupId) dispatch.wizard.fetchSurveyQuestions(surveyGroupId);
+    dispatch.wizard.fetchSurveyQuestions(surveyGroupId);
   }, [surveyGroupId, dispatch.wizard]);
 
   const firstClusterItem = React.useMemo(() => {
