@@ -11,28 +11,33 @@ class RaterSelection extends Component {
     return clearStaffAndStorage();
   }
 
-  fetchRaterGroups = async ({ surveyGroupId, rateeId }) => {
+  fetchRaterGroups = ({ surveyGroupId }) => {
     const { fetchRaterGroups } = this.props;
-    await fetchRaterGroups({ surveyGroupId, rateeId });
+    return fetchRaterGroups({ surveyGroupId });
   };
 
   fetchStaffForRater = ({ surveyGroupId, rateeId, raterGroupId, query }) => {
     const { fetchStaffForRater } = this.props;
-    fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId, query });
+    return fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId, query });
   };
 
-  setSelectedRaters = ({ rows, raterGpId }) => {
+  setSelectedRaters = (rows) => {
     const { setSelectedRaters } = this.props;
-    setSelectedRaters({ rows, raterGpId });
+    return setSelectedRaters(rows);
   }
 
-  submitRaters = async ({ surveyGroupId, rateeId, raterGroupId }) => {
+  submitRaters = async ({ surveyGroupId, rateeId, obj }) => {
     const { submitRaters } = this.props;
-    await submitRaters({ surveyGroupId, rateeId, raterGroupId });
+    await submitRaters({ surveyGroupId, rateeId, obj });
+  }
+
+  fetchAllStaffForRaters = ({ surveyGroupId, rateeId, raterGroupId }) => {
+    const { fetchAllStaffForRaters } = this.props;
+    return fetchAllStaffForRaters({ surveyGroupId, rateeId, raterGroupId });
   }
 
   render() {
-    const { loading, staffForRater, raterGroups, selectedRaters, changedLog } = this.props;
+    const { loading, staffForRater, raterGroups, selectedRaters, defaultSelectedRaters } = this.props;
     return (
       <Layout
         fetchStaffForRater={this.fetchStaffForRater}
@@ -41,8 +46,9 @@ class RaterSelection extends Component {
         fetchRaterGroups={this.fetchRaterGroups}
         raterGroups={raterGroups}
         setSelectedRaters={this.setSelectedRaters}
+        defaultSelectedRaters={defaultSelectedRaters}
         selectedRaters={selectedRaters}
-        changedLog={changedLog}
+        fetchAllStaffForRaters={this.fetchAllStaffForRaters}
         clearStaffAndStorage={this.clearStaffAndStorage}
         loading={loading}
       />
@@ -59,8 +65,9 @@ RaterSelection.propTypes = {
   selectedRaters: PropTypes.arrayOf(PropTypes.object).isRequired,
   setSelectedRaters: PropTypes.func.isRequired,
   submitRaters: PropTypes.func.isRequired,
-  changedLog: PropTypes.arrayOf(PropTypes.object).isRequired,
+  defaultSelectedRaters: PropTypes.arrayOf(PropTypes.object).isRequired,
   clearStaffAndStorage: PropTypes.func.isRequired,
+  fetchAllStaffForRaters: PropTypes.func.isRequired,
 };
 
 RaterSelection.defaultProps = {};
@@ -71,6 +78,7 @@ const mapStateToProps = (state) => ({
   raterGroups: state.ratee.raterGroups || [],
   selectedRaters: state.ratee.selectedRaters || [],
   changedLog: state.ratee.changedLog || [],
+  defaultSelectedRaters: state.ratee.defaultSelectedRaters || [],
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -79,6 +87,7 @@ const mapDispatchToProps = (dispatch) => ({
   setSelectedRaters: dispatch.ratee.setSelectedRaters,
   submitRaters: dispatch.ratee.submitRaters,
   clearStaffAndStorage: dispatch.ratee.clearStaffAndStorage,
+  fetchAllStaffForRaters: dispatch.ratee.fetchAllStaffForRaters,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RaterSelection);
