@@ -59,6 +59,7 @@ const StatusDetails = (
           onClick={async () => {
             await removeRateeRaters({ selectedRowsIds, surveyGroupId });
             fetch();
+            setSelectedRows([]);
           }}
         />
         <Button
