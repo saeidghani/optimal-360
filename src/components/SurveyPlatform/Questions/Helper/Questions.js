@@ -239,6 +239,7 @@ const Questions = ({
         size="middle"
         className="c-table-last-column-divide p-4 mt-8 md:mt-16 md:p-6 bg-white rounded-lg shadow"
         tableClassName="overflow-auto"
+        rowKey="key"
         loading={loading}
         columns={columns}
         dataSource={dataSource}
