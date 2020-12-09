@@ -526,7 +526,7 @@ const DataTable = ({
       key: 'raterName',
       title: (
         <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100">Ratee</span>
+          <span className="text-antgray-100">Rater</span>
         </div>
       ),
       width: 100,
