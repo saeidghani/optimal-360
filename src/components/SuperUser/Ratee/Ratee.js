@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useHistory } from 'react-router-dom';
-import { useQuery, useSurveyGroup, useTabs } from '../../../hooks';
+import { useQuery, useRateeSurveyGroup, useTabs } from '../../../hooks';
 
 import StatusOverview from './StatusOverview';
 import StatusDetails from './StatusDetails';
@@ -51,8 +51,8 @@ const Ratee = (
   },
 ) => {
   const history = useHistory();
-  const [parsedQuery, query, setQuery] = useQuery();
-  const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
+  const [parsedQuery, , setQuery] = useQuery();
+  const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useRateeSurveyGroup();
   const allTabs = [
     {
       title: 'Status Overview',
@@ -71,7 +71,7 @@ const Ratee = (
       key: 'result',
     },
     {
-      title: 'Report Setting',
+      title: 'Report Settings',
       key: 'report-setting',
     },
   ];
@@ -79,7 +79,7 @@ const Ratee = (
   const { TabPane } = Tabs;
 
   const dropDownOptions = React.useMemo(
-    () => (surveyGroups?.data || []).map((elm) => ({ title: elm.name, value: elm.id, label: elm.name })),
+    () => (surveyGroups || []).map((elm) => ({ title: elm.name, value: elm.id, label: elm.name })),
     [surveyGroups.timeStamp],
   );
 

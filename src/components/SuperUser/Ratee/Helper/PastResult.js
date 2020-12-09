@@ -45,9 +45,9 @@ const PastResult = ({
   const getOptions = (competencyId) => {
     let options;
     const askingValue = inputtedPastResult[competencyId]
-      ?.replaceAll('-', '')
+      ?.replaceAll('-', '') // avoid this characters on searching
       .replaceAll(' ', '')
-      .toLowerCase(); // avoid this characters on searching
+      .toLowerCase() || []; // we show all suggestions before type any character, if u want to show suggestions after type any character, delete <<|| []>>
 
     if (_pastResultOptions.length > 0) {
       options = (_pastResultOptions?.filter((each) => (
