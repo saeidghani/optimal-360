@@ -256,7 +256,7 @@ const StatusOverview = ({
             <div>
               <TeamOutlined className="bg-primary-100 p-2 text-primary-500 mr-5 rounded-sm" />
               <span className="font-medium text-2xl mr-5">{completionRate?.data?.totalRaters}</span>
-              <span className="text-xs text-antgray-100 ">Total Ratee(s)</span>
+              <span className="text-xs text-antgray-100 ">Total Rater(s)</span>
             </div>
             <div className="ml-14">
               <TeamOutlined className="bg-primary-100 p-2 text-primary-500 mr-5 rounded-sm" />
