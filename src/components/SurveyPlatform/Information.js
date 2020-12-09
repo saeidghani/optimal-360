@@ -24,6 +24,7 @@ import {
 const Information = ({ loading, fetchProfile, updateProfile, profile }) => {
   const [selectedSex, setSelectedSex] = React.useState('');
   const [selectItems, setSelectItems] = React.useState({});
+  const [errors, setErrors] = React.useState({});
 
   React.useEffect(() => {
     fetchProfile('');
@@ -119,14 +120,26 @@ const Information = ({ loading, fetchProfile, updateProfile, profile }) => {
       ...selectItems,
       [name]: value,
     });
-  };
 
+    setErrors({
+      ...errors,
+      [name]: false,
+    });
+  };
   const handleSubmit = async () => {
     const data = { sex: selectedSex, ...selectItems };
-    try {
-      await updateProfile(data);
-      history.push(dynamicMap.surveyPlatform.dashboard());
-    } catch (errors) {}
+    const dataErrors = {};
+    // eslint-disable-next-line no-unused-expressions
+    Object.keys(data)?.forEach((key) => {
+      if (!data[key]) dataErrors[key] = true;
+    });
+    setErrors(dataErrors);
+    if (Object.keys(dataErrors)?.length === 0) {
+      try {
+        await updateProfile(data);
+        history.push(dynamicMap.surveyPlatform.dashboard());
+      } catch (err) {}
+    }
   };
 
   return (
@@ -157,7 +170,9 @@ const Information = ({ loading, fetchProfile, updateProfile, profile }) => {
             <div className="text-sm text-body mb-3">{item.title}</div>
             <div className="cursor-pointer">
               <Dropdown
-                className="c-autocomplete w-full"
+                className={`c-autocomplete w-full ${
+                  errors[item.name] ? 'border border-solid border-red-500' : ''
+                }`}
                 showSearch={false}
                 options={item.dropdownOptions}
                 placeholder="Select"
