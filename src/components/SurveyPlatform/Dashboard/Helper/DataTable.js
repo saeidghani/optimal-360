@@ -228,8 +228,9 @@ const DataTable = ({
 
   return (
     <Table
-      style={{ height: 500 }}
+      scroll={{ y: 500 }}
       size="middle"
+      rowKey="key"
       loading={loading}
       className={className}
       tableClassName={`overflow-x-auto ${tableClassName}`}

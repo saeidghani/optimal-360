@@ -24,7 +24,7 @@ class _Login extends Component {
   render() {
     const { loading } = this.props;
 
-    return <Layout loading={loading} login={this.login} />;
+    return <Layout loading={false} login={this.login} />;
   }
 }
 
