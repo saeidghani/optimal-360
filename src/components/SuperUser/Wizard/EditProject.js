@@ -1,7 +1,7 @@
 import React from 'react';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
-import PropTypes, { shape } from 'prop-types';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 
 import { useQuery, parse, stringify } from '../../../hooks/useQuery';
@@ -42,13 +42,13 @@ const ProjectInfo = ({
 
   const SurveyGroupRef = [
     ...(surveyGroups?.data || []).map(({ name, id }) => ({
-      label: `B-${name}`,
+      label: `B-${name}-${id}`,
       value: `B-${name}`,
       id,
       key: `B-${id}`,
     })),
     ...(project?.data?.projectSurveyGroups || []).map(({ name, id }) => ({
-      label: `P-${name}`,
+      label: `P-${name}-${id}`,
       value: `P-${name}`,
       id,
       key: `P-${id}`,
@@ -112,6 +112,7 @@ const ProjectInfo = ({
 
               const params = stringify({
                 projectId,
+                wizardEditMode: true,
               });
 
               const path = dynamicMap.superUser.surveySettings();

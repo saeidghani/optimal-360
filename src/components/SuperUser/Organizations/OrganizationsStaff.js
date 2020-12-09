@@ -13,13 +13,13 @@ import Button from '../../Common/Button';
 import ImportExcelButton from '../../Common/ImportExcelButton';
 
 const OrganizationsStaff = ({
-                              importStaff,
-                              organizationsInfo,
-                              staff,
-                              fetchOrganizationsInfo,
-                              fetchOrganizationsStaff,
-                              loading,
-                            }) => {
+  importStaff,
+  organizationsInfo,
+  staff,
+  fetchOrganizationsInfo,
+  fetchOrganizationsStaff,
+  loading,
+}) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const { organizationId } = useParams();
@@ -125,7 +125,7 @@ const OrganizationsStaff = ({
     {
       key: 'password',
       title: 'Password',
-      render: (password) => (<span className="whitespace-pre">{password}</span>),
+      render: (password) => <span className="whitespace-pre">{password}</span>,
     },
     {
       key: 'edit',
@@ -160,7 +160,12 @@ const OrganizationsStaff = ({
   };
 
   return (
-    <MainLayout titleClass="mb-6 mt-3" hasBreadCrumb title="Staff" contentClass="py-6 pl-21 pr-6">
+    <MainLayout
+      titleClass="mb-6 mt-3"
+      breadCrumbItems={['Organizations', 'Users']}
+      title="Staff"
+      contentClass="py-6 pl-21 pr-6"
+    >
       <Table
         onTableChange={({ sorter }) => sort(sorter)}
         size="middle"

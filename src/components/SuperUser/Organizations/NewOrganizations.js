@@ -25,7 +25,7 @@ const NewOrganizations = ({ addNewOrganization, loading }) => {
     <MainLayout
       titleClass="mt-3"
       contentClass="py-6 pl-21 pr-6"
-      hasBreadCrumb
+      breadCrumbItems={['Organizations', 'New']}
       title="Organizations"
     >
       <div className="grid grid-cols-12 items-center justify-center min-h-screen">

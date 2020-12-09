@@ -266,7 +266,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
   return (
     <MainLayout
       titleClass="mb-6 mt-3"
-      hasBreadCrumb
+      breadCrumbItems={['Super User', 'Projects']}
       title="Super User"
       contentClass="py-6 pl-21 pr-6"
     >

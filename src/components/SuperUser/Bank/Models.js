@@ -136,8 +136,8 @@ const Models = ({
 
   return (
     <MainLayout
-      hasBreadCrumb
       title="Pre Defined Data"
+      breadCrumbItems={['Pre Defined Data']}
       titleClass="mb-2"
       contentClass="py-6 pl-21 pr-6"
       childrenPadding={false}

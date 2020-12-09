@@ -240,7 +240,8 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
 
   return (
     <MainLayout
-      hasBreadCrumb
+      wizardLayout
+      breadCrumbItems={['New Project', 'Survey Setting']}
       title="Survey Group"
       titleClass="mb-2"
       contentClass="py-4"

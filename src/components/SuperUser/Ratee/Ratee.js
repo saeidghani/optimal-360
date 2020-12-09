@@ -14,42 +14,40 @@ import MainLayout from '../../Common/Layout';
 import Dropdown from '../../Common/Dropdown';
 import ReportSetting from './ReportSetting';
 
-const Ratee = (
-  {
-    loading,
-    summary,
-    completionRate,
-    fetchSummary,
-    fetchCompletionRate,
-    fetchStatusDetails,
-    removeRateeRaters,
-    changeAssessmentsStatus,
-    exportSurveyGroupRaters,
-    statusDetails,
-    raters,
-    emailOptions,
-    fetchRaters,
-    sendEmail,
-    fetchEmailOptions,
-    importRelations,
-    exportRelations,
-    fetchIndividualReports,
-    fetchGroupReports,
-    exportDemographicData,
-    individualReports,
-    groupReports,
-    // reports
-    reportSetting,
-    fetchReportSetting,
-    setReportSetting,
-    importClientCompetencyModel,
-    fetchPastResultOptions,
-    fetchPastResult,
-    setPastResult,
-    pastResultOptions,
-    pastResult,
-  },
-) => {
+const Ratee = ({
+  loading,
+  summary,
+  completionRate,
+  fetchSummary,
+  fetchCompletionRate,
+  fetchStatusDetails,
+  removeRateeRaters,
+  changeAssessmentsStatus,
+  exportSurveyGroupRaters,
+  statusDetails,
+  raters,
+  emailOptions,
+  fetchRaters,
+  sendEmail,
+  fetchEmailOptions,
+  importRelations,
+  exportRelations,
+  fetchIndividualReports,
+  fetchGroupReports,
+  exportDemographicData,
+  individualReports,
+  groupReports,
+  // reports
+  reportSetting,
+  fetchReportSetting,
+  setReportSetting,
+  importClientCompetencyModel,
+  fetchPastResultOptions,
+  fetchPastResult,
+  setPastResult,
+  pastResultOptions,
+  pastResult,
+}) => {
   const history = useHistory();
   const [parsedQuery, , setQuery] = useQuery();
   const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useRateeSurveyGroup();
@@ -75,7 +73,10 @@ const Ratee = (
       key: 'report-setting',
     },
   ];
-  const [currentTab, setTab] = useTabs('tab', allTabs.map((eachTab) => eachTab.key));
+  const [currentTab, setTab] = useTabs(
+    'tab',
+    allTabs.map((eachTab) => eachTab.key),
+  );
   const { TabPane } = Tabs;
 
   const dropDownOptions = React.useMemo(
@@ -97,7 +98,12 @@ const Ratee = (
   };
 
   return (
-    <MainLayout contentClass="pl-21 pr-6 py-4" title="Super User" titleClass="my-2" hasBreadCrumb>
+    <MainLayout
+      contentClass="pl-21 pr-6 py-4"
+      title="Super User"
+      titleClass="my-2"
+      breadCrumbItems={['Super User', 'New Project', 'Participants/Raters']}
+    >
       <div className="grid grid-cols-7 mt-3 mb-10">
         <h2 className="col-start-1 my-6 pt-6 pl-3 font-medium text-base">Survey Group</h2>
         <Dropdown
@@ -114,11 +120,7 @@ const Ratee = (
         />
       </div>
 
-      <Tabs
-        defaultActiveKey={currentTab}
-        onChange={tabChangeCallback}
-        className="all-ratee-tabs"
-      >
+      <Tabs defaultActiveKey={currentTab} onChange={tabChangeCallback} className="all-ratee-tabs">
         <TabPane tab={allTabs[0].title} key={allTabs[0].key}>
           <StatusOverview
             summary={summary}
@@ -175,7 +177,6 @@ const Ratee = (
           />
         </TabPane>
       </Tabs>
-
     </MainLayout>
   );
 };

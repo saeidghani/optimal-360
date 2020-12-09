@@ -42,7 +42,8 @@ const EmailTemplate = ({ loading, emailSettings, setEmailSettingsData }) => {
 
   return (
     <MainLayout
-      hasBreadCrumb
+      wizardLayout
+      breadCrumbItems={['New Project', params?.name]}
       title="Super User"
       titleClass="mb-4.5"
       contentClass="py-4"

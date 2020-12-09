@@ -1,16 +1,43 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { stringify } from '../../hooks/useQuery';
+import PropTypes from 'prop-types';
+import { useLocation, useHistory } from 'react-router-dom';
+import { UserOutlined } from '@ant-design/icons';
 
+import { stringify } from '../../hooks/useQuery';
 import { dynamicMap } from '../../routes/RouteMap';
 
-import { UserOutlined } from '@ant-design/icons';
+import Button from './Button';
+import Modal from './Modal';
+
 import logo from '../../assets/images/360-icon.svg';
 
-const Sidebar = () => {
+const Sidebar = ({ wizardLayout }) => {
+  const history = useHistory();
   const { pathname } = useLocation();
 
-  const activeClassNames = 'bg-primary-500 bg-opacity-10 text-primary-500';
+  const [selectedPath, setSelectedPath] = React.useState('');
+
+  const activeClassNames =
+    'hover:bg-primary-500 bg-primary-500 hover:bg-opacity-10 bg-opacity-10 focus:text-primary-500 text-primary-500';
+
+  const DiscardModal = () => (
+    <Modal
+      okText="Discard These Settings"
+      cancelText="Continue"
+      visible={!!selectedPath}
+      cancelButtonText="Continue"
+      okButtonText="Discard These Settings"
+      handleOk={() => history.push(selectedPath)}
+      handleCancel={() => setSelectedPath('')}
+    >
+      <h3 className="text-lg text-body mb-3">Attention!</h3>
+
+      <p className="text-sm text-secondary">
+        Moving to another Section would discard all data you have entered here! Are you sure to
+        move?
+      </p>
+    </Modal>
+  );
 
   return (
     <div
@@ -18,19 +45,38 @@ const Sidebar = () => {
       className="bg-primary-900 min-h-screen h-screen max-h-screen
       flex flex-col justify-between items-center fixed"
     >
+      <DiscardModal />
+
       <div className="h-10">
         <img className="w-full h-10 p-2" alt="Logo" src={logo} />
       </div>
 
       <div className="w-full flex flex-col justify-center items-center">
-        <Link
-          className={`py-5 w-full flex flex-row justify-center items-center text-center text-2xl
-            hover:text-primary-500 ${
-            pathname === dynamicMap.superUser.projectsList()
-              ? activeClassNames
-              : 'text-antgray-100'
-          } `}
-          to={`${dynamicMap.superUser.projectsList()}${stringify({ status: 'active', page_size: 10, page_number: 1 })}`}
+        <Button
+          onClick={() => {
+            const path = dynamicMap.superUser.projectsList();
+            const params = stringify({
+              page_size: 10,
+              page_number: 1,
+              status: 'active',
+            });
+
+            const fullUrl = `${path}${params}`;
+
+            if (wizardLayout) {
+              setSelectedPath(fullUrl);
+            } else {
+              history.push(fullUrl);
+            }
+          }}
+          type="text"
+          size="middle"
+          className={`border-0 py-8 w-full flex flex-row justify-center items-center
+           text-center text-2xl hover:text-primary-500 bg-transparent ${
+             pathname === dynamicMap.superUser.projectsList()
+               ? activeClassNames
+               : 'focus:text-antgray-100 hover:text-antgray-100 text-antgray-100'
+           } `}
         >
           <svg className="fill-current" width="1em" height="1em" fill="none">
             <path
@@ -41,16 +87,32 @@ const Sidebar = () => {
               15a1 1 0 01-1 1h-8a1 1 0 01-1-1V5a1 1 0 011-1h3v3a3 3 0 00.18 1H11a1 1 0 100 2h8v5z"
             />
           </svg>
-        </Link>
+        </Button>
 
-        <Link
-          className={`py-5 w-full flex flex-row justify-center items-center text-center text-2xl
-          hover:text-primary-500 ${
-            pathname === dynamicMap.superUser.organizationsList()
-              ? activeClassNames
-              : 'text-antgray-100'
-          } `}
-          to={`${dynamicMap.superUser.organizationsList()}${stringify({ page_size: 10, page_number: 1 })}`}
+        <Button
+          onClick={() => {
+            const path = dynamicMap.superUser.organizationsList();
+            const params = stringify({
+              page_size: 10,
+              page_number: 1,
+            });
+
+            const fullUrl = `${path}${params}`;
+
+            if (wizardLayout) {
+              setSelectedPath(fullUrl);
+            } else {
+              history.push(fullUrl);
+            }
+          }}
+          type="text"
+          size="middle"
+          className={`border-0 py-8 w-full flex flex-row justify-center items-center
+           text-center text-2xl  hover:text-primary-500 bg-transparent ${
+             pathname === dynamicMap.superUser.organizationsList()
+               ? activeClassNames
+               : 'focus:text-antgray-100 hover:text-antgray-100 text-antgray-100'
+           } `}
         >
           <svg className="fill-current" width="1em" height="1em" fill="none">
             <path
@@ -60,14 +122,32 @@ const Sidebar = () => {
               1 0 00-1 1v5H6V4h12v16z"
             />
           </svg>
-        </Link>
+        </Button>
 
-        <Link
-          className={`py-5 w-full flex flex-row justify-center items-center text-center text-2xl
-          hover:text-primary-500 ${
-            pathname === dynamicMap.superUser.bankModels() ? activeClassNames : 'text-antgray-100'
-          } `}
-          to={`${dynamicMap.superUser.bankModels()}${stringify({ page_size: 10, page_number: 1 })}`}
+        <Button
+          onClick={() => {
+            const path = dynamicMap.superUser.bankModels();
+            const params = stringify({
+              page_size: 10,
+              page_number: 1,
+            });
+
+            const fullUrl = `${path}${params}`;
+
+            if (wizardLayout) {
+              setSelectedPath(fullUrl);
+            } else {
+              history.push(fullUrl);
+            }
+          }}
+          type="text"
+          size="middle"
+          className={`border-0 py-8 w-full flex flex-row justify-center items-center
+           text-center text-2xl hover:text-primary-500 bg-transparent ${
+             pathname === dynamicMap.superUser.bankModels()
+               ? activeClassNames
+               : 'focus:text-antgray-100 hover:text-antgray-100 text-antgray-100'
+           } `}
         >
           <svg className="fill-current" width="1em" height="1em" fill="none">
             <path
@@ -93,7 +173,29 @@ const Sidebar = () => {
               10.7929C8.51957 10.6054 8.26522 10.5 8 10.5Z"
             />
           </svg>
-        </Link>
+        </Button>
+
+        {/* <Link
+          className={`py-5 w-full flex flex-row justify-center items-center text-center text-2xl
+          hover:text-primary-500 ${
+            pathname === dynamicMap.superUser.organizationsList()
+              ? activeClassNames
+              : 'text-antgray-100'
+          } `}
+          to={`${dynamicMap.superUser.organizationsList()}${stringify({
+            page_size: 10,
+            page_number: 1,
+          })}`}
+        >
+          <svg className="fill-current" width="1em" height="1em" fill="none">
+            <path
+              d="M14 8h1a1 1 0 100-2h-1a1 1 0 100 2zm0 4h1a1 1 0 000-2h-1a1 1 0 000 2zM9 8h1a1
+              1 0 100-2H9a1 1 0 000 2zm0 4h1a1 1 0 000-2H9a1 1 0 000 2zm12 8h-1V3a1 1 0 00-1-1H5a1
+              1 0 00-1 1v17H3a1 1 0 000 2h18a1 1 0 000-2zm-8 0h-2v-4h2v4zm5 0h-3v-5a1 1 0 00-1-1h-4a1
+              1 0 00-1 1v5H6V4h12v16z"
+            />
+          </svg>
+        </Link> */}
       </div>
 
       <div
@@ -104,6 +206,14 @@ const Sidebar = () => {
       </div>
     </div>
   );
+};
+
+Sidebar.propTypes = {
+  wizardLayout: PropTypes.bool,
+};
+
+Sidebar.defaultProps = {
+  wizardLayout: false,
 };
 
 export default Sidebar;
