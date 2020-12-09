@@ -8,15 +8,14 @@ import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import { useQuery } from '../../../hooks';
 import { stringify } from '../../../hooks/useQuery';
-
 import { dynamicMap } from '../../../routes/RouteMap';
 
 const EditRatee = ({
-   loading,
-    fetchRateeMissionCriticals,
-    rateeMissionCriticals,
-    addMissionCriticalToRatee,
-  }) => {
+  loading,
+  fetchRateeMissionCriticals,
+  rateeMissionCriticals,
+  addMissionCriticalToRatee,
+}) => {
   const history = useHistory();
   const [parsedQuery] = useQuery();
   const surveyGroupId = parsedQuery?.surveyGroupId;
@@ -42,7 +41,6 @@ const EditRatee = ({
         </div>
       );
     },
-    // eslint-disable-next-line
     [loading],
   );
 
@@ -54,12 +52,12 @@ const EditRatee = ({
   ]);
 
   const handleClickNextStep = useCallback(async () => {
-      const competencyIds = selectedRows.map((item) => item.competencyId);
-      await addMissionCriticalToRatee({ surveyGroupId, rateeId, competencyIds });
-      const params = stringify({ surveyGroupId, rateeId, projectId });
-      const path = `${dynamicMap.superUser.raterSelection()}${params}`;
-      history.push(path);
-    }, [selectedRows],
+    const competencyIds = selectedRows.map((item) => item.competencyId);
+    await addMissionCriticalToRatee({ surveyGroupId, rateeId, competencyIds });
+    const params = stringify({ surveyGroupId, rateeId, projectId });
+    const path = `${dynamicMap.superUser.raterSelection()}${params}`;
+    history.push(path);
+  }, [selectedRows],
   );
 
   return (

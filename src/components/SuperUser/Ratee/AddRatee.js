@@ -1,13 +1,15 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import MainLayout from '../../Common/Layout';
 import Steps from '../../Common/Steps';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
-import { useQuery, parse, stringify } from '../../../hooks/useQuery';
+import Modal from '../../Common/Modal';
 import AutoComplete from '../../Common/AutoComplete';
 import { dynamicMap } from '../../../routes/RouteMap';
+import { useQuery, parse, stringify } from '../../../hooks/useQuery';
 
 const AddRatee = ({
   loading,
@@ -18,12 +20,12 @@ const AddRatee = ({
   staff,
   setStaff,
   fetchOrganizationId,
-  }) => {
+}) => {
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
   const [selectedRows, setSelectedRows] = useState([]);
-  const [selectedStaffId, setSelectedStaffId] = useState();
-
+  const [selectedStaffId, setSelectedStaffId] = useState(null);
+  const [alertModalVisible, setAlertModalVisible] = useState(false);
   const surveyGroupId = parsedQuery?.surveyGroupId;
   const projectId = parsedQuery?.projectId;
 
@@ -35,12 +37,16 @@ const AddRatee = ({
   useEffect(() => {
     const staffQuery = stringify(parse({ q: parsedQuery.sq }));
     fetchStaff({ surveyGroupId, query: staffQuery });
-     // TODO clear staffs
   }, [query, fetchStaff, parsedQuery.sq]);
 
   const handleClickAddNewStaff = useCallback(async () => {
     const organizationId = await fetchOrganizationId({ projectId });
-    history.push(`/super-user/organizations/${organizationId}/new-staff`);
+    const nextPath = `${dynamicMap.superUser.addOrganizationStaff({
+      organizationId,
+    })}${stringify({
+      prevUrl: `${history.location.pathname}${history.location.search}`,
+    })}`;
+    history.push(nextPath);
   }, [fetchOrganizationId]);
 
   const handleSelectStaff = ({ id }) => {
@@ -49,30 +55,31 @@ const AddRatee = ({
   };
 
   const handleClickNextStep = useCallback(async () => {
-    const competencyIds = selectedRows.map((item) => item.competencyId);
-     if (selectedStaffId) {
+    if (selectedStaffId) {
+      const competencyIds = selectedRows.map((item) => item.competencyId);
       await setStaff({ surveyGroupId, rateeId: selectedStaffId });
       await addMissionCriticalToRatee({ surveyGroupId, rateeId: selectedStaffId, competencyIds });
-     }
-     const params = stringify({ surveyGroupId, rateeId: selectedStaffId, projectId });
-     const path = `${dynamicMap.superUser.raterSelection()}${params}`;
-     history.push(path);
-    // TODO  where is to push ? hesam history.push(buttonLinks.next)
+      const params = stringify({ surveyGroupId, rateeId: selectedStaffId, projectId });
+      const path = `${dynamicMap.superUser.raterSelection()}${params}`;
+      history.push(path);
+    } else {
+      setAlertModalVisible(true);
+    }
   }, [selectedRows],
   );
 
   const renderHeader = React.useCallback(
-     () => {
-        return (
-          <div className="flex flex-row justify-start items-center">
-            <div className="flex flex-row">
-              <span className="w-48">
-                <AutoComplete
-                  size="middle"
-                  loading={loading}
-                  placeholder="Name of Staff"
-                  options={
-                    staff?.length > 0
+    () => {
+      return (
+        <div className="flex flex-row justify-start items-center">
+          <div className="flex flex-row">
+            <span className="w-48">
+              <AutoComplete
+                size="middle"
+                loading={loading}
+                placeholder="Name of Staff"
+                options={
+                  staff?.length > 0
                     ? staff.map(({ name, id }) => ({
                       label: name,
                       value: name,
@@ -80,78 +87,89 @@ const AddRatee = ({
                       key: id,
                     }))
                     : [{ label: 'no result found' }]
-                  }
-                  onSelect={handleSelectStaff}
-                  onChange={(text) => setQuery({ sq: text })}
-                  value={parsedQuery.sq}
-                />
-              </span>
-              <Button
-                onClick={handleClickAddNewStaff}
-                size="middle"
-                textSize="xs"
-                text="Add a New Staff"
-                textClassName="mr-2"
-                className="ml-3"
+                }
+                onSelect={handleSelectStaff}
+                onChange={(text) => setQuery({ sq: text })}
+                value={parsedQuery.sq}
               />
-            </div>
-          </div>);
-        },
-        // eslint-disable-next-line
-        [loading,parsedQuery.sq],
-    );
+            </span>
+            <Button
+              onClick={handleClickAddNewStaff}
+              size="middle"
+              textSize="xs"
+              text="Add a New Staff"
+              textClassName="mr-2"
+              className="ml-3"
+            />
+          </div>
+        </div>);
+    },
+    [loading, parsedQuery.sq],
+  );
 
   const columns = React.useMemo(() => [{
     title: 'Mission Critical Competencies',
     key: 'competencyName',
-    },
+  },
   ]);
 
-    return (
-      <MainLayout
-        hasBreadCrumb
-        title="Super User"
-        titleClass="mb-6 mt-3"
-        contentClass="pt-6"
-        headerClassName="pl-21"
-        childrenPadding={false}
+  return (
+    <MainLayout
+      hasBreadCrumb
+      title="Super User"
+      titleClass="mb-6 mt-3"
+      contentClass="pt-6"
+      headerClassName="pl-21"
+      childrenPadding={false}
+    >
+      <Modal
+        visible={alertModalVisible}
+        handleOk={() => setAlertModalVisible(false)}
+        handleCancel={() => setAlertModalVisible(false)}
+        width={588}
+        okText="Ok"
+        okButtonProps={{ textClassName: 'px-4' }}
       >
-        <div className="bg-white p-6 grid grid-cols-12  min-h-full">
-          <div className="px-6 py-5 col-start-2 col-span-10">
-            <div className="w-2/6">
-              <Steps steps={['Ratee Details', 'Rater Selection']} currentPosition={0} />
-            </div>
-            <Table
-              size="middle"
-              renderHeader={renderHeader}
-              className="p-6 mt-5 bg-white rounded-lg max-w-screen-xl"
-              columns={columns}
-              dataSource={rateeMissionCriticals}
-              rowKey="competencyId"
-              selectedRowKeys={selectedRows?.map((el) => el.competencyId.toString())}
-              onRowSelectionChange={(_, rows) => {
-                setSelectedRows(rows);
-              }}
-              pagination={false}
-              loading={loading}
+        <div className="flex flex-col items-center">
+          <InfoCircleOutlined className="text-4xl text-primary-500 mb-4" />
+          <p>Select Staff To Continue!</p>
+        </div>
+      </Modal>
+      <div className="bg-white p-6 grid grid-cols-12  min-h-full">
+        <div className="px-6 py-5 col-start-2 col-span-10">
+          <div className="w-2/6">
+            <Steps steps={['Ratee Details', 'Rater Selection']} currentPosition={0} />
+          </div>
+          <Table
+            size="middle"
+            renderHeader={renderHeader}
+            className="p-6 mt-5 bg-white rounded-lg max-w-screen-xl"
+            columns={columns}
+            dataSource={rateeMissionCriticals}
+            rowKey="competencyId"
+            selectedRowKeys={selectedRows?.map((el) => el.competencyId.toString())}
+            onRowSelectionChange={(_, rows) => {
+              setSelectedRows(rows);
+            }}
+            pagination={false}
+            loading={loading}
+          />
+          <div className="pt-23.5 pb-22 flex justify-end max-w-screen-xl">
+            <Button
+              className="w-24.5 h-9.5"
+              type="link"
+              text="Cancel"
             />
-            <div className="pt-23.5 pb-22 flex justify-end max-w-screen-xl">
-              <Button
-                className="w-24.5 h-9.5"
-                type="link"
-                text="Cancel"
-               // onClick={}
-              />
-              <Button
-                className="w-24.5 h-9.5"
-                text="Next"
-                onClick={handleClickNextStep}
-              />
-            </div>
+            <Button
+              className="w-24.5 h-9.5"
+              text="Next"
+              onClick={handleClickNextStep}
+            />
           </div>
         </div>
-      </MainLayout>
-    );
+      </div>
+    </MainLayout>
+  );
 };
 
 AddRatee.propTypes = {
