@@ -71,7 +71,7 @@ const Ratee = (
       key: 'result',
     },
     {
-      title: 'Report Setting',
+      title: 'Report Settings',
       key: 'report-setting',
     },
   ];
