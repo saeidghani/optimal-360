@@ -140,7 +140,7 @@ const EmailSettings = ({
   return (
     <MainLayout
       wizardLayout
-      hasBreadCrumb
+      breadCrumbItems={['New Project', 'Email Setting']}
       title="Survey Group"
       titleClass="mb-2"
       contentClass="py-4"

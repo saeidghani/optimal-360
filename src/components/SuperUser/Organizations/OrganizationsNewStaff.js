@@ -33,7 +33,7 @@ const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
     <MainLayout
       titleClass="mt-3"
       contentClass="py-6 pl-21 pr-6"
-      hasBreadCrumb
+      breadCrumbItems={['Organizations', 'Users', 'New']}
       title="Organizations"
     >
       <div className="grid grid-cols-12 items-center justify-center min-h-screen">

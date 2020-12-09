@@ -134,7 +134,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
   return (
     <MainLayout
       titleClass="mb-6 mt-3"
-      hasBreadCrumb
+      breadCrumbItems={['Organizations']}
       title="Organizations"
       contentClass="py-6 pl-21 pr-6"
     >

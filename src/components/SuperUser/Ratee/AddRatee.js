@@ -65,58 +65,62 @@ const AddRatee = ({
     } else {
       setAlertModalVisible(true);
     }
-  }, [selectedRows],
-  );
+  }, [selectedRows]);
 
-  const renderHeader = React.useCallback(
-    () => {
-      return (
-        <div className="flex flex-row justify-start items-center">
-          <div className="flex flex-row">
-            <span className="w-48">
-              <AutoComplete
-                size="middle"
-                loading={loading}
-                placeholder="Name of Staff"
-                options={
-                  staff?.length > 0
-                    ? staff.map(({ name, id }) => ({
+  const renderHeader = React.useCallback(() => {
+    return (
+      <div className="flex flex-row justify-start items-center">
+        <div className="flex flex-row">
+          <span className="w-48">
+            <AutoComplete
+              size="middle"
+              loading={loading}
+              placeholder="Name of Staff"
+              options={
+                staff?.length > 0
+                  ? staff.map(({ name, id }) => ({
                       label: name,
                       value: name,
                       id,
                       key: id,
                     }))
-                    : [{ label: 'no result found' }]
-                }
-                onSelect={handleSelectStaff}
-                onChange={(text) => setQuery({ sq: text })}
-                value={parsedQuery.sq}
-              />
-            </span>
-            <Button
-              onClick={handleClickAddNewStaff}
-              size="middle"
-              textSize="xs"
-              text="Add a New Staff"
-              textClassName="mr-2"
-              className="ml-3"
+                  : [{ label: 'no result found' }]
+              }
+              onSelect={handleSelectStaff}
+              onChange={(text) => setQuery({ sq: text })}
+              value={parsedQuery.sq}
             />
-          </div>
-        </div>);
-    },
-    [loading, parsedQuery.sq],
-  );
+          </span>
+          <Button
+            onClick={handleClickAddNewStaff}
+            size="middle"
+            textSize="xs"
+            text="Add a New Staff"
+            textClassName="mr-2"
+            className="ml-3"
+          />
+        </div>
+      </div>
+    );
+  }, [loading, parsedQuery.sq]);
 
-  const columns = React.useMemo(() => [{
-    title: 'Mission Critical Competencies',
-    key: 'competencyName',
-  },
+  const columns = React.useMemo(() => [
+    {
+      title: 'Mission Critical Competencies',
+      key: 'competencyName',
+    },
   ]);
 
   return (
     <MainLayout
-      hasBreadCrumb
       title="Super User"
+      breadCrumbItems={[
+        'New Project',
+        'Participants',
+        'Status Details',
+        'Add Ratee',
+        'Ratee Details',
+      ]}
       titleClass="mb-6 mt-3"
       contentClass="pt-6"
       headerClassName="pl-21"
@@ -155,16 +159,8 @@ const AddRatee = ({
             loading={loading}
           />
           <div className="pt-23.5 pb-22 flex justify-end max-w-screen-xl">
-            <Button
-              className="w-24.5 h-9.5"
-              type="link"
-              text="Cancel"
-            />
-            <Button
-              className="w-24.5 h-9.5"
-              text="Next"
-              onClick={handleClickNextStep}
-            />
+            <Button className="w-24.5 h-9.5" type="link" text="Cancel" />
+            <Button className="w-24.5 h-9.5" text="Next" onClick={handleClickNextStep} />
           </div>
         </div>
       </div>

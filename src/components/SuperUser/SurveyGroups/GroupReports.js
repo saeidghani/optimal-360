@@ -245,7 +245,12 @@ const GroupReports = ({
   );
 
   return (
-    <MainLayout contentClass="pl-21 pr-6 py-4" title="Super User" titleClass="my-2" hasBreadCrumb>
+    <MainLayout
+      contentClass="pl-21 pr-6 py-4"
+      title="Super User"
+      titleClass="my-2"
+      breadCrumbItems={['New Project', 'Reports', 'Group Reports']}
+    >
       <Table
         onTableChange={({ sorter }) => sort(sorter)}
         size="middle"

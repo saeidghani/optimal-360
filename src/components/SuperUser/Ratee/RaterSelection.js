@@ -50,14 +50,16 @@ const RaterSelection = ({
   }, [raterGroupId, query]);
 
   const setObjValue = () => {
-    const addItems = selectedRaters?.filter((item) =>
-      !defaultSelectedRaters?.find((el) => el.id === item.id)) || [];
-    const removeItems = defaultSelectedRaters?.filter((item) =>
-      !selectedRaters?.find((el) => el.id === item.id)) || [];
-    removeItems.map((item) =>
-      obj.removeRelations.push(item.relationId));
+    const addItems =
+      selectedRaters?.filter((item) => !defaultSelectedRaters?.find((el) => el.id === item.id)) ||
+      [];
+    const removeItems =
+      defaultSelectedRaters?.filter((item) => !selectedRaters?.find((el) => el.id === item.id)) ||
+      [];
+    removeItems.map((item) => obj.removeRelations.push(item.relationId));
     addItems.map((item) =>
-      obj.addRelations.push({ raterId: item.id, raterGroupId: parseInt(raterGroupId) }));
+      obj.addRelations.push({ raterId: item.id, raterGroupId: parseInt(raterGroupId) }),
+    );
   };
 
   useEffect(() => {
@@ -96,24 +98,21 @@ const RaterSelection = ({
     }
   };
 
-  const renderHeader = React.useCallback(
-    () => {
-      return (
-        <div className="flex flex-row justify-start items-center">
-          <div className="flex flex-row">
-            <SearchBox
-              onSearch={(e) => setQuery({ q: e.target.value })}
-              className="text-xs"
-              placeholder="Search"
-              loading={loading}
-              onChange={(e) => setQuery({ q: e.target.value })}
-            />
-          </div>
+  const renderHeader = React.useCallback(() => {
+    return (
+      <div className="flex flex-row justify-start items-center">
+        <div className="flex flex-row">
+          <SearchBox
+            onSearch={(e) => setQuery({ q: e.target.value })}
+            className="text-xs"
+            placeholder="Search"
+            loading={loading}
+            onChange={(e) => setQuery({ q: e.target.value })}
+          />
         </div>
-      );
-    },
-    [loading, parsedQuery.q],
-  );
+      </div>
+    );
+  }, [loading, parsedQuery.q]);
 
   const columns = React.useMemo(() => [
     {
@@ -140,8 +139,14 @@ const RaterSelection = ({
 
   return (
     <MainLayout
-      hasBreadCrumb
       title="Super User"
+      breadCrumbItems={[
+        'New Project',
+        'Participants',
+        'Status Details',
+        'Add Ratee',
+        'Ratee Details',
+      ]}
       titleClass="mb-6 mt-3"
       contentClass="pt-6"
       headerClassName="pl-21"
@@ -215,9 +220,8 @@ const RaterSelection = ({
                   const params = stringify({ surveyGroupId, projectId });
                   const path = `${dynamicMap.superUser.ratersList()}${params}`;
                   history.push(path);
-                } catch (error) { }
-              }
-              }
+                } catch (error) {}
+              }}
             />
           </div>
         </div>

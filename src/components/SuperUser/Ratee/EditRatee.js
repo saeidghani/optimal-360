@@ -33,16 +33,13 @@ const EditRatee = ({
     // TODO clear ratees
   }, [fetchRateeMissionCriticals]);
 
-  const renderHeader = React.useCallback(
-    () => {
-      return (
-        <div className="flex flex-row justify-start items-center">
-          <p className="text-sm pl-6">Team Player</p>
-        </div>
-      );
-    },
-    [loading],
-  );
+  const renderHeader = React.useCallback(() => {
+    return (
+      <div className="flex flex-row justify-start items-center">
+        <p className="text-sm pl-6">Team Player</p>
+      </div>
+    );
+  }, [loading]);
 
   const columns = React.useMemo(() => [
     {
@@ -57,19 +54,25 @@ const EditRatee = ({
     const params = stringify({ surveyGroupId, rateeId, projectId });
     const path = `${dynamicMap.superUser.raterSelection()}${params}`;
     history.push(path);
-  }, [selectedRows],
-  );
+  }, [selectedRows]);
 
   return (
     <MainLayout
-      hasBreadCrumb
       title="Super User"
+      breadCrumbItems={[
+        'New Project',
+        'Participants',
+        'Status Details',
+        'Add Ratee',
+        'Ratee Details',
+      ]}
       titleClass="mb-6 mt-3"
       contentClass="pt-6"
       headerClassName="pl-21"
       childrenPadding={false}
     >
       <Loading visible={loading} />
+
       <div className="bg-white p-6 grid grid-cols-12  min-h-full">
         <div className="px-6 py-5 col-start-2 col-span-10">
           <div className="w-2/6">
@@ -96,11 +99,7 @@ const EditRatee = ({
               text="Cancel"
               onClick={() => history.goBack()}
             />
-            <Button
-              className="w-24.5 h-9.5"
-              text="Next"
-              onClick={handleClickNextStep}
-            />
+            <Button className="w-24.5 h-9.5" text="Next" onClick={handleClickNextStep} />
           </div>
         </div>
       </div>

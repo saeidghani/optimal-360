@@ -270,7 +270,7 @@ const SurveyGroupCluster = ({
   return (
     <MainLayout
       title="Super User"
-      hasBreadCrumb
+      breadCrumbItems={['Pre Defined Data', parsedQuery.surveyGroupId ? 'Edit' : 'Add']}
       titleClass="mb-2"
       contentClass="py-4"
       headerClassName="pl-21"

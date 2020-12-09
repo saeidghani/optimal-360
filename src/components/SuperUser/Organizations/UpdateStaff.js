@@ -33,7 +33,7 @@ const UpdateStaff = ({ fetchStaffDetails, staffDetails, setStaffDetails, loading
     <MainLayout
       titleClass="mt-3"
       contentClass="py-6 pl-21 pr-6"
-      hasBreadCrumb
+      breadCrumbItems={['Organizations', 'Users', 'Edit']}
       title="Organizations"
     >
       <div className="grid grid-cols-12 items-center justify-center min-h-screen">
@@ -59,8 +59,7 @@ const UpdateStaff = ({ fetchStaffDetails, staffDetails, setStaffDetails, loading
 
                 const path = dynamicMap.superUser.organizationStaffList({ organizationId });
                 history.push(path);
-              } catch (error) {
-              }
+              } catch (error) {}
             }}
           >
             {({ values, errors, touched, handleChange, handleSubmit }) => (
