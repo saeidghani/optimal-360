@@ -43,6 +43,7 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
 
   return (
     <MainLayout
+      wizardLayout
       hasBreadCrumb
       title="Super User"
       titleClass="mb-2"

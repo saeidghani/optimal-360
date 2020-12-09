@@ -51,6 +51,10 @@ export default {
           data,
         });
 
+        await dispatch.projects.fetchSurveyGroups({
+          projectId: res?.data?.data?.id,
+        });
+
         return res;
       }, dispatch.util.errorHandler);
     },

@@ -42,6 +42,7 @@ const EmailTemplate = ({ loading, emailSettings, setEmailSettingsData }) => {
 
   return (
     <MainLayout
+      wizardLayout
       hasBreadCrumb
       title="Super User"
       titleClass="mb-4.5"

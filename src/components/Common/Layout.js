@@ -4,10 +4,18 @@ import PropTypes from 'prop-types';
 import Sidebar from './Sidebar';
 import BreadCrumb from './BreadCrumb';
 
-const Layout = ({ title, children, hasBreadCrumb, contentClass, headerClassName, titleClass }) => {
+const Layout = ({
+  wizardLayout,
+  title,
+  children,
+  hasBreadCrumb,
+  contentClass,
+  headerClassName,
+  titleClass,
+}) => {
   return (
     <div className="bg-primary-200 overflow-y-hidden min-h-screen">
-      <Sidebar />
+      <Sidebar wizardLayout={wizardLayout} />
 
       <div className={`w-full ${contentClass}`}>
         {hasBreadCrumb ? <BreadCrumb className={` ${headerClassName}`} /> : null}
@@ -31,6 +39,7 @@ Layout.propTypes = {
   contentClass: PropTypes.string,
   titleClass: PropTypes.string,
   headerClassName: PropTypes.string,
+  wizardLayout: PropTypes.bool,
 };
 
 Layout.defaultProps = {
@@ -39,6 +48,7 @@ Layout.defaultProps = {
   contentClass: '',
   titleClass: '',
   headerClassName: '',
+  wizardLayout: false,
 };
 
 export default Layout;

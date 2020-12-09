@@ -139,6 +139,7 @@ const EmailSettings = ({
 
   return (
     <MainLayout
+      wizardLayout
       hasBreadCrumb
       title="Survey Group"
       titleClass="mb-2"

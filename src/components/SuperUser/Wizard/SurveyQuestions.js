@@ -340,6 +340,7 @@ const SurveyQuestionsList = ({
 
   return (
     <MainLayout
+      wizardLayout
       title="Super User"
       hasBreadCrumb
       titleClass="mb-2"
