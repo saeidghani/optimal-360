@@ -9,14 +9,14 @@ import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
 
 const RatersEmail = ({
-                       loading,
-                       fetchRaters,
-                       raters,
-                       fetchEmailOptions,
-                       emailOptions,
-                       exportSurveyGroupRaters,
-                       sendEmail,
-                     }) => {
+  loading,
+  fetchRaters,
+  raters,
+  fetchEmailOptions,
+  emailOptions,
+  exportSurveyGroupRaters,
+  sendEmail,
+}) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [, , surveyGroupId, surveyGroupObject] = useRateeSurveyGroup();
@@ -28,14 +28,7 @@ const RatersEmail = ({
   React.useEffect(() => {
     fetchRaters({ query, surveyGroupId });
     setSelectedRows([]);
-  }, [
-    fetchRaters,
-    surveyGroupId,
-    pageSize,
-    pageNumber,
-    parsedQuery.q,
-    parsedQuery.sort,
-  ]);
+  }, [fetchRaters, surveyGroupId, pageSize, pageNumber, parsedQuery.q, parsedQuery.sort]);
   React.useEffect(() => {
     fetchEmailOptions({ surveyGroupId });
   }, [fetchEmailOptions, surveyGroupId]);
@@ -95,19 +88,19 @@ const RatersEmail = ({
   const columns = React.useMemo(() => [
     {
       key: 'name',
-      title: 'Rates Name',
+      title: 'Raters Name',
       width: 100,
       sorter: true,
     },
     {
       key: 'email',
-      title: 'Rates Email',
+      title: 'Raters Email',
       width: 100,
       sorter: true,
     },
     {
       key: 'password',
-      title: 'Rates Password',
+      title: 'Raters Password',
       width: 100,
       sorter: true,
     },
@@ -171,12 +164,13 @@ RatersEmail.propTypes = {
   }),
   fetchEmailOptions: PropTypes.func.isRequired,
   emailOptions: PropTypes.shape({
-    data: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number,
-      name: PropTypes.string,
-    })),
+    data: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+      }),
+    ),
   }),
-
 };
 
 RatersEmail.defaultProps = {
