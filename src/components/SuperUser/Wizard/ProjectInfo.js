@@ -46,13 +46,13 @@ const ProjectInfo = ({
 
   const SurveyGroupRef = [
     ...(surveyGroups?.data || []).map(({ name, id }) => ({
-      label: `B-${name}`,
+      label: `B-${name}-${id}`,
       value: `B-${name}`,
       id,
       key: `B-${id}`,
     })),
     ...(project?.data?.projectSurveyGroups || []).map(({ name, id }) => ({
-      label: `P-${name}`,
+      label: `P-${name}-${id}`,
       value: `P-${name}`,
       id,
       key: `P-${id}`,
@@ -132,7 +132,9 @@ const ProjectInfo = ({
                   setFieldValue('organization', el);
                   setQuery({ projectId: parsedQuery.projectId });
                 }}
-                extrainfoLink={dynamicMap.superUser.addOrganization()}
+                extrainfoLink={`${dynamicMap.superUser.addOrganization()}?prevUrl=${
+                  history?.location?.pathname
+                }`}
                 placeholder="Name of Organization"
                 options={
                   organizations?.data?.length > 0
@@ -172,7 +174,9 @@ const ProjectInfo = ({
                   setFieldValue('surveyGroup', [...values.surveyGroup, val]);
                   setQuery({ projectId: parsedQuery.projectId });
                 }}
-                extrainfoLink={dynamicMap.superUser.bankSurveyGroups()}
+                extrainfoLink={`${dynamicMap.superUser.bankSurveyGroups()}?prevUrl=${
+                  history?.location?.pathname
+                }`}
                 placeholder="Search"
                 options={SurveyGroupRef}
                 onChange={(txt) => setQuery({ sq: txt })}

@@ -190,6 +190,8 @@ export default {
             data,
           });
 
+          await dispatch.projects.fetchClusterBenchmarks(surveyGroupId);
+
           return res;
         },
         dispatch.util.errorHandler,
@@ -249,6 +251,8 @@ export default {
             data,
           });
 
+          await dispatch.projects.fetchCompetencyBenchmarks(surveyGroupId);
+
           return res;
         },
         dispatch.util.errorHandler,
@@ -271,6 +275,24 @@ export default {
 
         return res;
       }, dispatch.util.errorHandler);
+    },
+
+    async changeStatusOfSurveyGroups({ projectId, ...data }) {
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'patch',
+            url: `/super-user/projects/${projectId}/survey-groups/status`,
+            data,
+          });
+
+          await dispatch.projects.fetchSurveyGroups({ projectId });
+
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
     },
   }),
 

@@ -13,7 +13,7 @@ import Button from '../../../Common/Button';
 
 const _Menu = ({ items, title, className, onClick }) => {
   const history = useHistory();
-  const [parsedQuery, , setQuery] = useQuery();
+  const [parsedQuery] = useQuery();
   const { projectId, surveyGroupId } = parsedQuery;
 
   const dispatch = useDispatch();
@@ -23,38 +23,28 @@ const _Menu = ({ items, title, className, onClick }) => {
 
   const isSurveyGroupEditable = (el) => !el.stepsStatus || !moment(el.startDate).isBefore();
 
-  const fetchValidSurveyGroupId = (selectedId) => {
-    if (selectedId * 1 !== parsedQuery?.surveyGroupId * 1) return parsedQuery?.surveyGroupId;
-
-    const nextValidSurveyGroupId = sortedArr.find((el) => el.id * 1 !== selectedId * 1)?.id;
-    return nextValidSurveyGroupId;
-  };
-
   const removeSurveyGroups = async (selectedId) => {
-    const validSurveyGroupId = fetchValidSurveyGroupId(selectedId);
-
     await dispatch.projects.removeSurveyGroups({ projectId, surveyGroupIds: [selectedId] });
-
-    // if there is any alternative incative surveyGroupId (validSurveyGroupId) we
-    // can replace it with the currently selected inactive surveyGroupId
-    if (validSurveyGroupId) {
-      setQuery({ surveyGroupId: validSurveyGroupId });
-    }
   };
 
   React.useEffect(() => {
     if (sortedArr.length === 0) {
       const path = dynamicMap.superUser.projectsList();
+      const params = stringify({
+        status: 'active',
+        page_number: 1,
+        page_size: 10,
+      });
 
-      history.replace(`${path}?status=active&page_size=10&page_number=1`);
+      history.replace(`${path}${params}`);
     } else {
-      const editableSurveyGroup = sortedArr.find(isSurveyGroupEditable);
+      const isEverySurveyGroupSubmitted = sortedArr.every(({ stepsStatus }) => !!stepsStatus);
 
-      if (!editableSurveyGroup) {
+      if (isEverySurveyGroupSubmitted) {
         const path = dynamicMap.superUser.ratersList();
         const params = stringify({
           projectId,
-          surveyGroupId,
+          surveyGroupId: sortedArr?.[0]?.id,
         });
 
         history.replace(`${path}${params}`);

@@ -42,7 +42,8 @@ const EmailTemplate = ({ loading, emailSettings, setEmailSettingsData }) => {
 
   return (
     <MainLayout
-      hasBreadCrumb
+      wizardLayout
+      breadCrumbItems={['New Project', params?.name]}
       title="Super User"
       titleClass="mb-4.5"
       contentClass="py-4"
@@ -93,7 +94,11 @@ const EmailTemplate = ({ loading, emailSettings, setEmailSettingsData }) => {
               text="Save"
               onClick={async () => {
                 const path = dynamicMap.superUser.emailSettings();
-                const newParams = stringify({ projectId, surveyGroupId });
+                const newParams = stringify({
+                  projectId,
+                  surveyGroupId,
+                  wizardEditMode: parsedQuery?.wizardEditMode,
+                });
 
                 await setEmailSettingsData({ ...emailSettingsCopy });
 

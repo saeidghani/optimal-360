@@ -238,14 +238,10 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
     },
   ];
 
-  console.log({
-    surveySettings,
-    initialValues,
-  });
-
   return (
     <MainLayout
-      hasBreadCrumb
+      wizardLayout
+      breadCrumbItems={['New Project', 'Survey Setting']}
       title="Survey Group"
       titleClass="mb-2"
       contentClass="py-4"
@@ -383,7 +379,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                 </div>
 
                 <div className="flex flex-col xl:pr-24 md:pr-12">
-                  <h1 className="text-xl text-secondary mb-8">Rates Settings</h1>
+                  <h1 className="text-xl text-secondary mb-8">Rater Settings</h1>
 
                   <Table
                     rowSelection={false}

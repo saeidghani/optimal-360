@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import moment from 'moment';
 import { useHistory } from 'react-router-dom';
-import { useQuery } from '../../../hooks';
+import { useQuery, useRateeSurveyGroup } from '../../../hooks';
 import { stringify } from '../../../hooks/useQuery';
 
 import { dynamicMap } from '../../../routes/RouteMap';
@@ -27,12 +28,13 @@ const StatusDetails = (
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const [, , surveyGroupId, surveyGroupObject] = useRateeSurveyGroup();
 
   const viewBy = parsedQuery?.viewBy || 'raters';
   const pageNumber = parsedQuery?.page_number || 1;
   const pageSize = parsedQuery?.page_size || 10;
-  const surveyGroupId = parsedQuery?.surveyGroupId;
   const projectId = parsedQuery?.projectId;
+  const isNotPastEndDate = !moment(surveyGroupObject.endDate).isBefore();
 
   const fetch = () => {
     fetchStatusDetails({ query, surveyGroupId });
@@ -57,6 +59,7 @@ const StatusDetails = (
           onClick={async () => {
             await removeRateeRaters({ selectedRowsIds, surveyGroupId });
             fetch();
+            setSelectedRows([]);
           }}
         />
         <Button
@@ -115,21 +118,24 @@ const StatusDetails = (
             onSearch={(val) => setQuery({ q: val })}
             onPressEnter={(e) => setQuery({ q: e.target.value })}
           />
-          <Button
-            size="middle"
-            textSize="xs"
-            text="Add Ratee"
-            textClassName="mr-2"
-            className="ml-3"
-            type="gray"
-            icon="PlusCircleOutlined"
-            iconPosition="right"
-            onClick={() => {
-              const params = stringify({ projectId, surveyGroupId });
-              const path = `${dynamicMap.superUser.addRatee()}${params}`;
-              history.push(path);
-            }}
-          />
+          {isNotPastEndDate ? (
+            <Button
+              size="middle"
+              textSize="xs"
+              text="Add Ratee"
+              textClassName="mr-2"
+              className="ml-3"
+              type="gray"
+              icon="PlusCircleOutlined"
+              iconPosition="right"
+              onClick={() => {
+                const params = stringify({ projectId, surveyGroupId });
+                const path = `${dynamicMap.superUser.addRatee()}${params}`;
+                history.push(path);
+              }}
+            />
+          ) : null}
+
           <Button
             size="middle"
             textSize="xs"
@@ -143,14 +149,16 @@ const StatusDetails = (
               exportRelations({ surveyGroupId });
             }}
           />
-          <ImportExcelButton
-            textClassName="mr-2"
-            className="ml-3"
-            beforeUpload={(file) => {
-              importRelations({ file, surveyGroupId });
-              return false;
-            }}
-          />
+          {isNotPastEndDate ? (
+            <ImportExcelButton
+              textClassName="mr-2"
+              className="ml-3"
+              beforeUpload={(file) => {
+                importRelations({ file, surveyGroupId });
+                return false;
+              }}
+            />
+          ) : null}
         </div>
       </div>
     );
@@ -191,7 +199,7 @@ const StatusDetails = (
               textSize="xs"
               type="link"
               className="ml-2 p-0 h-6 w-6"
-              icon={"EditOutlined"}
+              icon="EditOutlined"
             />
           </div>
         </div>
@@ -297,6 +305,7 @@ const StatusDetails = (
           page_number,
         });
       }}
+      rowSelection={isNotPastEndDate}
       selectedRowKeys={selectedRows?.map((el) => el.relationId)}
       onRowSelectionChange={(_, rows) => {
         setSelectedRows(rows);

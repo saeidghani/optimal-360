@@ -1,14 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import { dynamicMap } from '../../../routes/RouteMap';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import MainLayout from '../../Common/Layout';
 import Menu from './Helper/Menu';
 import Steps from '../../Common/Steps';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import SearchBox from '../../Common/SearchBox';
-import { useQuery, parse, stringify } from '../../../hooks/useQuery';
+import Modal from '../../Common/Modal';
+import { dynamicMap } from '../../../routes/RouteMap';
+import { useQuery, stringify } from '../../../hooks/useQuery';
 
 const RaterSelection = ({
   loading,
@@ -16,61 +18,102 @@ const RaterSelection = ({
   staffForRater,
   fetchRaterGroups,
   raterGroups,
-  setSelectedRaters,
   submitRaters,
-  changedLog,
-  clearStaffAndStorage,
+  setSelectedRaters,
+  selectedRaters,
+  defaultSelectedRaters,
 }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
+  const [discardModalVisible, setDiscardModalVisible] = useState(false);
+  const [raterGroupRedirectId, setRaterGroupRedirectId] = useState(null);
   const surveyGroupId = parsedQuery?.surveyGroupId;
   const rateeId = parsedQuery?.rateeId;
   const projectId = parsedQuery?.projectId;
   const raterGroupId = parsedQuery?.raterGroupId || raterGroups[0]?.id?.toString();
-  const currentRaterGroupChangeLog = changedLog.find((el) => el.raterGroupId == raterGroupId);
-  console.log(raterGroupId);
-  const defaultSelected = currentRaterGroupChangeLog?.isChanged
-  ? currentRaterGroupChangeLog.selectedItems : currentRaterGroupChangeLog?.defaultItems;
-  const currentGroupId = currentRaterGroupChangeLog?.raterGroupId;
-
-  const staffQuery = stringify(parse({ q: parsedQuery.sq })) || '';
+  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
+  const pageNumber = parsedQuery?.page_number;
+  const obj = {
+    addRelations: [],
+    removeRelations: [],
+  };
 
   useEffect(() => {
-     fetchRaterGroups({ surveyGroupId, rateeId });
-     return () => {
-      clearStaffAndStorage();
-    };
-  }, [fetchRaterGroups]);
+    fetchRaterGroups({ surveyGroupId });
+  }, [surveyGroupId]);
 
   useEffect(() => {
     if (raterGroupId) {
       setQuery({ raterGroupId });
-      // const items = changedLog?.find((el) => el.raterGroupId === raterGroupId)?.items;
-      // console.log(changedLog);
-    //   setQuery({ raterGroupId });
-    //   fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId, query: staffQuery });
+      fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId, query });
     }
-  }, [staffQuery, raterGroupId]);
+  }, [raterGroupId, query]);
 
-  const renderHeader = React.useCallback(
-    () => {
-      return (
-        <div className="flex flex-row justify-start items-center">
-          <div className="flex flex-row">
-            <SearchBox
-              onSearch={(e) => setQuery({ sq: e.target.value })}
-              className="text-xs"
-              placeholder="SEARCH"
-              loading={loading}
-              onChange={(e) => setQuery({ sq: e.target.value })}
-            />
-          </div>
+  const setObjValue = () => {
+    const addItems =
+      selectedRaters?.filter((item) => !defaultSelectedRaters?.find((el) => el.id === item.id)) ||
+      [];
+    const removeItems =
+      defaultSelectedRaters?.filter((item) => !selectedRaters?.find((el) => el.id === item.id)) ||
+      [];
+    removeItems.map((item) => obj.removeRelations.push(item.relationId));
+    addItems.map((item) =>
+      obj.addRelations.push({ raterId: item.id, raterGroupId: parseInt(raterGroupId) }),
+    );
+  };
+
+  useEffect(() => {
+    setQuery({
+      page_number: 1,
+      page_size: 10,
+      status: 'active',
+    });
+  }, [parsedQuery.raterGroupId]);
+
+  useEffect(() => {
+    setObjValue();
+    if (obj?.addRelations?.length > 0 || obj?.removeRelations?.length > 0) {
+      submitRaters({
+        surveyGroupId,
+        rateeId,
+        obj,
+      });
+    }
+  }, [parsedQuery?.page_size, parsedQuery?.page_number, parsedQuery?.q, submitRaters]);
+
+  const handleSubmitClick = async () => {
+    setObjValue();
+    await submitRaters({ surveyGroupId, rateeId, obj });
+    setQuery({ raterGroupId: raterGroupRedirectId });
+    setDiscardModalVisible(false);
+  };
+
+  const handleClickOnMenu = (id) => {
+    setObjValue();
+    if (obj?.addRelations?.length > 0 || obj?.removeRelations?.length > 0) {
+      setDiscardModalVisible(true);
+      setRaterGroupRedirectId(id);
+    } else {
+      setQuery({ raterGroupId: id });
+    }
+  };
+
+  const renderHeader = React.useCallback(() => {
+    return (
+      <div className="flex flex-row justify-start items-center">
+        <div className="flex flex-row">
+          <SearchBox
+            onSearch={(e) => setQuery({ q: e.target.value })}
+            className="text-xs"
+            placeholder="Search"
+            loading={loading}
+            onChange={(e) => setQuery({ q: e.target.value })}
+          />
         </div>
-      );
-    },
-    // eslint-disable-next-line
-    [loading,parsedQuery.sq],
-  );
+      </div>
+    );
+  }, [loading, parsedQuery.q]);
+
   const columns = React.useMemo(() => [
     {
       key: 'id',
@@ -93,20 +136,39 @@ const RaterSelection = ({
       title: 'Email',
     },
   ]);
+
   return (
     <MainLayout
-      hasBreadCrumb
       title="Super User"
+      breadCrumbItems={[
+        'New Project',
+        'Participants',
+        'Status Details',
+        'Add Ratee',
+        'Ratee Details',
+      ]}
       titleClass="mb-6 mt-3"
       contentClass="pt-6"
       headerClassName="pl-21"
       childrenPadding={false}
     >
+      <Modal
+        visible={discardModalVisible}
+        handleOk={handleSubmitClick}
+        handleCancel={() => setDiscardModalVisible(false)}
+        width={588}
+        okText="Save"
+        cancelText="Discard"
+        okButtonProps={{ textClassName: 'px-4' }}
+      >
+        <div className="flex flex-col items-center">
+          <InfoCircleOutlined className="text-4xl text-primary-500 mb-4" />
+          <p>Your changes will be thrown away if you press Discard!</p>
+        </div>
+      </Modal>
       <div className="bg-white grid grid-cols-12 pl-15">
         <Menu
-          onClick={(id) => {
-            setQuery({ raterGroupId: id });
-          }}
+          onClick={(id) => handleClickOnMenu(id)}
           title="Rater Group"
           items={raterGroups}
           className="col-span-2"
@@ -121,12 +183,25 @@ const RaterSelection = ({
             renderHeader={renderHeader}
             loading={loading}
             columns={columns}
-            dataSource={changedLog?.find((el) => el.raterGroupId == raterGroupId)?.items || []}
-            selectedRowKeys={defaultSelected?.map((el) => el.id)}
+            dataSource={staffForRater?.data}
+            selectedRowKeys={selectedRaters?.map((el) => el.id)}
             onRowSelectionChange={(_, rows) => {
-              setSelectedRaters({ rows, raterGpId: raterGroupId });
+              setSelectedRaters(rows);
             }}
-            pagination={false}
+            onPageSizeChange={(size) => {
+              setPageSize(size);
+              setQuery({ page_size: size, page_number: 1 });
+            }}
+            pageSize={pageSize * 1}
+            pageNumber={pageNumber * 1}
+            // eslint-disable-next-line camelcase
+            onPaginationChange={(page_number, page_size) => {
+              setQuery({
+                page_size,
+                page_number,
+              });
+            }}
+            totalRecordSize={staffForRater?.metaData?.pagination?.totalRecords * 1}
           />
           <div className="pt-23.5 pb-22 flex justify-end max-w-screen-xl">
             <Button
@@ -140,14 +215,13 @@ const RaterSelection = ({
               text="Submit"
               onClick={async () => {
                 try {
-                  await submitRaters({ surveyGroupId, rateeId, raterGroupId: parseInt(raterGroupId), projectId });
-
+                  setObjValue();
+                  await submitRaters({ surveyGroupId, rateeId, obj });
                   const params = stringify({ surveyGroupId, projectId });
                   const path = `${dynamicMap.superUser.ratersList()}${params}`;
                   history.push(path);
-              } catch (error) { }
-              }
-             }
+                } catch (error) {}
+              }}
             />
           </div>
         </div>
@@ -162,10 +236,10 @@ RaterSelection.propTypes = {
   staffForRater: PropTypes.arrayOf(PropTypes.object).isRequired,
   fetchRaterGroups: PropTypes.func.isRequired,
   raterGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setSelectedRaters: PropTypes.func.isRequired,
   submitRaters: PropTypes.func.isRequired,
-  changedLog: PropTypes.arrayOf(PropTypes.object).isRequired,
-  clearStaffAndStorage: PropTypes.func.isRequired,
+  setSelectedRaters: PropTypes.func.isRequired,
+  selectedRaters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  defaultSelectedRaters: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 RaterSelection.defaultProps = {};

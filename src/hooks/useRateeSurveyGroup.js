@@ -1,31 +1,30 @@
 import React from 'react';
-import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
 import { useQuery } from './useQuery';
 
-const useSurveyGroup = () => {
+const useRateeSurveyGroup = () => {
   const [parsedQuery, , setQuery] = useQuery();
   const { surveyGroupId, projectId } = parsedQuery;
 
   const dispatch = useDispatch();
-  const surveyGroups = useSelector((state) => state.projects?.surveyGroups || {});
+  const _surveyGroups = useSelector((state) => state.projects?.surveyGroups || {});
+
+  const surveyGroups = _surveyGroups?.data.filter((el) => el.stepsStatus);
+  const surveyGroupObject = _surveyGroups.data?.find((el) => el.id * 1 === surveyGroupId * 1) || {};
 
   React.useEffect(() => {
     if (projectId) dispatch.projects.fetchSurveyGroups({ projectId });
   }, [projectId, dispatch.projects]);
 
   React.useEffect(() => {
-    const sortedArr = surveyGroups?.data?.sort((el1, el2) => el1.id - el2.id) || [];
+    const sortedArr = _surveyGroups?.data?.sort((el1, el2) => el1.id - el2.id) || [];
 
     const firstValidSurveyGroupId =
-      sortedArr?.length > 0
-        ? sortedArr.find((el) => !el.stepsStatus || !moment(el.startDate).isBefore())?.id
-        : '';
+      sortedArr?.length > 0 ? sortedArr.find((el) => el.stepsStatus)?.id : '';
 
     const isURLSurveyGroupValid = !!sortedArr.find(
       (el) =>
-        el.id?.toString() === parsedQuery?.surveyGroupId?.toString() &&
-        (!el.stepsStatus || !moment(el.startDate).isBefore()),
+        el.id?.toString() === parsedQuery?.surveyGroupId?.toString() && el.stepsStatus,
     );
 
     if (
@@ -36,14 +35,14 @@ const useSurveyGroup = () => {
       setQuery({ surveyGroupId: firstValidSurveyGroupId });
     }
     // eslint-disable-next-line
-  }, [JSON.stringify(surveyGroups.data)]);
+  }, [JSON.stringify(_surveyGroups.data)]);
 
   const currentSurveyGroupName =
-    surveyGroups?.data?.find((el) => el.id.toString() === parsedQuery?.surveyGroupId?.toString())
+    _surveyGroups?.data?.find((el) => el.id.toString() === parsedQuery?.surveyGroupId?.toString())
       ?.name || '';
 
-  return [surveyGroups, currentSurveyGroupName, surveyGroupId];
+  return [surveyGroups, currentSurveyGroupName, surveyGroupId, surveyGroupObject];
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export { useSurveyGroup };
+export { useRateeSurveyGroup };

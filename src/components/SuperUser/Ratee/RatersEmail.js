@@ -1,38 +1,34 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-
 import PropTypes from 'prop-types';
+
+import moment from 'moment';
+import { useQuery, useRateeSurveyGroup } from '../../../hooks';
+
 import Table from '../../Common/Table';
 import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
-import { useQuery } from '../../../hooks';
 
 const RatersEmail = ({
-                       loading,
-                       fetchRaters,
-                       raters,
-                       fetchEmailOptions,
-                       emailOptions,
-                       exportSurveyGroupRaters,
-                       sendEmail,
-                     }) => {
+  loading,
+  fetchRaters,
+  raters,
+  fetchEmailOptions,
+  emailOptions,
+  exportSurveyGroupRaters,
+  sendEmail,
+}) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const [, , surveyGroupId, surveyGroupObject] = useRateeSurveyGroup();
+
   const pageNumber = parsedQuery?.page_number || 1;
   const pageSize = parsedQuery?.page_size || 10;
-  const surveyGroupId = parsedQuery?.surveyGroupId;
+  const isNotPastEndDate = !moment(surveyGroupObject.endDate).isBefore();
 
   React.useEffect(() => {
     fetchRaters({ query, surveyGroupId });
     setSelectedRows([]);
-  }, [
-    fetchRaters,
-    surveyGroupId,
-    pageSize,
-    pageNumber,
-    parsedQuery.q,
-    parsedQuery.sort,
-  ]);
+  }, [fetchRaters, surveyGroupId, pageSize, pageNumber, parsedQuery.q, parsedQuery.sort]);
   React.useEffect(() => {
     fetchEmailOptions({ surveyGroupId });
   }, [fetchEmailOptions, surveyGroupId]);
@@ -92,19 +88,19 @@ const RatersEmail = ({
   const columns = React.useMemo(() => [
     {
       key: 'name',
-      title: 'Rates Name',
+      title: 'Raters Name',
       width: 100,
       sorter: true,
     },
     {
       key: 'email',
-      title: 'Rates Email',
+      title: 'Raters Email',
       width: 100,
       sorter: true,
     },
     {
       key: 'password',
-      title: 'Rates Password',
+      title: 'Raters Password',
       width: 100,
       sorter: true,
     },
@@ -140,6 +136,7 @@ const RatersEmail = ({
           page_number,
         });
       }}
+      rowSelection={isNotPastEndDate}
       selectedRowKeys={selectedRows?.map((el) => el.raterId)}
       onRowSelectionChange={(_, rows) => {
         setSelectedRows(rows);
@@ -167,12 +164,13 @@ RatersEmail.propTypes = {
   }),
   fetchEmailOptions: PropTypes.func.isRequired,
   emailOptions: PropTypes.shape({
-    data: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number,
-      name: PropTypes.string,
-    })),
+    data: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+      }),
+    ),
   }),
-
 };
 
 RatersEmail.defaultProps = {

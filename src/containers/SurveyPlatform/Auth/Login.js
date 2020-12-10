@@ -14,7 +14,7 @@ class _Login extends Component {
 
     const { prevPath } = parse(window.location.search);
 
-    const newPath = prevPath || '/survey-platform/dashboard';
+    const newPath = prevPath || '/survey-platform/information';
 
     await login({ username: email, password, rememberMe });
 

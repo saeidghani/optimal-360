@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Formik, Form } from 'formik';
+import moment from 'moment';
 import * as yup from 'yup';
 import arrayMove from 'array-move';
 
@@ -32,15 +33,20 @@ import Button from '../../Common/Button';
 import DraggableTable from '../../Common/DataTable';
 import Loading from '../../Common/Loading';
 
-const _ratingScales = [
-  { score: 0, description: '', label: '' },
-  { score: 1, description: '', label: '' },
-  { score: 2, description: '', label: '' },
-  { score: 3, description: '', label: '' },
-  { score: 4, description: '', label: '' },
-];
+const SurveyQuestionsList = ({
+  fetchSurveyGroups,
+  fetchSurveyQuestions,
+  setSurveyQuestions,
+  loading,
+}) => {
+  const _ratingScales = [
+    { score: 0, description: '', label: '' },
+    { score: 1, description: '', label: '' },
+    { score: 2, description: '', label: '' },
+    { score: 3, description: '', label: '' },
+    { score: 4, description: '', label: '' },
+  ];
 
-const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading }) => {
   const formRef = React.useRef();
 
   const schema = yup.object({
@@ -52,15 +58,13 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
       }),
     ),
     clusters: yup.array(yup.object({})).min(1, 'You must specify at least one cluster item'),
-    feedbacks: yup
-      .array(
-        yup.object({
-          label: yup.string().nullable().required('label is required'),
-          statement: yup.string().nullable().required('statement is required'),
-          required: yup.bool().required('required is required'),
-        }),
-      )
-      .min(1, 'You must specify at least one feedback item'),
+    feedbacks: yup.array(
+      yup.object({
+        label: yup.string().nullable().required('label is required'),
+        statement: yup.string().nullable().required('statement is required'),
+        required: yup.bool().required('required is required'),
+      }),
+    ),
   });
 
   const history = useHistory();
@@ -68,7 +72,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
   const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
   const [persistedData, setPersistData] = usePersist();
   const [surveyQuestions, firstClusterItem, _selectedCluster, _selectedCompetency] = useClusters();
-  const [parsedQuery, query, setQuery] = useQuery();
+  const [parsedQuery, , setQuery] = useQuery();
 
   const [surveyGroupModal, setSurveyGroupModal] = React.useState(false);
   const [addClusterModal, setAddClusterModal] = React.useState(false);
@@ -105,6 +109,49 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
   React.useEffect(() => {
     if (surveyGroupId) fetchSurveyQuestions(surveyGroupId);
   }, [surveyGroupId, fetchSurveyQuestions]);
+
+  const _handleSubmit = async (values) => {
+    try {
+      const { projectId } = parsedQuery;
+
+      await setSurveyQuestions({ ...values, surveyGroupId, projectId });
+      const newSurveyGroups = await fetchSurveyGroups(projectId);
+      setPersistData('');
+
+      const isEverySurveyGroupSubmitted = (newSurveyGroups?.data?.data || []).every(
+        ({ stepsStatus }) => !!stepsStatus,
+      );
+
+      const editableSurveyGroup = (newSurveyGroups?.data?.data || []).find(
+        ({ id, stepsStatus, startDate }) =>
+          id * 1 !== parsedQuery?.surveyGroupId * 1 &&
+          !stepsStatus &&
+          !moment(startDate).isBefore(),
+      );
+
+      if (parsedQuery?.wizardEditMode) {
+        const path = dynamicMap.superUser.surveyGroupsList({ projectId });
+
+        history.push(`${path}`);
+      } else if (isEverySurveyGroupSubmitted) {
+        const path = dynamicMap.superUser.ratersList();
+        const params = stringify({
+          projectId,
+          surveyGroupId,
+        });
+
+        history.push(`${path}${params}`);
+      } else if (editableSurveyGroup) {
+        const path = dynamicMap.superUser.surveySettings();
+        const params = stringify({
+          projectId,
+          surveyGroupId: editableSurveyGroup.id,
+        });
+
+        history.push(`${path}${params}`);
+      }
+    } catch (error) {}
+  };
 
   const onMenuClick = ({ clusterId, competencyId, questionId }) => {
     setSelectedCluster('');
@@ -247,25 +294,12 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
     return {
       ratingScales:
         surveyQuestions?.ratingScales?.length > 0 ? surveyQuestions.ratingScales : _ratingScales,
-      feedbacks:
-        surveyQuestions?.feedbacks?.length > 0
-          ? surveyQuestions.feedbacks
-          : [
-              {
-                label: '',
-                statement: '',
-                required: false,
-                showOrder: 1,
-                index: 0,
-                id: 1,
-                newAddedItem: true,
-              },
-            ],
+      feedbacks: surveyQuestions?.feedbacks?.length > 0 ? surveyQuestions.feedbacks : [],
       clusters: clusters?.length > 0 ? clusters : [],
     };
 
     // eslint-disable-next-line
-  }, [query, surveyQuestionsStringified]);
+  }, [parsedQuery?.surveyGroupId, surveyQuestionsStringified]);
 
   const renderHeader = () => (
     <div
@@ -306,8 +340,9 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
 
   return (
     <MainLayout
+      wizardLayout
       title="Super User"
-      hasBreadCrumb
+      breadCrumbItems={['New Project', 'Survey Questions']}
       titleClass="mb-2"
       contentClass="py-4"
       headerClassName="pl-21"
@@ -391,22 +426,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
             enableReinitialize
             initialValues={initialValues}
             validationSchema={schema}
-            onSubmit={async (values) => {
-              try {
-                const { projectId } = parsedQuery;
-                const params = stringify({
-                  projectId,
-                  surveyGroupId,
-                });
-
-                await setSurveyQuestions({ ...values, surveyGroupId });
-                setPersistData('');
-
-                const path = dynamicMap.superUser.ratersList();
-
-                history.push(`${path}${params}`);
-              } catch (error) {}
-            }}
+            onSubmit={_handleSubmit}
           >
             {({ values, errors, touched, handleSubmit }) => (
               <Form className="pr-28" onSubmit={handleSubmit}>
@@ -592,6 +612,7 @@ const SurveyQuestionsList = ({ fetchSurveyQuestions, setSurveyQuestions, loading
 };
 
 SurveyQuestionsList.propTypes = {
+  fetchSurveyGroups: PropTypes.func.isRequired,
   fetchSurveyQuestions: PropTypes.func.isRequired,
   setSurveyQuestions: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,

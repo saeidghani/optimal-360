@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 import { dynamicMap } from '../../../routes/RouteMap';
 
-import { useQuery } from '../../../hooks';
+import { useQuery, parse } from '../../../hooks/useQuery';
 
 import * as ClusterUtils from '../../../lib/Wizard/clusterUtils';
 
@@ -39,15 +39,13 @@ const SurveyGroupCluster = ({
   const schema = yup.object({
     name: yup.string().nullable().required('Survey group name is required'),
     clusters: yup.array(yup.object({})).min(1, 'You must specify at least one cluster item'),
-    feedbacks: yup
-      .array(
-        yup.object({
-          label: yup.string().nullable().required('label is required'),
-          statement: yup.string().nullable().required('statement is required'),
-          required: yup.bool().required('required is required'),
-        }),
-      )
-      .min(1, 'You must specify at least one feedback item'),
+    feedbacks: yup.array(
+      yup.object({
+        label: yup.string().nullable().required('label is required'),
+        statement: yup.string().nullable().required('statement is required'),
+        required: yup.bool().required('required is required'),
+      }),
+    ),
   });
 
   const history = useHistory();
@@ -226,20 +224,7 @@ const SurveyGroupCluster = ({
     return {
       name: surveyGroupInfo?.name,
       clusters: clusters.map((el) => ({ ...el, index: el.showOrder, name: el.name || el.label })),
-      feedbacks:
-        surveyGroupInfo?.feedbacks?.length > 0
-          ? surveyGroupInfo.feedbacks
-          : [
-              {
-                label: '',
-                statement: '',
-                required: false,
-                showOrder: 1,
-                index: 0,
-                id: 1,
-                newAddedItem: true,
-              },
-            ],
+      feedbacks: surveyGroupInfo?.feedbacks?.length > 0 ? surveyGroupInfo.feedbacks : [],
     };
     // eslint-disable-next-line
   }, [query, JSON.stringify(surveyGroupInfo)]);
@@ -285,7 +270,7 @@ const SurveyGroupCluster = ({
   return (
     <MainLayout
       title="Super User"
-      hasBreadCrumb
+      breadCrumbItems={['Pre Defined Data', parsedQuery.surveyGroupId ? 'Edit' : 'Add']}
       titleClass="mb-2"
       contentClass="py-4"
       headerClassName="pl-21"
@@ -344,7 +329,12 @@ const SurveyGroupCluster = ({
                   await addSurveyGroup(values);
                 }
 
-                history.push(dynamicMap.superUser.bankModels());
+                const nextPath =
+                  history.location.search && parse(history.location.search).prevUrl
+                    ? parse(history.location.search).prevUrl
+                    : dynamicMap.superUser.bankModels();
+
+                history.push(nextPath);
               } catch (err) {}
             }}
           >

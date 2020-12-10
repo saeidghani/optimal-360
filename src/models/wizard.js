@@ -51,6 +51,10 @@ export default {
           data,
         });
 
+        await dispatch.projects.fetchSurveyGroups({
+          projectId: res?.data?.data?.id,
+        });
+
         return res;
       }, dispatch.util.errorHandler);
     },
@@ -105,6 +109,8 @@ export default {
         });
 
         await this.fetchEmailSettings_reducer('');
+        // need to clean up emailsettings field of store for wizard's next step
+        await this.fetchSurveyIntro_reducer('');
 
         return res;
       }, dispatch.util.errorHandler);
@@ -142,11 +148,15 @@ export default {
           data: { ...payload, clientPicture: path },
         });
 
+        this.fetchSurveyQuestions_reducer('');
+
         return res;
       }, dispatch.util.errorHandler);
     },
 
     async fetchSurveyQuestions(surveyGroupId) {
+      if (!surveyGroupId) return this.fetchSurveyQuestions_reducer('');
+
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
@@ -158,13 +168,15 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
-    async setSurveyQuestions({ surveyGroupId, ...payload }) {
+    async setSurveyQuestions({ projectId, surveyGroupId, ...payload }) {
       return actionWapper(async () => {
         const res = await axios({
           method: 'post',
           url: `super-user/wizard/survey-groups/${surveyGroupId}/survey-questions`,
           data: payload,
         });
+
+        await dispatch.projects.fetchSurveyGroups({ projectId });
 
         return res;
       }, dispatch.util.errorHandler);

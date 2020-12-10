@@ -226,7 +226,7 @@ const ReportContent = ({
               ghost
               icon=""
               loading={loading}
-              buttonText="Import Excel client competency model"
+              buttonText="Import Excel Client Competency Model"
               beforeUpload={(file) => {
                 importClientCompetencyModel({ file, surveyGroupId });
                 return false;

@@ -43,7 +43,8 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
 
   return (
     <MainLayout
-      hasBreadCrumb
+      wizardLayout
+      breadCrumbItems={['New Project', 'Survey Intro']}
       title="Super User"
       titleClass="mb-2"
       contentClass="py-4"

@@ -69,7 +69,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
             icon="DeleteOutlined"
           />
 
-          <Button
+          {/* <Button
             onClick={async () => {
               await changeStatusOfProjects(
                 selectedRowsIds,
@@ -89,7 +89,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
                 ? 'Deactivate'
                 : 'Activate'
             }
-          />
+          /> */}
 
           <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
         </div>
@@ -266,7 +266,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
   return (
     <MainLayout
       titleClass="mb-6 mt-3"
-      hasBreadCrumb
+      breadCrumbItems={['Super User', 'Projects']}
       title="Super User"
       contentClass="py-6 pl-21 pr-6"
     >

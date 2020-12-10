@@ -78,6 +78,7 @@ const EmailSettings = ({
             const params = stringify({
               projectId,
               surveyGroupId,
+              wizardEditMode: parsedQuery?.wizardEditMode,
             });
 
             history.push(`${path}${params}`);
@@ -138,7 +139,8 @@ const EmailSettings = ({
 
   return (
     <MainLayout
-      hasBreadCrumb
+      wizardLayout
+      breadCrumbItems={['New Project', 'Email Setting']}
       title="Survey Group"
       titleClass="mb-2"
       contentClass="py-4"
