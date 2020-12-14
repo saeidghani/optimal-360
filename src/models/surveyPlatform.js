@@ -110,7 +110,6 @@ export default {
           method: 'get',
           url: `/survey-platform/survey-groups/${surveyGroupId}/questions/${questionNumber}?${relationIds}`,
         });
-        console.log(res?.data?.options);
         this.fetchQuestions_reducer(res?.data);
         return res;
       }, dispatch.util.errorHandler);
