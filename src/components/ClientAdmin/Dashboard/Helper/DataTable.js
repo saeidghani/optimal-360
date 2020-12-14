@@ -571,7 +571,7 @@ const DataTable = ({
       key: 'bySelf',
       title: (
         <div className="text-center flex flex-col justify-between h-20">
-          <span className="text-antgray-100">For Self</span>
+          <span className="text-antgray-100">As Self</span>
           <span className="text-body text-opacity-75 text-xs">Min. 1</span>
         </div>
       ),
@@ -607,7 +607,7 @@ const DataTable = ({
       key: 'byManager',
       title: (
         <div className="text-center flex flex-col justify-between h-20">
-          <span className="text-antgray-100">For Manager</span>
+          <span className="text-antgray-100">As Manager</span>
           <span className="text-body text-opacity-75 text-xs">Min. 1</span>
         </div>
       ),
@@ -642,7 +642,7 @@ const DataTable = ({
       key: 'byPeers',
       title: (
         <div className="text-center flex flex-col justify-between h-20">
-          <span className="text-antgray-100">For Peers</span>
+          <span className="text-antgray-100">As Peers</span>
           <span className="text-body text-opacity-75 text-xs">Min. 2</span>
         </div>
       ),
@@ -677,7 +677,7 @@ const DataTable = ({
       key: 'byDirectReports',
       title: (
         <div className="text-center flex flex-col justify-between h-20">
-          <span className="text-antgray-100">For Direct Reports</span>
+          <span className="text-antgray-100">As Direct Reports</span>
           <span className="text-body text-opacity-75 text-xs">Min. 3</span>
         </div>
       ),
