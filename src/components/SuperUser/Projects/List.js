@@ -137,7 +137,13 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
               text="New Organization"
               type="gray"
               className="mx-3 px-3"
-              onClick={() => history.push(dynamicMap.superUser.addOrganization())}
+              onClick={() => {
+                const path = `${dynamicMap.superUser.addOrganization()}?prevUrl=${
+                  history?.location?.pathname
+                }`;
+
+                history.push(path);
+              }}
             />
             <Button
               onClick={() => history.push(dynamicMap.superUser.projectInfo())}
