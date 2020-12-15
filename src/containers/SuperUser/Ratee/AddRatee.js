@@ -16,6 +16,11 @@ class AddRatee extends Component {
     return fetchStaff({ surveyGroupId, query });
   };
 
+  clearRateeMissionCriticals = () => {
+    const { clearRateeMissionCriticals } = this.props;
+    return clearRateeMissionCriticals();
+  }
+
   setStaff = ({ surveyGroupId, rateeId }) => {
     const { setStaff } = this.props;
     return setStaff({ surveyGroupId, rateeId });
@@ -43,6 +48,7 @@ class AddRatee extends Component {
         fetchRateeMissionCriticals={this.fetchRateeMissionCriticals}
         addMissionCriticalToRatee={this.addMissionCriticalToRatee}
         fetchStaff={this.fetchStaff}
+        clearRateeMissionCriticals={this.clearRateeMissionCriticals}
         setStaff={this.setStaff}
         rateeMissionCriticals={rateeMissionCriticals}
         staff={staff}
@@ -59,6 +65,7 @@ AddRatee.propTypes = {
   addMissionCriticalToRatee: PropTypes.func.isRequired,
   rateeMissionCriticals: PropTypes.arrayOf(PropTypes.object).isRequired,
   fetchStaff: PropTypes.func.isRequired,
+  clearRateeMissionCriticals: PropTypes.func.isRequired,
   staff: PropTypes.arrayOf(PropTypes.object).isRequired,
   setStaff: PropTypes.func.isRequired,
   fetchOrganizationId: PropTypes.func.isRequired,
@@ -76,6 +83,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchRateeMissionCriticals: dispatch.ratee.fetchRateeMissionCriticals,
   fetchStaff: dispatch.ratee.fetchStaff,
+  clearRateeMissionCriticals: dispatch.ratee.clearRateeMissionCriticals,
   setStaff: dispatch.ratee.setStaff,
   fetchOrganizationId: dispatch.ratee.fetchOrganizationId,
   fetchStaffForRater: dispatch.ratee.fetchStaffForRater,

@@ -7,7 +7,7 @@ import Layout from '../../../components/SuperUser/Ratee/Ratee';
 class Ratee extends Component {
   state = {};
 
-// Status overview
+  // Status overview
   fetchCompletionRate = (query) => {
     const { fetchCompletionRate } = this.props;
 
@@ -20,7 +20,7 @@ class Ratee extends Component {
     return fetchSummary(query);
   };
 
-// Status Details
+  // Status Details
   fetchStatusDetails = (query) => {
     const { fetchStatusDetails } = this.props;
 
@@ -51,7 +51,7 @@ class Ratee extends Component {
     return importRelations(query);
   };
 
-// raters email
+  // raters email
   fetchRaters = (query) => {
     const { fetchRaters } = this.props;
 
@@ -76,7 +76,7 @@ class Ratee extends Component {
     return fetchEmailOptions(query);
   };
 
-// results
+  // results
   fetchIndividualReports = (query) => {
     const { fetchIndividualReports } = this.props;
 
@@ -95,7 +95,7 @@ class Ratee extends Component {
     return exportDemographicData(query);
   };
 
-// reports
+  // reports
   fetchReportSetting = (query) => {
     const { fetchReportSetting } = this.props;
 
@@ -132,6 +132,11 @@ class Ratee extends Component {
     return setPastResult(query);
   };
 
+  fetchRaterGroups = ({ surveyGroupId }) => {
+    const { fetchRaterGroups } = this.props;
+    return fetchRaterGroups({ surveyGroupId });
+  }
+
   render() {
     const {
       loading,
@@ -145,6 +150,7 @@ class Ratee extends Component {
       reportSetting,
       pastResultOptions,
       pastResult,
+      raterGroups,
     } = this.props;
 
     return (
@@ -181,6 +187,8 @@ class Ratee extends Component {
         setPastResult={this.setPastResult}
         pastResultOptions={pastResultOptions}
         pastResult={pastResult}
+        fetchRaterGroups={this.fetchRaterGroups}
+        raterGroups={raterGroups}
       />
     );
   }
@@ -219,7 +227,8 @@ Ratee.propTypes = {
   fetchPastResultOptions: PropTypes.func.isRequired,
   fetchPastResult: PropTypes.func.isRequired,
   setPastResult: PropTypes.func.isRequired,
-
+  fetchRaterGroups: PropTypes.func.isRequired,
+  raterGroups: PropTypes.PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 Ratee.defaultProps = {
@@ -247,6 +256,7 @@ const mapStateToProps = (state) => ({
   reportSetting: state.ratee?.reportSetting || {},
   pastResultOptions: state.ratee?.pastResultOptions || {},
   pastResult: state.ratee?.pastResult || {},
+  raterGroups: state.ratee.raterGroups,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -270,6 +280,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchPastResultOptions: dispatch.ratee.fetchPastResultOptions,
   fetchPastResult: dispatch.ratee.fetchPastResult,
   setPastResult: dispatch.ratee.setPastResult,
+  fetchRaterGroups: dispatch.ratee.fetchRaterGroups,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Ratee);

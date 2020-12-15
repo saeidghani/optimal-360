@@ -13,6 +13,7 @@ import { dynamicMap } from '../../../routes/RouteMap';
 const EditRatee = ({
   loading,
   fetchRateeMissionCriticals,
+  clearRateeMissionCriticals,
   rateeMissionCriticals,
   addMissionCriticalToRatee,
 }) => {
@@ -30,6 +31,10 @@ const EditRatee = ({
 
   useEffect(() => {
     fetchRateeMissionCriticals({ surveyGroupId, rateeId });
+
+    return () => {
+      clearRateeMissionCriticals();
+    };
     // TODO clear ratees
   }, [fetchRateeMissionCriticals]);
 
@@ -112,6 +117,7 @@ EditRatee.propTypes = {
   fetchRateeMissionCriticals: PropTypes.func.isRequired,
   addMissionCriticalToRatee: PropTypes.func.isRequired,
   rateeMissionCriticals: PropTypes.arrayOf(PropTypes.object).isRequired,
+  clearRateeMissionCriticals: PropTypes.func.isRequired,
 };
 
 EditRatee.defaultProps = {};

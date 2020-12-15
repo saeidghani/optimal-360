@@ -236,7 +236,7 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
-    async clearRateeMissionCriticals() {
+    clearRateeMissionCriticals() {
       this.fetchRateeMissionCriticals_reducer('');
     },
 
@@ -298,6 +298,10 @@ export default {
         dispatch.util.errorHandler);
     },
 
+    clearRaterGroups() {
+      this.fetchRaterGroups_reducer('');
+    },
+
     async fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId, query }) {
       return actionWapper(async () => {
         const res = await axios({
@@ -316,7 +320,7 @@ export default {
       this.setSelectedRaters_reducer(rows);
     },
 
-    async submitRaters({ surveyGroupId, rateeId, obj }) {
+    submitRaters({ surveyGroupId, rateeId, obj }) {
       return actionWapper(async () => {
         const res = await axios({
           method: 'post',

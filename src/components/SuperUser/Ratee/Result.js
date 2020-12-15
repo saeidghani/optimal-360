@@ -89,46 +89,47 @@ const Result = ({
         <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
       </div>
     ) : (
-      <div className="flex justify-between items-center borderless-tab">
-        <Tabs
-          defaultActiveKey={resultBy || 'individual'}
-          onChange={tabChangeCallback}
-          className="relative contents"
-          tabBarStyle={{ color: '#262626' }}
-        >
-          <TabPane tab="Individual Report" key="individual" />
-          <TabPane tab="Group Report" key="group" />
-        </Tabs>
-        <div className="flex flex-row ">
-          {resultBy === 'individual' && (
-            <SearchBox
-              className="text-xs"
-              placeholder="SEARCH"
-              loading={loading}
-              onSearch={(val) => setQuery({ q: val })}
-              onPressEnter={(e) => setQuery({ q: e.target.value })}
-            />
-          )}
-          <Button
-            size="middle"
-            textSize="xs"
-            text="Add Data"
-            textClassName="mr-2"
-            className="ml-3"
-            type="gray"
-            onClick={() => {
-              const path = dynamicMap.superUser.groupReports({ surveyGroupId });
-              const params = stringify({
-                projectId: parsedQuery?.projectId,
-                surveyGroupId,
-              });
+        <div className="flex justify-between items-center borderless-tab">
+          <Tabs
+            defaultActiveKey={resultBy || 'individual'}
+            onChange={tabChangeCallback}
+            className="relative contents"
+            tabBarStyle={{ color: '#262626' }}
+          >
+            <TabPane tab="Individual Report" key="individual" />
+            <TabPane tab="Group Report" key="group" />
+          </Tabs>
+          <div className="flex flex-row ">
+            {resultBy === 'individual' && (
+              <SearchBox
+                className="text-xs"
+                placeholder="SEARCH"
+                loading={loading}
+                value={parsedQuery?.q}
+                onSearch={(val) => setQuery({ q: val })}
+                onPressEnter={(e) => setQuery({ q: e.target.value })}
+              />
+            )}
+            <Button
+              size="middle"
+              textSize="xs"
+              text="Add Data"
+              textClassName="mr-2"
+              className="ml-3"
+              type="gray"
+              onClick={() => {
+                const path = dynamicMap.superUser.groupReports({ surveyGroupId });
+                const params = stringify({
+                  projectId: parsedQuery?.projectId,
+                  surveyGroupId,
+                });
 
-              history.push(`${path}${params}`);
-            }}
-          />
+                history.push(`${path}${params}`);
+              }}
+            />
+          </div>
         </div>
-      </div>
-    );
+      );
   }, [loading, selectedRows.length, resultBy]);
 
   const individualColumns = React.useMemo(() => [
@@ -199,8 +200,8 @@ const Result = ({
           {criticalCompetencyData ? (
             <div className="w-5 h-5 bg-green-400 rounded-full" />
           ) : (
-            <CloseOutlined className="text-base ml-2 text-red-500" />
-          )}
+              <CloseOutlined className="text-base ml-2 text-red-500" />
+            )}
         </div>
       ),
     },
@@ -218,8 +219,8 @@ const Result = ({
           {previosResults ? (
             <div className="w-5 h-5 bg-orange rounded-full" />
           ) : (
-            <CloseOutlined className="text-base ml-2 text-red-500" />
-          )}
+              <CloseOutlined className="text-base ml-2 text-red-500" />
+            )}
         </div>
       ),
     },

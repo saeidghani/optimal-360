@@ -4,7 +4,7 @@ import { Input } from 'antd';
 
 const { Search } = Input;
 
-const SearchBox = ({ placeholder, loading, onSearch, onChange, onPressEnter, className }) => (
+const SearchBox = ({ placeholder, loading, onSearch, onChange, onPressEnter, className, value }) => (
   <Search
     className={`h-8 ${className}`}
     placeholder={placeholder}
@@ -12,6 +12,7 @@ const SearchBox = ({ placeholder, loading, onSearch, onChange, onPressEnter, cla
     onSearch={onSearch}
     onChange={onChange}
     onPressEnter={onPressEnter}
+    value={value}
   />
 );
 
@@ -22,14 +23,15 @@ SearchBox.propTypes = {
   onSearch: PropTypes.func.isRequired,
   onChange: PropTypes.func,
   onPressEnter: PropTypes.func,
+  value: PropTypes.string.isRequired,
 };
 
 SearchBox.defaultProps = {
   placeholder: 'Search',
   className: '',
   loading: false,
-  onChange: () => {},
-  onPressEnter: () => {},
+  onChange: () => { },
+  onPressEnter: () => { },
 };
 
 export default SearchBox;

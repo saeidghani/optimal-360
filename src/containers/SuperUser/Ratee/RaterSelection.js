@@ -6,11 +6,6 @@ import Layout from '../../../components/SuperUser/Ratee/RaterSelection';
 class RaterSelection extends Component {
   state = {};
 
-  clearStaffAndStorage = () => {
-    const { clearStaffAndStorage } = this.props;
-    return clearStaffAndStorage();
-  }
-
   fetchRaterGroups = ({ surveyGroupId }) => {
     const { fetchRaterGroups } = this.props;
     return fetchRaterGroups({ surveyGroupId });
@@ -31,9 +26,9 @@ class RaterSelection extends Component {
     await submitRaters({ surveyGroupId, rateeId, obj });
   }
 
-  fetchAllStaffForRaters = ({ surveyGroupId, rateeId, raterGroupId }) => {
-    const { fetchAllStaffForRaters } = this.props;
-    return fetchAllStaffForRaters({ surveyGroupId, rateeId, raterGroupId });
+  clearRaterGroups = async () => {
+    const { clearRaterGroups } = this.props;
+    await clearRaterGroups();
   }
 
   render() {
@@ -44,12 +39,11 @@ class RaterSelection extends Component {
         submitRaters={this.submitRaters}
         staffForRater={staffForRater}
         fetchRaterGroups={this.fetchRaterGroups}
+        clearRaterGroups={this.clearRaterGroups}
         raterGroups={raterGroups}
         setSelectedRaters={this.setSelectedRaters}
         defaultSelectedRaters={defaultSelectedRaters}
         selectedRaters={selectedRaters}
-        fetchAllStaffForRaters={this.fetchAllStaffForRaters}
-        clearStaffAndStorage={this.clearStaffAndStorage}
         loading={loading}
       />
     );
@@ -61,13 +55,12 @@ RaterSelection.propTypes = {
   fetchStaffForRater: PropTypes.func.isRequired,
   staffForRater: PropTypes.arrayOf(PropTypes.object).isRequired,
   fetchRaterGroups: PropTypes.func.isRequired,
+  clearRaterGroups: PropTypes.func.isRequired,
   raterGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
   selectedRaters: PropTypes.arrayOf(PropTypes.object).isRequired,
   setSelectedRaters: PropTypes.func.isRequired,
   submitRaters: PropTypes.func.isRequired,
   defaultSelectedRaters: PropTypes.arrayOf(PropTypes.object).isRequired,
-  clearStaffAndStorage: PropTypes.func.isRequired,
-  fetchAllStaffForRaters: PropTypes.func.isRequired,
 };
 
 RaterSelection.defaultProps = {};
@@ -77,7 +70,6 @@ const mapStateToProps = (state) => ({
   staffForRater: state.ratee.staffForRater || [],
   raterGroups: state.ratee.raterGroups || [],
   selectedRaters: state.ratee.selectedRaters || [],
-  changedLog: state.ratee.changedLog || [],
   defaultSelectedRaters: state.ratee.defaultSelectedRaters || [],
 });
 
@@ -86,8 +78,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchRaterGroups: dispatch.ratee.fetchRaterGroups,
   setSelectedRaters: dispatch.ratee.setSelectedRaters,
   submitRaters: dispatch.ratee.submitRaters,
-  clearStaffAndStorage: dispatch.ratee.clearStaffAndStorage,
-  fetchAllStaffForRaters: dispatch.ratee.fetchAllStaffForRaters,
+  clearRaterGroups: dispatch.ratee.clearRaterGroups,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RaterSelection);

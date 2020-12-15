@@ -17,6 +17,7 @@ const AddRatee = ({
   addMissionCriticalToRatee,
   rateeMissionCriticals,
   fetchStaff,
+  clearRateeMissionCriticals,
   staff,
   setStaff,
   fetchOrganizationId,
@@ -25,7 +26,7 @@ const AddRatee = ({
   const [parsedQuery, query, setQuery] = useQuery();
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedStaffId, setSelectedStaffId] = useState(null);
-  const [alertModalVisible, setAlertModalVisible] = useState(false);
+  const [isNextStepActive, SetIsNextStepActive] = useState(true);
   const surveyGroupId = parsedQuery?.surveyGroupId;
   const projectId = parsedQuery?.projectId;
 
@@ -37,6 +38,10 @@ const AddRatee = ({
   useEffect(() => {
     const staffQuery = stringify(parse({ q: parsedQuery.sq }));
     fetchStaff({ surveyGroupId, query: staffQuery });
+
+    return () => {
+      clearRateeMissionCriticals();
+    };
   }, [query, fetchStaff, parsedQuery.sq]);
 
   const handleClickAddNewStaff = useCallback(async () => {
@@ -50,6 +55,7 @@ const AddRatee = ({
   }, [fetchOrganizationId]);
 
   const handleSelectStaff = ({ id }) => {
+    SetIsNextStepActive(false);
     setSelectedStaffId(id);
     fetchRateeMissionCriticals({ surveyGroupId, rateeId: id });
   };
@@ -63,7 +69,7 @@ const AddRatee = ({
       const path = `${dynamicMap.superUser.raterSelection()}${params}`;
       history.push(path);
     } else {
-      setAlertModalVisible(true);
+      SetIsNextStepActive(true);
     }
   }, [selectedRows]);
 
@@ -79,15 +85,18 @@ const AddRatee = ({
               options={
                 staff?.length > 0
                   ? staff.map(({ name, id }) => ({
-                      label: name,
-                      value: name,
-                      id,
-                      key: id,
-                    }))
+                    label: name,
+                    value: name,
+                    id,
+                    key: id,
+                  }))
                   : [{ label: 'no result found' }]
               }
               onSelect={handleSelectStaff}
-              onChange={(text) => setQuery({ sq: text })}
+              onChange={(text) => {
+                SetIsNextStepActive(true);
+                setQuery({ sq: text });
+              }}
               value={parsedQuery.sq}
             />
           </span>
@@ -126,19 +135,6 @@ const AddRatee = ({
       headerClassName="pl-21"
       childrenPadding={false}
     >
-      <Modal
-        visible={alertModalVisible}
-        handleOk={() => setAlertModalVisible(false)}
-        handleCancel={() => setAlertModalVisible(false)}
-        width={588}
-        okText="Ok"
-        okButtonProps={{ textClassName: 'px-4' }}
-      >
-        <div className="flex flex-col items-center">
-          <InfoCircleOutlined className="text-4xl text-primary-500 mb-4" />
-          <p>Select Staff To Continue!</p>
-        </div>
-      </Modal>
       <div className="bg-white p-6 grid grid-cols-12  min-h-full">
         <div className="px-6 py-5 col-start-2 col-span-10">
           <div className="w-2/6">
@@ -159,8 +155,14 @@ const AddRatee = ({
             loading={loading}
           />
           <div className="pt-23.5 pb-22 flex justify-end max-w-screen-xl">
-            <Button className="w-24.5 h-9.5" type="link" text="Cancel" />
-            <Button className="w-24.5 h-9.5" text="Next" onClick={handleClickNextStep} />
+            <Button className="w-24.5 h-9.5" text="Cancel" onClick={() => history.goBack()} />
+            <Button
+              loading={loading}
+              className="w-24.5 h-9.5 ml-3"
+              text="Next"
+              onClick={handleClickNextStep}
+              disabled={isNextStepActive}
+            />
           </div>
         </div>
       </div>
@@ -174,6 +176,7 @@ AddRatee.propTypes = {
   addMissionCriticalToRatee: PropTypes.func.isRequired,
   rateeMissionCriticals: PropTypes.arrayOf(PropTypes.object).isRequired,
   fetchStaff: PropTypes.func.isRequired,
+  clearRateeMissionCriticals: PropTypes.func.isRequired,
   staff: PropTypes.arrayOf(PropTypes.object).isRequired,
   setStaff: PropTypes.func.isRequired,
   fetchOrganizationId: PropTypes.func.isRequired,

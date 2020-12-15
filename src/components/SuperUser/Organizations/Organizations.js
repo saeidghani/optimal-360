@@ -40,6 +40,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
             loading={loading}
             onSearch={(val) => setQuery({ q: val })}
             onPressEnter={(e) => setQuery({ q: e.target.value })}
+            value={parsedQuery?.q}
           />
           <Button
             size="middle"

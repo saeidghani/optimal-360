@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { notification } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import MainLayout from '../../Common/Layout';
@@ -18,6 +19,7 @@ const RaterSelection = ({
   staffForRater,
   fetchRaterGroups,
   raterGroups,
+  clearRaterGroups,
   submitRaters,
   setSelectedRaters,
   selectedRaters,
@@ -27,35 +29,34 @@ const RaterSelection = ({
   const history = useHistory();
   const [discardModalVisible, setDiscardModalVisible] = useState(false);
   const [raterGroupRedirectId, setRaterGroupRedirectId] = useState(null);
+  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const surveyGroupId = parsedQuery?.surveyGroupId;
   const rateeId = parsedQuery?.rateeId;
   const projectId = parsedQuery?.projectId;
-  const raterGroupId = parsedQuery?.raterGroupId || raterGroups[0]?.id?.toString();
-  const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
   const pageNumber = parsedQuery?.page_number;
+  const raterGroupId = parsedQuery?.raterGroupId || raterGroups[0]?.id?.toString();
+
   const obj = {
     addRelations: [],
     removeRelations: [],
+  };
+
+  const openNotificationWithIcon = (type) => {
+    notification[type]({
+      message: 'Success',
+      description: 'Your changes have been saved successfully!',
+    });
   };
 
   useEffect(() => {
     fetchRaterGroups({ surveyGroupId });
   }, [surveyGroupId]);
 
-  useEffect(() => {
-    if (raterGroupId) {
-      setQuery({ raterGroupId });
-      fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId, query });
-    }
-  }, [raterGroupId, query]);
-
   const setObjValue = () => {
-    const addItems =
-      selectedRaters?.filter((item) => !defaultSelectedRaters?.find((el) => el.id === item.id)) ||
-      [];
-    const removeItems =
-      defaultSelectedRaters?.filter((item) => !selectedRaters?.find((el) => el.id === item.id)) ||
-      [];
+    const addItems = selectedRaters?.filter((item) =>
+      !defaultSelectedRaters?.find((el) => el.id === item.id)) || [];
+    const removeItems = defaultSelectedRaters?.filter((item) =>
+      !selectedRaters?.find((el) => el.id === item.id)) || [];
     removeItems.map((item) => obj.removeRelations.push(item.relationId));
     addItems.map((item) =>
       obj.addRelations.push({ raterId: item.id, raterGroupId: parseInt(raterGroupId) }),
@@ -63,30 +64,55 @@ const RaterSelection = ({
   };
 
   useEffect(() => {
+    setObjValue();
+    if (obj.addRelations.length > 0 || obj.removeRelations.length > 0) {
+      submitRaters({ surveyGroupId, rateeId, obj }).then(() => {
+        openNotificationWithIcon('success');
+      });
+    }
+  },
+    [submitRaters,
+      parsedQuery?.q,
+      parsedQuery?.page_number,
+      parsedQuery?.page_size],
+  );
+
+  useEffect(() => {
+    if (raterGroupId && parsedQuery?.page_size) {
+      fetchStaffForRater({ surveyGroupId, rateeId, raterGroupId, query });
+      setQuery({ raterGroupId });
+    }
+  }, [fetchStaffForRater,
+    query,
+    raterGroupId,
+    parsedQuery?.raterGroupId,
+    parsedQuery?.pageSize,
+    parsedQuery?.page_number,
+    parsedQuery?.q]);
+
+  useEffect(() => {
     setQuery({
       page_number: 1,
       page_size: 10,
       status: 'active',
+      raterGroupId,
     });
-  }, [parsedQuery.raterGroupId]);
+  }, [parsedQuery?.raterGroupId]);
 
   useEffect(() => {
-    setObjValue();
-    if (obj?.addRelations?.length > 0 || obj?.removeRelations?.length > 0) {
-      submitRaters({
-        surveyGroupId,
-        rateeId,
-        obj,
+    if (!parsedQuery?.page_number || !parsedQuery?.page_size || !parsedQuery?.status) {
+      setQuery({
+        page_number: 1,
+        page_size: 10,
+        status: 'active',
+        raterGroupId,
       });
-    }
-  }, [parsedQuery?.page_size, parsedQuery?.page_number, parsedQuery?.q, submitRaters]);
 
-  const handleSubmitClick = async () => {
-    setObjValue();
-    await submitRaters({ surveyGroupId, rateeId, obj });
-    setQuery({ raterGroupId: raterGroupRedirectId });
-    setDiscardModalVisible(false);
-  };
+      return () => {
+        clearRaterGroups();
+      };
+    }
+  }, [history?.location?.pathname]);
 
   const handleClickOnMenu = (id) => {
     setObjValue();
@@ -98,6 +124,13 @@ const RaterSelection = ({
     }
   };
 
+  const handleSubmitClick = async () => {
+    setObjValue();
+    await submitRaters({ surveyGroupId, rateeId, obj });
+    setQuery({ raterGroupId: raterGroupRedirectId });
+    setDiscardModalVisible(false);
+  };
+
   const renderHeader = React.useCallback(() => {
     return (
       <div className="flex flex-row justify-start items-center">
@@ -107,12 +140,13 @@ const RaterSelection = ({
             className="text-xs"
             placeholder="Search"
             loading={loading}
+            value={parsedQuery?.q || ''}
             onChange={(e) => setQuery({ q: e.target.value })}
           />
         </div>
       </div>
     );
-  }, [loading, parsedQuery.q]);
+  }, [loading, parsedQuery?.q]);
 
   const columns = React.useMemo(() => [
     {
@@ -159,7 +193,7 @@ const RaterSelection = ({
         width={588}
         okText="Save"
         cancelText="Discard"
-        okButtonProps={{ textClassName: 'px-4' }}
+        okButtonProps={{ textClassName: 'px-4', loading }}
       >
         <div className="flex flex-col items-center">
           <InfoCircleOutlined className="text-4xl text-primary-500 mb-4" />
@@ -220,7 +254,7 @@ const RaterSelection = ({
                   const params = stringify({ surveyGroupId, projectId });
                   const path = `${dynamicMap.superUser.ratersList()}${params}`;
                   history.push(path);
-                } catch (error) {}
+                } catch (error) { }
               }}
             />
           </div>
