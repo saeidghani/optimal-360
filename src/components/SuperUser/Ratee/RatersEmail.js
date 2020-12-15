@@ -88,19 +88,19 @@ const RatersEmail = ({
   const columns = React.useMemo(() => [
     {
       key: 'name',
-      title: 'Raters Name',
+      title: 'Rater Name',
       width: 100,
       sorter: true,
     },
     {
       key: 'email',
-      title: 'Raters Email',
+      title: 'Rater Email',
       width: 100,
       sorter: true,
     },
     {
       key: 'password',
-      title: 'Raters Password',
+      title: 'Rater Password',
       width: 100,
       sorter: true,
     },
