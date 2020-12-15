@@ -44,8 +44,8 @@ const IndividualQuestions = ({
     const rows = [];
     const row = {};
     // eslint-disable-next-line no-unused-expressions
-    questions?.data?.options?.forEach(({ label, score }) => {
-      row[label] = { value: score };
+    questions?.data?.options?.forEach(({ score }) => {
+      row[score] = { value: score };
     });
     const currentRelation =
       relations?.data?.find(
@@ -53,7 +53,7 @@ const IndividualQuestions = ({
       ) || {};
     const newRow = {
       ...row,
-      key: `${relationId}`,
+      key: relationId?.toString(),
       describesThisPerson: currentRelation?.rateeName,
     };
     if (currentRelation?.raterGroupName === 'self') {
@@ -113,6 +113,7 @@ const IndividualQuestions = ({
       <Questions
         loading={loading}
         dataSource={dataSource}
+        options={questions?.data?.options}
         questions={questions}
         relationValues={relationValues}
         onSetRelationValues={(e, item, key) =>

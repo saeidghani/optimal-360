@@ -80,6 +80,9 @@ const NewOrganizations = ({ addNewOrganization, loading }) => {
                   type="dashed"
                   className="h-8"
                 />
+
+                <p className="text-red-500 h-5 mt-1">{touched.logo && errors.logo}</p>
+
                 <Button
                   loading={loading}
                   onClick={handleSubmit}
