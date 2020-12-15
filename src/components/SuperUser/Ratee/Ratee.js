@@ -47,6 +47,8 @@ const Ratee = ({
   setPastResult,
   pastResultOptions,
   pastResult,
+  fetchRaterGroups,
+  raterGroups,
 }) => {
   const history = useHistory();
   const [parsedQuery, , setQuery] = useQuery();
@@ -138,7 +140,9 @@ const Ratee = ({
             statusDetails={statusDetails}
             importRelations={importRelations}
             exportRelations={exportRelations}
+            fetchRaterGroups={fetchRaterGroups}
             loading={loading}
+            raterGroups={raterGroups}
           />
         </TabPane>
         <TabPane tab={allTabs[2].title} key={allTabs[2].key}>

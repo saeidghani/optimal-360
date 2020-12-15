@@ -30,7 +30,7 @@ const RatersEmail = ({
     setSelectedRows([]);
   }, [fetchRaters, surveyGroupId, pageSize, pageNumber, parsedQuery.q, parsedQuery.sort]);
   React.useEffect(() => {
-    fetchEmailOptions({ surveyGroupId });
+    if (isNotPastEndDate) fetchEmailOptions({ surveyGroupId });
   }, [fetchEmailOptions, surveyGroupId]);
 
   const renderHeader = React.useCallback(() => {
@@ -57,32 +57,34 @@ const RatersEmail = ({
         ))}
         <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
       </div>
-    ) : (
-      <div className="flex flex-row justify-end items-center">
-        <div className="flex flex-row">
-          <SearchBox
-            className="text-xs"
-            placeholder="SEARCH"
-            loading={loading}
-            onSearch={(val) => setQuery({ q: val })}
-            onPressEnter={(e) => setQuery({ q: e.target.value })}
-          />
-          <Button
-            size="middle"
-            textSize="xs"
-            text="Export Excel File"
-            textClassName="mr-2"
-            className="ml-3"
-            type="gray"
-            icon="FileExcelOutlined"
-            iconPosition="right"
-            onClick={() => {
-              exportSurveyGroupRaters({ surveyGroupId });
-            }}
-          />
+    ) :
+      (
+        <div className="flex flex-row justify-end items-center">
+          <div className="flex flex-row">
+            <SearchBox
+              className="text-xs"
+              placeholder="SEARCH"
+              loading={loading}
+              value={parsedQuery?.q}
+              onSearch={(val) => setQuery({ q: val })}
+              onPressEnter={(e) => setQuery({ q: e.target.value })}
+            />
+            <Button
+              size="middle"
+              textSize="xs"
+              text="Export Excel File"
+              textClassName="mr-2"
+              className="ml-3"
+              type="gray"
+              icon="FileExcelOutlined"
+              iconPosition="right"
+              onClick={() => {
+                exportSurveyGroupRaters({ surveyGroupId });
+              }}
+            />
+          </div>
         </div>
-      </div>
-    );
+      );
   }, [loading, selectedRows.length]);
 
   const columns = React.useMemo(() => [

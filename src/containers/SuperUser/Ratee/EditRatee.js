@@ -11,6 +11,11 @@ class EditRatee extends Component {
     return fetchRateeMissionCriticals({ surveyGroupId, rateeId });
   };
 
+  clearRateeMissionCriticals = () => {
+    const { clearRateeMissionCriticals } = this.props;
+    return clearRateeMissionCriticals();
+  }
+
   addMissionCriticalToRatee = ({ surveyGroupId, rateeId, competencyIds }) => {
     const { addMissionCriticalToRatee } = this.props;
     return addMissionCriticalToRatee({ surveyGroupId, rateeId, competencyIds });
@@ -22,6 +27,7 @@ class EditRatee extends Component {
       <Layout
         loading={loading}
         fetchRateeMissionCriticals={this.fetchRateeMissionCriticals}
+        clearRateeMissionCriticals={this.clearRateeMissionCriticals}
         addMissionCriticalToRatee={this.addMissionCriticalToRatee}
         rateeMissionCriticals={rateeMissionCriticals}
       />
@@ -34,6 +40,7 @@ EditRatee.propTypes = {
   fetchRateeMissionCriticals: PropTypes.func.isRequired,
   addMissionCriticalToRatee: PropTypes.func.isRequired,
   rateeMissionCriticals: PropTypes.arrayOf(PropTypes.object).isRequired,
+  clearRateeMissionCriticals: PropTypes.func.isRequired,
 };
 
 EditRatee.defaultProps = {};
@@ -46,6 +53,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchRateeMissionCriticals: dispatch.ratee.fetchRateeMissionCriticals,
   addMissionCriticalToRatee: dispatch.ratee.addMissionCriticalToRatee,
+  clearRateeMissionCriticals: dispatch.ratee.clearRateeMissionCriticals,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditRatee);
