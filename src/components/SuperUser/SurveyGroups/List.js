@@ -105,7 +105,13 @@ const SurveyGroups = ({
 
           <div className="flex flex-row items-center">
             <Button
-              onClick={() => history.push(dynamicMap.superUser.addOrganization())}
+              onClick={() => {
+                const path = `${dynamicMap.superUser.addOrganization()}?prevUrl=${
+                  history?.location?.pathname
+                }`;
+
+                history.push(path);
+              }}
               size="middle"
               textSize="xs"
               text="New Organization"
