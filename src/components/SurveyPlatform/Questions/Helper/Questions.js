@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 import { QuestionOutlined } from '@ant-design/icons';
+import arrayMove from 'array-move';
 
 import Button from '../../../Common/Button';
 import Progress from '../../../Common/Progress';
@@ -17,9 +18,9 @@ const Questions = ({
   onSetRelationValues,
   onNext,
   dataSource,
+  options,
 }) => {
   const [visible, setVisible] = React.useState(false);
-
   const history = useHistory();
   const { questionNumber } = useParams();
 
@@ -73,24 +74,15 @@ const Questions = ({
     );
   }, [questions.timeStamp]);
 
-  const columns = React.useMemo(() => [
-    {
-      key: 'describesThisPerson',
+  const columns = React.useMemo(() => {
+    const zeroScoreIndex = options.findIndex(({ score }) => score?.toString() === '0');
+    const arrangedOptions = arrayMove(options, zeroScoreIndex, -1);
+    // eslint-disable-next-line no-unused-expressions
+    const scoreColumns = arrangedOptions?.map(({ label, score }) => ({
+      key: score,
       title: (
-        <span className="text-xs flex justify-center xl:pr-8 md:text-sm">
-          Describes this person:
-        </span>
-      ),
-      width: 100,
-      render: (text) => (
-        <span className="text-xs flex justify-center p-4 xl:pr-8 md:text-sm">{text}</span>
-      ),
-    },
-    {
-      key: 'not at all',
-      title: (
-        <div className="inline-flex flex-col justify-between items-center md:flex-row">
-          <span className="mr-0 text-xs md:mr-2 mb-2 md:mb-0 md:text-sm">Not at all</span>
+        <div className="flex flex-col justify-center items-center md:flex-row">
+          <span className="mr-0 text-xs md:mr-2 mb-2 capitalize md:mb-0 md:text-sm">{label}</span>
           <QuestionOutlined
             className="text-white bg-gray-400 w-5 h-5 rounded-full"
             style={{ paddingTop: 3 }}
@@ -99,106 +91,43 @@ const Questions = ({
       ),
       width: 100,
       render: (item, { key }) => (
-        <Radio
-          onChange={(e) => onSetRelationValues(e, item, key)}
-          value={relationValues[key]}
-          checked={relationValues[key] === item?.value}
-          className="pl-5"
-        />
-      ),
-    },
-    {
-      key: 'not much',
-      title: (
-        <div className="inline-flex flex-col justify-between items-center md:flex-row">
-          <span className="mr-0 text-xs md:mr-2 mb-2 md:mb-0 md:text-sm">Not much</span>
-          <QuestionOutlined
-            className="text-white bg-gray-400 w-5 h-5 rounded-full"
-            style={{ paddingTop: 3 }}
-          />
-        </div>
-      ),
-      width: 100,
-      render: (item, { key }) => (
-        <Radio
-          onChange={(e) => onSetRelationValues(e, item, key)}
-          value={relationValues[key]}
-          checked={relationValues[key] === item?.value}
-          className="pl-5"
-        />
-      ),
-    },
-    {
-      key: 'somewhat',
-      title: (
-        <div className="inline-flex flex-col justify-between items-center md:flex-row">
-          <span className="mr-0 text-xs md:mr-2 mb-2 md:mb-0 md:text-sm">Somewhat</span>
-          <QuestionOutlined
-            className="text-white bg-gray-400 w-5 h-5 rounded-full"
-            style={{ paddingTop: 3 }}
-          />
-        </div>
-      ),
-      width: 100,
-      render: (item, { key }) => (
-        <Radio
-          onChange={(e) => onSetRelationValues(e, item, key)}
-          value={relationValues[key]}
-          checked={relationValues[key] === item?.value}
-          className="pl-5"
-        />
-      ),
-    },
-    {
-      key: 'most',
-      title: (
-        <div className="inline-flex flex-col justify-between items-center md:flex-row">
-          <span className="mr-0 text-xs md:mr-2 mb-2 md:mb-0 md:text-sm">Most</span>
-          <QuestionOutlined
-            className="text-white bg-gray-400 w-5 h-5 rounded-full"
-            style={{ paddingTop: 3 }}
-          />
-        </div>
-      ),
-      width: 100,
-      render: (item, { key }) => (
-        <Radio
-          onChange={(e) => onSetRelationValues(e, item, key)}
-          value={relationValues[key]}
-          checked={relationValues[key] === item?.value}
-          className="pl-5"
-        />
-      ),
-    },
-    {
-      key: 'not clear',
-      title: (
-        <div className="inline-flex flex-col justify-between items-center pl-8 md:flex-row">
-          <span className="mr-0 text-xs md:mr-2 mb-2 md:mb-0 md:text-sm">Not Clear</span>
-          <QuestionOutlined
-            className="text-white bg-gray-400 w-5 h-5 rounded-full"
-            style={{ paddingTop: 3 }}
-          />
-        </div>
-      ),
-      width: 100,
-      render: (item, { key }) => (
-        <React.Fragment>
+        <div
+          className={
+            score?.toString() === '0'
+              ? 'red-radio flex justify-center items-center'
+              : 'flex justify-center items-center'
+          }
+        >
           {item && (
-            <span className="red-radio">
-              <Radio
-                onChange={(e) => onSetRelationValues(e, item, key)}
-                value={relationValues[key]}
-                checked={relationValues[key] === item?.value}
-                className="pl-8"
-                radioClassName="pl-8"
-              />
-            </span>
+            <Radio
+              onChange={(e) => {
+                onSetRelationValues(e, item, key);
+              }}
+              value={relationValues[key]}
+              checked={relationValues[key] === item?.value}
+              className="pl-5"
+            />
           )}
-        </React.Fragment>
+        </div>
       ),
-    },
-  ]);
+    }));
+
+    return [
+      {
+        key: 'describesThisPerson',
+        title: (
+          <span className="text-xs flex justify-center xl:pr-8 md:text-sm">
+            Describes this person:
+          </span>
+        ),
+        width: 100,
+        render: (text) => (
+          <span className="text-xs flex justify-center p-4 xl:pr-8 md:text-sm">{text}</span>
+        ),
+      },
+      ...scoreColumns,
+    ];
+  }, [relationValues]);
 
   const handleNext = () => {
     onNext();
@@ -284,12 +213,14 @@ Questions.propTypes = {
   onSetRelationValues: PropTypes.func.isRequired,
   onNext: PropTypes.func.isRequired,
   dataSource: PropTypes.arrayOf(PropTypes.shape({})),
+  options: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 Questions.defaultProps = {
   questions: {},
   relationValues: {},
   dataSource: [{}],
+  options: [{}],
 };
 
 export default Questions;

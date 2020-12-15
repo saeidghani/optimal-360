@@ -51,15 +51,15 @@ const AllRateesQuestions = ({
   const dataSource = React.useMemo(() => {
     const row = {};
     // eslint-disable-next-line no-unused-expressions
-    questions?.data?.options?.forEach(({ label, score }) => {
-      if (score !== 0) row[label] = { value: score };
+    questions?.data?.options?.forEach(({ score }) => {
+      if (score !== 0) row[score] = { value: score };
     });
     const rows = [];
     // eslint-disable-next-line no-unused-expressions
     relations?.data?.forEach(({ relationId, rateeName, raterGroupName }) => {
       const newRow = {
         ...row,
-        key: relationId,
+        key: relationId?.toString(),
         describesThisPerson: rateeName,
       };
       if (raterGroupName === 'self') {
@@ -119,12 +119,14 @@ const AllRateesQuestions = ({
     <Layout hasBreadCrumb>
       <Questions
         loading={loading}
+        options={questions?.data?.options}
         dataSource={dataSource}
         questions={questions}
         relationValues={relationValues}
-        onSetRelationValues={(e, item, key) =>
-          setRelationValues({ ...relationValues, [key]: item?.value })
-        }
+        onSetRelationValues={(e, item, key) => {
+          console.log(e, item, key);
+          setRelationValues({ ...relationValues, [key]: item?.value });
+        }}
         onNext={submitResponse}
       />
     </Layout>

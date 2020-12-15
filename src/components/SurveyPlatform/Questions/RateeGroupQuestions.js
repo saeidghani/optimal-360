@@ -53,8 +53,8 @@ const RateeGroupQuestions = ({
   const dataSource = React.useMemo(() => {
     const row = {};
     // eslint-disable-next-line no-unused-expressions
-    questions?.data?.options?.forEach(({ label, score }) => {
-      row[label] = { value: score };
+    questions?.data?.options?.forEach(({ score }) => {
+      row[score] = { value: score };
     });
     const rows = [];
     // eslint-disable-next-line no-unused-expressions
@@ -65,7 +65,7 @@ const RateeGroupQuestions = ({
     relationsGroup?.forEach(({ relationId, rateeName, raterGroupName }) => {
       const newRow = {
         ...row,
-        key: `${relationId}`,
+        key: relationId?.toString(),
         describesThisPerson: rateeName,
       };
       if (raterGroupName === 'self') {
@@ -126,6 +126,7 @@ const RateeGroupQuestions = ({
       <Questions
         loading={loading}
         dataSource={dataSource}
+        options={questions?.data?.options}
         questions={questions}
         relationValues={relationValues}
         onSetRelationValues={(e, item, key) =>
