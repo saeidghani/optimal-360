@@ -19,6 +19,12 @@ class Dashboard extends Component {
     return fetchCompletionRate(surveyGroupId);
   };
 
+  fetchRaterGroups = async (surveyGroupId) => {
+    const { fetchRaterGroups } = this.props;
+
+    return fetchRaterGroups(surveyGroupId);
+  };
+
   fetchSummary = async (surveyGroupId) => {
     const { fetchSummary } = this.props;
 
@@ -38,7 +44,7 @@ class Dashboard extends Component {
   };
 
   render() {
-    const { loading, projects, completionRate, summary, ratees, raters } = this.props;
+    const { loading, projects, completionRate, raterGroups, summary, ratees, raters } = this.props;
 
     return (
       <Layout
@@ -46,10 +52,12 @@ class Dashboard extends Component {
         completionRate={completionRate}
         fetchProjects={this.fetchProjects}
         fetchCompletionRate={this.fetchCompletionRate}
+        fetchRaterGroups={this.fetchRaterGroups}
         fetchSummary={this.fetchSummary}
         fetchRatees={this.fetchRatees}
         fetchRaters={this.fetchRaters}
         projects={projects}
+        raterGroups={raterGroups}
         summary={summary}
         ratees={ratees}
         raters={raters}
@@ -62,11 +70,13 @@ Dashboard.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchProjects: PropTypes.func.isRequired,
   fetchCompletionRate: PropTypes.func.isRequired,
+  fetchRaterGroups: PropTypes.func.isRequired,
   fetchSummary: PropTypes.func.isRequired,
   fetchRatees: PropTypes.func.isRequired,
   fetchRaters: PropTypes.func.isRequired,
   projects: PropTypes.shape({}),
   completionRate: PropTypes.shape({}),
+  raterGroups: PropTypes.shape({}),
   summary: PropTypes.shape({}),
   ratees: PropTypes.shape({}),
   raters: PropTypes.shape({}),
@@ -75,6 +85,7 @@ Dashboard.propTypes = {
 Dashboard.defaultProps = {
   projects: {},
   completionRate: {},
+  raterGroups: {},
   summary: {},
   ratees: {},
   raters: {},
@@ -84,6 +95,7 @@ const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
   projects: state.clientAdmin?.projects || {},
   completionRate: state.clientAdmin?.completionRate || {},
+  raterGroups: state.clientAdmin?.raterGroups || {},
   summary: state.clientAdmin?.summary || {},
   ratees: state.clientAdmin?.ratees || {},
   raters: state.clientAdmin?.raters || {},
@@ -92,6 +104,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchProjects: dispatch.clientAdmin?.fetchProjects,
   fetchCompletionRate: dispatch.clientAdmin?.fetchCompletionRate,
+  fetchRaterGroups: dispatch.clientAdmin?.fetchRaterGroups,
   fetchSummary: dispatch.clientAdmin?.fetchSummary,
   fetchRatees: dispatch.clientAdmin?.fetchRatees,
   fetchRaters: dispatch.clientAdmin?.fetchRaters,

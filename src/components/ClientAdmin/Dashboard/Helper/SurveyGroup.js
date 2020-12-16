@@ -11,10 +11,12 @@ import DataTable from './DataTable';
 const SurveyGroup = ({
   loading,
   completionRate,
+  raterGroups,
   summary,
   ratees,
   raters,
   fetchCompletionRate,
+  fetchRaterGroups,
   fetchSummary,
   fetchRatees,
   fetchRaters,
@@ -47,8 +49,10 @@ const SurveyGroup = ({
           loading={loading}
           ratees={ratees}
           raters={raters}
-          fetchRatees={fetchRatees}
+          raterGroups={raterGroups}
           summary={summary}
+          fetchRatees={fetchRatees}
+          fetchRaterGroups={fetchRaterGroups}
           fetchSummary={fetchSummary}
           fetchRaters={fetchRaters}
         />
@@ -60,6 +64,7 @@ const SurveyGroup = ({
 SurveyGroup.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchCompletionRate: PropTypes.func.isRequired,
+  fetchRaterGroups: PropTypes.func.isRequired,
   fetchSummary: PropTypes.func.isRequired,
   fetchRatees: PropTypes.func.isRequired,
   fetchRaters: PropTypes.func.isRequired,
@@ -81,6 +86,7 @@ SurveyGroup.propTypes = {
       ),
     }),
   }),
+  raterGroups: PropTypes.shape({}),
   summary: PropTypes.shape({}),
   ratees: PropTypes.shape({}),
   raters: PropTypes.shape({}),
@@ -88,6 +94,7 @@ SurveyGroup.propTypes = {
 
 SurveyGroup.defaultProps = {
   completionRate: {},
+  raterGroups: {},
   summary: {},
   ratees: {},
   raters: {},
