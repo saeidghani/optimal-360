@@ -37,7 +37,8 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
         abbr: yup.string().required('Abbr Cannot Be Empty'),
         name: yup.string().required('Group Name Cannot Be Empty'),
         minRater: yup
-          .number('Min. Rates must be a number')
+          .number()
+          .typeError('Min. Rates must be a number')
           .min(1, 'Min. Rates must be greater than 0'),
       }),
     ),
@@ -125,6 +126,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
       includeAverage: false,
       remove: '',
       id: newId,
+      newlyAddedItem: true,
     };
     newRaterGroups.push(newItem);
 
@@ -302,7 +304,6 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
 
                 const path = dynamicMap.superUser.emailSettings();
                 const params = history?.location?.search;
-
                 history.push(`${path}${params}`);
               } catch (error) {}
             }}
