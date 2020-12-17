@@ -20,9 +20,24 @@ class SurveySetting extends Component {
   };
 
   setSurveySettings = async (data) => {
+    const newData = { ...data };
+
+    newData.raterGroups = newData.raterGroups.map((el) => {
+      if (el.newlyAddedItem) {
+        const newRaterGroupItem = { ...el };
+
+        delete newRaterGroupItem.newlyAddedItem;
+        delete newRaterGroupItem.id;
+
+        return newRaterGroupItem;
+      }
+
+      return el;
+    });
+
     const { setSurveySettings } = this.props;
 
-    return setSurveySettings(data);
+    return setSurveySettings(newData);
   };
 
   render() {
