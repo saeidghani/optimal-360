@@ -24,7 +24,6 @@ export default {
             url: '/survey-platform/auth/login',
             data: { username, password },
           });
-          console.log(res?.data?.data?.token);
           await this.setToken({ token: res?.data?.data?.token, rememberMe });
           return res;
         },

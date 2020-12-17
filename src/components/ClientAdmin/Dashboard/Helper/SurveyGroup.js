@@ -34,6 +34,7 @@ const SurveyGroup = ({
       {surveyGroupId && <ViewByButtons />}
       <OverallCompletion
         totalRatees={completionRate?.data?.totalRatees}
+        totalRaters={completionRate?.data?.totalRaters}
         totalSurveySubmissionRate={completionRate?.data?.totalSurveySubmissionRate}
         totalSurveyRate={completionRate?.data?.totalSurveyRate}
         totalAnsweredRate={completionRate?.data?.totalAnsweredRate}
@@ -71,6 +72,7 @@ SurveyGroup.propTypes = {
   completionRate: PropTypes.shape({
     data: PropTypes.shape({
       totalRatees: PropTypes.string,
+      totalRaters: PropTypes.string,
       totalSurveySubmissionRate: PropTypes.string,
       totalSurveyRate: PropTypes.string,
       totalAnsweredRate: PropTypes.string,

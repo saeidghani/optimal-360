@@ -6,6 +6,7 @@ import Progress from '../../../Common/Progress';
 
 const OverallCompletion = ({
   totalRatees,
+  totalRaters,
   totalSurveySubmissionRate,
   totalSurveyRate,
   totalAnsweredRate,
@@ -25,7 +26,7 @@ const OverallCompletion = ({
           <div className="flex">
             <div className="flex justify-between items-center md:mr-16">
               <TeamOutlined className="bg-primary-100 p-2 text-primary-500 mr-5 rounded-sm" />
-              <span className="font-medium text-2xl mr-5">{totalRatees}</span>
+              <span className="font-medium text-2xl mr-5">{totalRaters}</span>
               <span className="text-xs text-antgray-100 ">Total Rater(s)</span>
             </div>
             <div className="flex justify-between items-center">
@@ -51,6 +52,7 @@ const OverallCompletion = ({
 
 OverallCompletion.propTypes = {
   totalRatees: PropTypes.string.isRequired,
+  totalRaters: PropTypes.string.isRequired,
   totalSurveySubmissionRate: PropTypes.string.isRequired,
   totalSurveyRate: PropTypes.string.isRequired,
   totalAnsweredRate: PropTypes.string.isRequired,
