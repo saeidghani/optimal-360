@@ -8,6 +8,7 @@ export default {
   state: {
     projects: '',
     completionRate: '',
+    raterGroups: '',
     summary: '',
     ratees: '',
     raters: '',
@@ -66,6 +67,20 @@ export default {
         });
 
         this.fetchCompletionRate_reducer(res?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async fetchRaterGroups(surveyGroupId) {
+      if (!surveyGroupId) return this.fetchRaterGroups_reducer('');
+
+      return actionWrapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/client-admin/survey-groups/${surveyGroupId}/rater-groups`,
+        });
+
+        this.fetchRaterGroups_reducer(res?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
@@ -129,6 +144,10 @@ export default {
     fetchCompletionRate_reducer: (state, payload) => ({
       ...state,
       completionRate: payload,
+    }),
+    fetchRaterGroups_reducer: (state, payload) => ({
+      ...state,
+      raterGroups: payload,
     }),
     fetchSummary_reducer: (state, payload) => ({
       ...state,

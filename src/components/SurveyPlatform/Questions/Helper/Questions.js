@@ -75,7 +75,7 @@ const Questions = ({
   }, [questions.timeStamp]);
 
   const columns = React.useMemo(() => {
-    const zeroScoreIndex = options.findIndex(({ score }) => score?.toString() === '0');
+    const zeroScoreIndex = options?.findIndex(({ score }) => score?.toString() === '0');
     const arrangedOptions = arrayMove(options, zeroScoreIndex, -1);
     // eslint-disable-next-line no-unused-expressions
     const scoreColumns = arrangedOptions?.map(({ label, score }) => ({

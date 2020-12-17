@@ -12,11 +12,13 @@ const Dashboard = ({
   loading,
   projects,
   completionRate,
+  raterGroups,
   summary,
   ratees,
   raters,
   fetchProjects,
   fetchCompletionRate,
+  fetchRaterGroups,
   fetchSummary,
   fetchRatees,
   fetchRaters,
@@ -92,10 +94,12 @@ const Dashboard = ({
               loading={loading}
               projects={projects}
               completionRate={completionRate}
+              raterGroups={raterGroups}
               summary={summary}
               ratees={ratees}
               raters={raters}
               fetchCompletionRate={fetchCompletionRate}
+              fetchRaterGroups={fetchRaterGroups}
               fetchSummary={fetchSummary}
               fetchRatees={fetchRatees}
               fetchRaters={fetchRaters}
@@ -111,6 +115,7 @@ Dashboard.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchProjects: PropTypes.func.isRequired,
   fetchCompletionRate: PropTypes.func.isRequired,
+  fetchRaterGroups: PropTypes.func.isRequired,
   fetchSummary: PropTypes.func.isRequired,
   fetchRatees: PropTypes.func.isRequired,
   fetchRaters: PropTypes.func.isRequired,
@@ -134,6 +139,7 @@ Dashboard.propTypes = {
       }),
     ),
   }),
+  raterGroups: PropTypes.shape({}),
   summary: PropTypes.shape({}),
   ratees: PropTypes.shape({}),
   raters: PropTypes.shape({}),
@@ -142,6 +148,7 @@ Dashboard.propTypes = {
 Dashboard.defaultProps = {
   completionRate: {},
   projects: {},
+  raterGroups: {},
   summary: {},
   ratees: {},
   raters: {},
