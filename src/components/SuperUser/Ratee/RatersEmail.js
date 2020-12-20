@@ -63,7 +63,7 @@ const RatersEmail = ({
           <div className="flex flex-row">
             <SearchBox
               className="text-xs"
-              placeholder="SEARCH"
+              placeholder="Search"
               loading={loading}
               value={parsedQuery?.q}
               onSearch={(val) => setQuery({ q: val })}

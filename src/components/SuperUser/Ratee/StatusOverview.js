@@ -287,6 +287,7 @@ const StatusOverview = ({
         </div>
         <Progress
           type="line"
+          // eslint-disable-next-line max-len
           percentage={parseInt((completionRate?.data?.totalSurveySubmissionRate / completionRate?.data?.totalSurveyRate) * 100, 10) || 0}
         />
       </div>
@@ -297,6 +298,7 @@ const StatusOverview = ({
         </div>
         <Progress
           type="line"
+          // eslint-disable-next-line max-len
           percentage={parseInt((completionRate?.data?.totalAnsweredRate / completionRate?.data?.totalQuestionRate) * 100, 10) || 0}
         />
       </div>

@@ -124,11 +124,13 @@ const RaterSelection = ({
 
   const handleClickOnMenu = (id) => {
     setObjValue();
-    if (obj?.addRelations?.length > 0 || obj?.removeRelations?.length > 0) {
-      setDiscardModalVisible(true);
-      setRaterGroupRedirectId(id);
-    } else {
-      setQuery({ raterGroupId: id });
+    if (id !== parsedQuery?.raterGroupId) {
+      if (obj?.addRelations?.length > 0 || obj?.removeRelations?.length > 0) {
+        setDiscardModalVisible(true);
+        setRaterGroupRedirectId(id);
+      } else {
+        setQuery({ raterGroupId: id });
+      }
     }
   };
 
