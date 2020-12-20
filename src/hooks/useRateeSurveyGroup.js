@@ -9,7 +9,7 @@ const useRateeSurveyGroup = () => {
   const dispatch = useDispatch();
   const _surveyGroups = useSelector((state) => state.projects?.surveyGroups || {});
 
-  const surveyGroups = _surveyGroups?.data.filter((el) => el.stepsStatus);
+  const surveyGroups = _surveyGroups?.data?.filter((el) => el.stepsStatus);
   const surveyGroupObject = _surveyGroups.data?.find((el) => el.id * 1 === surveyGroupId * 1) || {};
 
   React.useEffect(() => {

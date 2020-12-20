@@ -24,6 +24,7 @@ const RaterSelection = ({
   setSelectedRaters,
   selectedRaters,
   defaultSelectedRaters,
+  clearSelectedAndDefault,
 }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
@@ -50,6 +51,9 @@ const RaterSelection = ({
 
   useEffect(() => {
     fetchRaterGroups({ surveyGroupId });
+    return () => {
+      clearRaterGroups();
+    };
   }, [surveyGroupId]);
 
   const setObjValue = () => {
@@ -70,6 +74,10 @@ const RaterSelection = ({
         openNotificationWithIcon('success');
       });
     }
+
+    return () => {
+      clearSelectedAndDefault();
+    };
   },
     [submitRaters,
       parsedQuery?.q,
@@ -97,6 +105,10 @@ const RaterSelection = ({
       status: 'active',
       raterGroupId,
     });
+
+    return () => {
+      clearSelectedAndDefault();
+    };
   }, [parsedQuery?.raterGroupId]);
 
   useEffect(() => {
@@ -107,10 +119,6 @@ const RaterSelection = ({
         status: 'active',
         raterGroupId,
       });
-
-      return () => {
-        clearRaterGroups();
-      };
     }
   }, [history?.location?.pathname]);
 
@@ -127,8 +135,15 @@ const RaterSelection = ({
   const handleSubmitClick = async () => {
     setObjValue();
     await submitRaters({ surveyGroupId, rateeId, obj });
+    await clearSelectedAndDefault();
     setQuery({ raterGroupId: raterGroupRedirectId });
     setDiscardModalVisible(false);
+  };
+
+  const handleCancelClick = () => {
+    clearSelectedAndDefault();
+    setDiscardModalVisible(false);
+    setQuery({ raterGroupId: raterGroupRedirectId });
   };
 
   const renderHeader = React.useCallback(() => {
@@ -187,10 +202,10 @@ const RaterSelection = ({
       childrenPadding={false}
     >
       <Modal
+        className="w-56"
         visible={discardModalVisible}
         handleOk={handleSubmitClick}
-        handleCancel={() => setDiscardModalVisible(false)}
-        width={588}
+        handleCancel={handleCancelClick}
         okText="Save"
         cancelText="Discard"
         okButtonProps={{ textClassName: 'px-4', loading }}
@@ -274,6 +289,8 @@ RaterSelection.propTypes = {
   setSelectedRaters: PropTypes.func.isRequired,
   selectedRaters: PropTypes.arrayOf(PropTypes.object).isRequired,
   defaultSelectedRaters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  clearRaterGroups: PropTypes.func.isRequired,
+  clearSelectedAndDefault: PropTypes.func.isRequired,
 };
 
 RaterSelection.defaultProps = {};

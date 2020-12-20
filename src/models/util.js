@@ -54,6 +54,15 @@ export default {
       reader.readAsDataURL(blob);
     },
 
+    saveZipFile({ res, filename }) {
+      const url = window.URL.createObjectURL(new Blob([res]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+    },
+
     async errorHandler(error) {
       const { status, data } = error?.response || {};
 

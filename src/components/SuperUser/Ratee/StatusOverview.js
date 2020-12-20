@@ -1,30 +1,30 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 import { TeamOutlined } from '@ant-design/icons';
-
 import PropTypes from 'prop-types';
 import Progress from '../../Common/Progress';
 import Table from '../../Common/Table';
 import { useQuery } from '../../../hooks';
 
 const StatusOverview = ({
-                          summary,
-                          completionRate,
-                          fetchSummary,
-                          fetchCompletionRate,
-                          loading,
-                        }) => {
+  summary,
+  completionRate,
+  fetchSummary,
+  fetchCompletionRate,
+  loading,
+  fetchRaterGroups,
+  allRaterGroups,
+}) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const pageNumber = parsedQuery?.page_number || 1;
   const pageSize = parsedQuery?.page_size || 10;
   const surveyGroupId = parsedQuery?.surveyGroupId;
-
   React.useEffect(() => {
     fetchCompletionRate({ query, surveyGroupId });
   }, [fetchCompletionRate, surveyGroupId]);
 
   React.useEffect(() => {
     fetchSummary({ query, surveyGroupId });
+    fetchRaterGroups({ surveyGroupId });
   }, [fetchSummary, surveyGroupId, pageSize, pageNumber]);
 
   const columns = React.useMemo(() => [
@@ -68,121 +68,138 @@ const StatusOverview = ({
       ),
     },
     {
-      key: 'bySelf',
+      key: 'self',
       title: (
         <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100">By Self</span>
+          <span className="text-antgray-100 capitalize">by self</span>
           <span className="text-body text-opacity-75 text-xs">Min. 1</span>
         </div>
       ),
       width: 100,
       render: (_, { groups }) => {
-        const { bySelf } = groups || {};
-        return bySelf && (
+        const { self } = groups || {};
+        return self && (
           <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status={bySelf?.totalSubmissions === bySelf?.totalRaters ? 'sub' : ''}
-              percentage={parseInt((bySelf?.totalAnswers / bySelf?.totalQuestions) * 100, 10)}
+              status={self?.totalSubmissions === self?.totalRaters ? 'sub' : ''}
+              percentage={parseInt((self?.totalAnswers / self?.totalQuestions) * 100, 10)}
             />
-            <div className="text-center">{bySelf?.totalSubmissions}/{bySelf?.totalRaters}</div>
+            <div className="text-center">{self?.totalSubmissions}/{self?.totalRaters}</div>
           </div>
         );
       },
     },
     {
-      key: 'byManager',
+      // eslint-disable-next-line react/prop-types
+      key: allRaterGroups?.[0]?.name,
       title: (
         <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100">By Manager</span>
-          <span className="text-body text-opacity-75 text-xs">Min. 1</span>
+          <span className="text-antgray-100 capitalize">
+            {allRaterGroups?.[0]?.name ? `by ${allRaterGroups?.[0]?.name}` : null}
+          </span>
+          <span className="text-body text-opacity-75 text-xs">
+            {allRaterGroups?.[0]?.minRater ? `Min. ${allRaterGroups?.[0]?.minRater}` : null}
+          </span>
         </div>
       ),
       width: 100,
       render: (_, { groups }) => {
-        const { byManager } = groups || {};
-        return byManager && (
+        const { first } = groups || {};
+        return first && (
           <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status={byManager?.totalSubmissions === byManager?.totalRaters ? 'sub' : ''}
-              percentage={parseInt((byManager?.totalAnswers / byManager?.totalQuestions) * 100, 10)}
+              status={first?.totalSubmissions === first?.totalRaters ? 'sub' : ''}
+              percentage={parseInt((first?.totalAnswers / first?.totalQuestions) * 100, 10)}
             />
-            <div className="text-center">{byManager?.totalSubmissions}/{byManager?.totalRaters}</div>
+            <div className="text-center">{first?.totalSubmissions}/{first?.totalRaters}</div>
           </div>
         );
       },
     },
     {
-      key: 'byPeers',
+      key: allRaterGroups?.[1]?.name,
       title: (
         <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100">by Peers</span>
-          <span className="text-body text-opacity-75 text-xs">Min. 2</span>
+          <span className="text-antgray-100 capitalize">
+            {allRaterGroups?.[1]?.name ? `by ${allRaterGroups?.[1]?.name}` : null}
+          </span>
+          <span className="text-body text-opacity-75 text-xs">
+            {allRaterGroups?.[1]?.minRater ? `Min. ${allRaterGroups?.[1]?.minRater}` : null}
+          </span>
         </div>
       ),
       width: 100,
       render: (_, { groups }) => {
-        const { byPeers } = groups || {};
-        return byPeers && (
+        const { second } = groups || {};
+        return second && (
           <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status={byPeers?.totalSubmissions === byPeers?.totalRaters ? 'sub' : ''}
-              percentage={parseInt((byPeers?.totalAnswers / byPeers?.totalQuestions) * 100, 10)}
+              status={second?.totalSubmissions === second?.totalRaters ? 'sub' : ''}
+              percentage={parseInt((second?.totalAnswers / second?.totalQuestions) * 100, 10)}
             />
-            <div className="text-center">{byPeers?.totalSubmissions}/{byPeers?.totalRaters}</div>
+            <div className="text-center">{second?.totalSubmissions}/{second?.totalRaters}</div>
           </div>
         );
       },
     },
     {
-      key: 'byDirectReports',
+      key: allRaterGroups?.[2]?.name,
       title: (
         <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100">Direct Reports</span>
-          <span className="text-body text-opacity-75 text-xs">Min. 3</span>
+          <span className="text-antgray-100 capitalize">
+            {allRaterGroups?.[2]?.name ? `by ${allRaterGroups?.[2]?.name}` : null}
+          </span>
+          <span className="text-body text-opacity-75 text-xs">
+            {allRaterGroups?.[2]?.minRater ? `Min. ${allRaterGroups?.[2]?.minRater}` : null}
+          </span>
         </div>
       ),
       width: 100,
       render: (_, { groups }) => {
-        const { byDirectReport } = groups || {};
-        return byDirectReport && (
+        const { third } = groups || {};
+        return third && (
           <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status={byDirectReport?.totalSubmissions === byDirectReport?.totalRaters ? 'sub' : ''}
-              percentage={parseInt((byDirectReport?.totalAnswers / byDirectReport?.totalQuestions) * 100, 10)}
+              status={third?.totalSubmissions === third?.totalRaters ? 'sub' : ''}
+              percentage={parseInt((third?.totalAnswers / third?.totalQuestions) * 100, 10)}
             />
-            <div className="text-center">{byDirectReport?.totalSubmissions}/{byDirectReport?.totalRaters}</div>
+            <div className="text-center">{third?.totalSubmissions}/{third?.totalRaters}</div>
           </div>
         );
       },
     },
     {
-      key: 'others',
+      key: allRaterGroups?.[3]?.name,
       title: (
         <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100">Others</span>
-          <span className="text-body text-opacity-75 text-xs">Min. 2</span>
+          <span className="text-antgray-100 capitalize">
+            {allRaterGroups?.[3]?.name ? `by ${allRaterGroups?.[3]?.name}` : null}
+          </span>
+          <span className="text-body text-opacity-75 text-xs">
+            {allRaterGroups?.[3]?.minRater ? `Min. ${allRaterGroups?.[3]?.minRater}` : null}
+          </span>
         </div>
       ),
       width: 50,
       render: (_, { groups }) => {
-        const { byOther } = groups || {};
-        return byOther && (
+        const { fourth } = groups || {};
+        return fourth && (
           <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
             <Progress
               className="h-8"
               subClassName="mb-12 pb-2"
-              status={byOther?.totalSubmissions === byOther?.totalRaters ? 'sub' : ''}
-              percentage={parseInt((byOther?.totalAnswers / byOther?.totalQuestions) * 100, 10)}
+              status={fourth?.totalSubmissions === fourth?.totalRaters ? 'sub' : ''}
+              percentage={parseInt((fourth?.totalAnswers / fourth?.totalQuestions) * 100, 10)}
             />
-            <div className="text-center">{byOther?.totalSubmissions}/{byOther?.totalRaters}</div>
+            <div className="text-center">{fourth?.totalSubmissions}/{fourth?.totalRaters}</div>
           </div>
         );
       },
@@ -205,44 +222,47 @@ const StatusOverview = ({
       ),
     },
   ]);
+
   const dataSource = React.useMemo(() => (summary?.data || []).map((
     {
       rateeName, totalRaters, totalSubmissions, totalAnswers, totalQuestions, minMet, raterGroups,
     },
-    ) => {
-      const data = {
-        key: `${rateeName}-${totalRaters}-${totalSubmissions}`,
-        rateeName,
-        totalRaters,
-        totalSubmissions,
-        totalAnswers,
-        totalQuestions,
-        minMet,
-        groups: {},
-      };
+  ) => {
+    const data = {
+      key: `${rateeName}-${totalRaters}-${totalSubmissions}`,
+      rateeName,
+      totalRaters,
+      totalSubmissions,
+      totalAnswers,
+      totalQuestions,
+      minMet,
+      groups: {},
+    };
 
-      raterGroups.forEach((group) => {
-        switch (group.raterGroupName) {
-          case 'manager':
-            data.groups.byManager = group;
-            break;
-          case 'peers':
-            data.groups.byPeers = group;
-            break;
-          case 'direct report':
-            data.groups.byDirectReport = group;
-            break;
-          case 'self':
-            data.groups.bySelf = group;
-            break;
-          default:
-            data.groups.byOther = group;
-        }
-      });
-      data.isTotalQuestionAnsweredRateSub = !((raterGroups.filter((obj) => obj?.totalAnswers !== obj?.totalQuestions)).length);
-
-      return (data);
-    }),
+    raterGroups.forEach((group) => {
+      switch (group.raterGroupName) {
+        case allRaterGroups?.[0]?.name:
+          data.groups.first = group;
+          break;
+        case allRaterGroups?.[1]?.name:
+          data.groups.second = group;
+          break;
+        case allRaterGroups?.[2]?.name:
+          data.groups.third = group;
+          break;
+        case allRaterGroups?.[3]?.name:
+          data.groups.fourth = group;
+          break;
+        case 'self':
+          data.groups.self = group;
+          break;
+        default: return true;
+      }
+    });
+    data.isTotalQuestionAnsweredRateSub = !((raterGroups.filter((obj) =>
+      obj?.totalAnswers !== obj?.totalQuestions)).length);
+    return (data);
+  }),
     // eslint-disable-next-line
     [summary.timeStamp],
   );
@@ -260,7 +280,7 @@ const StatusOverview = ({
             </div>
             <div className="ml-14">
               <TeamOutlined className="bg-primary-100 p-2 text-primary-500 mr-5 rounded-sm" />
-              <span className="font-medium text-2xl mr-5">{completionRate?.data?.totalRaters}</span>
+              <span className="font-medium text-2xl mr-5">{completionRate?.data?.totalRatees}</span>
               <span className="text-xs text-antgray-100 ">Total Ratee(s)</span>
             </div>
           </div>
@@ -281,9 +301,9 @@ const StatusOverview = ({
         />
       </div>
       <div className="grid grid-cols-5 gap-6">
-        {(completionRate?.data?.raterGroups || []).map((data) => (
-          <CompletionRate {...data} />
-        ))}
+        {(completionRate?.data?.raterGroups || []).map((data) =>
+          (<CompletionRate key={data.raterGroupName} {...data} />),
+        )}
       </div>
       <Table
         size="middle"
@@ -313,14 +333,13 @@ const StatusOverview = ({
 };
 
 const CompletionRate = React.memo(({
-                                     raterGroupId,
-                                     raterGroupName,
-                                     totalRaters,
-                                     totalSubmissions,
-                                     totalAnswered,
-                                     totalQuestions,
-                                   }) => (
-  <div className="flex flex-col " key={raterGroupId}>
+  raterGroupName,
+  totalRaters,
+  totalSubmissions,
+  totalAnswered,
+  totalQuestions,
+}) => (
+  <div className="flex flex-col">
     <div className="bg-white p-6 rounded-md">
       <div className="mb-3">
         <span className="text-xs">Total Raters: </span>
@@ -341,19 +360,19 @@ const CompletionRate = React.memo(({
 ));
 
 CompletionRate.propTypes = {
-  raterGroupId: PropTypes.string.isRequired,
   raterGroupName: PropTypes.string.isRequired,
-  totalRaters: PropTypes.string.isRequired,
-  totalSubmissions: PropTypes.string.isRequired,
-  totalAnswered: PropTypes.string.isRequired,
-  totalQuestions: PropTypes.string.isRequired,
+  totalRaters: PropTypes.number.isRequired,
+  totalSubmissions: PropTypes.number.isRequired,
+  totalAnswered: PropTypes.number.isRequired,
+  totalQuestions: PropTypes.number.isRequired,
 };
 
 StatusOverview.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchSummary: PropTypes.func.isRequired,
   fetchCompletionRate: PropTypes.func.isRequired,
-
+  allRaterGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
+  fetchRaterGroups: PropTypes.func.isRequired,
   summary: PropTypes.shape({
     metaData: PropTypes.shape({
       pagination: PropTypes.shape({
@@ -365,18 +384,18 @@ StatusOverview.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({
       rateeId: PropTypes.string,
       rateeName: PropTypes.string,
-      totalRaters: PropTypes.string,
-      totalSubmissions: PropTypes.string,
+      totalRaters: PropTypes.number,
+      totalSubmissions: PropTypes.number,
       totalAnswers: PropTypes.string,
-      totalQuestions: PropTypes.string,
+      totalQuestions: PropTypes.number,
       minMet: PropTypes.bool,
       raterGroups: PropTypes.arrayOf(PropTypes.shape({
         raterGroupName: PropTypes.string,
         raterGroupMinRater: PropTypes.number,
-        totalQuestions: PropTypes.string,
+        totalQuestions: PropTypes.number,
         totalAnswers: PropTypes.string,
-        totalRaters: PropTypes.string,
-        totalSubmissions: PropTypes.string,
+        totalRaters: PropTypes.number,
+        totalSubmissions: PropTypes.number,
       })),
     })),
     message: PropTypes.string,
@@ -384,18 +403,18 @@ StatusOverview.propTypes = {
 
   completionRate: PropTypes.shape({
     data: PropTypes.shape({
-      totalRatees: PropTypes.string,
-      totalRaters: PropTypes.string,
-      totalSurveyRate: PropTypes.string,
-      totalSurveySubmissionRate: PropTypes.string,
-      totalQuestionRate: PropTypes.string,
-      totalAnsweredRate: PropTypes.string,
+      totalRatees: PropTypes.number,
+      totalRaters: PropTypes.number,
+      totalSurveyRate: PropTypes.number,
+      totalSurveySubmissionRate: PropTypes.number,
+      totalQuestionRate: PropTypes.number,
+      totalAnsweredRate: PropTypes.number,
       raterGroups: PropTypes.arrayOf(PropTypes.shape({
         raterGroupName: PropTypes.string,
-        totalRaters: PropTypes.string,
-        totalSubmissions: PropTypes.string,
-        totalQuestions: PropTypes.string,
-        totalAnswered: PropTypes.string,
+        totalRaters: PropTypes.number,
+        totalSubmissions: PropTypes.number,
+        totalQuestions: PropTypes.number,
+        totalAnswered: PropTypes.number,
       })),
     }),
     message: PropTypes.string,
