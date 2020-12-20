@@ -40,6 +40,15 @@ const IndividualQuestions = ({
     setRelationValues({ [relationId]: '' });
   }, [fetchQuestions, surveyGroupId, questionNumber, relationId]);
 
+  React.useEffect(() => {
+    const newRelationValues = { ...relationValues };
+    // eslint-disable-next-line no-unused-expressions
+    questions?.data?.responses?.forEach((res) => {
+      newRelationValues[res.relationId] = res?.responseScore?.toString();
+    });
+    setRelationValues(newRelationValues);
+  }, [questions]);
+
   const dataSource = React.useMemo(() => {
     const rows = [];
     const row = {};

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tabs } from 'antd';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
@@ -25,10 +25,11 @@ const Dashboard = ({
   info,
   relations,
 }) => {
-  const [submitModalVisible, setSubmitModalVisible] = React.useState(false);
-  const [thankYouModalVisible, setThankYouModalVisible] = React.useState(false);
-  const [welcomeModalVisible, setWelcomeModalVisible] = React.useState(false);
-  const [isNotFirstTimeVisit, setIsNotFirstTimeVisit] = React.useState(false);
+  const [submitModalVisible, setSubmitModalVisible] = useState(false);
+  const [thankYouModalVisible, setThankYouModalVisible] = useState(false);
+  const [welcomeModalVisible, setWelcomeModalVisible] = useState(false);
+  const [isNotFirstTimeVisit, setIsNotFirstTimeVisit] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const history = useHistory();
   const [parsedQuery, , setQuery] = useQuery();
@@ -60,7 +61,7 @@ const Dashboard = ({
     [projects.timeStamp],
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!projectId && projectsList?.length > 0) {
       setQuery({ projectId: projectsList[0]?.value });
       const notFirstTimeVisit = Cookies.get('notFirstTimeVisit');
@@ -75,7 +76,7 @@ const Dashboard = ({
     [projects.timeStamp, projectId],
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!surveyGroupId && surveyGroups?.length > 0) {
       setQuery({ surveyGroupId: surveyGroups[0]?.surveyGroupId });
     }
@@ -111,6 +112,7 @@ const Dashboard = ({
     setSubmitModalVisible(false);
     try {
       await submitResponses({ surveyGroupId });
+      setIsSubmitted(true);
       setThankYouModalVisible(true);
     } catch {}
   };
@@ -187,6 +189,7 @@ const Dashboard = ({
               fetchRelations={fetchRelations}
               info={info}
               relations={relations}
+              isSubmitted={isSubmitted}
             />
           </TabPane>
         ))}

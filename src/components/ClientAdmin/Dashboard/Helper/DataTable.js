@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import Progress from '../../../Common/Progress';
@@ -188,6 +188,21 @@ const DataTable = ({
   const rateeAndRaterDetailsColumns = React.useMemo(() => {
     const isRateeDetails = viewBy === 'ratee-details';
 
+    const renderSummaryProgress = (allAnswered, itemsCount) => (
+      <div className="flex flex-col items-center mb-20">
+        <div className="w-16 mx-auto">
+          <Progress
+            className="h-8"
+            subClassName="mb-10 pb-4"
+            percentage={parseInt((allAnswered / itemsCount) * 100, 10)}
+          />
+        </div>
+        <div className="text-center">
+          {allAnswered}/{itemsCount}
+        </div>
+      </div>
+    );
+
     const initialColumns = [
       {
         key: isRateeDetails ? 'rateeName' : 'raterName',
@@ -262,11 +277,31 @@ const DataTable = ({
         width: 100,
         render: (_, { groups }) => {
           const { self } = groups || {};
+          let allAnswered = 0;
+          let itemsCount;
+          if (isRateeDetails) {
+            // eslint-disable-next-line no-unused-expressions
+            self?.raters?.forEach((rater) => {
+              // eslint-disable-next-line no-plusplus
+              if (rater?.totalAnswered === rater?.totalQuestions) allAnswered++;
+            });
+            itemsCount = self?.raters?.length;
+          } else {
+            // eslint-disable-next-line no-unused-expressions
+            self?.ratees?.forEach((ratee) => {
+              // eslint-disable-next-line no-plusplus
+              if (ratee?.totalAnswered === ratee?.totalQuestions) allAnswered++;
+            });
+            itemsCount = self?.ratees?.length;
+          }
+
           return (
             self && (
               <div className="mb-auto w-full">
-                {isRateeDetails
-                  ? self?.raters?.map((rater) => (
+                {isRateeDetails ? (
+                  <Fragment>
+                    {renderSummaryProgress(allAnswered, itemsCount)}
+                    {self?.raters?.map((rater) => (
                       <div className="flex flex-col items-center mb-20" key={rater.raterId}>
                         <div className="w-16 mx-auto">
                           <Progress
@@ -281,8 +316,12 @@ const DataTable = ({
                         </div>
                         <div className="text-center">{rater?.raterName}</div>
                       </div>
-                    ))
-                  : self?.ratees?.map((ratee) => (
+                    ))}
+                  </Fragment>
+                ) : (
+                  <Fragment>
+                    {renderSummaryProgress(allAnswered, itemsCount)}
+                    {self?.ratees?.map((ratee) => (
                       <div className="flex flex-col items-center mb-20" key={ratee.rateeId}>
                         <div className="w-16 mx-auto">
                           <Progress
@@ -298,6 +337,8 @@ const DataTable = ({
                         <div className="text-center">{ratee?.raterName}</div>
                       </div>
                     ))}
+                  </Fragment>
+                )}
               </div>
             )
           );
@@ -320,11 +361,30 @@ const DataTable = ({
       ),
       width: 100,
       render: (_, { groups }) => {
+        let allAnswered = 0;
+        let itemsCount;
+        if (isRateeDetails) {
+          // eslint-disable-next-line no-unused-expressions
+          groups[name]?.raters?.forEach((rater) => {
+            // eslint-disable-next-line no-plusplus
+            if (rater?.totalAnswered === rater?.totalQuestions) allAnswered++;
+          });
+          itemsCount = groups[name]?.raters?.length;
+        } else {
+          // eslint-disable-next-line no-unused-expressions
+          groups[name]?.ratees?.forEach((ratee) => {
+            // eslint-disable-next-line no-plusplus
+            if (ratee?.totalAnswered === ratee?.totalQuestions) allAnswered++;
+          });
+          itemsCount = groups[name]?.ratees?.length;
+        }
         return (
           groups[name] && (
             <div className="mb-auto w-full">
-              {isRateeDetails
-                ? groups[name]?.raters?.map((rater) => (
+              {isRateeDetails ? (
+                <Fragment>
+                  {renderSummaryProgress(allAnswered, itemsCount)}
+                  {groups[name]?.raters?.map((rater) => (
                     <div className="flex flex-col items-center mb-20" key={rater.raterId}>
                       <div className="w-16 mx-auto">
                         <Progress
@@ -339,8 +399,12 @@ const DataTable = ({
                       </div>
                       <div className="text-center">{rater.raterName}</div>
                     </div>
-                  ))
-                : groups[name]?.ratees?.map((ratee) => (
+                  ))}
+                </Fragment>
+              ) : (
+                <Fragment>
+                  {renderSummaryProgress(allAnswered, itemsCount)}
+                  {groups[name]?.ratees?.map((ratee) => (
                     <div className="flex flex-col items-center mb-20" key={ratee.rateeId}>
                       <div className="w-16 mx-auto">
                         <Progress
@@ -356,6 +420,8 @@ const DataTable = ({
                       <div className="text-center">{ratee.raterName}</div>
                     </div>
                   ))}
+                </Fragment>
+              )}
             </div>
           )
         );
