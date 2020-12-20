@@ -225,6 +225,25 @@ export default {
       );
     },
 
+    async exportDemographicDataForIndividual({ surveyGroupIds, fields }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: '/super-user/survey-groups/demographic-data/export',
+          data: {
+            surveyGroupIds,
+            fields,
+          },
+          responseType: 'arraybuffer',
+        });
+        dispatch.util.saveZipFile({
+          res: res?.data,
+          filename: `report--surveyGroups[${surveyGroupIds}].zip`,
+        });
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
     async fetchRateeMissionCriticals({ surveyGroupId, rateeId }) {
       return actionWapper(async () => {
         const res = await axios({

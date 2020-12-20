@@ -153,10 +153,9 @@ const StatusDetails = (
                       return false;
                     }}
                   />
-
                 </>
               ) : null}
-            {isNotPastEndDate ? <Button
+            <Button
               size="middle"
               textSize="xs"
               text="Export Excel File"
@@ -168,7 +167,7 @@ const StatusDetails = (
               onClick={() => {
                 exportRelations({ surveyGroupId });
               }}
-            /> : null}
+            />
           </div>
         </div>
       );

@@ -21,12 +21,14 @@ const Result = ({
   individualReports,
   groupReports,
   generateReport,
+  exportDemographicDataForIndividual,
 }) => {
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
   const formRef = React.useRef();
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [visible, setVisible] = React.useState(false);
+  const [visibleModal, setVisibleModal] = React.useState(false);
   const { TabPane } = Tabs;
   const pageNumber = parsedQuery?.page_number || 1;
   const pageSize = parsedQuery?.page_size || 10;
@@ -139,7 +141,7 @@ const Result = ({
               className="ml-3"
               icon="FileExcelOutlined"
               iconPosition="right"
-              onClick={() => alert('comming soon')}
+              onClick={() => setVisibleModal(true)}
             />
             <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
           </div>
@@ -480,6 +482,158 @@ const Result = ({
         )}
       </Formik>
 
+      <Formik
+        initialValues={{
+          lengthOfService: false,
+          ageGroup: false,
+          highestEducation: false,
+          jobLevel: false,
+          jobFunction: false,
+          industry: false,
+          sector: false,
+          employmentLocation: false,
+          sex: false,
+        }}
+        onSubmit={(values) => {
+          const fields = Object.entries(values)
+            // eslint-disable-next-line no-unused-vars
+            .filter(([_, item]) => item === true)
+            .map((item) => item[0]);
+          console.log({ selectedRows, fields });
+          exportDemographicDataForIndividual({
+            fields,
+            surveyGroupIds: selectedRows?.map((el) => el.id),
+          });
+          setVisibleModal(false);
+        }}
+      >
+        {({ values, handleSubmit, setFieldValue }) => (
+          <Form>
+            <Modal
+              okText="Export"
+              cancelText="Cancel"
+              visible={visibleModal}
+              cancelButtonText="Cancel"
+              okButtonText="Export"
+              handleOk={handleSubmit}
+              handleCancel={() => setVisibleModal(false)}
+              width={605}
+            >
+              <div className="grid grid-cols-2 mb-3">
+                <div>
+                  <Checkbox
+                    checked={!Object.values(values).some((fieldVal) => fieldVal === false)}
+                    className="block mb-3"
+                    labelClass="text-sm"
+                    onChange={() => {
+                      const state = Object.values(values).some((fieldVal) => fieldVal === false);
+                      setFieldValue('lengthOfService', state);
+                      setFieldValue('ageGroup', state);
+                      setFieldValue('highestEducation', state);
+                      setFieldValue('jobLevel', state);
+                      setFieldValue('jobFunction', state);
+                      setFieldValue('industry', state);
+                      setFieldValue('sector', state);
+                      setFieldValue('employmentLocation', state);
+                      setFieldValue('sex', state);
+                    }}
+                  >
+                    All
+                  </Checkbox>
+                  <Checkbox
+                    checked={values.employmentLocation}
+                    onChange={(val) => setFieldValue('employmentLocation', val)}
+                    className="block mb-3"
+                    value="admin"
+                    labelClass="text-sm"
+                  >
+                    Employment location
+                  </Checkbox>
+                  <Checkbox
+                    onChange={(val) => setFieldValue('sector', val)}
+                    checked={values.sector}
+                    name="checked"
+                    value="a11"
+                    className="block mb-3"
+                    labelClass="text-sm"
+                  >
+                    Sector
+                  </Checkbox>
+                  <Checkbox
+                    onChange={(val) => setFieldValue('industry', val)}
+                    checked={values.industry}
+                    name="checked"
+                    value="a22"
+                    className="block mb-3"
+                    labelClass="text-sm"
+                  >
+                    Industry
+                  </Checkbox>
+                  <Checkbox
+                    onChange={(val) => setFieldValue('jobFunction', val)}
+                    checked={values.jobFunction}
+                    name="checked"
+                    value="a33"
+                    className="block mb-3"
+                    labelClass="text-sm"
+                  >
+                    Job Function
+                  </Checkbox>
+                  <Checkbox
+                    onChange={(val) => setFieldValue('jobLevel', val)}
+                    checked={values.jobLevel}
+                    name="checked"
+                    value="a44"
+                    className="block mb-3"
+                    labelClass="text-sm"
+                  >
+                    Job Level
+                  </Checkbox>
+                </div>
+                <div>
+                  <Checkbox
+                    onChange={(val) => setFieldValue('lengthOfService', val)}
+                    checked={values.lengthOfService}
+                    name="checked"
+                    className="block mb-3"
+                    labelClass="text-sm"
+                  >
+                    Length of service in current role
+                  </Checkbox>
+                  <Checkbox
+                    onChange={(val) => setFieldValue('ageGroup', val)}
+                    checked={values.ageGroup}
+                    name="checked"
+                    className="block mb-3"
+                    labelClass="text-sm"
+                  >
+                    Age Group
+                  </Checkbox>
+                  <Checkbox
+                    onChange={(val) => setFieldValue('sex', val)}
+                    checked={values.sex}
+                    name="checked"
+                    className="block mb-3"
+                    labelClass="text-sm"
+                  >
+                    Gender
+                  </Checkbox>
+                  <Checkbox
+                    onChange={(val) => setFieldValue('highestEducation', val)}
+                    checked={values.highestEducation}
+                    name="checked"
+                    className="block mb-3"
+                    labelClass="text-sm"
+                  >
+                    Highest education attained
+                  </Checkbox>
+                </div>
+              </div>
+            </Modal>
+          </Form>
+        )}
+      </Formik>
+
       <Table
         size="middle"
         className="p-6 mt-5 bg-white rounded-lg shadow"
@@ -569,6 +723,7 @@ Result.propTypes = {
     timeStamp: PropTypes.number,
   }),
   generateReport: PropTypes.func.isRequired,
+  exportDemographicDataForIndividual: PropTypes.func.isRequired,
 };
 
 Result.defaultProps = {
