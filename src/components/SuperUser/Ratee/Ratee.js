@@ -50,6 +50,7 @@ const Ratee = ({
   fetchRaterGroups,
   raterGroups,
   generateReport,
+  exportDemographicDataForIndividual,
 }) => {
   const history = useHistory();
   const [parsedQuery, , setQuery] = useQuery();
@@ -168,6 +169,7 @@ const Ratee = ({
             individualReports={individualReports}
             groupReports={groupReports}
             generateReport={generateReport}
+            exportDemographicDataForIndividual={exportDemographicDataForIndividual}
           />
         </TabPane>
         <TabPane tab={allTabs[4].title} key={allTabs[4].key}>
@@ -224,6 +226,7 @@ Ratee.propTypes = {
   generateReport: PropTypes.func.isRequired,
   fetchRaterGroups: PropTypes.func.isRequired,
   raterGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
+  exportDemographicDataForIndividual: PropTypes.func.isRequired,
 };
 
 Ratee.defaultProps = {
