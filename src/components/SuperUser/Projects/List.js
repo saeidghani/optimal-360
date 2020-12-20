@@ -132,7 +132,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
                 onSearch={(val) => setQuery({ q: val })}
                 onChange={(e) => setQuery({ q: e.target.value })}
                 onPressEnter={(e) => setQuery({ q: e.target.value })}
-                value={parsedQuery?.q}
+                value={parsedQuery?.q || ''}
               />
               <Button
                 size="middle"

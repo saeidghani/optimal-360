@@ -31,6 +31,11 @@ class RaterSelection extends Component {
     await clearRaterGroups();
   }
 
+  clearSelectedAndDefault = async () => {
+    const { clearSelectedAndDefault } = this.props;
+    await clearSelectedAndDefault();
+  }
+
   render() {
     const { loading, staffForRater, raterGroups, selectedRaters, defaultSelectedRaters } = this.props;
     return (
@@ -42,6 +47,7 @@ class RaterSelection extends Component {
         clearRaterGroups={this.clearRaterGroups}
         raterGroups={raterGroups}
         setSelectedRaters={this.setSelectedRaters}
+        clearSelectedAndDefault={this.clearSelectedAndDefault}
         defaultSelectedRaters={defaultSelectedRaters}
         selectedRaters={selectedRaters}
         loading={loading}
@@ -61,6 +67,7 @@ RaterSelection.propTypes = {
   setSelectedRaters: PropTypes.func.isRequired,
   submitRaters: PropTypes.func.isRequired,
   defaultSelectedRaters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  clearSelectedAndDefault: PropTypes.func.isRequired,
 };
 
 RaterSelection.defaultProps = {};
@@ -79,6 +86,7 @@ const mapDispatchToProps = (dispatch) => ({
   setSelectedRaters: dispatch.ratee.setSelectedRaters,
   submitRaters: dispatch.ratee.submitRaters,
   clearRaterGroups: dispatch.ratee.clearRaterGroups,
+  clearSelectedAndDefault: dispatch.ratee.clearSelectedAndDefault,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RaterSelection);

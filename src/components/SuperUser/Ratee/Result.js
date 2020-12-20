@@ -4,11 +4,8 @@ import { Tabs } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import { Form, Formik } from 'formik';
 import { useHistory } from 'react-router-dom';
-
 import { dynamicMap } from '../../../routes/RouteMap';
-
 import { useQuery, stringify } from '../../../hooks/useQuery';
-
 import Table from '../../Common/Table';
 import Progress from '../../Common/Progress';
 import Button from '../../Common/Button';
@@ -23,22 +20,20 @@ const Result = ({
   exportDemographicData,
   individualReports,
   groupReports,
+  generateReport,
 }) => {
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
-
   const formRef = React.useRef();
-
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [visible, setVisible] = React.useState(false);
-
   const { TabPane } = Tabs;
   const pageNumber = parsedQuery?.page_number || 1;
   const pageSize = parsedQuery?.page_size || 10;
   const surveyGroupId = parsedQuery?.surveyGroupId;
   const projectId = parsedQuery?.projectId;
   const resultBy = parsedQuery?.resultBy || 'individual';
-
+  const selectedRowsReportAvailable = selectedRows?.map((el) => el.reportAvailable);
   // TODO: use useTabs hook
 
   function tabChangeCallback(key) {
@@ -58,37 +53,98 @@ const Result = ({
   }, [fetchIndividualReports, pageSize, pageNumber, parsedQuery.q, parsedQuery.sort]);
 
   const renderHeader = React.useCallback(() => {
-    return selectedRows && selectedRows?.length > 0 ? (
-      <div className="flex flex-row items-center">
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Force generate report"
-          textClassName="mr-2"
-          className="ml-3"
-        />
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Download report"
-          textClassName="mr-2"
-          className="ml-3"
-          icon="FileExcelOutlined"
-          iconPosition="right"
-        />
-        <Button
-          size="middle"
-          textSize="xs"
-          text="Export results to Excel"
-          textClassName="mr-2"
-          className="ml-3"
-          icon="FileExcelOutlined"
-          iconPosition="right"
-          onClick={() => setVisible(true)}
-        />
-        <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
-      </div>
-    ) : (
+    return selectedRows && selectedRows?.length > 0 ?
+      resultBy === 'individual' ?
+        (
+          <div className="flex flex-row items-center">
+            {
+              selectedRowsReportAvailable?.includes(false) ?
+                <Button
+                  size="middle"
+                  textSize="xs"
+                  text="Force generate report"
+                  textClassName="mr-2"
+                  className="ml-3"
+                  onClick={() =>
+                    alert('comming soon')
+                    // generateReport({
+                    //   projectId: parseInt(parsedQuery.projectId),
+                    //   surveyGroupIds: selectedRows.map((el) => el.id),
+                    // })
+                  }
+                />
+                : null
+            }
+            {
+              !selectedRowsReportAvailable?.includes(false) ?
+                <Button
+                  size="middle"
+                  textSize="xs"
+                  text="Download report"
+                  textClassName="mr-2"
+                  className="ml-3"
+                  icon="FileExcelOutlined"
+                  iconPosition="right"
+                /> : null
+            }
+            <Button
+              size="middle"
+              textSize="xs"
+              text="Export results to Excel"
+              textClassName="mr-2"
+              className="ml-3"
+              icon="FileExcelOutlined"
+              iconPosition="right"
+              onClick={() => setVisible(true)}
+            />
+            <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
+          </div>
+        ) :
+        (
+          <div className="flex flex-row items-center">
+            {
+              selectedRowsReportAvailable?.includes(false) ?
+                <Button
+                  size="middle"
+                  textSize="xs"
+                  text="Force generate report"
+                  textClassName="mr-2"
+                  className="ml-3"
+                  onClick={() =>
+                    generateReport({
+                      // eslint-disable-next-line radix
+                      projectId: parseInt(parsedQuery.projectId),
+                      surveyGroupIds: selectedRows.map((el) => el.id),
+                    })}
+                />
+                : null
+            }
+            {
+              !selectedRowsReportAvailable?.includes(false) ?
+                <Button
+                  size="middle"
+                  textSize="xs"
+                  text="Download report"
+                  textClassName="mr-2"
+                  className="ml-3"
+                  icon="FileExcelOutlined"
+                  iconPosition="right"
+                /> : null
+            }
+            <Button
+              size="middle"
+              textSize="xs"
+              text="Export results to Excel"
+              textClassName="mr-2"
+              className="ml-3"
+              icon="FileExcelOutlined"
+              iconPosition="right"
+              onClick={() => alert('comming soon')}
+            />
+            <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
+          </div>
+        ) :
+      (
         <div className="flex justify-between items-center borderless-tab">
           <Tabs
             defaultActiveKey={resultBy || 'individual'}
@@ -105,7 +161,7 @@ const Result = ({
                 className="text-xs"
                 placeholder="SEARCH"
                 loading={loading}
-                value={parsedQuery?.q}
+                value={parsedQuery?.q || ''}
                 onSearch={(val) => setQuery({ q: val })}
                 onPressEnter={(e) => setQuery({ q: e.target.value })}
               />
@@ -199,7 +255,8 @@ const Result = ({
         <div className="w-16 flex-inline items-center justify-start">
           {criticalCompetencyData ? (
             <div className="w-5 h-5 bg-green-400 rounded-full" />
-          ) : (
+          ) :
+            (
               <CloseOutlined className="text-base ml-2 text-red-500" />
             )}
         </div>
@@ -218,7 +275,8 @@ const Result = ({
         <div className="w-16 flex-inline items-center justify-start">
           {previosResults ? (
             <div className="w-5 h-5 bg-orange rounded-full" />
-          ) : (
+          ) :
+            (
               <CloseOutlined className="text-base ml-2 text-red-500" />
             )}
         </div>
@@ -251,9 +309,9 @@ const Result = ({
       key: 'reportAvailable',
       title: 'Report Available',
       width: 200,
-      render: (reportAvailable) => (
+      render: (isReportAvailable) => (
         <div className="w-16 flex-inline items-center justify-start">
-          <span className={!reportAvailable && 'text-red'}>{reportAvailable ? 'Yes' : 'No'}</span>
+          <span className={!isReportAvailable && 'text-red'}>{isReportAvailable ? 'Yes' : 'No'}</span>
         </div>
       ),
     },
@@ -284,6 +342,7 @@ const Result = ({
         }}
         onSubmit={(values) => {
           const fields = Object.entries(values)
+            // eslint-disable-next-line no-unused-vars
             .filter(([_, item]) => item === true)
             .map((item) => item[0]);
           exportDemographicData({
@@ -453,7 +512,8 @@ const Result = ({
           setSelectedRows(rows);
         }}
         totalRecordSize={
-          (resultBy === 'individual' ? individualReports : groupReports)?.metaData?.pagination
+          // eslint-disable-next-line radix
+          parseInt(resultBy === 'individual' ? individualReports : groupReports)?.metaData?.pagination
             ?.totalRecords
         }
       />
@@ -469,8 +529,8 @@ Result.propTypes = {
   individualReports: PropTypes.shape({
     data: PropTypes.arrayOf(
       PropTypes.shape({
-        surveyGroupId: PropTypes.string,
-        rateeId: PropTypes.string,
+        surveyGroupId: PropTypes.number,
+        rateeId: PropTypes.number,
         rateeName: PropTypes.string,
         minMet: PropTypes.bool,
         totalRaters: PropTypes.string,
@@ -508,6 +568,7 @@ Result.propTypes = {
     }),
     timeStamp: PropTypes.number,
   }),
+  generateReport: PropTypes.func.isRequired,
 };
 
 Result.defaultProps = {

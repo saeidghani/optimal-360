@@ -35,7 +35,6 @@ const EditRatee = ({
     return () => {
       clearRateeMissionCriticals();
     };
-    // TODO clear ratees
   }, [fetchRateeMissionCriticals]);
 
   const renderHeader = React.useCallback(() => {

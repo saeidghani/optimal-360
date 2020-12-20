@@ -351,7 +351,7 @@ StatusDetails.propTypes = {
     timeStamp: PropTypes.number,
   }),
   fetchRaterGroups: PropTypes.func.isRequired,
-  raterGroups: PropTypes.arrayOf(PropTypes.object).isRequired
+  raterGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 StatusDetails.defaultProps = {
