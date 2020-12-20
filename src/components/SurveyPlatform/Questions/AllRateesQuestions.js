@@ -19,6 +19,7 @@ const AllRateesQuestions = ({
   const { surveyGroupId, questionNumber } = useParams();
 
   const [relationValues, setRelationValues] = React.useState({});
+  const [showErr, setShowErr] = React.useState(false);
 
   const allRelationIds = React.useMemo(
     () => relations?.data?.map((relation) => relation.relationId),
@@ -47,6 +48,15 @@ const AllRateesQuestions = ({
       if (relationIds) fetchQuestions({ surveyGroupId, questionNumber, relationIds });
     }
   }, [fetchQuestions, surveyGroupId, questionNumber, allRelationIds]);
+
+  React.useEffect(() => {
+    const newRelationValues = { ...relationValues };
+    // eslint-disable-next-line no-unused-expressions
+    questions?.data?.responses?.forEach((res) => {
+      newRelationValues[res.relationId] = res?.responseScore?.toString();
+    });
+    setRelationValues(newRelationValues);
+  }, [questions]);
 
   const dataSource = React.useMemo(() => {
     const row = {};
@@ -90,7 +100,12 @@ const AllRateesQuestions = ({
       });
       responses.push(response);
     });
-    if (responses?.length !== Object.keys(relationValues)?.length) return;
+    if (responses?.length !== Object.keys(relationValues)?.length) {
+      setShowErr(true);
+      return;
+    }
+    setShowErr(false);
+
     const questionId = questions?.data?.question?.id;
     if (questionNumber <= questions?.data?.totalQuestions) {
       try {
@@ -119,12 +134,12 @@ const AllRateesQuestions = ({
     <Layout hasBreadCrumb>
       <Questions
         loading={loading}
+        showErr={showErr}
         options={questions?.data?.options}
         dataSource={dataSource}
         questions={questions}
         relationValues={relationValues}
         onSetRelationValues={(e, item, key) => {
-          console.log(e, item, key);
           setRelationValues({ ...relationValues, [key]: item?.value });
         }}
         onNext={submitResponse}

@@ -9,7 +9,7 @@ import graphIcon from '../../../../assets/images/graph-icon.svg';
 
 import DataTable from './DataTable';
 
-const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations }) => {
+const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations, isSubmitted }) => {
   const [parsedQuery, , setQuery] = useQuery();
   const { surveyGroupId, surveyMode } = parsedQuery || {};
 
@@ -109,7 +109,13 @@ const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations }) =>
         <span className="mx-2 text-body text-sm">extraDetails</span>
         <span className="text-heading text-xl">In progress</span>
       </div>
-      <Progress className="mt-10" percentage={totalAvg} subClassName="text-heading" showPercent />
+      <Progress
+        className="mt-10"
+        percentage={totalAvg}
+        subClassName="text-heading"
+        status={isSubmitted ? 'sub' : ''}
+        showPercent
+      />
       <div className="mt-10 text-antgray-100">Collective Completion Rate</div>
     </div>
   );
@@ -133,7 +139,7 @@ const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations }) =>
                   : 'pt-4 mt-8 md:mt-0 md:pt-6 bg-white rounded-lg shadow overflow-auto'
               }`}
               tableClassName={`${
-                mode?.key === 'all' ? 'col-span-5 overflow-auto' : 'overflow-auto'
+                mode?.key === 'all' ? 'col-span-5 overflow-auto h-128' : 'overflow-auto h-128'
               }`}
               extraDetailsClassName={`${
                 mode?.key === 'all' ? 'row-start-1 col-start-6 col-span-3' : ''
@@ -148,8 +154,10 @@ const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations }) =>
     </div>
   );
 };
+
 SurveyGroup.propTypes = {
   loading: PropTypes.bool.isRequired,
+  isSubmitted: PropTypes.bool,
   fetchInfo: PropTypes.func.isRequired,
   fetchRelations: PropTypes.func.isRequired,
   info: PropTypes.shape({
@@ -168,6 +176,7 @@ SurveyGroup.propTypes = {
 SurveyGroup.defaultProps = {
   info: {},
   relations: {},
+  isSubmitted: false,
 };
 
 export default SurveyGroup;

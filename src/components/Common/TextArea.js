@@ -20,9 +20,11 @@ const _TextArea = ({
   errorMessage,
 }) => (
   <div className={`flex flex-col ${wrapperClassName}`}>
-    <label className={`text-body mb-3 ${labelClassName}`} htmlFor={name}>
-      {label}
-    </label>
+    {label && (
+      <label className={`text-body mb-3 ${labelClassName}`} htmlFor={name}>
+        {label}
+      </label>
+    )}
 
     <TextArea
       placeholder={placeholder}
@@ -35,7 +37,7 @@ const _TextArea = ({
       rows={rows}
     />
 
-    <p className="text-red-500 h-5 mt-1">{errorMessage}</p>
+    {errorMessage && <p className="text-red-500 h-5 mt-1">{errorMessage}</p>}
   </div>
 );
 

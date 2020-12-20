@@ -7,6 +7,10 @@ import comma from '../../../../assets/images/comma.svg';
 import { fetchFullURL } from '../../../../lib/utils';
 
 const Welcome = ({ loading, clientWelcomeMessage, clientPicture, surveyMessage }) => {
+  const el = document.createElement('html');
+  el.innerHTML =
+    "<html><head><title>titleTest</title></head><body><a href='test0'>test01</a><a href='test1'>test02</a><a href='test2'>test03</a></body></html>";
+
   return (
     <div>
       <Loading visible={loading} />
@@ -32,9 +36,9 @@ const Welcome = ({ loading, clientWelcomeMessage, clientPicture, surveyMessage }
           <img src={comma} className="mr-2" alt="" />
           <img src={comma} alt="" />
         </div>
-        <p className="col-start-1 col-span-12 md:col-start-1 md:row-start-1 md:col-span-10 mt-8 pt-8">
+        <div className="col-start-1 col-span-12 md:col-start-1 md:row-start-1 md:col-span-10 mt-8 pt-8">
           {surveyMessage}
-        </p>
+        </div>
         <div className="col-start-1 col-span-12 flex flex-col mt-5 md:flex-row">
           <span className="text-body mr-8 mb-4">Roselaini Faiz</span>
           <span className="text-antgray-100">CHRO Sime Darby Group</span>

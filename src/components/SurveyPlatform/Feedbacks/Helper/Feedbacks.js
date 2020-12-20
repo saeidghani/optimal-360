@@ -105,7 +105,6 @@ const Feedbacks = ({ loading, feedbacks, onNext, ratees, relationValues, onSetRe
             border border-solid border-antgray-100 rounded-md h-24"
             >
               <TextArea
-                placeholder="(The verbatim can be left empty by clicking skip)"
                 value={relationValues[ratee?.rateeId]}
                 onChange={(e) => onSetRelationValues(e, ratee)}
                 rows={2}

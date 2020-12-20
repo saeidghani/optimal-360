@@ -9,6 +9,7 @@ import Progress from '../../../Common/Progress';
 import Table from '../../../Common/Table';
 import Radio from '../../../Common/Radio';
 import Modal from '../../../Common/Modal';
+import Tooltip from '../../../Common/Tooltip';
 import { dynamicMap } from '../../../../routes/RouteMap';
 
 const Questions = ({
@@ -19,10 +20,11 @@ const Questions = ({
   onNext,
   dataSource,
   options,
+  showErr,
 }) => {
   const [visible, setVisible] = React.useState(false);
   const history = useHistory();
-  const { questionNumber } = useParams();
+  const { surveyGroupId, questionNumber } = useParams();
 
   const renderHeader = React.useCallback(() => {
     return (
@@ -30,9 +32,10 @@ const Questions = ({
         {questions?.data?.totalQuestions && (
           <React.Fragment>
             <p>
-              1. {questions?.data?.question?.statement}
+              {questionNumber}. {questions?.data?.question?.statement}
               {questions?.data?.question?.required && <span className="text-red-500">*</span>}
             </p>
+            {showErr && <p className="text-red-500 mt-2">Please answer all the questions</p>}
             <div className="flex justify-between">
               <div className="inline-flex flex-col md:flex-row mt-5">
                 <div className="w-40 -ml-12">
@@ -72,21 +75,23 @@ const Questions = ({
         )}
       </div>
     );
-  }, [questions.timeStamp]);
+  }, [questions.timeStamp, showErr]);
 
   const columns = React.useMemo(() => {
     const zeroScoreIndex = options?.findIndex(({ score }) => score?.toString() === '0');
     const arrangedOptions = arrayMove(options, zeroScoreIndex, -1);
     // eslint-disable-next-line no-unused-expressions
-    const scoreColumns = arrangedOptions?.map(({ label, score }) => ({
+    const scoreColumns = arrangedOptions?.map(({ label, score, description }) => ({
       key: score,
       title: (
         <div className="flex flex-col justify-center items-center md:flex-row">
           <span className="mr-0 text-xs md:mr-2 mb-2 capitalize md:mb-0 md:text-sm">{label}</span>
-          <QuestionOutlined
-            className="text-white bg-gray-400 w-5 h-5 rounded-full"
-            style={{ paddingTop: 3 }}
-          />
+          <Tooltip title={description}>
+            <QuestionOutlined
+              className="text-white bg-gray-400 w-5 h-5 rounded-full"
+              style={{ paddingTop: 3 }}
+            />
+          </Tooltip>
         </div>
       ),
       width: 100,
@@ -134,7 +139,16 @@ const Questions = ({
   };
 
   const handleBack = () => {
-    setVisible(true);
+    if (questionNumber?.toString() === '1') {
+      setVisible(true);
+    } else {
+      history.push(
+        dynamicMap.surveyPlatform.allRateesQuestions({
+          surveyGroupId,
+          questionNumber: questionNumber * 1 - 1,
+        }),
+      );
+    }
   };
 
   const handleOk = () => {
@@ -214,6 +228,7 @@ Questions.propTypes = {
   onNext: PropTypes.func.isRequired,
   dataSource: PropTypes.arrayOf(PropTypes.shape({})),
   options: PropTypes.arrayOf(PropTypes.shape({})),
+  showErr: PropTypes.bool,
 };
 
 Questions.defaultProps = {
@@ -221,6 +236,7 @@ Questions.defaultProps = {
   relationValues: {},
   dataSource: [{}],
   options: [{}],
+  showErr: false,
 };
 
 export default Questions;
