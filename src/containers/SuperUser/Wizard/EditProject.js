@@ -19,10 +19,16 @@ class EditProject extends Component {
     return editProject(data);
   };
 
-  fetchSurveyGroups = async (query = '') => {
+  fetchSurveyGroups = (query = '') => {
     const { fetchSurveyGroups } = this.props;
 
-    await fetchSurveyGroups(query);
+    return fetchSurveyGroups(query);
+  };
+
+  fetchProjectSurveyGroups = (projectId) => {
+    const { fetchProjectSurveyGroups } = this.props;
+
+    return fetchProjectSurveyGroups({ projectId });
   };
 
   render() {
@@ -32,6 +38,7 @@ class EditProject extends Component {
       <Layout
         project={project}
         fetchSingleProject={this.fetchSingleProject}
+        fetchProjectSurveyGroups={this.fetchProjectSurveyGroups}
         fetchSurveyGroups={this.fetchSurveyGroups}
         editProject={this.editProject}
         surveyGroups={surveyGroups}
@@ -45,6 +52,7 @@ EditProject.propTypes = {
   fetchSurveyGroups: PropTypes.func.isRequired,
   fetchSingleProject: PropTypes.func.isRequired,
   editProject: PropTypes.func.isRequired,
+  fetchProjectSurveyGroups: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   surveyGroups: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
@@ -67,6 +75,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchSurveyGroups: dispatch.bank.fetchSurveyGroups,
+  fetchProjectSurveyGroups: dispatch.projects.fetchSurveyGroups,
   fetchSingleProject: dispatch.projects.fetchSingleProject,
   editProject: dispatch.wizard.editProject,
 });

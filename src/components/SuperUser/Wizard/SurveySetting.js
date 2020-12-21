@@ -107,7 +107,12 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
     const newRaterGroups = [...(oldValues?.raterGroups || [])];
 
     const removeIndex = newRaterGroups.findIndex((el) => el.id * 1 === id * 1);
-    newRaterGroups.splice(removeIndex, 1);
+
+    if (newRaterGroups[removeIndex].newlyAddedItem) {
+      newRaterGroups.splice(removeIndex, 1);
+    } else {
+      newRaterGroups[removeIndex].deleted = true;
+    }
 
     formRef.current.setValues({ ...oldValues, raterGroups: formatRaterGroupItems(newRaterGroups) });
   };
@@ -386,7 +391,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                     rowSelection={false}
                     pagination={false}
                     columns={getColumns(touched, errors)}
-                    dataSource={values.raterGroups}
+                    dataSource={values.raterGroups.filter((row) => !row.deleted)}
                     renderHeader={() => (
                       <div className="flex justify-between items-center">
                         <p className="text-14px">Set rater group (limit to 5, including Self):</p>
