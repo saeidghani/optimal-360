@@ -19,6 +19,7 @@ const AllRateesFeedbacks = ({
   const { surveyGroupId, feedbackNumber } = useParams();
 
   const [relationValues, setRelationValues] = React.useState({});
+  const [showErr, setShowErr] = React.useState(false);
 
   const allRelationIds = React.useMemo(
     () => relations?.data?.map((relation) => relation.relationId),
@@ -78,7 +79,12 @@ const AllRateesFeedbacks = ({
       });
       responses.push(newResponse);
     });
-    if (responses?.length !== Object.keys(relationValues)?.length) return;
+    if (responses?.length !== Object.keys(relationValues)?.length) {
+      setShowErr(true);
+      return;
+    }
+    setShowErr(false);
+
     const feedbackId = feedbacks?.data?.feedback?.id;
     if (feedbackNumber <= feedbacks?.data?.totalFeedbacks) {
       try {
@@ -109,6 +115,7 @@ const AllRateesFeedbacks = ({
         feedbacks={feedbacks}
         ratees={ratees}
         relationValues={relationValues}
+        showErr={showErr}
         onSetRelationValues={(e, ratee) =>
           setRelationValues({ ...relationValues, [ratee?.rateeId]: e.target.value })
         }

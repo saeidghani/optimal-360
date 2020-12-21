@@ -106,8 +106,10 @@ const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations, isSu
         <span className="relative w-10 h-10 rounded-full bg-primary-500">
           <img src={graphIcon} className="absolute bottom-0 pb-3 pl-2 w-3/4" alt="" />
         </span>
-        <span className="mx-2 text-body text-sm">extraDetails</span>
-        <span className="text-heading text-xl">In progress</span>
+        <span className="mx-2 text-body text-sm">Status / Action:</span>
+        <span className="text-heading text-xl">
+          {totalAvg === 0 ? 'Not started' : totalAvg === 100 ? 'Completed' : 'In progress'}
+        </span>
       </div>
       <Progress
         className="mt-10"
@@ -139,7 +141,7 @@ const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations, isSu
                   : 'pt-4 mt-8 md:mt-0 md:pt-6 bg-white rounded-lg shadow overflow-auto'
               }`}
               tableClassName={`${
-                mode?.key === 'all' ? 'col-span-5 overflow-auto h-128' : 'overflow-auto h-128'
+                mode?.key === 'all' ? 'col-span-5 overflow-auto' : 'overflow-auto'
               }`}
               extraDetailsClassName={`${
                 mode?.key === 'all' ? 'row-start-1 col-start-6 col-span-3' : ''
