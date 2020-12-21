@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Tabs } from 'antd';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';

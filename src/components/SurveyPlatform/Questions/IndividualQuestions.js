@@ -22,6 +22,7 @@ const IndividualQuestions = ({
   const { relationId } = parsedQuery;
 
   const [relationValues, setRelationValues] = React.useState({});
+  const [showErr, setShowErr] = React.useState(false);
 
   React.useEffect(() => {
     if (surveyGroupId) {
@@ -42,10 +43,12 @@ const IndividualQuestions = ({
 
   React.useEffect(() => {
     const newRelationValues = { ...relationValues };
-    // eslint-disable-next-line no-unused-expressions
-    questions?.data?.responses?.forEach((res) => {
-      newRelationValues[res.relationId] = res?.responseScore?.toString();
-    });
+    if (questions?.data?.responses?.length > 0) {
+      // eslint-disable-next-line no-unused-expressions
+      questions?.data?.responses?.forEach((res) => {
+        newRelationValues[res.relationId] = res?.responseScore?.toString();
+      });
+    }
     setRelationValues(newRelationValues);
   }, [questions]);
 
@@ -83,7 +86,7 @@ const IndividualQuestions = ({
     // eslint-disable-next-line no-unused-expressions
     Object.keys(relationValues)?.forEach((key) => {
       response.relationId = key * 1;
-      response.responseScore = relationValues[key] === '' ? null : relationValues[key] * 1;
+      response.responseScore = !relationValues[key] ? null : relationValues[key] * 1;
       // eslint-disable-next-line no-unused-expressions
       questions?.data?.responses.forEach((res) => {
         if (res?.relationId?.toString() === key?.toString()) {
@@ -91,7 +94,15 @@ const IndividualQuestions = ({
         }
       });
     });
-    if (questions?.data?.question?.required && response?.responseScore === null) return;
+    if (
+      !Object.keys(relationValues)?.length ||
+      (questions?.data?.question?.required && response?.responseScore === null)
+    ) {
+      setShowErr(true);
+      return;
+    }
+    setShowErr(false);
+
     responses.push(response);
     const questionId = questions?.data?.question?.id;
     if (questionNumber <= questions?.data?.totalQuestions) {
@@ -125,6 +136,7 @@ const IndividualQuestions = ({
         options={questions?.data?.options}
         questions={questions}
         relationValues={relationValues}
+        showErr={showErr}
         onSetRelationValues={(e, item, key) =>
           setRelationValues({ ...relationValues, [key]: item?.value })
         }
