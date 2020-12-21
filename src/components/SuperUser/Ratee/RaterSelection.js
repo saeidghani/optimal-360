@@ -109,7 +109,7 @@ const RaterSelection = ({
     return () => {
       clearSelectedAndDefault();
     };
-  }, [parsedQuery?.raterGroupId]);
+  }, [parsedQuery?.raterGroupId, parsedQuery?.q]);
 
   useEffect(() => {
     if (!parsedQuery?.page_number || !parsedQuery?.page_size || !parsedQuery?.status) {
