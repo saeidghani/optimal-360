@@ -1,4 +1,5 @@
 import React from 'react';
+import { Tabs } from 'antd';
 import PropTypes from 'prop-types';
 
 import { useHistory } from 'react-router-dom';
@@ -9,7 +10,6 @@ import StatusDetails from './StatusDetails';
 import RatersEmail from './RatersEmail';
 import Result from './Result';
 
-import { Tabs } from 'antd';
 import MainLayout from '../../Common/Layout';
 import Dropdown from '../../Common/Dropdown';
 import ReportSetting from './ReportSetting';
@@ -49,6 +49,8 @@ const Ratee = ({
   pastResult,
   fetchRaterGroups,
   raterGroups,
+  generateReport,
+  exportDemographicDataForIndividual,
 }) => {
   const history = useHistory();
   const [parsedQuery, , setQuery] = useQuery();
@@ -83,7 +85,7 @@ const Ratee = ({
 
   const dropDownOptions = React.useMemo(
     () => (surveyGroups || []).map((elm) => ({ title: elm.name, value: elm.id, label: elm.name })),
-    [surveyGroups.timeStamp],
+    [surveyGroups?.timeStamp],
   );
 
   React.useEffect(() => {
@@ -112,7 +114,7 @@ const Ratee = ({
           className="c-autocomplete col-start-1 w-full"
           showSearch={false}
           labelInValue
-          value={{ value: surveyGroupId, label: currentSurveyGroupName }}
+          value={{ value: surveyGroupId.toString(), label: currentSurveyGroupName }}
           handleChange={({ value }) => {
             setQuery({ surveyGroupId: value });
           }}
@@ -129,6 +131,8 @@ const Ratee = ({
             completionRate={completionRate}
             fetchSummary={fetchSummary}
             fetchCompletionRate={fetchCompletionRate}
+            fetchRaterGroups={fetchRaterGroups}
+            allRaterGroups={raterGroups}
             loading={loading}
           />
         </TabPane>
@@ -164,6 +168,8 @@ const Ratee = ({
             exportDemographicData={exportDemographicData}
             individualReports={individualReports}
             groupReports={groupReports}
+            generateReport={generateReport}
+            exportDemographicDataForIndividual={exportDemographicDataForIndividual}
           />
         </TabPane>
         <TabPane tab={allTabs[4].title} key={allTabs[4].key}>
@@ -217,6 +223,10 @@ Ratee.propTypes = {
   setPastResult: PropTypes.func.isRequired,
   pastResultOptions: PropTypes.shape({}),
   pastResult: PropTypes.shape({}),
+  generateReport: PropTypes.func.isRequired,
+  fetchRaterGroups: PropTypes.func.isRequired,
+  raterGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
+  exportDemographicDataForIndividual: PropTypes.func.isRequired,
 };
 
 Ratee.defaultProps = {

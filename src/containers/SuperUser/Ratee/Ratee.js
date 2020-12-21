@@ -137,6 +137,16 @@ class Ratee extends Component {
     return fetchRaterGroups({ surveyGroupId });
   }
 
+  generateReport = ({ projectId, surveyGroupIds }) => {
+    const { generateReport } = this.props;
+    return generateReport({ projectId, surveyGroupIds });
+  }
+
+  exportDemographicDataForIndividual = ({ surveyGroupIds, fields }) => {
+    const { exportDemographicDataForIndividual } = this.props;
+    return exportDemographicDataForIndividual({ surveyGroupIds, fields });
+  }
+
   render() {
     const {
       loading,
@@ -189,6 +199,8 @@ class Ratee extends Component {
         pastResult={pastResult}
         fetchRaterGroups={this.fetchRaterGroups}
         raterGroups={raterGroups}
+        generateReport={this.generateReport}
+        exportDemographicDataForIndividual={this.exportDemographicDataForIndividual}
       />
     );
   }
@@ -229,6 +241,8 @@ Ratee.propTypes = {
   setPastResult: PropTypes.func.isRequired,
   fetchRaterGroups: PropTypes.func.isRequired,
   raterGroups: PropTypes.PropTypes.arrayOf(PropTypes.object).isRequired,
+  generateReport: PropTypes.func.isRequired,
+  exportDemographicDataForIndividual: PropTypes.func.isRequired,
 };
 
 Ratee.defaultProps = {
@@ -281,6 +295,8 @@ const mapDispatchToProps = (dispatch) => ({
   fetchPastResult: dispatch.ratee.fetchPastResult,
   setPastResult: dispatch.ratee.setPastResult,
   fetchRaterGroups: dispatch.ratee.fetchRaterGroups,
+  generateReport: dispatch.ratee.generateReport,
+  exportDemographicDataForIndividual: dispatch.ratee.exportDemographicDataForIndividual,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Ratee);

@@ -30,7 +30,6 @@ const StatusDetails = (
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const [isSelf, setIsSelf] = React.useState(false);
   const [, , surveyGroupId, surveyGroupObject] = useRateeSurveyGroup();
 
   const viewBy = parsedQuery?.viewBy || 'raters';
@@ -128,48 +127,47 @@ const StatusDetails = (
               onPressEnter={(e) => setQuery({ q: e.target.value })}
               onChange={(e) => setQuery({ q: e.target.value })}
             />
-            {isNotPastEndDate && raterGroups?.length > 0 ? (
-              <>
-                <Button
-                  size="middle"
-                  textSize="xs"
-                  text="Add Ratee"
-                  textClassName="mr-2"
-                  className="ml-3"
-                  type="gray"
-                  icon="PlusCircleOutlined"
-                  iconPosition="right"
-                  onClick={() => {
-                    const params = stringify({ projectId, surveyGroupId });
-                    const path = `${dynamicMap.superUser.addRatee()}${params}`;
-                    history.push(path);
-                  }}
-                />
-                <Button
-                  size="middle"
-                  textSize="xs"
-                  text="Export Excel File"
-                  textClassName="mr-2"
-                  className="ml-3 mr-3"
-                  type="gray"
-                  icon="FileExcelOutlined"
-                  iconPosition="right"
-                  onClick={() => {
-                    exportRelations({ surveyGroupId });
-                  }}
-                />
-              </>
-            ) : null}
-            {isNotPastEndDate ? (
-              <ImportExcelButton
-                textClassName="mr-2"
-                className="ml-3"
-                beforeUpload={(file) => {
-                  importRelations({ file, surveyGroupId });
-                  return false;
-                }}
-              />
-            ) : null}
+            {
+              isNotPastEndDate && raterGroups?.length > 0 ? (
+                <>
+                  <Button
+                    size="middle"
+                    textSize="xs"
+                    text="Add Ratee"
+                    textClassName="mr-2"
+                    className="ml-3"
+                    type="gray"
+                    icon="PlusCircleOutlined"
+                    iconPosition="right"
+                    onClick={() => {
+                      const params = stringify({ projectId, surveyGroupId });
+                      const path = `${dynamicMap.superUser.addRatee()}${params}`;
+                      history.push(path);
+                    }}
+                  />
+                  <ImportExcelButton
+                    textClassName="mr-2"
+                    className="ml-3"
+                    beforeUpload={(file) => {
+                      importRelations({ file, surveyGroupId });
+                      return false;
+                    }}
+                  />
+                </>
+              ) : null}
+            <Button
+              size="middle"
+              textSize="xs"
+              text="Export Excel File"
+              textClassName="mr-2"
+              className="ml-3 mr-3"
+              type="gray"
+              icon="FileExcelOutlined"
+              iconPosition="right"
+              onClick={() => {
+                exportRelations({ surveyGroupId });
+              }}
+            />
           </div>
         </div>
       );
@@ -351,7 +349,7 @@ StatusDetails.propTypes = {
     timeStamp: PropTypes.number,
   }),
   fetchRaterGroups: PropTypes.func.isRequired,
-  raterGroups: PropTypes.arrayOf(PropTypes.object).isRequired
+  raterGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 StatusDetails.defaultProps = {

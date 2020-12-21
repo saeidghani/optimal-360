@@ -207,7 +207,7 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
-    async exportDemographicData({ surveyGroupId, fields, rateeIds }) {
+    async exportDemographicData({ surveyGroupId, fields, rateeIds }) { // for individual write for survey groups
       return actionWapper(async () => {
         const res = await axios({
           method: 'post',
@@ -223,6 +223,25 @@ export default {
         return res;
       }, dispatch.util.errorHandler,
       );
+    },
+
+    async exportDemographicDataForIndividual({ surveyGroupIds, fields }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: '/super-user/survey-groups/demographic-data/export',
+          data: {
+            surveyGroupIds,
+            fields,
+          },
+          responseType: 'arraybuffer',
+        });
+        dispatch.util.saveZipFile({
+          res: res?.data,
+          filename: `report--surveyGroups[${surveyGroupIds}].zip`,
+        });
+        return res;
+      }, dispatch.util.errorHandler);
     },
 
     async fetchRateeMissionCriticals({ surveyGroupId, rateeId }) {
@@ -320,6 +339,11 @@ export default {
       this.setSelectedRaters_reducer(rows);
     },
 
+    clearSelectedAndDefault() {
+      this.setSelectedRaters_reducer([]);
+      this.setDefaultRaters_reducer([]);
+    },
+
     submitRaters({ surveyGroupId, rateeId, obj }) {
       return actionWapper(async () => {
         const res = await axios({
@@ -344,6 +368,7 @@ export default {
         await this.fetchReportSetting_reducer(res?.data?.data);
       }, dispatch.util.errorHandler);
     },
+
     async setReportSetting({ surveyGroupId, reports }) {
       return actionWapper(async () => {
         const res = await axios({
@@ -357,6 +382,7 @@ export default {
         dispatch.util.errorHandler,
         dispatch.util.alert);
     },
+
     async importClientCompetencyModel({ file, surveyGroupId }) {
       // eslint-disable-next-line no-undef
       const data = new FormData();
@@ -375,6 +401,7 @@ export default {
         dispatch.util.alert,
       );
     },
+
     async fetchPastResultOptions({ surveyGroupId, query = '' }) {
       return actionWapper(async () => {
         const res = await axios({
@@ -386,6 +413,7 @@ export default {
         await this.fetchPastResultOptions_reducer(res?.data);
       }, dispatch.util.errorHandler);
     },
+
     async fetchPastResult({ surveyGroupId }) {
       return actionWapper(async () => {
         const res = await axios({
@@ -397,6 +425,7 @@ export default {
         await this.fetchPastResult_reducer(res?.data);
       }, dispatch.util.errorHandler);
     },
+
     async setPastResult({ surveyGroupId, selectedPastResults }) {
       return actionWapper(async () => {
         const res = await axios({
@@ -406,6 +435,23 @@ export default {
         });
 
         return res;
+      },
+        dispatch.util.errorHandler,
+        dispatch.util.alert);
+    },
+
+    async generateReport({ projectId, surveyGroupIds }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: `/super-user/projects/${projectId}/results/group-reports/generate-reports`,
+          data: { surveyGroupIds },
+          responseType: 'arraybuffer',
+        });
+        dispatch.util.saveZipFile({
+          res: res?.data,
+          filename: `report-project-${projectId}--surveyGroups[${surveyGroupIds}].zip`,
+        });
       },
         dispatch.util.errorHandler,
         dispatch.util.alert);

@@ -97,7 +97,7 @@ const GroupReports = ({
                 } else {
                   await exportClusterBenchmark(surveyGroupId);
                 }
-              } catch (err) {}
+              } catch (err) { }
             }}
           />
 
@@ -109,7 +109,7 @@ const GroupReports = ({
                 } else {
                   await importClusterBenchmark({ surveyGroupId, file });
                 }
-              } catch (err) {}
+              } catch (err) { }
 
               return false;
             }}
@@ -164,7 +164,7 @@ const GroupReports = ({
 
                 setSelectedRows([]);
               }
-            } catch (err) {}
+            } catch (err) { }
           }}
         />
       </div>
@@ -221,7 +221,6 @@ const GroupReports = ({
         width: 500,
         render: (value, { id, name }) => (
           <InputNumber
-            disabled={!selectedRows.find((row) => row.id * 1 === id * 1)}
             size="large"
             wrapperClassName="flex flex-col justify-center items-center"
             className="border border-antgray-300 w-28 text-center text-antgray-800 text-14px c-input-number-text-center"
@@ -235,6 +234,8 @@ const GroupReports = ({
             parser={(newVal) => newVal.replace('', '')}
             precision={2}
             step={0.01}
+            min={1}
+            max={4}
           />
         ),
       },
