@@ -1,8 +1,9 @@
 import React from 'react';
-import * as yup from 'yup';
-import { Formik, Form } from 'formik';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import { Formik, Form } from 'formik';
+import * as yup from 'yup';
+import moment from 'moment';
 
 import { useQuery, parse, stringify } from '../../../hooks/useQuery';
 import { dynamicMap } from '../../../routes/RouteMap';
@@ -19,6 +20,7 @@ const ProjectInfo = ({
   surveyGroups,
   fetchSingleProject,
   fetchSurveyGroups,
+  fetchProjectSurveyGroups,
   editProject,
 }) => {
   const history = useHistory();
@@ -71,7 +73,7 @@ const ProjectInfo = ({
             organization: project?.data?.organization || {},
             name: project?.data?.name || '',
             projectSurveyGroups: (project?.data?.projectSurveyGroups || []).map(({ name, id }) => ({
-              label: `P-${name}`,
+              label: `P-${name}-${id}`,
               value: `P-${name}`,
               id,
               key: `P-${id}`,
@@ -79,7 +81,6 @@ const ProjectInfo = ({
           }}
           validationSchema={schema}
           onSubmit={async ({ organization, name, projectSurveyGroups }) => {
-            // const projectSurveyGroupIds = projectSurveyGroups.map((el) => el.id * 1);
             const projectSurveyGroupIds = project.data.projectSurveyGroups.map((el) => el.id * 1);
             const removeProjectSurveyGroupIds = [];
             const bankSurveyGroupIds = [];
@@ -100,8 +101,15 @@ const ProjectInfo = ({
               }
             });
 
+            const isSurveyGroupEditable = (el) =>
+              !el.stepsStatus || !moment(el.startDate).isBefore();
+
             try {
-              await editProject({
+              const existingProjectSurveyGroups = (
+                await fetchProjectSurveyGroups(project?.data?.id)
+              )?.data?.data;
+
+              const res = await editProject({
                 projectId,
                 organizationId: organization.id,
                 projectName: name,
@@ -110,14 +118,34 @@ const ProjectInfo = ({
                 bankSurveyGroupIds,
               });
 
-              const params = stringify({
-                projectId,
-                wizardEditMode: true,
-              });
+              const newProjectSurveyGroups = (await fetchProjectSurveyGroups(res.data.data.id))
+                ?.data?.data;
 
-              const path = dynamicMap.superUser.surveySettings();
+              const newlyAddedSurveyGroups = newProjectSurveyGroups.filter(
+                (nSG) => !existingProjectSurveyGroups.find((eSG) => eSG.id * 1 === nSG.id * 1),
+              );
+              const editableSurveyGroup = [
+                ...newlyAddedSurveyGroups,
+                ...newProjectSurveyGroups,
+              ].find(isSurveyGroupEditable);
 
-              history.replace(`${path}${params}`);
+              if (editableSurveyGroup) {
+                const params = stringify({
+                  projectId,
+                  surveyGroupId: editableSurveyGroup.id,
+                  wizardEditMode: true,
+                });
+
+                const path = dynamicMap.superUser.surveySettings();
+
+                history.replace(`${path}${params}`);
+              } else {
+                const path = dynamicMap.superUser.surveyGroupsList({
+                  projectId,
+                });
+
+                history.replace(path);
+              }
             } catch (error) {}
           }}
         >
@@ -152,6 +180,7 @@ const ProjectInfo = ({
                 extrainfoText="Create New"
                 onSelect={(val) => {
                   setFieldValue('projectSurveyGroups', [...values.projectSurveyGroups, val]);
+
                   setQuery({ projectId });
                 }}
                 extrainfoLink={dynamicMap.superUser.bankSurveyGroups()}
@@ -184,7 +213,7 @@ const ProjectInfo = ({
               ) : null}
 
               <Button
-                loading={loading}
+                // loading={loading}
                 onClick={handleSubmit}
                 text="Next"
                 textSize="base"
@@ -202,6 +231,7 @@ ProjectInfo.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchSingleProject: PropTypes.func.isRequired,
   fetchSurveyGroups: PropTypes.func.isRequired,
+  fetchProjectSurveyGroups: PropTypes.func.isRequired,
   editProject: PropTypes.func.isRequired,
   project: PropTypes.shape({
     data: PropTypes.shape({
