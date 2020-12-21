@@ -10,6 +10,7 @@ const _Progress = ({
   status,
   type,
   showPercent,
+  width,
 }) => {
   let strokeColor = '';
   if (percentage < 50) {
@@ -30,6 +31,7 @@ const _Progress = ({
         status={status}
         type={type}
         strokeColor={strokeColor}
+        width={width}
         format={
           status === 'sub'
             ? () => (

@@ -15,71 +15,103 @@ const DataTable = ({
   extraDetailsClassName,
   relations,
 }) => {
-  const [parsedQuery] = useQuery();
-  const { surveyGroupId, surveyMode } = parsedQuery || {};
+  const [parsedQuery, , setQuery] = useQuery();
+  const { surveyGroupId, surveyMode, sort } = parsedQuery || {};
 
-  const allAndIndividualColumns = React.useMemo(() => [
-    {
-      key: 'rateeName',
-      title: <span className="pl-4">Name</span>,
-      width: 100,
-      sorter: true,
-      render: (rateeName, { key }) => {
-        return (
-          <React.Fragment>
-            {surveyMode === 'individual' ? (
-              <Link
-                to={`${dynamicMap.surveyPlatform.individualQuestions({
-                  surveyGroupId,
-                  questionNumber: 1,
-                })}${stringify({ relationId: key })}`}
-              >
-                <span className="text-primary-500 pl-4">{rateeName}</span>
-              </Link>
-            ) : (
-              <span className="pl-4">{rateeName}</span>
-            )}
-          </React.Fragment>
-        );
+  const getSortOrder = (key) => {
+    const sortOrder = parsedQuery?.sort?.includes(key)
+      ? parsedQuery?.sort?.[0] === '+'
+        ? 'ascend'
+        : 'descend'
+      : '';
+    return sortOrder;
+  };
+
+  const sortColumns = (sorter) => {
+    // eslint-disable-next-line operator-linebreak
+    const order = parsedQuery?.sort?.[0] === '+' ? '-' : '+';
+    const newItem = `${order}${sorter.columnKey}`;
+
+    setQuery({ sort: newItem });
+  };
+
+  const allAndIndividualColumns = React.useMemo(() => {
+    const columns = [
+      {
+        key: 'rateeName',
+        title: <span className="pl-4">Name</span>,
+        width: 100,
+        sorter: (a, b) => a?.rateeName?.localeCompare(b?.rateeName),
+        sortOrder: getSortOrder('rateeName'),
+        render: (rateeName, { key }) => {
+          return (
+            <React.Fragment>
+              {surveyMode === 'individual' ? (
+                <Link
+                  to={`${dynamicMap.surveyPlatform.individualQuestions({
+                    surveyGroupId,
+                    questionNumber: 1,
+                  })}${stringify({ relationId: key })}`}
+                >
+                  <span className="text-primary-500 pl-4">{rateeName}</span>
+                </Link>
+              ) : (
+                <span className="pl-4">{rateeName}</span>
+              )}
+            </React.Fragment>
+          );
+        },
       },
-    },
-    {
-      key: 'raterGroupName',
-      title: 'Relationship',
-      width: 100,
-    },
-    {
+      {
+        key: 'rate',
+        title: 'Rate',
+        width: 100,
+        render: (_, { totalAnswers, totalQuestions }) => (
+          <div className="w-16 h-16 flex items-center justify-end pt-2">
+            <div className="mr-1 md:mr-4">
+              {parseInt((totalAnswers / totalQuestions) * 100, 10)}%
+            </div>
+            <div>
+              <Progress
+                width={40}
+                className="ml-auto"
+                percentage={parseInt((totalAnswers / totalQuestions) * 100, 10)}
+                showPercent={false}
+              />
+            </div>
+          </div>
+        ),
+      },
+    ];
+    const statusColumn = {
       key: 'statusAction',
       title: 'Status / Action:',
       width: 100,
-    },
-    {
-      key: 'rate',
-      title: 'Rate',
-      width: 100,
-      render: (_, { totalAnswers, totalQuestions }) => (
-        <div className="w-16 h-16 flex items-center justify-end pt-2">
-          <div className="pb-2 mr-1 md:mr-4">
-            {parseInt((totalAnswers / totalQuestions) * 100, 10)}%
-          </div>
-          <div className="w-12 h-full">
-            <Progress
-              className="-mb-12 ml-auto"
-              percentage={parseInt((totalAnswers / totalQuestions) * 100, 10)}
-              showPercent={false}
-            />
-          </div>
-        </div>
-      ),
-    },
-  ]);
+    };
+    if (surveyMode === 'individual') {
+      columns.splice(1, 0, {
+        key: 'raterGroupName',
+        title: 'Relationship',
+        width: 100,
+      });
+      columns.splice(2, 0, statusColumn);
+    } else if (surveyMode === 'all') {
+      columns.splice(1, 0, {
+        key: 'raterGroupName',
+        title: 'Relationship',
+        width: 100,
+        sorter: (a, b) => a?.raterGroupName?.localeCompare(b?.raterGroupName),
+        sortOrder: getSortOrder('raterGroupName'),
+      });
+    }
+    return columns;
+  }, [surveyMode, sort]);
 
   const groupColumns = React.useMemo(() => [
     {
       key: 'relationship',
       title: <span className="pl-4">Relationship</span>,
       width: 100,
-      sorter: true,
       render: (relationship) => (
         <Link
           to={`${dynamicMap.surveyPlatform.rateeGroupQuestions({
@@ -95,7 +127,6 @@ const DataTable = ({
       key: 'names',
       title: 'Name',
       width: 100,
-      sorter: true,
       render: (names) => (
         <div className="flex flex-col justify-between align-center h-full">
           {names.map((name) => (
@@ -160,9 +191,9 @@ const DataTable = ({
       case avg > 0 && avg < 100:
         return 'In progress';
       case avg === 100:
-        return 'To review';
+        return 'Completed';
       default:
-        return 'To start';
+        return 'Not started';
     }
   };
 
@@ -207,7 +238,7 @@ const DataTable = ({
           relationship: item,
           names: items[item]?.names,
           statuses: items[item]?.rates.map((status) =>
-            status === 0 ? 'To start' : status === 100 ? 'To review' : 'In progress',
+            status === 0 ? 'Not started' : status === 100 ? 'Completed' : 'In progress',
           ),
           rates: items[item]?.rates,
         };
@@ -228,7 +259,7 @@ const DataTable = ({
 
   return (
     <Table
-      scroll={{ y: 500 }}
+      scroll={{ y: 450 }}
       size="middle"
       rowKey="key"
       loading={loading}
@@ -238,6 +269,7 @@ const DataTable = ({
       columns={surveyMode === 'group' ? groupColumns : allAndIndividualColumns}
       dataSource={surveyMode === 'group' ? groupDataSource : allAndIndividualDataSource}
       extraDetails={extraDetails}
+      onTableChange={({ sorter }) => sortColumns(sorter)}
       rowSelection={false}
       pagination={false}
       title={null}
