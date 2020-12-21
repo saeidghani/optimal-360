@@ -11,7 +11,15 @@ import Loading from '../../../Common/Loading';
 
 import { dynamicMap } from '../../../../routes/RouteMap';
 
-const Feedbacks = ({ loading, feedbacks, onNext, ratees, relationValues, onSetRelationValues }) => {
+const Feedbacks = ({
+  loading,
+  feedbacks,
+  onNext,
+  ratees,
+  relationValues,
+  onSetRelationValues,
+  showErr,
+}) => {
   const [visible, setVisible] = React.useState(false);
 
   const history = useHistory();
@@ -59,6 +67,7 @@ const Feedbacks = ({ loading, feedbacks, onNext, ratees, relationValues, onSetRe
               1. {feedbacks?.data?.feedback?.statement}
               {feedbacks?.data?.feedback?.required && <span className="text-red-500">*</span>}
             </p>
+            {showErr && <p className="text-red-500 mt-2">Please answer all the questions</p>}
             <div
               className="flex justify-between md:border-b md:border-solid
             md:border-gray-200 md:pb-4"
@@ -155,6 +164,7 @@ Feedbacks.propTypes = {
   onNext: PropTypes.func.isRequired,
   ratees: PropTypes.arrayOf(PropTypes.shape({})),
   relationValues: PropTypes.shape({}),
+  showErr: PropTypes.bool,
 };
 
 Feedbacks.defaultProps = {
@@ -162,6 +172,7 @@ Feedbacks.defaultProps = {
   relations: {},
   ratees: [{}],
   relationValues: {},
+  showErr: false,
 };
 
 export default Feedbacks;

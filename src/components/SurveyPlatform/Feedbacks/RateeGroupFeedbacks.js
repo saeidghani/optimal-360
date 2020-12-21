@@ -23,6 +23,7 @@ const RateeGroupFeedbacks = ({
   const { relation } = parsedQuery;
 
   const [relationValues, setRelationValues] = React.useState({});
+  const [showErr, setShowErr] = React.useState(false);
 
   React.useEffect(() => {
     if (surveyGroupId) {
@@ -85,7 +86,12 @@ const RateeGroupFeedbacks = ({
       });
       responses.push(newResponse);
     });
-    if (responses?.length !== Object.keys(relationValues)?.length) return;
+    if (responses?.length !== Object.keys(relationValues)?.length) {
+      setShowErr(true);
+      return;
+    }
+    setShowErr(false);
+
     const feedbackId = feedbacks?.data?.feedback?.id;
     if (feedbackNumber <= feedbacks?.data?.totalFeedbacks) {
       try {
@@ -116,6 +122,7 @@ const RateeGroupFeedbacks = ({
         feedbacks={feedbacks}
         ratees={ratees}
         relationValues={relationValues}
+        showErr={showErr}
         onSetRelationValues={(e, ratee) =>
           setRelationValues({ ...relationValues, [ratee?.rateeId]: e.target.value })
         }

@@ -62,7 +62,7 @@ const Login = ({ login, loading }) => {
                 />
 
                 <Input
-                  inputClass="c-input-sm-placeholder"
+                  inputClass="ant-input-lg"
                   value={values.password}
                   disabled={loading}
                   onChange={handleChange}
@@ -80,7 +80,7 @@ const Login = ({ login, loading }) => {
                 <Checkbox
                   checked={values.rememberMe}
                   onChange={(val) => setFieldValue('rememberMe', val)}
-                  className="text-gray-300 "
+                  className="text-gray-300"
                 >
                   Remember Me
                 </Checkbox>

@@ -6,6 +6,8 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { dynamicMap } from '../../../routes/RouteMap';
 
+import { generateNewPassword } from '../../../lib/utils';
+
 import MainLayout from '../../Common/Layout';
 import Input from '../../Common/Input';
 import Button from '../../Common/Button';
@@ -62,7 +64,7 @@ const UpdateStaff = ({ fetchStaffDetails, staffDetails, setStaffDetails, loading
               } catch (error) {}
             }}
           >
-            {({ values, errors, touched, handleChange, handleSubmit }) => (
+            {({ values, errors, touched, handleChange, handleSubmit, setFieldValue }) => (
               <Form onSubmit={handleSubmit} className="w-full">
                 <Input
                   disabled={loading}
@@ -94,6 +96,13 @@ const UpdateStaff = ({ fetchStaffDetails, staffDetails, setStaffDetails, loading
                   wrapperClassName="mb-2"
                   extrainfoText="Generate Password"
                   extrainfoLink="#"
+                  onExtraInfoLinkClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const newPassword = generateNewPassword();
+                    setFieldValue('password', newPassword);
+                  }}
                   errorMessage={touched.password && errors.password}
                 />
                 <Input

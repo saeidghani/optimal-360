@@ -417,7 +417,7 @@ const DataTable = ({
                           )}
                         />
                       </div>
-                      <div className="text-center">{ratee.raterName}</div>
+                      <div className="text-center">{ratee.rateeName}</div>
                     </div>
                   ))}
                 </Fragment>
