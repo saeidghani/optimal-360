@@ -229,7 +229,6 @@ const GroupReports = ({
             value={value}
             placeholder="External Benchmark"
             fixedHeightForErrorMessage={false}
-            errorMessage={value ? '' : 'value cannot be empty'}
             formatter={(newVal) => `${newVal}`}
             parser={(newVal) => newVal.replace('', '')}
             precision={2}
@@ -258,9 +257,9 @@ const GroupReports = ({
         className="p-6 mt-5 bg-white rounded-lg shadow c-table-selection-lg"
         loading={loading}
         columns={columns}
+        rowSelection={false}
         dataSource={tableData}
         renderHeader={renderHeader}
-        selectedRowKeys={selectedRows?.map((el) => el.id.toString())}
         onRowSelectionChange={(_, rows) => setSelectedRows(rows)}
         pagination={false}
         footer={renderFooter}
