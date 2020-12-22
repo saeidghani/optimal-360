@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 import { QuestionOutlined } from '@ant-design/icons';
@@ -20,7 +20,6 @@ const Questions = ({
   onNext,
   onBack,
   dataSource,
-  options,
   showErr,
 }) => {
   const [visible, setVisible] = React.useState(false);
@@ -79,8 +78,13 @@ const Questions = ({
   }, [questions.timeStamp, showErr]);
 
   const columns = React.useMemo(() => {
-    const zeroScoreIndex = options?.findIndex(({ score }) => score?.toString() === '0');
-    const arrangedOptions = arrayMove(options, zeroScoreIndex, -1);
+    const zeroScoreIndex = questions?.data?.options?.findIndex(
+      ({ score }) => score?.toString() === '0',
+    );
+    let arrangedOptions = [];
+    if (questions?.data?.options) {
+      arrangedOptions = arrayMove(questions?.data?.options, zeroScoreIndex, -1);
+    }
     // eslint-disable-next-line no-unused-expressions
     const scoreColumns = arrangedOptions?.map(({ label, score, description }) => ({
       key: score,
@@ -133,7 +137,7 @@ const Questions = ({
       },
       ...scoreColumns,
     ];
-  }, [relationValues]);
+  }, [relationValues, questions?.timeStamp]);
 
   const handleNext = () => {
     onNext();
@@ -173,33 +177,37 @@ const Questions = ({
           <p>You have not completed this survey, are you sure to exit?</p>
         </div>
       </Modal>
-      <div className="p-4 mt-6 bg-white rounded-lg shadow md:hidden">{renderHeader()}</div>
-      <Table
-        size="middle"
-        className="c-table-last-column-divide p-4 mt-8 md:mt-16 md:p-6 bg-white rounded-lg shadow"
-        tableClassName="overflow-auto"
-        rowKey="key"
-        loading={loading}
-        columns={columns}
-        dataSource={dataSource}
-        title={() => <div className="hidden md:block">{renderHeader()}</div>}
-        pageNumber={1}
-        rowSelection={false}
-        pagination={false}
-      />
-      <div className="flex flex-col items-center md:flex-row-reverse">
-        <Button
-          className="mt-6 px-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
-          text="Next"
-          onClick={handleNext}
-        />
-        <Button
-          className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none
+      {questions?.data?.options && (
+        <Fragment>
+          <div className="p-4 mt-6 bg-white rounded-lg shadow md:hidden">{renderHeader()}</div>
+          <Table
+            size="middle"
+            className="c-table-last-column-divide p-4 mt-8 md:mt-16 md:p-6 bg-white rounded-lg shadow"
+            tableClassName="overflow-auto"
+            rowKey="key"
+            loading={loading}
+            columns={columns}
+            dataSource={dataSource}
+            title={() => <div className="hidden md:block">{renderHeader()}</div>}
+            pageNumber={1}
+            rowSelection={false}
+            pagination={false}
+          />
+          <div className="flex flex-col items-center md:flex-row-reverse">
+            <Button
+              className="mt-6 px-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
+              text="Next"
+              onClick={handleNext}
+            />
+            <Button
+              className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none
           w-full md:mr-4 md:w-auto md:border-none"
-          text="Back"
-          onClick={handleBack}
-        />
-      </div>
+              text="Back"
+              onClick={handleBack}
+            />
+          </div>
+        </Fragment>
+      )}
     </div>
   );
 };
