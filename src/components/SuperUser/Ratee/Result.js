@@ -67,13 +67,12 @@ const Result = ({
                   text="Force generate report"
                   textClassName="mr-2"
                   className="ml-3"
-                  onClick={() =>
-                    alert('comming soon')
-                    // generateReport({
-                    //   projectId: parseInt(parsedQuery.projectId),
-                    //   surveyGroupIds: selectedRows.map((el) => el.id),
-                    // })
-                  }
+                //   onClick={() => {
+                // generateReport({
+                //   projectId: parseInt(parsedQuery.projectId),
+                //   surveyGroupIds: selectedRows.map((el) => el.id),
+                // })
+                // }
                 />
                 : null
             }
@@ -130,6 +129,12 @@ const Result = ({
                   textClassName="mr-2"
                   className="ml-3"
                   icon="FileExcelOutlined"
+                  onClick={() =>
+                    generateReport({
+                      // eslint-disable-next-line radix
+                      projectId: parseInt(parsedQuery.projectId),
+                      surveyGroupIds: selectedRows.map((el) => el.id),
+                    })}
                   iconPosition="right"
                 /> : null
             }
