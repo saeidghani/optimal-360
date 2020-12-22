@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -24,13 +24,13 @@ const RateeGroupQuestions = ({
   const [relationValues, setRelationValues] = React.useState({});
   const [showErr, setShowErr] = React.useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (surveyGroupId) {
       fetchRelations({ surveyGroupId });
     }
   }, [fetchRelations, surveyGroupId]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (surveyGroupId && questionNumber && relation) {
       let relationIds = '';
       let allRelationValues = {};
@@ -51,13 +51,13 @@ const RateeGroupQuestions = ({
     }
   }, [fetchQuestions, surveyGroupId, questionNumber, relations, relation]);
 
-  React.useEffect(() => {
-    const newRelationValues = { ...relationValues };
+  useEffect(() => {
+    const newRelationValues = {};
     // eslint-disable-next-line no-unused-expressions
     questions?.data?.responses?.forEach((res) => {
-      newRelationValues[res.relationId] = res?.responseScore?.toString();
+      newRelationValues[res.relationId] = res?.responseScore?.toString() || '';
     });
-    setRelationValues(newRelationValues);
+    setRelationValues({ ...relationValues, ...newRelationValues });
   }, [questions]);
 
   const dataSource = React.useMemo(() => {
@@ -98,7 +98,7 @@ const RateeGroupQuestions = ({
       if (questions?.data?.question?.required && !relationValues[key]) return;
       const response = {
         relationId: key * 1,
-        responseScore: relationValues[key] === '' ? null : relationValues[key] * 1,
+        responseScore: !relationValues[key] ? null : relationValues[key] * 1,
       };
       // eslint-disable-next-line no-unused-expressions
       questions?.data?.responses.forEach((res) => {
@@ -106,12 +106,14 @@ const RateeGroupQuestions = ({
       });
       responses.push(response);
     });
+    console.log(responses?.length);
+    console.log(Object.keys(relationValues)?.length);
+
     if (responses?.length !== Object.keys(relationValues)?.length) {
       setShowErr(true);
       return;
     }
     setShowErr(false);
-
     const questionId = questions?.data?.question?.id;
     if (questionNumber <= questions?.data?.totalQuestions) {
       try {
@@ -136,6 +138,16 @@ const RateeGroupQuestions = ({
     }
   };
 
+  const handleBack = () => {
+    setShowErr(false);
+    history.push(
+      `${dynamicMap.surveyPlatform.rateeGroupQuestions({
+        surveyGroupId,
+        questionNumber: questionNumber * 1 - 1,
+      })}${stringify({ relation })}`,
+    );
+  };
+
   return (
     <Layout hasBreadCrumb>
       <Questions
@@ -145,6 +157,7 @@ const RateeGroupQuestions = ({
         questions={questions}
         relationValues={relationValues}
         showErr={showErr}
+        onBack={handleBack}
         onSetRelationValues={(e, item, key) =>
           setRelationValues({ ...relationValues, [key]: item?.value })
         }

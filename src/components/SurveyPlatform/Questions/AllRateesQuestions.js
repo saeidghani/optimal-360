@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -6,6 +6,7 @@ import Layout from '../../Common/SurveyPlatformLayout';
 import { dynamicMap } from '../../../routes/RouteMap';
 
 import Questions from './Helper/Questions';
+import { stringify } from '../../../hooks/useQuery';
 
 const AllRateesQuestions = ({
   loading,
@@ -26,13 +27,13 @@ const AllRateesQuestions = ({
     [relations.timeStamp],
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (surveyGroupId) {
       fetchRelations({ surveyGroupId });
     }
   }, [fetchRelations, surveyGroupId]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (surveyGroupId && questionNumber && allRelationIds?.length > 0) {
       let relationIds = '';
       let allRelationValues = {};
@@ -49,13 +50,13 @@ const AllRateesQuestions = ({
     }
   }, [fetchQuestions, surveyGroupId, questionNumber, allRelationIds]);
 
-  React.useEffect(() => {
-    const newRelationValues = { ...relationValues };
+  useEffect(() => {
+    const newRelationValues = {};
     // eslint-disable-next-line no-unused-expressions
     questions?.data?.responses?.forEach((res) => {
-      newRelationValues[res.relationId] = res?.responseScore?.toString();
+      newRelationValues[res.relationId] = res?.responseScore?.toString() || null;
     });
-    setRelationValues(newRelationValues);
+    setRelationValues({ ...relationValues, ...newRelationValues });
   }, [questions]);
 
   const dataSource = React.useMemo(() => {
@@ -92,7 +93,7 @@ const AllRateesQuestions = ({
       if (questions?.data?.question?.required && !relationValues[key]) return;
       const response = {
         relationId: key * 1,
-        responseScore: relationValues[key] === '' ? null : relationValues[key] * 1,
+        responseScore: !relationValues[key] ? null : relationValues[key] * 1,
       };
       // eslint-disable-next-line no-unused-expressions
       questions?.data?.responses.forEach((res) => {
@@ -130,6 +131,16 @@ const AllRateesQuestions = ({
     }
   };
 
+  const handleBack = () => {
+    setShowErr(false);
+    history.push(
+      dynamicMap.surveyPlatform.allRateesQuestions({
+        surveyGroupId,
+        questionNumber: questionNumber * 1 - 1,
+      }),
+    );
+  };
+
   return (
     <Layout hasBreadCrumb>
       <Questions
@@ -139,6 +150,7 @@ const AllRateesQuestions = ({
         dataSource={dataSource}
         questions={questions}
         relationValues={relationValues}
+        onBack={handleBack}
         onSetRelationValues={(e, item, key) => {
           setRelationValues({ ...relationValues, [key]: item?.value });
         }}

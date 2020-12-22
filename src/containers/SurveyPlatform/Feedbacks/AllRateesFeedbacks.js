@@ -26,7 +26,7 @@ class AllRateesFeedbacks extends Component {
   };
 
   render() {
-    const { loading, feedbacks, relations } = this.props;
+    const { loading, questions, feedbacks, relations } = this.props;
 
     return (
       <Layout
@@ -34,6 +34,7 @@ class AllRateesFeedbacks extends Component {
         fetchRelations={this.fetchRelations}
         fetchFeedbacks={this.fetchFeedbacks}
         addFeedbackResponses={this.addFeedbackResponses}
+        questions={questions}
         relations={relations}
         feedbacks={feedbacks}
       />
@@ -46,17 +47,20 @@ AllRateesFeedbacks.propTypes = {
   fetchFeedbacks: PropTypes.func.isRequired,
   fetchRelations: PropTypes.func.isRequired,
   addFeedbackResponses: PropTypes.func.isRequired,
+  questions: PropTypes.shape({}),
   feedbacks: PropTypes.shape({}),
   relations: PropTypes.shape({}),
 };
 
 AllRateesFeedbacks.defaultProps = {
+  questions: {},
   feedbacks: {},
   relations: {},
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
+  questions: state.surveyPlatform?.questions || {},
   feedbacks: state.surveyPlatform?.feedbacks || {},
   relations: state.surveyPlatform?.relations || {},
 });

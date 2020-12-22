@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -19,37 +19,35 @@ const IndividualQuestions = ({
   const history = useHistory();
   const { surveyGroupId, questionNumber } = useParams();
   const [parsedQuery] = useQuery();
-  const { relationId } = parsedQuery;
+  const { relationId } = parsedQuery || {};
 
   const [relationValues, setRelationValues] = React.useState({});
   const [showErr, setShowErr] = React.useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (surveyGroupId) {
       fetchRelations({ surveyGroupId });
     }
   }, [fetchRelations, surveyGroupId]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (surveyGroupId && questionNumber && relationId) {
+      setRelationValues({ [relationId]: '' });
       fetchQuestions({
         surveyGroupId,
         questionNumber,
         relationIds: `relation_ids[]=${relationId}`,
       });
     }
-    setRelationValues({ [relationId]: '' });
   }, [fetchQuestions, surveyGroupId, questionNumber, relationId]);
 
-  React.useEffect(() => {
-    const newRelationValues = { ...relationValues };
+  useEffect(() => {
     if (questions?.data?.responses?.length > 0) {
-      // eslint-disable-next-line no-unused-expressions
-      questions?.data?.responses?.forEach((res) => {
-        newRelationValues[res.relationId] = res?.responseScore?.toString();
-      });
+      const newRelationValues = {};
+      newRelationValues[relationId] =
+        questions?.data?.responses[0]?.responseScore?.toString() || '';
+      setRelationValues({ ...relationValues, ...newRelationValues });
     }
-    setRelationValues(newRelationValues);
   }, [questions]);
 
   const dataSource = React.useMemo(() => {
@@ -94,10 +92,7 @@ const IndividualQuestions = ({
         }
       });
     });
-    if (
-      !Object.keys(relationValues)?.length ||
-      (questions?.data?.question?.required && response?.responseScore === null)
-    ) {
+    if (questions?.data?.question?.required && response?.responseScore === null) {
       setShowErr(true);
       return;
     }
@@ -128,6 +123,16 @@ const IndividualQuestions = ({
     }
   };
 
+  const handleBack = () => {
+    setShowErr(false);
+    history.push(
+      `${dynamicMap.surveyPlatform.individualQuestions({
+        surveyGroupId,
+        questionNumber: questionNumber * 1 - 1,
+      })}${stringify({ relationId })}`,
+    );
+  };
+
   return (
     <Layout hasBreadCrumb>
       <Questions
@@ -141,6 +146,7 @@ const IndividualQuestions = ({
           setRelationValues({ ...relationValues, [key]: item?.value })
         }
         onNext={submitResponse}
+        onBack={handleBack}
       />
     </Layout>
   );
@@ -160,7 +166,7 @@ IndividualQuestions.propTypes = {
         required: PropTypes.bool,
       }),
       options: PropTypes.arrayOf(PropTypes.shape({})),
-      responses: PropTypes.arrayOf(PropTypes.shape({})),
+      responses: PropTypes.arrayOf(PropTypes.shape({ responseScore: PropTypes.string })),
     }),
     timeStamp: PropTypes.number,
   }),
