@@ -67,12 +67,7 @@ const Result = ({
                   text="Force generate report"
                   textClassName="mr-2"
                   className="ml-3"
-                //   onClick={() => {
-                // generateReport({
-                //   projectId: parseInt(parsedQuery.projectId),
-                //   surveyGroupIds: selectedRows.map((el) => el.id),
-                // })
-                // }
+                  onClick={() => { }}
                 />
                 : null
             }
