@@ -1,15 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import Button from '../../../Common/Button';
 import Progress from '../../../Common/Progress';
 import TextArea from '../../../Common/TextArea';
-import Modal from '../../../Common/Modal';
 import Loading from '../../../Common/Loading';
-
-import { dynamicMap } from '../../../../routes/RouteMap';
 
 const Feedbacks = ({
   loading,
@@ -18,48 +15,18 @@ const Feedbacks = ({
   ratees,
   relationValues,
   onSetRelationValues,
+  onBack,
   showErr,
 }) => {
-  const [visible, setVisible] = React.useState(false);
-
-  const history = useHistory();
   const { feedbackNumber } = useParams();
 
   const handleNext = () => {
     onNext();
   };
 
-  const handleBack = () => {
-    setVisible(true);
-  };
-
-  const handleOk = () => {
-    setVisible(false);
-    history.push(dynamicMap.surveyPlatform.dashboard());
-  };
-
-  const handleCancel = () => {
-    setVisible(false);
-  };
-
   return (
     <div>
       <Loading visible={loading} />
-      <Modal
-        visible={visible}
-        handleCancel={handleCancel}
-        handleOk={handleOk}
-        width={588}
-        cancelText="Continue to Answer"
-        okText="Yes, Exit!"
-        okButtonProps={{ danger: true }}
-        cancelButtonProps={{ textClassName: 'text-red-500' }}
-      >
-        <div className="flex flex-col">
-          <span className="text-2xl mb-4">Attention!</span>
-          <p>You have not completed this survey, are you sure to exit?</p>
-        </div>
-      </Modal>
       <div className="px-4 py-6 mt-16 flex flex-col justify-between md:px-8 md:bg-white md:rounded-lg md:shadow">
         {feedbacks?.data?.totalFeedbacks && (
           <div>
@@ -130,7 +97,7 @@ const Feedbacks = ({
           textSize="base"
         />
         <Button
-          onClick={handleBack}
+          onClick={onBack}
           text="Back"
           className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none w-full
           md:mr-6 md:w-auto md:border-none"
@@ -161,6 +128,7 @@ Feedbacks.propTypes = {
     timeStamp: PropTypes.number,
   }),
   onSetRelationValues: PropTypes.func.isRequired,
+  onBack: PropTypes.func.isRequired,
   onNext: PropTypes.func.isRequired,
   ratees: PropTypes.arrayOf(PropTypes.shape({})),
   relationValues: PropTypes.shape({}),

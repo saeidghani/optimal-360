@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -11,6 +11,7 @@ import Feedbacks from './Helper/Feedbacks';
 
 const RateeGroupFeedbacks = ({
   loading,
+  questions,
   feedbacks,
   relations,
   fetchRelations,
@@ -115,6 +116,24 @@ const RateeGroupFeedbacks = ({
     }
   };
 
+  const handleBack = () => {
+    if (feedbackNumber?.toString() === '1') {
+      history.push(
+        `${dynamicMap.surveyPlatform.rateeGroupQuestions({
+          surveyGroupId,
+          questionNumber: questions?.data?.totalQuestions,
+        })}${stringify({ relation })}`,
+      );
+    } else {
+      history.push(
+        `${dynamicMap.surveyPlatform.rateeGroupFeedbacks({
+          surveyGroupId,
+          feedbackNumber: feedbackNumber * 1 - 1,
+        })}${stringify({ relation })}`,
+      );
+    }
+  };
+
   return (
     <Layout hasBreadCrumb>
       <Feedbacks
@@ -127,6 +146,7 @@ const RateeGroupFeedbacks = ({
           setRelationValues({ ...relationValues, [ratee?.rateeId]: e.target.value })
         }
         onNext={submitResponse}
+        onBack={handleBack}
       />
     </Layout>
   );
@@ -137,6 +157,11 @@ RateeGroupFeedbacks.propTypes = {
   fetchRelations: PropTypes.func.isRequired,
   fetchFeedbacks: PropTypes.func.isRequired,
   addFeedbackResponses: PropTypes.func.isRequired,
+  questions: PropTypes.shape({
+    data: PropTypes.shape({
+      totalQuestions: PropTypes.number,
+    }),
+  }),
   feedbacks: PropTypes.shape({
     data: PropTypes.shape({
       totalFeedbacks: PropTypes.number,
@@ -157,6 +182,7 @@ RateeGroupFeedbacks.propTypes = {
 };
 
 RateeGroupFeedbacks.defaultProps = {
+  questions: {},
   feedbacks: {},
   relations: {},
 };

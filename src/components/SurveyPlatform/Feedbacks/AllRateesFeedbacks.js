@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -9,6 +9,7 @@ import Feedbacks from './Helper/Feedbacks';
 
 const AllRateesFeedbacks = ({
   loading,
+  questions,
   feedbacks,
   relations,
   fetchRelations,
@@ -18,21 +19,21 @@ const AllRateesFeedbacks = ({
   const history = useHistory();
   const { surveyGroupId, feedbackNumber } = useParams();
 
-  const [relationValues, setRelationValues] = React.useState({});
-  const [showErr, setShowErr] = React.useState(false);
+  const [relationValues, setRelationValues] = useState({});
+  const [showErr, setShowErr] = useState(false);
 
   const allRelationIds = React.useMemo(
     () => relations?.data?.map((relation) => relation.relationId),
     [relations.timeStamp],
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (surveyGroupId) {
       fetchRelations({ surveyGroupId });
     }
   }, [fetchRelations, surveyGroupId]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (surveyGroupId && feedbackNumber && allRelationIds?.length > 0) {
       let relationIds = '';
       let allRelationValues = {};
@@ -108,6 +109,24 @@ const AllRateesFeedbacks = ({
     }
   };
 
+  const handleBack = () => {
+    if (feedbackNumber?.toString() === '1') {
+      history.push(
+        dynamicMap.surveyPlatform.allRateesQuestions({
+          surveyGroupId,
+          questionNumber: questions?.data?.totalQuestions,
+        }),
+      );
+    } else {
+      history.push(
+        dynamicMap.surveyPlatform.allRateesFeedbacks({
+          surveyGroupId,
+          feedbackNumber: feedbackNumber * 1 - 1,
+        }),
+      );
+    }
+  };
+
   return (
     <Layout hasBreadCrumb>
       <Feedbacks
@@ -120,6 +139,7 @@ const AllRateesFeedbacks = ({
           setRelationValues({ ...relationValues, [ratee?.rateeId]: e.target.value })
         }
         onNext={submitResponse}
+        onBack={handleBack}
       />
     </Layout>
   );
@@ -130,6 +150,11 @@ AllRateesFeedbacks.propTypes = {
   fetchRelations: PropTypes.func.isRequired,
   fetchFeedbacks: PropTypes.func.isRequired,
   addFeedbackResponses: PropTypes.func.isRequired,
+  questions: PropTypes.shape({
+    data: PropTypes.shape({
+      totalQuestions: PropTypes.number,
+    }),
+  }),
   feedbacks: PropTypes.shape({
     data: PropTypes.shape({
       totalFeedbacks: PropTypes.number,
@@ -150,6 +175,7 @@ AllRateesFeedbacks.propTypes = {
 };
 
 AllRateesFeedbacks.defaultProps = {
+  questions: {},
   feedbacks: {},
   relations: {},
 };
