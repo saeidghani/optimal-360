@@ -153,7 +153,6 @@ const RateeGroupQuestions = ({
       <Questions
         loading={loading}
         dataSource={dataSource}
-        options={questions?.data?.options}
         questions={questions}
         relationValues={relationValues}
         showErr={showErr}

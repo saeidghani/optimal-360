@@ -146,7 +146,6 @@ const AllRateesQuestions = ({
       <Questions
         loading={loading}
         showErr={showErr}
-        options={questions?.data?.options}
         dataSource={dataSource}
         questions={questions}
         relationValues={relationValues}
