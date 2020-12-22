@@ -259,7 +259,17 @@ const RaterSelection = ({
               className="w-24.5 h-9.5"
               type="link"
               text="Prev"
-              onClick={() => history.goBack()}
+              onClick={() => {
+                if (parsedQuery?.isEdit) {
+                  const params = stringify({ projectId, surveyGroupId, rateeId });
+                  const path = `${dynamicMap.superUser.editRatee()}${params}`;
+                  history.push(path);
+                } else {
+                  const params = stringify({ projectId, surveyGroupId });
+                  const path = `${dynamicMap.superUser.addRatee()}${params}`;
+                  history.push(path);
+                }
+              }}
             />
             <Button
               className="w-24.5 h-9.5"

@@ -164,7 +164,8 @@ const Result = ({
                 placeholder="Search"
                 loading={loading}
                 value={parsedQuery?.q || ''}
-                onSearch={(val) => setQuery({ q: val })}
+                onChange={(e) => setQuery({ q: e.target.value })}
+                onSearch={(e) => setQuery({ q: e.target.value })}
                 onPressEnter={(e) => setQuery({ q: e.target.value })}
               />
             )}
@@ -188,7 +189,7 @@ const Result = ({
           </div>
         </div>
       );
-  }, [loading, selectedRows.length, resultBy]);
+  }, [loading, selectedRows.length, resultBy, parsedQuery?.q]);
 
   const individualColumns = React.useMemo(() => [
     {

@@ -254,10 +254,10 @@ const GroupReports = ({
       <Table
         onTableChange={({ sorter }) => sort(sorter)}
         size="middle"
+        selectedRowKeys={selectedRows?.map((el) => el.id.toString())}
         className="p-6 mt-5 bg-white rounded-lg shadow c-table-selection-lg"
         loading={loading}
         columns={columns}
-        rowSelection={false}
         dataSource={tableData}
         renderHeader={renderHeader}
         onRowSelectionChange={(_, rows) => setSelectedRows(rows)}
