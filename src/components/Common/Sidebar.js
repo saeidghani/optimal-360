@@ -8,6 +8,7 @@ import { dynamicMap } from '../../routes/RouteMap';
 
 import Button from './Button';
 import Modal from './Modal';
+import Tooltip from './Tooltip';
 
 import logo from '../../assets/images/360-icon.svg';
 
@@ -52,106 +53,111 @@ const Sidebar = ({ wizardLayout }) => {
       </div>
 
       <div className="w-full flex flex-col justify-center items-center">
-        <Button
-          onClick={() => {
-            const path = dynamicMap.superUser.projectsList();
-            const params = stringify({
-              page_size: 10,
-              page_number: 1,
-              status: 'active',
-            });
+        <Tooltip title="Projects">
+          <Button
+            onClick={() => {
+              const path = dynamicMap.superUser.projectsList();
+              const params = stringify({
+                page_size: 10,
+                page_number: 1,
+                status: 'active',
+              });
 
-            const fullUrl = `${path}${params}`;
+              const fullUrl = `${path}${params}`;
 
-            if (wizardLayout) {
-              setSelectedPath(fullUrl);
-            } else {
-              history.push(fullUrl);
-            }
-          }}
-          type="text"
-          size="middle"
-          className={`border-0 py-8 w-full flex flex-row justify-center items-center
+              if (wizardLayout) {
+                setSelectedPath(fullUrl);
+              } else {
+                history.push(fullUrl);
+              }
+            }}
+            type="text"
+            size="middle"
+            className={`border-0 py-8 w-full flex flex-row justify-center items-center
            text-center text-2xl hover:text-primary-500 bg-transparent ${
              pathname === dynamicMap.superUser.projectsList()
                ? activeClassNames
                : 'focus:text-antgray-100 hover:text-antgray-100 text-antgray-100'
            } `}
-        >
-          <svg className="fill-current" width="1em" height="1em" fill="none">
-            <path
-              d="M16 20H8a3 3 0 01-3-3V7a1 1 0 00-2 0v10a5 5 0 005 5h8a1 1 0 000-2zm-6-7a1
+          >
+            <svg className="fill-current" width="1em" height="1em" fill="none">
+              <path
+                d="M16 20H8a3 3 0 01-3-3V7a1 1 0 00-2 0v10a5 5 0 005 5h8a1 1 0 000-2zm-6-7a1
               1 0 001 1h5a1 1 0 000-2h-5a1 1 0 00-1 1zm11-4.06a1.307 1.307 0 00-.06-.27v-.09a1.07
               1.07 0 00-.19-.28l-6-6a1.071 1.071 0 00-.28-.19.32.32 0 00-.09 0 .88.88 0 00-.33-.11H10a3
               3 0 00-3 3v10a3 3 0 003 3h8a3 3 0 003-3V8.94zm-6-3.53L17.59 8H16a1 1 0 01-1-1V5.41zM19
               15a1 1 0 01-1 1h-8a1 1 0 01-1-1V5a1 1 0 011-1h3v3a3 3 0 00.18 1H11a1 1 0 100 2h8v5z"
-            />
-          </svg>
-        </Button>
+              />
+            </svg>
+          </Button>
+        </Tooltip>
 
-        <Button
-          onClick={() => {
-            const path = dynamicMap.superUser.organizationsList();
-            const params = stringify({
-              page_size: 10,
-              page_number: 1,
-            });
+        <Tooltip title="Organizations">
+          <Button
+            onClick={() => {
+              const path = dynamicMap.superUser.organizationsList();
+              const params = stringify({
+                page_size: 10,
+                page_number: 1,
+              });
 
-            const fullUrl = `${path}${params}`;
+              const fullUrl = `${path}${params}`;
 
-            if (wizardLayout) {
-              setSelectedPath(fullUrl);
-            } else {
-              history.push(fullUrl);
-            }
-          }}
-          type="text"
-          size="middle"
-          className={`border-0 py-8 w-full flex flex-row justify-center items-center
+              if (wizardLayout) {
+                setSelectedPath(fullUrl);
+              } else {
+                history.push(fullUrl);
+              }
+            }}
+            type="text"
+            size="middle"
+            className={`border-0 py-8 w-full flex flex-row justify-center items-center
            text-center text-2xl  hover:text-primary-500 bg-transparent ${
              pathname === dynamicMap.superUser.organizationsList()
                ? activeClassNames
                : 'focus:text-antgray-100 hover:text-antgray-100 text-antgray-100'
            } `}
-        >
-          <svg className="fill-current" width="1em" height="1em" fill="none">
-            <path
-              d="M14 8h1a1 1 0 100-2h-1a1 1 0 100 2zm0 4h1a1 1 0 000-2h-1a1 1 0 000 2zM9 8h1a1
+          >
+            <svg className="fill-current" width="1em" height="1em" fill="none">
+              <path
+                d="M14 8h1a1 1 0 100-2h-1a1 1 0 100 2zm0 4h1a1 1 0 000-2h-1a1 1 0 000 2zM9 8h1a1
               1 0 100-2H9a1 1 0 000 2zm0 4h1a1 1 0 000-2H9a1 1 0 000 2zm12 8h-1V3a1 1 0 00-1-1H5a1
               1 0 00-1 1v17H3a1 1 0 000 2h18a1 1 0 000-2zm-8 0h-2v-4h2v4zm5 0h-3v-5a1 1 0 00-1-1h-4a1
               1 0 00-1 1v5H6V4h12v16z"
-            />
-          </svg>
-        </Button>
+              />
+            </svg>
+          </Button>
+        </Tooltip>
 
-        <Button
-          onClick={() => {
-            const path = dynamicMap.superUser.bankModels();
-            const params = stringify({
-              page_size: 10,
-              page_number: 1,
-            });
+        <Tooltip title="Bank">
+          <Button
+            onClick={() => {
+              const path = dynamicMap.superUser.bankModels();
+              const params = stringify({
+                page_size: 10,
+                page_number: 1,
+              });
 
-            const fullUrl = `${path}${params}`;
+              const fullUrl = `${path}${params}`;
 
-            if (wizardLayout) {
-              setSelectedPath(fullUrl);
-            } else {
-              history.push(fullUrl);
-            }
-          }}
-          type="text"
-          size="middle"
-          className={`border-0 py-8 w-full flex flex-row justify-center items-center
+              if (wizardLayout) {
+                setSelectedPath(fullUrl);
+              } else {
+                history.push(fullUrl);
+              }
+            }}
+            type="text"
+            size="middle"
+            className={`border-0 py-8 w-full flex flex-row justify-center items-center
            text-center text-2xl hover:text-primary-500 bg-transparent ${
              pathname === dynamicMap.superUser.bankModels()
                ? activeClassNames
                : 'focus:text-antgray-100 hover:text-antgray-100 text-antgray-100'
            } `}
-        >
-          <svg className="fill-current" width="1em" height="1em" fill="none">
-            <path
-              d="M8 16.5C7.80222 16.5 7.60888 16.5586 7.44443 16.6685C7.27998 16.7784
+          >
+            <svg className="fill-current" width="1em" height="1em" fill="none">
+              <path
+                d="M8 16.5C7.80222 16.5 7.60888 16.5586 7.44443 16.6685C7.27998 16.7784
               7.15181 16.9346 7.07612 17.1173C7.00043 17.3 6.98063 17.5011 7.01921
               17.6951C7.0578 17.8891 7.15304 18.0673 7.29289 18.2071C7.43275 18.347
               7.61093 18.4422 7.80491 18.4808C7.99889 18.5194 8.19996 18.4996 8.38268
@@ -171,9 +177,10 @@ const Sidebar = ({ wizardLayout }) => {
               8.38268 12.4239C8.56541 12.3482 8.72159 12.22 8.83147 12.0556C8.94135
               11.8911 9 11.6978 9 11.5C9 11.2348 8.89464 10.9804 8.70711
               10.7929C8.51957 10.6054 8.26522 10.5 8 10.5Z"
-            />
-          </svg>
-        </Button>
+              />
+            </svg>
+          </Button>
+        </Tooltip>
 
         {/* <Link
           className={`py-5 w-full flex flex-row justify-center items-center text-center text-2xl
