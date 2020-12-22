@@ -283,9 +283,8 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
         ) : null}
 
         <div
-          className={`px-6 py-5 col-span-10 ${
-            parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
-          } `}
+          className={`px-6 py-5 col-span-10 ${parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
+            } `}
         >
           <Steps currentPosition={0} />
 
@@ -310,7 +309,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                 const path = dynamicMap.superUser.emailSettings();
                 const params = history?.location?.search;
                 history.push(`${path}${params}`);
-              } catch (error) {}
+              } catch (error) { }
             }}
           >
             {({ values, errors, touched, handleSubmit, setFieldValue }) => (
@@ -399,7 +398,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                           disabled={!!(values.raterGroups?.length > 4)}
                           onClick={addTableRow}
                           textSize="12px"
-                          text="Add Rates Group"
+                          text="Add Rater Group"
                           type="gray"
                         />
                       </div>
