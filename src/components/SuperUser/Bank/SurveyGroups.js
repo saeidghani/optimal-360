@@ -161,7 +161,7 @@ const SurveyGroupCluster = ({
     const newClusters = {
       label: '',
       statement: '',
-      required: false,
+      required: true,
       showOrder,
       index,
       id,

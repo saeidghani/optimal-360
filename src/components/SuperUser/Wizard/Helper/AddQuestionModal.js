@@ -33,7 +33,7 @@ const AddFeedbackModal = ({ visible, onSave, onCancel }) => {
           label: '',
           statement: '',
           statementType: 'positive',
-          required: false,
+          required: true,
         }}
         validationSchema={schema}
         onSubmit={(values) => {

@@ -150,7 +150,7 @@ const SurveyQuestionsList = ({
 
         history.push(`${path}${params}`);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const onMenuClick = ({ clusterId, competencyId, questionId }) => {
@@ -229,7 +229,7 @@ const SurveyQuestionsList = ({
     const newClusters = {
       label: '',
       statement: '',
-      required: false,
+      required: true,
       showOrder,
       index,
       id,
@@ -318,8 +318,8 @@ const SurveyQuestionsList = ({
             parsedQuery?.competencyId
               ? 'Add Question'
               : parsedQuery?.clusterId
-                ? 'Add Competency'
-                : 'Add Cluster'
+              ? 'Add Competency'
+              : 'Add Cluster'
           }
           className="text-base"
           onClick={() => {
@@ -415,8 +415,9 @@ const SurveyQuestionsList = ({
         ) : null}
 
         <div
-          className={`px-6 py-5 col-span-10 ${parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
-            } `}
+          className={`px-6 py-5 col-span-10 ${
+            parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
+          } `}
         >
           <Steps currentPosition={3} />
 
@@ -521,21 +522,21 @@ const SurveyQuestionsList = ({
                         onCancel={() => setSelectedCluster('')}
                       />
                     ) : (
-                            <DraggableTable
-                              tableClassName="clusters-table"
-                              renderHeader={renderHeader}
-                              onClusterEdit={(cluster) => setSelectedCluster(cluster)}
-                              onClusterDelete={(cluster) => deleteCluster({ clusterId: cluster.id })}
-                              onCompetencyEdit={(competency) => setSelectedCompetency(competency)}
-                              onCompetencyDelete={(competency) =>
-                                deleteCluster({ competencyId: competency.id })
-                              }
-                              onQuestionEdit={(question) => setSelectedQuestion(question)}
-                              onQuestionDelete={(question) => deleteCluster({ questionId: question.id })}
-                              data={ClusterUtils.getTableData(parsedQuery, values)}
-                              onSortEnd={onClusterSortEnd}
-                            />
-                          )}
+                      <DraggableTable
+                        tableClassName="clusters-table"
+                        renderHeader={renderHeader}
+                        onClusterEdit={(cluster) => setSelectedCluster(cluster)}
+                        onClusterDelete={(cluster) => deleteCluster({ clusterId: cluster.id })}
+                        onCompetencyEdit={(competency) => setSelectedCompetency(competency)}
+                        onCompetencyDelete={(competency) =>
+                          deleteCluster({ competencyId: competency.id })
+                        }
+                        onQuestionEdit={(question) => setSelectedQuestion(question)}
+                        onQuestionDelete={(question) => deleteCluster({ questionId: question.id })}
+                        data={ClusterUtils.getTableData(parsedQuery, values)}
+                        onSortEnd={onClusterSortEnd}
+                      />
+                    )}
                   </div>
 
                   <div className="col-span-8">
