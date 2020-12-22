@@ -18,13 +18,14 @@ const Questions = ({
   relationValues,
   onSetRelationValues,
   onNext,
+  onBack,
   dataSource,
   options,
   showErr,
 }) => {
   const [visible, setVisible] = React.useState(false);
   const history = useHistory();
-  const { surveyGroupId, questionNumber } = useParams();
+  const { questionNumber } = useParams();
 
   const renderHeader = React.useCallback(() => {
     return (
@@ -142,12 +143,7 @@ const Questions = ({
     if (questionNumber?.toString() === '1') {
       setVisible(true);
     } else {
-      history.push(
-        dynamicMap.surveyPlatform.allRateesQuestions({
-          surveyGroupId,
-          questionNumber: questionNumber * 1 - 1,
-        }),
-      );
+      onBack();
     }
   };
 
@@ -226,6 +222,7 @@ Questions.propTypes = {
   relationValues: PropTypes.shape({}),
   onSetRelationValues: PropTypes.func.isRequired,
   onNext: PropTypes.func.isRequired,
+  onBack: PropTypes.func.isRequired,
   dataSource: PropTypes.arrayOf(PropTypes.shape({})),
   options: PropTypes.arrayOf(PropTypes.shape({})),
   showErr: PropTypes.bool,
