@@ -76,12 +76,6 @@ const Routes = () => (
     <PrivateRoute path={map.superUser.editRatee} exact component={EditRatee} />
 
     <PrivateRoute path={map.superUser.raterSelection} exact component={RaterSelection} />
-
-    {/* TODO: change url */}
-    {/* <PrivateRoute path={map.superUser.editRatee} exact component={AddRateeStep2} /> */}
-    {/* TODO: change url */}
-    {/* <PrivateRoute path={map.superUser.rateesList} exact component={AddRateeStep2} /> */}
-    {/* TODO: change url */}
     <PrivateRoute
       path={map.superUser.ratersList}
       // tab: 'status-overview'||'status-details'||'raters-email'||'result'

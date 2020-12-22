@@ -68,6 +68,7 @@ const RatersEmail = ({
               value={parsedQuery?.q}
               onSearch={(val) => setQuery({ q: val })}
               onPressEnter={(e) => setQuery({ q: e.target.value })}
+              onChange={(e) => setQuery({ q: e.target.value })}
             />
             <Button
               size="middle"

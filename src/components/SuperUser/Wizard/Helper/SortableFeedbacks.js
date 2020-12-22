@@ -11,7 +11,7 @@ import Checkbox from '../../../Common/Checkbox';
 
 const DragHandle = sortableHandle(() => (
   <Button
-    onClick={() => {}}
+    onClick={() => { }}
     className="col-span-1 h-10"
     type="link"
     icon={
@@ -29,7 +29,7 @@ const SortableItem = sortableElement(
       <DragHandle />
 
       <Input
-        placeholder="General"
+        placeholder="Label"
         value={value.label}
         name={`feedbacks[${i}].label`}
         wrapperClassName="col-span-3"
@@ -81,19 +81,19 @@ const SortableFeedbacks = ({
   <SortableContainer onSortEnd={onSortEnd} useDragHandle>
     {items?.length > 0
       ? items
-          .sort((a, b) => a.showOrder - b.showOrder)
-          .map((value, index) => (
-            <SortableItem
-              touched={touched}
-              errors={errors}
-              handleFormChange={handleFormChange}
-              deleteFeedback={deleteFeedback}
-              key={`item-${value.id}`}
-              index={index}
-              i={index}
-              value={value}
-            />
-          ))
+        .sort((a, b) => a.showOrder - b.showOrder)
+        .map((value, index) => (
+          <SortableItem
+            touched={touched}
+            errors={errors}
+            handleFormChange={handleFormChange}
+            deleteFeedback={deleteFeedback}
+            key={`item-${value.id}`}
+            index={index}
+            i={index}
+            value={value}
+          />
+        ))
       : null}
   </SortableContainer>
 );

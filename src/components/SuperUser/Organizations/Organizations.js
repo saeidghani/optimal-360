@@ -39,6 +39,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
             className="text-xs"
             loading={loading}
             onSearch={(val) => setQuery({ q: val })}
+            onChange={(e) => setQuery({ q: e.target.value })}
             onPressEnter={(e) => setQuery({ q: e.target.value })}
             value={parsedQuery?.q}
           />
@@ -144,6 +145,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
         size="middle"
         className="p-6 bg-white rounded-lg shadow"
         loading={loading}
+        on
         columns={columns}
         rowSelection={false}
         dataSource={organizations?.data || []}
