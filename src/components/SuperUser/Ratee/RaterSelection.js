@@ -36,7 +36,7 @@ const RaterSelection = ({
   const projectId = parsedQuery?.projectId;
   const pageNumber = parsedQuery?.page_number;
   const raterGroupId = parsedQuery?.raterGroupId || raterGroups[0]?.id?.toString();
-
+  const isPageOne = parsedQuery?.page_number == 1 ? parsedQuery?.q : null;
   const obj = {
     addRelations: [],
     removeRelations: [],
@@ -48,13 +48,6 @@ const RaterSelection = ({
       description: 'Your changes have been saved successfully!',
     });
   };
-
-  useEffect(() => {
-    fetchRaterGroups({ surveyGroupId });
-    return () => {
-      clearRaterGroups();
-    };
-  }, [surveyGroupId]);
 
   const setObjValue = () => {
     const addItems = selectedRaters?.filter((item) =>
@@ -72,27 +65,16 @@ const RaterSelection = ({
     if (obj?.addRelations?.length > 0 || obj?.removeRelations?.length > 0) {
       submitRaters({ surveyGroupId, rateeId, obj }).then(() => {
         openNotificationWithIcon('success');
-        setQuery({ page_number: 1 });
-        clearSelectedAndDefault();
       });
     }
-  }, [parsedQuery?.q]);
+  }, [parsedQuery?.page_size, parsedQuery?.page_number, isPageOne]);
 
   useEffect(() => {
-    setObjValue();
-    if (obj.addRelations.length > 0 || obj.removeRelations.length > 0) {
-      submitRaters({ surveyGroupId, rateeId, obj }).then(() => {
-        openNotificationWithIcon('success');
-      });
-    }
-
+    fetchRaterGroups({ surveyGroupId });
     return () => {
-      clearSelectedAndDefault();
+      clearRaterGroups();
     };
-  },
-    [submitRaters,
-      parsedQuery?.page_size],
-  );
+  }, [surveyGroupId]);
 
   useEffect(() => {
     if (raterGroupId && parsedQuery?.page_size) {
@@ -100,12 +82,19 @@ const RaterSelection = ({
       setQuery({ raterGroupId });
     }
   }, [fetchStaffForRater,
-    query,
     raterGroupId,
+    query,
+    parsedQuery?.q,
     parsedQuery?.raterGroupId,
-    parsedQuery?.pageSize,
+    parsedQuery?.page_size,
     parsedQuery?.page_number,
   ]);
+
+  useEffect(() => {
+    setQuery({ page_number: 1 });
+  },
+    [parsedQuery?.q],
+  );
 
   useEffect(() => {
     if (!parsedQuery?.page_number || !parsedQuery?.page_size || !parsedQuery?.status) {
