@@ -14,6 +14,7 @@ const Feedbacks = ({
   onNext,
   ratees,
   relationValues,
+  totalRelations,
   onSetRelationValues,
   onBack,
   showErr,
@@ -31,10 +32,18 @@ const Feedbacks = ({
         {feedbacks?.data?.totalFeedbacks && (
           <div>
             <p>
-              1. {feedbacks?.data?.feedback?.statement}
+              {feedbackNumber}. {feedbacks?.data?.feedback?.statement}
               {feedbacks?.data?.feedback?.required && <span className="text-red-500">*</span>}
             </p>
-            {showErr && <p className="text-red-500 mt-2">Please answer all the questions</p>}
+            {showErr && (
+              <p className="text-red-500 mt-2">
+                {totalRelations === 1 ? (
+                  <span>Please answer the question</span>
+                ) : (
+                  <span>Please answer all the questions</span>
+                )}
+              </p>
+            )}
             <div
               className="flex justify-between md:border-b md:border-solid
             md:border-gray-200 md:pb-4"
@@ -56,13 +65,13 @@ const Feedbacks = ({
               </div>
               <div className="flex ratees-center justify-end md:my-auto">
                 <span className="mr-3">
-                  {parseInt((feedbackNumber / feedbacks?.data?.totalFeedbacks) * 100, 10)}%
+                  {parseInt(((feedbackNumber - 1) / feedbacks?.data?.totalFeedbacks) * 100, 10)}%
                 </span>
                 <div className="w-12 h-12">
                   <Progress
                     showPercent={false}
                     percentage={parseInt(
-                      (feedbackNumber / feedbacks?.data?.totalFeedbacks) * 100,
+                      ((feedbackNumber - 1) / feedbacks?.data?.totalFeedbacks) * 100,
                       10,
                     )}
                   />
@@ -133,6 +142,7 @@ Feedbacks.propTypes = {
   ratees: PropTypes.arrayOf(PropTypes.shape({})),
   relationValues: PropTypes.shape({}),
   showErr: PropTypes.bool,
+  totalRelations: PropTypes.number.isRequired,
 };
 
 Feedbacks.defaultProps = {

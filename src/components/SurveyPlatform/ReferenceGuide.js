@@ -10,7 +10,7 @@ import Radio from '../Common/RadioGroup';
 import TextArea from '../Common/TextArea';
 import { dynamicMap } from '../../routes/RouteMap';
 
-const ReferenceGuide = ({ loading }) => {
+const ReferenceGuide = ({ loading, profileName }) => {
   const [comment, setComment] = React.useState('');
   const items = {
     101: '4',
@@ -118,7 +118,7 @@ const ReferenceGuide = ({ loading }) => {
   ];
 
   return (
-    <Layout title="Reference Guide">
+    <Layout title="Reference Guide" profileName={profileName}>
       <div className="hidden text-left text-heading md:block">Reference Guide</div>
       <h1 className="hidden text-base text-primary-500 font-medium mt-1 md:mt-12 md:block">
         Reference Guide
@@ -281,7 +281,7 @@ const ReferenceGuide = ({ loading }) => {
         <Button
           className="c-force-padding-y-px mt-16 shadow-none w-full px-5 md:w-auto md:border-none"
           text="Ok, Got it!"
-          href={dynamicMap.surveyPlatform.rateeGroupQuestions2({ id: '2' })}
+          href={dynamicMap.surveyPlatform.dashboard()}
         />
       </div>
     </Layout>
@@ -290,6 +290,7 @@ const ReferenceGuide = ({ loading }) => {
 
 ReferenceGuide.propTypes = {
   loading: PropTypes.bool.isRequired,
+  profileName: PropTypes.string.isRequired,
 };
 
 ReferenceGuide.defaultProps = {};

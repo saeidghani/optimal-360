@@ -6,6 +6,7 @@ export default {
   namespace: 'clientAdmin',
 
   state: {
+    userName: '',
     projects: '',
     completionRate: '',
     raterGroups: '',
@@ -137,6 +138,10 @@ export default {
 
       return null;
     },
+    saveUserName: (state, payload) => ({
+      ...state,
+      userName: payload.userName,
+    }),
     fetchProjects_reducer: (state, payload) => ({
       ...state,
       projects: payload,

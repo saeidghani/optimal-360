@@ -15,6 +15,7 @@ const IndividualQuestions = ({
   addQuestionResponses,
   questions,
   relations,
+  profileName,
 }) => {
   const history = useHistory();
   const { surveyGroupId, questionNumber } = useParams();
@@ -134,13 +135,14 @@ const IndividualQuestions = ({
   };
 
   return (
-    <Layout hasBreadCrumb>
+    <Layout hasBreadCrumb profileName={profileName}>
       <Questions
         loading={loading}
         dataSource={dataSource}
         questions={questions}
         relationValues={relationValues}
         showErr={showErr}
+        totalRelations={Object.keys(relationValues)?.length}
         onSetRelationValues={(e, item, key) =>
           setRelationValues({ ...relationValues, [key]: item?.value })
         }
@@ -173,6 +175,7 @@ IndividualQuestions.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({})),
     timeStamp: PropTypes.number,
   }),
+  profileName: PropTypes.string.isRequired,
 };
 
 IndividualQuestions.defaultProps = {

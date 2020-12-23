@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {
   MailOutlined,
   HomeOutlined,
@@ -9,16 +9,14 @@ import {
   TwitterOutlined,
   InstagramOutlined,
   FacebookOutlined,
-  UserOutlined,
 } from '@ant-design/icons';
-import { Avatar } from 'antd';
 
+import Cookie from 'js-cookie';
 import ProfileDropdown from './ProfileDropdown';
 import BreadCrumb from './BreadCrumb';
 
 import { dynamicMap } from '../../routes/RouteMap';
 
-import budgetLogo from '../../assets/images/budgetLogo.png';
 import optimal360Logo from '../../assets/images/optimal360Logo.png';
 
 const ClientAdminLayout = ({
@@ -29,30 +27,19 @@ const ClientAdminLayout = ({
   hasBreadCrumb,
   headerClassName,
   heading,
+  profileName,
 }) => {
+  const history = useHistory();
+
   const profileDropdownOptions = [
     {
       key: 1,
-      title: 'Anthony Hardy',
-      titleClassName: 'md:hidden',
-      icon: <Avatar className="bg-primary-500" icon={<UserOutlined />} />,
-      itemClassName: 'md:hidden',
-      href: '',
-    },
-    { key: 2, title: 'Home', icon: <HomeOutlined />, href: dynamicMap.clientAdmin.dashboard() },
-    {
-      key: 3,
-      title: 'Customer Support',
-      icon: <MailOutlined />,
-      href: '#',
+      title: 'Logout',
       // eslint-disable-next-line no-undef
-      onClick: () => alert('coming soon'),
-    },
-    {
-      key: 4,
-      title: 'Guides',
-      icon: <QuestionCircleOutlined />,
-      href: dynamicMap.clientAdmin.referenceGuide(),
+      onClick: () => {
+        Cookie.remove('token');
+        history.push(dynamicMap.clientAdmin.login());
+      },
     },
   ];
 
@@ -67,7 +54,7 @@ const ClientAdminLayout = ({
       >
         <img src={optimal360Logo} alt="" />
         <div className="lg:ml-16">
-          <img src={budgetLogo} className="w-24 lg:w-32" alt="" />
+          <img src="" className="w-24 lg:w-32" alt="" />
         </div>
         <Link to={dynamicMap.clientAdmin.dashboard()}>
           <div className="flex justify-between items-center text-base">
@@ -75,16 +62,12 @@ const ClientAdminLayout = ({
             <span className="ml-2 text-xs lg:text-base">Home</span>
           </div>
         </Link>
-        <Link to="#">
-          <div
-            /* eslint-disable-next-line no-undef */
-            onClick={() => alert('coming soon')}
-            className="flex justify-between items-center text-gray-500 text-base"
-          >
-            <MailOutlined />
-            <span className="ml-2 text-xs lg:text-base">Customer Support</span>
-          </div>
-        </Link>
+        <div className="flex justify-between items-center text-gray-500 text-base">
+          <MailOutlined />
+          <span className="ml-2 text-xs lg:text-base">
+            <a href="mailto:e360support@optimalconsulting.com.sg">Customer Support</a>
+          </span>
+        </div>
         <Link to={dynamicMap.clientAdmin.referenceGuide()}>
           <div className="flex justify-between items-center text-gray-500 text-base">
             <QuestionCircleOutlined />
@@ -92,7 +75,7 @@ const ClientAdminLayout = ({
           </div>
         </Link>
         <ProfileDropdown
-          title="Anthony Hardy"
+          title={profileName}
           options={profileDropdownOptions}
           iconClassName="pb-1"
         />
@@ -102,8 +85,8 @@ const ClientAdminLayout = ({
           <LeftOutlined />
           <span className="ml-3">{title}</span>
         </div>
-        <img src={budgetLogo} className="ml-auto pr-2" alt="" />
-        <ProfileDropdown title="Anthony Hardy" options={profileDropdownOptions} />
+        <img src="" className="ml-auto pr-2" alt="" />
+        <ProfileDropdown title={profileName} options={profileDropdownOptions} />
       </div>
       <div
         className={`flex flex-col py-6 px-4 mt-8 mb-40 sm:mt-5
@@ -145,6 +128,7 @@ ClientAdminLayout.propTypes = {
   hasBreadCrumb: PropTypes.bool,
   headerClassName: PropTypes.string,
   heading: PropTypes.string,
+  profileName: PropTypes.string,
 };
 
 ClientAdminLayout.defaultProps = {
@@ -153,6 +137,7 @@ ClientAdminLayout.defaultProps = {
   title: '',
   hasBreadCrumb: false,
   headerClassName: '',
+  profileName: '',
   heading: 'Dashboard',
 };
 

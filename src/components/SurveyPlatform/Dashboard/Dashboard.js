@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tabs } from 'antd';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
@@ -24,6 +24,7 @@ const Dashboard = ({
   projects,
   info,
   relations,
+  profileName,
 }) => {
   const [submitModalVisible, setSubmitModalVisible] = useState(false);
   const [thankYouModalVisible, setThankYouModalVisible] = useState(false);
@@ -77,7 +78,7 @@ const Dashboard = ({
   );
 
   useEffect(() => {
-    if (!surveyGroupId && surveyGroups?.length > 0) {
+    if (surveyGroups?.length > 0) {
       setQuery({ surveyGroupId: surveyGroups[0]?.surveyGroupId });
     }
   }, [surveyGroups]);
@@ -126,7 +127,7 @@ const Dashboard = ({
   };
 
   return (
-    <Layout>
+    <Layout profileName={profileName}>
       <Modal
         visible={submitModalVisible}
         handleOk={handleSubmitModalOk}
@@ -163,7 +164,7 @@ const Dashboard = ({
         width={1220}
         closable
         className="relative"
-        footerClassName=""
+        footer={<span />}
         okButtonProps={{ className: 'px-6' }}
       >
         <Welcome loading={loading} {...info?.data?.surveyIntro} />
@@ -231,6 +232,7 @@ Dashboard.propTypes = {
     }),
   }),
   relations: PropTypes.shape({}),
+  profileName: PropTypes.string.isRequired,
 };
 
 Dashboard.defaultProps = {

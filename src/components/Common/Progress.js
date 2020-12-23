@@ -6,11 +6,10 @@ const _Progress = ({
   percentage,
   className,
   subClassName,
-  percentageClassName,
   status,
   type,
   showPercent,
-  width,
+  ...props
 }) => {
   let strokeColor = '';
   if (percentage < 50) {
@@ -31,7 +30,6 @@ const _Progress = ({
         status={status}
         type={type}
         strokeColor={strokeColor}
-        width={width}
         format={
           status === 'sub'
             ? () => (
@@ -47,6 +45,7 @@ const _Progress = ({
               )
             : () => <span />
         }
+        {...props}
       />
     </div>
   );
@@ -56,7 +55,6 @@ _Progress.propTypes = {
   percentage: PropTypes.number,
   className: PropTypes.string,
   subClassName: PropTypes.string,
-  percentageClassName: PropTypes.string,
   status: PropTypes.string,
   type: PropTypes.string,
   showPercent: PropTypes.bool,
@@ -66,7 +64,6 @@ _Progress.defaultProps = {
   percentage: 0,
   className: '',
   subClassName: '',
-  percentageClassName: '',
   status: 'normal', // sub also available
   type: 'circle', // line also available
   showPercent: true,

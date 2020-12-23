@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { HomeOutlined, MailOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
-import BudgetLogo from './BudgetLogo';
 import ProfileDropdown from '../../../Common/ProfileDropdown';
 
 import { dynamicMap } from '../../../../routes/RouteMap';
@@ -41,19 +39,14 @@ const Layout = ({ children, className, wrapperClassName, isLogin }) => {
         <img src={optimal360MiniLogo} className="block md:hidden" alt="" />
         {isLogin && (
           <div className="flex justify-between items-center">
-            <Link to="#">
-              <div
-                /* eslint-disable-next-line no-undef */
-                onClick={() => alert('coming soon')}
-                className="hidden sm:flex justify-between items-center text-gray-500 text-base"
-              >
-                <MailOutlined />
-                <span className="ml-2">Customer Support</span>
-              </div>
-            </Link>
-            <BudgetLogo className="ml-6 lg:ml-16" />
+            <div className="hidden sm:flex justify-between items-center text-gray-500 text-base">
+              <MailOutlined />
+              <span className="ml-2">
+                <a href="mailto:e360support@optimalconsulting.com.sg">Customer Support</a>
+              </span>
+            </div>
             <div className="md:hidden">
-              <ProfileDropdown title="Anthony Hardy" options={profileDropdownOptions} />
+              <ProfileDropdown title="" options={profileDropdownOptions} />
             </div>
           </div>
         )}

@@ -44,7 +44,16 @@ class Dashboard extends Component {
   };
 
   render() {
-    const { loading, projects, completionRate, raterGroups, summary, ratees, raters } = this.props;
+    const {
+      loading,
+      projects,
+      completionRate,
+      raterGroups,
+      summary,
+      ratees,
+      raters,
+      userName,
+    } = this.props;
 
     return (
       <Layout
@@ -61,6 +70,7 @@ class Dashboard extends Component {
         summary={summary}
         ratees={ratees}
         raters={raters}
+        userName={userName}
       />
     );
   }
@@ -80,6 +90,7 @@ Dashboard.propTypes = {
   summary: PropTypes.shape({}),
   ratees: PropTypes.shape({}),
   raters: PropTypes.shape({}),
+  userName: PropTypes.string,
 };
 
 Dashboard.defaultProps = {
@@ -89,6 +100,7 @@ Dashboard.defaultProps = {
   summary: {},
   ratees: {},
   raters: {},
+  userName: '',
 };
 
 const mapStateToProps = (state) => ({
@@ -99,6 +111,7 @@ const mapStateToProps = (state) => ({
   summary: state.clientAdmin?.summary || {},
   ratees: state.clientAdmin?.ratees || {},
   raters: state.clientAdmin?.raters || {},
+  userName: state.clientAdmin?.userName,
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -100,9 +100,9 @@ const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations, isSu
   );
 
   const extraDetails = (
-    <div className="flex flex-col items-center mt-6">
+    <div className="flex flex-col items-center mt-10">
       <div className="md:hidden">{deadlineInfo}</div>
-      <div className="flex items-center mt-10 md:mt-20">
+      <div className="flex items-center">
         <span className="relative w-10 h-10 rounded-full bg-primary-500">
           <img src={graphIcon} className="absolute bottom-0 pb-3 pl-2 w-3/4" alt="" />
         </span>

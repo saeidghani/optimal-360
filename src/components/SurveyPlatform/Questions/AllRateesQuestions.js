@@ -6,7 +6,6 @@ import Layout from '../../Common/SurveyPlatformLayout';
 import { dynamicMap } from '../../../routes/RouteMap';
 
 import Questions from './Helper/Questions';
-import { stringify } from '../../../hooks/useQuery';
 
 const AllRateesQuestions = ({
   loading,
@@ -15,6 +14,7 @@ const AllRateesQuestions = ({
   addQuestionResponses,
   questions,
   relations,
+  profileName,
 }) => {
   const history = useHistory();
   const { surveyGroupId, questionNumber } = useParams();
@@ -142,13 +142,14 @@ const AllRateesQuestions = ({
   };
 
   return (
-    <Layout hasBreadCrumb>
+    <Layout hasBreadCrumb profileName={profileName}>
       <Questions
         loading={loading}
         showErr={showErr}
         dataSource={dataSource}
         questions={questions}
         relationValues={relationValues}
+        totalRelations={Object.keys(relationValues)?.length}
         onBack={handleBack}
         onSetRelationValues={(e, item, key) => {
           setRelationValues({ ...relationValues, [key]: item?.value });
@@ -181,6 +182,7 @@ AllRateesQuestions.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({})),
     timeStamp: PropTypes.number,
   }),
+  profileName: PropTypes.string.isRequired,
 };
 
 AllRateesQuestions.defaultProps = {
