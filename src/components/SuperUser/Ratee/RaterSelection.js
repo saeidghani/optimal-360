@@ -256,7 +256,10 @@ const RaterSelection = ({
               onClick={async () => {
                 try {
                   setObjValue();
-                  await submitRaters({ surveyGroupId, rateeId, obj });
+                  await submitRaters({ surveyGroupId, rateeId, obj }).then(() => {
+                    openNotificationWithIcon('success');
+                  });
+                  clearSelectedAndDefault();
                   const params = stringify({ surveyGroupId, projectId });
                   const path = `${dynamicMap.superUser.ratersList()}${params}`;
                   history.push(path);
