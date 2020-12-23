@@ -69,6 +69,17 @@ const RaterSelection = ({
 
   useEffect(() => {
     setObjValue();
+    if (obj?.addRelations?.length > 0 || obj?.removeRelations?.length > 0) {
+      submitRaters({ surveyGroupId, rateeId, obj }).then(() => {
+        openNotificationWithIcon('success');
+        setQuery({ page_number: 1 });
+        clearSelectedAndDefault();
+      });
+    }
+  }, [parsedQuery?.q]);
+
+  useEffect(() => {
+    setObjValue();
     if (obj.addRelations.length > 0 || obj.removeRelations.length > 0) {
       submitRaters({ surveyGroupId, rateeId, obj }).then(() => {
         openNotificationWithIcon('success');
@@ -80,8 +91,6 @@ const RaterSelection = ({
     };
   },
     [submitRaters,
-      parsedQuery?.q,
-      parsedQuery?.page_number,
       parsedQuery?.page_size],
   );
 
@@ -96,20 +105,7 @@ const RaterSelection = ({
     parsedQuery?.raterGroupId,
     parsedQuery?.pageSize,
     parsedQuery?.page_number,
-    parsedQuery?.q]);
-
-  useEffect(() => {
-    setQuery({
-      page_number: 1,
-      page_size: 10,
-      status: 'active',
-      raterGroupId,
-    });
-
-    return () => {
-      clearSelectedAndDefault();
-    };
-  }, [parsedQuery?.raterGroupId, parsedQuery?.q]);
+  ]);
 
   useEffect(() => {
     if (!parsedQuery?.page_number || !parsedQuery?.page_size || !parsedQuery?.status) {
@@ -138,7 +134,7 @@ const RaterSelection = ({
     setObjValue();
     await submitRaters({ surveyGroupId, rateeId, obj });
     await clearSelectedAndDefault();
-    setQuery({ raterGroupId: raterGroupRedirectId });
+    setQuery({ raterGroupId: raterGroupRedirectId, page_number: 1 });
     setDiscardModalVisible(false);
   };
 
@@ -153,12 +149,12 @@ const RaterSelection = ({
       <div className="flex flex-row justify-start items-center">
         <div className="flex flex-row">
           <SearchBox
-            onSearch={(e) => setQuery({ q: e.target.value })}
+            onSearch={(e) => setQuery({ q: e.target.value, page_number: 1 })}
             className="text-xs"
             placeholder="Search"
             loading={loading}
             value={parsedQuery?.q || ''}
-            onChange={(e) => setQuery({ q: e.target.value })}
+            onChange={(e) => setQuery({ q: e.target.value, pageNumber: 1 })}
           />
         </div>
       </div>
@@ -260,15 +256,9 @@ const RaterSelection = ({
               type="link"
               text="Prev"
               onClick={() => {
-                if (parsedQuery?.isEdit) {
-                  const params = stringify({ projectId, surveyGroupId, rateeId });
-                  const path = `${dynamicMap.superUser.editRatee()}${params}`;
-                  history.push(path);
-                } else {
-                  const params = stringify({ projectId, surveyGroupId });
-                  const path = `${dynamicMap.superUser.addRatee()}${params}`;
-                  history.push(path);
-                }
+                const params = stringify({ projectId, surveyGroupId, rateeId });
+                const path = `${dynamicMap.superUser.editRatee()}${params}`;
+                history.push(path);
               }}
             />
             <Button

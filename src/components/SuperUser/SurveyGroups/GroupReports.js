@@ -27,7 +27,6 @@ const GroupReports = ({
 }) => {
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
-  const [selectedRows, setSelectedRows] = React.useState([]);
   const { surveyGroupId } = useParams();
 
   React.useEffect(() => {
@@ -60,21 +59,19 @@ const GroupReports = ({
           <Button
             onClick={() => {
               setQuery({ benchmarkType: 'cluster' });
-              setSelectedRows([]);
             }}
             size="middle"
             textSize="xs"
-            text="Select Clusters"
+            text="Clusters"
             light={parsedQuery?.benchmarkType === 'competency'}
           />
           <Button
             onClick={() => {
               setQuery({ benchmarkType: 'competency' });
-              setSelectedRows([]);
             }}
             size="middle"
             textSize="xs"
-            text="Select Competencies"
+            text="Competencies"
             className="ml-3"
             light={parsedQuery?.benchmarkType !== 'competency'}
           />
@@ -97,6 +94,7 @@ const GroupReports = ({
                 } else {
                   await exportClusterBenchmark(surveyGroupId);
                 }
+                // eslint-disable-next-line no-empty
               } catch (err) { }
             }}
           />
@@ -109,6 +107,7 @@ const GroupReports = ({
                 } else {
                   await importClusterBenchmark({ surveyGroupId, file });
                 }
+                // eslint-disable-next-line no-empty
               } catch (err) { }
 
               return false;
@@ -119,7 +118,7 @@ const GroupReports = ({
     ),
 
     // eslint-disable-next-line
-    [loading, query, selectedRows.length, parsedQuery.benchmarkType],
+    [loading, query, parsedQuery.benchmarkType],
   );
 
   const renderFooter = React.useCallback(
@@ -141,36 +140,46 @@ const GroupReports = ({
         />
 
         <Button
-          disabled={
-            selectedRows?.length === 0 || !!selectedRows.find((el) => !el.externalBenchmark)
-          }
           className="w-24.5 h-9.5"
           text="Next"
           onClick={async () => {
-            const benchmarks = selectedRows.map((row) => ({
-              id: row.id,
-              externalBenchmark: parseFloat(row.externalBenchmark.toFixed(2)),
-              surveyGroupId: row.surveyGroupId,
-              ...(row.clusterId && { clusterId: row.clusterId }),
-            }));
+            console.log(clusterBenchmarks);
+            let benchmarks = [];
+            if (parsedQuery?.benchmarkType === 'competency') {
+              benchmarks = competencyBenchmarks?.data.map((row) => ({
+                id: row.id,
+                externalBenchmark: parseFloat(row.externalBenchmark.toFixed(2)),
+                surveyGroupId: row.surveyGroupId,
+                clusterId: row.clusterId,
+              }));
+            } else {
+              benchmarks = clusterBenchmarks?.data.map((row) => ({
+                id: row.id,
+                externalBenchmark: parseFloat(row.externalBenchmark.toFixed(2)),
+                surveyGroupId: row.surveyGroupId,
+              }));
+            }
 
             try {
               if (parsedQuery?.benchmarkType === 'competency') {
                 await setCompetencyBenchmarks({ surveyGroupId, benchmarks });
-
-                setSelectedRows([]);
+                const params = stringify({ surveyGroupId, projectId: parsedQuery?.projectId });
+                const path = `${dynamicMap.superUser.ratersList()}${params}`;
+                history.push(path);
               } else {
                 await setClusterBenchmarks({ surveyGroupId, benchmarks });
-
-                setSelectedRows([]);
+                const params = stringify({ surveyGroupId, projectId: parsedQuery?.projectId });
+                const path = `${dynamicMap.superUser.ratersList()}${params}`;
+                history.push(path);
               }
+              // eslint-disable-next-line no-empty
             } catch (err) { }
           }}
         />
       </div>
     ),
     // eslint-disable-next-line
-    [setCompetencyBenchmarks, JSON.stringify({ selectedRows }), parsedQuery.benchmarkType],
+    [setCompetencyBenchmarks, parsedQuery.benchmarkType],
   );
 
   const getSortOrder = (key) => {
@@ -223,6 +232,7 @@ const GroupReports = ({
           <InputNumber
             size="large"
             wrapperClassName="flex flex-col justify-center items-center"
+            // eslint-disable-next-line max-len
             className="border border-antgray-300 w-28 text-center text-antgray-800 text-14px c-input-number-text-center"
             name={`${name}-${id}`}
             onChange={(newVal) => handleTableChange(id, newVal)}
@@ -241,7 +251,7 @@ const GroupReports = ({
     ],
 
     // eslint-disable-next-line
-    [tableDataStringified, selectedRows?.length, query],
+    [tableDataStringified, query],
   );
 
   return (
@@ -254,13 +264,12 @@ const GroupReports = ({
       <Table
         onTableChange={({ sorter }) => sort(sorter)}
         size="middle"
-        selectedRowKeys={selectedRows?.map((el) => el.id.toString())}
         className="p-6 mt-5 bg-white rounded-lg shadow c-table-selection-lg"
         loading={loading}
         columns={columns}
+        rowSelection={false}
         dataSource={tableData}
         renderHeader={renderHeader}
-        onRowSelectionChange={(_, rows) => setSelectedRows(rows)}
         pagination={false}
         footer={renderFooter}
       />
