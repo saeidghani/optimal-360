@@ -15,6 +15,7 @@ const RateeGroupQuestions = ({
   addQuestionResponses,
   questions,
   relations,
+  profileName,
 }) => {
   const history = useHistory();
   const { surveyGroupId, questionNumber } = useParams();
@@ -149,12 +150,13 @@ const RateeGroupQuestions = ({
   };
 
   return (
-    <Layout hasBreadCrumb>
+    <Layout hasBreadCrumb profileName={profileName}>
       <Questions
         loading={loading}
         dataSource={dataSource}
         questions={questions}
         relationValues={relationValues}
+        totalRelations={Object.keys(relationValues)?.length}
         showErr={showErr}
         onBack={handleBack}
         onSetRelationValues={(e, item, key) =>
@@ -188,6 +190,7 @@ RateeGroupQuestions.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({})),
     timeStamp: PropTypes.number,
   }),
+  profileName: PropTypes.string.isRequired,
 };
 
 RateeGroupQuestions.defaultProps = {

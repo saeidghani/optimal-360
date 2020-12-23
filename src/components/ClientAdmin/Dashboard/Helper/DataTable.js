@@ -189,15 +189,11 @@ const DataTable = ({
     const isRateeDetails = viewBy === 'ratee-details';
 
     const renderSummaryProgress = (allAnswered, itemsCount) => (
-      <div className="flex flex-col items-center mb-20">
-        <div className="w-16 mx-auto">
-          <Progress
-            className="h-8"
-            subClassName="mb-10 pb-4"
-            percentage={parseInt((allAnswered / itemsCount) * 100, 10)}
-          />
+      <div className="flex flex-col items-center">
+        <div className="mx-auto">
+          <Progress width={60} percentage={parseInt((allAnswered / itemsCount) * 100, 10)} />
         </div>
-        <div className="text-center">
+        <div className="text-center mt-3">
           {allAnswered}/{itemsCount}
         </div>
       </div>
@@ -212,7 +208,7 @@ const DataTable = ({
           </div>
         ),
         width: 100,
-        render: (name) => <span className="text-sm absolute top-0 pt-16">{name}</span>,
+        render: (name) => <span className="text-sm absolute top-0 pt-8">{name}</span>,
       },
       isRateeDetails
         ? {
@@ -224,7 +220,7 @@ const DataTable = ({
             ),
             width: 100,
             render: (_, { totalRaters, totalSubmissions }) => (
-              <span className="text-sm absolute top-0 pt-16">
+              <span className="text-sm absolute top-0 pt-8">
                 {totalSubmissions}/{totalRaters}
               </span>
             ),
@@ -238,7 +234,7 @@ const DataTable = ({
             ),
             width: 100,
             render: (_, { totalRatees, totalSubmissions }) => (
-              <span className="text-sm absolute top-0 pt-16">
+              <span className="text-sm">
                 {totalSubmissions}/{totalRatees}
               </span>
             ),
@@ -252,11 +248,12 @@ const DataTable = ({
         ),
         width: 100,
         render: (_, { totalAnswered, totalQuestions, isTotalQuestionAnsweredRateSub }) => (
-          <div className="w-full mt-5 flex-inline flex-col items-center justify-center">
-            <div className="w-20 mx-auto">
+          <div className="w-full flex justify-center">
+            <div className="mx-auto" style={{ position: 'relative', top: 20 }}>
               <Progress
-                subClassName="mb-10"
-                percentageClassName="mb-10 text-heading2"
+                // className="pt-5"
+                width={80}
+                percentageClassName="text-heading2"
                 status={isTotalQuestionAnsweredRateSub ? 'sub' : ''}
                 percentage={parseInt((totalAnswered / totalQuestions) * 100, 10)}
               />
@@ -297,16 +294,15 @@ const DataTable = ({
 
           return (
             self && (
-              <div className="mb-auto w-full">
+              <div className="w-full mb-2">
                 {isRateeDetails ? (
                   <Fragment>
                     {renderSummaryProgress(allAnswered, itemsCount)}
                     {self?.raters?.map((rater) => (
-                      <div className="flex flex-col items-center mb-20" key={rater.raterId}>
-                        <div className="w-16 mx-auto">
+                      <div className="flex flex-col items-center mt-6" key={rater.raterId}>
+                        <div className="mx-auto">
                           <Progress
-                            className="h-8"
-                            subClassName="mb-10 pb-4"
+                            width={60}
                             status={rater?.totalAnswered === rater?.totalQuestions ? 'sub' : ''}
                             percentage={parseInt(
                               (rater?.totalAnswered / rater?.totalQuestions) * 100,
@@ -314,7 +310,7 @@ const DataTable = ({
                             )}
                           />
                         </div>
-                        <div className="text-center">{rater?.raterName}</div>
+                        <div className="text-center mt-3">{rater?.raterName}</div>
                       </div>
                     ))}
                   </Fragment>
@@ -322,11 +318,10 @@ const DataTable = ({
                   <Fragment>
                     {renderSummaryProgress(allAnswered, itemsCount)}
                     {self?.ratees?.map((ratee) => (
-                      <div className="flex flex-col items-center mb-20" key={ratee.rateeId}>
-                        <div className="w-16 mx-auto">
+                      <div className="flex flex-col items-center mt-6" key={ratee.rateeId}>
+                        <div className="mx-auto">
                           <Progress
-                            className="h-8"
-                            subClassName="mb-10 pb-4"
+                            width={60}
                             status={ratee?.totalAnswered === ratee?.totalQuestions ? 'sub' : ''}
                             percentage={parseInt(
                               (ratee?.totalAnswered / ratee?.totalQuestions) * 100,
@@ -334,7 +329,7 @@ const DataTable = ({
                             )}
                           />
                         </div>
-                        <div className="text-center">{ratee?.raterName}</div>
+                        <div className="text-center mt-3">{ratee?.raterName}</div>
                       </div>
                     ))}
                   </Fragment>
@@ -385,11 +380,10 @@ const DataTable = ({
                 <Fragment>
                   {renderSummaryProgress(allAnswered, itemsCount)}
                   {groups[name]?.raters?.map((rater) => (
-                    <div className="flex flex-col items-center mb-20" key={rater.raterId}>
-                      <div className="w-16 mx-auto">
+                    <div className="flex flex-col items-center mt-6 mb-2" key={rater.raterId}>
+                      <div className="mx-auto">
                         <Progress
-                          className="h-8"
-                          subClassName="mb-10 pb-4"
+                          width={60}
                           status={rater?.totalAnswered === rater?.totalQuestions ? 'sub' : ''}
                           percentage={parseInt(
                             (rater?.totalAnswered / rater?.totalQuestions) * 100,
@@ -397,7 +391,7 @@ const DataTable = ({
                           )}
                         />
                       </div>
-                      <div className="text-center">{rater.raterName}</div>
+                      <div className="text-center mt-3">{rater.raterName}</div>
                     </div>
                   ))}
                 </Fragment>
@@ -405,11 +399,10 @@ const DataTable = ({
                 <Fragment>
                   {renderSummaryProgress(allAnswered, itemsCount)}
                   {groups[name]?.ratees?.map((ratee) => (
-                    <div className="flex flex-col items-center mb-20" key={ratee.rateeId}>
-                      <div className="w-16 mx-auto">
+                    <div className="flex flex-col items-center mt-6 mb-2" key={ratee.rateeId}>
+                      <div className="mx-auto">
                         <Progress
-                          className="h-8"
-                          subClassName="mb-10 pb-4"
+                          width={60}
                           status={ratee?.totalAnswered === ratee?.totalQuestions ? 'sub' : ''}
                           percentage={parseInt(
                             (ratee?.totalAnswered / ratee?.totalQuestions) * 100,
@@ -417,7 +410,7 @@ const DataTable = ({
                           )}
                         />
                       </div>
-                      <div className="text-center">{ratee.rateeName}</div>
+                      <div className="text-center mt-3">{ratee.rateeName}</div>
                     </div>
                   ))}
                 </Fragment>
@@ -563,6 +556,7 @@ const DataTable = ({
 
   return (
     <Table
+      scroll={{ y: 700 }}
       size="middle"
       className="p-6 bg-white rounded-lg shadow"
       tableClassName="c-table-thead-white overflow-x-auto align-top md:overflow-x-visible"

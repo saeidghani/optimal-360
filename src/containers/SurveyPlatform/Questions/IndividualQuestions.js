@@ -26,7 +26,7 @@ class IndividualQuestions extends Component {
   };
 
   render() {
-    const { loading, questions, relations } = this.props;
+    const { loading, profileName, questions, relations } = this.props;
 
     return (
       <Layout
@@ -36,6 +36,7 @@ class IndividualQuestions extends Component {
         addQuestionResponses={this.addQuestionResponses}
         questions={questions}
         relations={relations}
+        profileName={profileName}
       />
     );
   }
@@ -48,17 +49,20 @@ IndividualQuestions.propTypes = {
   addQuestionResponses: PropTypes.func.isRequired,
   questions: PropTypes.shape({}),
   relations: PropTypes.shape({}),
+  profileName: PropTypes.string,
 };
 
 IndividualQuestions.defaultProps = {
   questions: {},
   relations: {},
+  profileName: '',
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
   questions: state.surveyPlatform?.questions || {},
   relations: state.surveyPlatform?.relations || {},
+  profileName: state.surveyPlatform?.profile?.data?.name || '',
 });
 
 const mapDispatchToProps = (dispatch) => ({

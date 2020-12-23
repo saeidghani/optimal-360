@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import Loading from '../../../Common/Loading';
@@ -37,7 +37,7 @@ const Welcome = ({ loading, clientWelcomeMessage, clientPicture, surveyMessage }
         </div>
         <div
           className="col-start-1 col-span-12 md:col-start-1 md:row-start-1 md:col-span-10 mt-10 pt-8"
-          dangerouslySetInnerHTML={{ __html: clientWelcomeMessage }}
+          dangerouslySetInnerHTML={{ __html: surveyMessage }}
         />
         <div className="col-start-1 col-span-12 flex flex-col mt-5 md:flex-row">
           <span className="text-body mr-8 mb-4">Roselaini Faiz</span>

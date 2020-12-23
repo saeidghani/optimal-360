@@ -16,6 +16,7 @@ const Questions = ({
   loading,
   questions,
   relationValues,
+  totalRelations,
   onSetRelationValues,
   onNext,
   onBack,
@@ -35,7 +36,15 @@ const Questions = ({
               {questionNumber}. {questions?.data?.question?.statement}
               {questions?.data?.question?.required && <span className="text-red-500">*</span>}
             </p>
-            {showErr && <p className="text-red-500 mt-2">Please answer all the questions</p>}
+            {showErr && (
+              <p className="text-red-500 mt-2">
+                {totalRelations?.toString() === '1' ? (
+                  <span>Please answer the question</span>
+                ) : (
+                  <span>Please answer all the questions</span>
+                )}
+              </p>
+            )}
             <div className="flex justify-between">
               <div className="inline-flex flex-col md:flex-row mt-5">
                 <div className="w-40 -ml-12">
@@ -56,14 +65,14 @@ const Questions = ({
               </div>
               <div className="flex items-center justify-end md:my-auto">
                 <span className="mr-3">
-                  {parseInt((questionNumber / questions?.data?.totalQuestions) * 100, 10)}%
+                  {parseInt(((questionNumber - 1) / questions?.data?.totalQuestions) * 100, 10)}%
                 </span>
                 <div className="w-12 h-12">
                   {questions?.data?.totalQuestions && (
                     <Progress
                       showPercent={false}
                       percentage={parseInt(
-                        (questionNumber / questions?.data?.totalQuestions) * 100,
+                        ((questionNumber - 1) / questions?.data?.totalQuestions) * 100,
                         10,
                       )}
                     />
@@ -234,6 +243,7 @@ Questions.propTypes = {
   dataSource: PropTypes.arrayOf(PropTypes.shape({})),
   options: PropTypes.arrayOf(PropTypes.shape({})),
   showErr: PropTypes.bool,
+  totalRelations: PropTypes.number.isRequired,
 };
 
 Questions.defaultProps = {

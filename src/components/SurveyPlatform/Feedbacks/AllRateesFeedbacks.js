@@ -15,6 +15,7 @@ const AllRateesFeedbacks = ({
   fetchRelations,
   fetchFeedbacks,
   addFeedbackResponses,
+  profileName,
 }) => {
   const history = useHistory();
   const { surveyGroupId, feedbackNumber } = useParams();
@@ -128,12 +129,13 @@ const AllRateesFeedbacks = ({
   };
 
   return (
-    <Layout hasBreadCrumb>
+    <Layout hasBreadCrumb profileName={profileName}>
       <Feedbacks
         loading={loading}
         feedbacks={feedbacks}
         ratees={ratees}
         relationValues={relationValues}
+        totalRelations={Object.keys(relationValues)?.length}
         showErr={showErr}
         onSetRelationValues={(e, ratee) =>
           setRelationValues({ ...relationValues, [ratee?.rateeId]: e.target.value })
@@ -172,6 +174,7 @@ AllRateesFeedbacks.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({})),
     timeStamp: PropTypes.number,
   }),
+  profileName: PropTypes.string.isRequired,
 };
 
 AllRateesFeedbacks.defaultProps = {

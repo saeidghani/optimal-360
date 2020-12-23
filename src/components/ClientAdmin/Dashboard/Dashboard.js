@@ -22,6 +22,7 @@ const Dashboard = ({
   fetchSummary,
   fetchRatees,
   fetchRaters,
+  userName,
 }) => {
   const [parsedQuery, , setQuery] = useQuery();
   const { projectId, surveyGroupId } = parsedQuery || {};
@@ -30,7 +31,7 @@ const Dashboard = ({
 
   useEffect(() => {
     fetchProjects('');
-  }, []);
+  }, [fetchProjects]);
 
   const projectsList = React.useMemo(
     () =>
@@ -56,7 +57,7 @@ const Dashboard = ({
   );
 
   React.useEffect(() => {
-    if (!surveyGroupId && surveyGroups?.length > 0) {
+    if (surveyGroups?.length > 0) {
       setQuery({ surveyGroupId: surveyGroups[0]?.surveyGroupId });
     }
   }, [surveyGroups]);
@@ -73,7 +74,7 @@ const Dashboard = ({
   };
 
   return (
-    <Layout>
+    <Layout profileName={userName}>
       <div className="grid grid-cols-12 mb-10 mt-8">
         <div className="col-start-1 col-span-6 text-base text-body mb-3">Select Project</div>
         <Dropdown
@@ -143,6 +144,7 @@ Dashboard.propTypes = {
   summary: PropTypes.shape({}),
   ratees: PropTypes.shape({}),
   raters: PropTypes.shape({}),
+  userName: PropTypes.string,
 };
 
 Dashboard.defaultProps = {
@@ -152,6 +154,7 @@ Dashboard.defaultProps = {
   summary: {},
   ratees: {},
   raters: {},
+  userName: '',
 };
 
 export default Dashboard;

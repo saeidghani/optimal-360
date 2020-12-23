@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {
   MailOutlined,
   HomeOutlined,
@@ -9,15 +9,13 @@ import {
   TwitterOutlined,
   InstagramOutlined,
   FacebookOutlined,
-  UserOutlined,
 } from '@ant-design/icons';
+import Cookie from 'js-cookie';
 
-import { Avatar } from 'antd';
 import ProfileDropdown from './ProfileDropdown';
 
 import { dynamicMap } from '../../routes/RouteMap';
 
-import budgetLogo from '../../assets/images/budgetLogo.png';
 import logo from '../../assets/images/optimal360Logo.png';
 import BreadCrumb from './BreadCrumb';
 
@@ -28,30 +26,19 @@ const SurveyPlatformLayout = ({
   title,
   hasBreadCrumb,
   headerClassName,
+  profileName,
 }) => {
+  const history = useHistory();
+
   const profileDropdownOptions = [
     {
       key: 1,
-      title: 'Anthony Hardy',
-      titleClassName: 'md:hidden',
-      icon: <Avatar className="bg-primary-500" icon={<UserOutlined />} />,
-      itemClassName: 'md:hidden',
-      href: '',
-    },
-    { key: 2, title: 'Home', icon: <HomeOutlined />, href: dynamicMap.surveyPlatform.dashboard() },
-    {
-      key: 3,
-      title: 'Customer Support',
-      icon: <MailOutlined />,
-      href: '#',
+      title: 'Logout',
       // eslint-disable-next-line no-undef
-      onClick: () => alert('coming soon'),
-    },
-    {
-      key: 4,
-      title: 'Guides',
-      icon: <QuestionCircleOutlined />,
-      href: dynamicMap.surveyPlatform.referenceGuide(),
+      onClick: () => {
+        Cookie.remove('token');
+        history.push(dynamicMap.surveyPlatform.login());
+      },
     },
   ];
 
@@ -66,7 +53,7 @@ const SurveyPlatformLayout = ({
       >
         <img src={logo} alt="" />
         <div className="lg:ml-16">
-          <img src={budgetLogo} className="w-24 lg:w-32" alt="" />
+          <img src="" className="w-24 lg:w-32" alt="" />
         </div>
         <Link to={dynamicMap.surveyPlatform.dashboard()}>
           <div className="flex justify-between items-center text-base">
@@ -74,31 +61,27 @@ const SurveyPlatformLayout = ({
             <span className="ml-2 text-xs lg:text-base">Home</span>
           </div>
         </Link>
-        <Link to="#">
-          <div
-            /* eslint-disable-next-line no-undef */
-            onClick={() => alert('coming soon')}
-            className="flex justify-between items-center text-gray-500 text-base"
-          >
-            <MailOutlined />
-            <span className="ml-2 text-xs lg:text-base">Customer Support</span>
-          </div>
-        </Link>
+        <div className="hidden sm:flex justify-between items-center text-gray-500 text-base">
+          <MailOutlined />
+          <span className="ml-2">
+            <a href="mailto:e360support@optimalconsulting.com.sg">Customer Support</a>
+          </span>
+        </div>
         <Link to={dynamicMap.surveyPlatform.referenceGuide()}>
           <div className="flex justify-between items-center text-gray-500 text-base">
             <QuestionCircleOutlined />
             <span className="ml-2 text-xs lg:text-base">Guides</span>
           </div>
         </Link>
-        <ProfileDropdown title="Anthony Hardy" options={profileDropdownOptions} />
+        <ProfileDropdown title={profileName} options={profileDropdownOptions} />
       </div>
       <div className="flex items-center md:hidden px-6 pt-6">
         <div className="flex items-center">
           <LeftOutlined />
           <span className="ml-3">{title}</span>
         </div>
-        <img src={budgetLogo} className="ml-auto pr-2" alt="" />
-        <ProfileDropdown title="Anthony Hardy" options={profileDropdownOptions} />
+        <img src="" className="ml-auto pr-2" alt="" />
+        <ProfileDropdown title={profileName} options={profileDropdownOptions} />
       </div>
       <div
         className={`flex flex-col py-6 px-4 mt-8 mb-40 sm:mt-5
@@ -141,6 +124,7 @@ SurveyPlatformLayout.propTypes = {
   title: PropTypes.string,
   hasBreadCrumb: PropTypes.bool,
   headerClassName: PropTypes.string,
+  profileName: PropTypes.string,
 };
 
 SurveyPlatformLayout.defaultProps = {
@@ -149,6 +133,7 @@ SurveyPlatformLayout.defaultProps = {
   title: '',
   hasBreadCrumb: false,
   headerClassName: '',
+  profileName: '',
 };
 
 export default SurveyPlatformLayout;

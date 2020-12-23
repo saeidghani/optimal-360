@@ -9,6 +9,12 @@ import Layout from '../../../components/SurveyPlatform/Auth/Login';
 class _Login extends Component {
   state = {};
 
+  fetchProfile = async (query) => {
+    const { fetchProfile } = this.props;
+
+    return fetchProfile(query);
+  };
+
   login = async ({ email, password, rememberMe }) => {
     const { login } = this.props;
 
@@ -17,6 +23,7 @@ class _Login extends Component {
     const newPath = prevPath || '/survey-platform/information';
 
     await login({ username: email, password, rememberMe });
+    await this.fetchProfile('');
 
     setTimeout(() => window.location.replace(newPath), 4000);
   };
@@ -31,14 +38,22 @@ class _Login extends Component {
 _Login.propTypes = {
   login: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
+  fetchProfile: PropTypes.func.isRequired,
+  profile: PropTypes.shape({}),
+};
+
+_Login.defaultProps = {
+  profile: {},
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
+  profile: state.surveyPlatform?.profile || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
   login: dispatch.surveyPlatform?.login,
+  fetchProfile: dispatch.surveyPlatform?.fetchProfile,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(_Login);

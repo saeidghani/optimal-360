@@ -143,7 +143,7 @@ const Information = ({ loading, fetchProfile, updateProfile, profile }) => {
   };
 
   return (
-    <Layout title="Information">
+    <Layout title="Information" profileName={profile?.data?.name}>
       <Loading visible={loading} />
       <div className="text-left text-heading hidden md:block">Information</div>
       <h1 className="text-xl text-heading font-medium mt-1 md:mt-12">
@@ -197,7 +197,7 @@ Information.propTypes = {
   fetchProfile: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
   profile: PropTypes.shape({
-    data: PropTypes.shape({}),
+    data: PropTypes.shape({ name: PropTypes.string }),
   }),
 };
 

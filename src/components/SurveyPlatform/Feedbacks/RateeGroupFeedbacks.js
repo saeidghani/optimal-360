@@ -17,22 +17,23 @@ const RateeGroupFeedbacks = ({
   fetchRelations,
   fetchFeedbacks,
   addFeedbackResponses,
+  profileName,
 }) => {
   const history = useHistory();
   const { surveyGroupId, feedbackNumber } = useParams();
   const [parsedQuery] = useQuery();
   const { relation } = parsedQuery;
 
-  const [relationValues, setRelationValues] = React.useState({});
-  const [showErr, setShowErr] = React.useState(false);
+  const [relationValues, setRelationValues] = useState({});
+  const [showErr, setShowErr] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (surveyGroupId) {
       fetchRelations({ surveyGroupId });
     }
   }, [fetchRelations, surveyGroupId]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (surveyGroupId && feedbackNumber && relation) {
       let relationIds = '';
       let allRelationValues = {};
@@ -135,12 +136,13 @@ const RateeGroupFeedbacks = ({
   };
 
   return (
-    <Layout hasBreadCrumb>
+    <Layout hasBreadCrumb profileName={profileName}>
       <Feedbacks
         loading={loading}
         feedbacks={feedbacks}
         ratees={ratees}
         relationValues={relationValues}
+        totalRelations={Object.keys(relationValues)?.length}
         showErr={showErr}
         onSetRelationValues={(e, ratee) =>
           setRelationValues({ ...relationValues, [ratee?.rateeId]: e.target.value })
@@ -179,6 +181,7 @@ RateeGroupFeedbacks.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({})),
     timeStamp: PropTypes.number,
   }),
+  profileName: PropTypes.string.isRequired,
 };
 
 RateeGroupFeedbacks.defaultProps = {

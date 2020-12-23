@@ -91,7 +91,7 @@ const ReferenceGuide = () => {
         until 26th February 2020 to complete the survey. Please complete the survey within the
         stipulated time period.
       </p>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 mt-10">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-12 mt-10">
         {ReferenceGuideCards.map((rate) => (
           <div
             className="bg-white rounded-md flex flex-col items-center
