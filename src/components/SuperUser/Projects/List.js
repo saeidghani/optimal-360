@@ -93,66 +93,65 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
 
           <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
         </div>
-      ) :
-        (
-          <div className="flex flex-row justify-between items-center">
-            <div className="flex flex-row">
-              <Button
-                size="middle"
-                onClick={() => setQuery({ status: 'active', page_number: 1 })}
-                textSize="xs"
-                text="Active Projects"
-                className="mr-3 px-3"
-                light={parsedQuery?.status !== 'active'}
-              />
+      ) : (
+        <div className="flex flex-row justify-between items-center">
+          <div className="flex flex-row">
+            <Button
+              size="middle"
+              onClick={() => setQuery({ status: 'active', page_number: 1 })}
+              textSize="xs"
+              text="Active Projects"
+              className="mr-3 px-3"
+              light={parsedQuery?.status !== 'active'}
+            />
 
-              <Button
-                size="middle"
-                onClick={() => setQuery({ status: 'inactive', page_number: 1 })}
-                textSize="xs"
-                text="Inactive Projects"
-                light={parsedQuery?.status !== 'inactive'}
-                className="mr-3 px-3"
-              />
+            <Button
+              size="middle"
+              onClick={() => setQuery({ status: 'inactive', page_number: 1 })}
+              textSize="xs"
+              text="Inactive Projects"
+              light={parsedQuery?.status !== 'inactive'}
+              className="mr-3 px-3"
+            />
 
-              <Button
-                size="middle"
-                onClick={() => setQuery({ status: 'complete', page_number: 1 })}
-                textSize="xs"
-                text="Completed Projects"
-                light={parsedQuery?.status !== 'complete'}
-                className=" px-3"
-              />
-            </div>
-
-            <div className="flex flex-row">
-              <SearchBox
-                className="text-xs"
-                loading={loading}
-                onSearch={(val) => setQuery({ q: val })}
-                onChange={(e) => setQuery({ q: e.target.value })}
-                onPressEnter={(e) => setQuery({ q: e.target.value })}
-                value={parsedQuery?.q || ''}
-              />
-              <Button
-                size="middle"
-                textSize="xs"
-                text="New Organization"
-                type="gray"
-                className="mx-3 px-3"
-                onClick={() => history.push(dynamicMap.superUser.addOrganization())}
-              />
-              <Button
-                onClick={() => history.push(dynamicMap.superUser.projectInfo())}
-                className="px-3"
-                size="middle"
-                textSize="xs"
-                text="Add Project"
-                type="gray"
-              />
-            </div>
+            <Button
+              size="middle"
+              onClick={() => setQuery({ status: 'complete', page_number: 1 })}
+              textSize="xs"
+              text="Completed Projects"
+              light={parsedQuery?.status !== 'complete'}
+              className=" px-3"
+            />
           </div>
-        );
+
+          <div className="flex flex-row">
+            <SearchBox
+              className="text-xs"
+              loading={loading}
+              onSearch={(val) => setQuery({ q: val })}
+              onChange={(e) => setQuery({ q: e.target.value })}
+              onPressEnter={(e) => setQuery({ q: e.target.value })}
+              value={parsedQuery?.q || ''}
+            />
+            <Button
+              size="middle"
+              textSize="xs"
+              text="New Organization"
+              type="gray"
+              className="mx-3 px-3"
+              onClick={() => history.push(dynamicMap.superUser.addOrganization())}
+            />
+            <Button
+              onClick={() => history.push(dynamicMap.superUser.projectInfo())}
+              className="px-3"
+              size="middle"
+              textSize="xs"
+              text="Add Project"
+              type="gray"
+            />
+          </div>
+        </div>
+      );
     },
     // eslint-disable-next-line
     [projects.timeStamp, loading, setQuery, selectedRows.length],
@@ -269,7 +268,7 @@ const ActiveProjects = ({ changeStatusOfProjects, removeProjects, loading }) => 
   return (
     <MainLayout
       titleClass="mb-6 mt-3"
-      breadCrumbItems={['Super User', 'Projects']}
+      breadCrumbItems={['Super User', 'Projects', selectedRows?.length > 0 ? 'Selected' : '']}
       title="Super User"
       contentClass="py-6 pl-21 pr-6"
     >
