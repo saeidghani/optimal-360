@@ -246,7 +246,12 @@ const SurveyGroups = ({
   return (
     <MainLayout
       titleClass="mb-6 mt-3"
-      breadCrumbItems={['Super User', 'Projects', 'Survey Groups']}
+      breadCrumbItems={[
+        'Super User',
+        'Projects',
+        'Survey Groups',
+        selectedRows?.length > 0 ? 'Selected' : '',
+      ]}
       title="Super User"
       contentClass="py-6 pl-21 pr-6"
     >

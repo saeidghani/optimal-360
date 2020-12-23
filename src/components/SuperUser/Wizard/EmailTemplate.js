@@ -56,22 +56,37 @@ const EmailTemplate = ({ loading, emailSettings, setEmailSettingsData }) => {
         <p className="text-body text-xl mb-6">{selectedEmailTemplate?.name}</p>
 
         <div className="flex flex-row justify-between items-center">
-          <div className="inline-flex flex-row flex-wrap">
-            <Button
-              onClick={() => addTag('PROJECT_NAME')}
-              size="middle"
-              text="Project Name"
-              textSize="base"
-              className="px-3  mr-3"
-            />
-            <Button
-              onClick={() => addTag('RATER')}
-              size="middle"
-              text="Rater"
-              textSize="base"
-              className="mr-3"
-            />
-            <Button onClick={() => addTag('SENDER')} size="middle" text="Sender" textSize="base" />
+          <div className="flex flex-col">
+            {[
+              [
+                { tag: 'PROJECT_NAME', label: 'Project Name' },
+                { tag: 'RATER', label: 'Rater' },
+                { tag: 'SENDER', label: 'Sender' },
+                { tag: 'SURVEY_LINK', label: 'Survey Link' },
+                { tag: 'RELATION_TABLE_EXCLUDE_SELF', label: 'Relation Table Exclude Self' },
+              ],
+              [
+                { tag: 'RATER_LOGIN_ID', label: 'Rater Login Id' },
+                { tag: 'PASSWORD', label: 'Password' },
+                { tag: 'START_DATE', label: 'Start Date' },
+                { tag: 'END_DATE', label: 'End Date' },
+                { tag: 'RELATION_TABLE_INCLUDE_SELF', label: 'Relation Table Include Self' },
+              ],
+            ].map((rowArr) => (
+              <div className="inline-flex flex-row flex-wrap">
+                {rowArr.map(({ tag, label }) => (
+                  <Button
+                    onClick={() => addTag(tag)}
+                    size="middle"
+                    text={label}
+                    textSize="base"
+                    textClassName="text-primary-500"
+                    className="mr-3 my-2 border-0 bg-primary-500 bg-opacity-15
+                    hover:bg-primary-500 hover:bg-opacity-15 focus:bg-primary-500 focus:bg-opacity-15"
+                  />
+                ))}
+              </div>
+            ))}
           </div>
 
           <div className="flex flex-row">
