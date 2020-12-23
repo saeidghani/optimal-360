@@ -55,7 +55,7 @@ const EditRatee = ({
   const handleClickNextStep = useCallback(async () => {
     const competencyIds = selectedRows.map((item) => item.competencyId);
     await addMissionCriticalToRatee({ surveyGroupId, rateeId, competencyIds });
-    const params = stringify({ surveyGroupId, rateeId, projectId, isEdit: true });
+    const params = stringify({ surveyGroupId, rateeId, projectId });
     const path = `${dynamicMap.superUser.raterSelection()}${params}`;
     history.push(path);
   }, [selectedRows]);
