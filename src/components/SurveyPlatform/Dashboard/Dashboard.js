@@ -3,13 +3,13 @@ import { Tabs } from 'antd';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { FileTextOutlined, CheckOutlined } from '@ant-design/icons';
-import Cookies from 'js-cookie';
 
 import Layout from '../../Common/SurveyPlatformLayout';
 import Modal from '../../Common/Modal';
 import Button from '../../Common/Button';
 import Dropdown from '../../Common/Dropdown';
 import { useQuery } from '../../../hooks';
+import { stringify } from '../../../hooks/useQuery';
 import { dynamicMap } from '../../../routes/RouteMap';
 
 import SurveyGroup from './Helper/SurveyGroup';
@@ -20,6 +20,7 @@ const Dashboard = ({
   fetchProjects,
   fetchInfo,
   fetchRelations,
+  organization,
   submitResponses,
   projects,
   info,
@@ -29,7 +30,7 @@ const Dashboard = ({
   const [submitModalVisible, setSubmitModalVisible] = useState(false);
   const [thankYouModalVisible, setThankYouModalVisible] = useState(false);
   const [welcomeModalVisible, setWelcomeModalVisible] = useState(false);
-  const [isNotFirstTimeVisit, setIsNotFirstTimeVisit] = useState(false);
+  const [visitedSurveyGroups, setVisitedSurveyGroups] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const history = useHistory();
@@ -39,13 +40,13 @@ const Dashboard = ({
   const { TabPane } = Tabs;
 
   useEffect(() => {
-    const notFirstTimeVisit = Cookies.get('notFirstTimeVisit');
-    if (notFirstTimeVisit) {
-      setIsNotFirstTimeVisit(true);
+    const visitedGroups = localStorage.getItem('visitedSurveyGroups');
+    if (visitedGroups) {
+      const parsedVisitedGroups = JSON.parse(visitedGroups);
+      setVisitedSurveyGroups(parsedVisitedGroups);
+    } else {
+      setWelcomeModalVisible(true);
     }
-    return () => {
-      if (!notFirstTimeVisit) Cookies.set('notFirstTimeVisit', true);
-    };
   }, []);
 
   useEffect(() => {
@@ -65,8 +66,6 @@ const Dashboard = ({
   useEffect(() => {
     if (!projectId && projectsList?.length > 0) {
       setQuery({ projectId: projectsList[0]?.value });
-      const notFirstTimeVisit = Cookies.get('notFirstTimeVisit');
-      if (!notFirstTimeVisit) setWelcomeModalVisible(true);
     }
   }, [projectId, projectsList]);
 
@@ -78,8 +77,24 @@ const Dashboard = ({
   );
 
   useEffect(() => {
-    if (surveyGroups?.length > 0) {
-      setQuery({ surveyGroupId: surveyGroups[0]?.surveyGroupId });
+    if (!surveyGroupId && surveyGroups?.length > 0) {
+      const newSurveyGroupId = surveyGroups[0]?.surveyGroupId?.toString();
+      setQuery({ surveyGroupId: newSurveyGroupId });
+      const newObj = {
+        projectId,
+        surveyGroupId: newSurveyGroupId,
+      };
+      const visitedGroupIndex = visitedSurveyGroups?.indexOf({
+        projectId,
+        surveyGroupId: newSurveyGroupId,
+      });
+      if (visitedGroupIndex === -1) {
+        setVisitedSurveyGroups([
+          ...visitedSurveyGroups,
+          { projectId, surveyGroupId: newSurveyGroupId },
+        ]);
+        setWelcomeModalVisible(true);
+      }
     }
   }, [surveyGroups]);
 
@@ -93,16 +108,26 @@ const Dashboard = ({
   const onTabChange = (key) => {
     setQuery({ surveyGroupId: key, viewBy: '', page_number: '', page_size: '' });
     fetchInfo({ surveyGroupId: key });
-    if (!isNotFirstTimeVisit) setWelcomeModalVisible(true);
+    const visitedGroupIndex = visitedSurveyGroups?.indexOf({ projectId, surveyGroupId: key });
+    if (visitedGroupIndex === -1) {
+      setVisitedSurveyGroups([...visitedSurveyGroups, { projectId, surveyGroupId: key }]);
+      setWelcomeModalVisible(true);
+    }
   };
 
   const handleContinue = () => {
-    history.push(
-      dynamicMap.surveyPlatform.allRateesQuestions({
-        surveyGroupId,
-        questionNumber: 1,
-      }),
+    localStorage.setItem('visitedSurveyGroups', JSON?.stringify(visitedSurveyGroups));
+    const currentSurveyGroup = surveyGroups?.find(
+      (surveyGroup) => surveyGroup?.surveyGroupId?.toString() === surveyGroupId?.toString(),
     );
+    if (!currentSurveyGroup?.surveyGroupSubmited) {
+      history.push(
+        `${dynamicMap.surveyPlatform.allRateesQuestions({
+          surveyGroupId,
+          questionNumber: 1,
+        })}${stringify({ projectId })}`,
+      );
+    }
   };
 
   const handleSubmit = () => {
@@ -127,7 +152,7 @@ const Dashboard = ({
   };
 
   return (
-    <Layout profileName={profileName}>
+    <Layout profileName={profileName} organizationSrc={organization?.data?.organizationLogo}>
       <Modal
         visible={submitModalVisible}
         handleOk={handleSubmitModalOk}
@@ -177,11 +202,18 @@ const Dashboard = ({
           type="gray"
           showSearch={false}
           value={projectName}
-          handleChange={(val) => setQuery({ projectId: val })}
+          handleChange={(val) => {
+            setQuery({ projectId: val, surveyGroupId: '' });
+          }}
           options={projectsList}
         />
       </div>
-      <Tabs className="survey-group-tabs" defaultActiveKey={surveyGroupId} onChange={onTabChange}>
+      <Tabs
+        className="survey-group-tabs"
+        defaultActiveKey={surveyGroupId}
+        activeKey={surveyGroupId}
+        onChange={onTabChange}
+      >
         {surveyGroups?.map((group) => (
           <TabPane key={group.surveyGroupId?.toString()} tab={group.surveyGroupName}>
             <SurveyGroup
@@ -191,6 +223,7 @@ const Dashboard = ({
               info={info}
               relations={relations}
               isSubmitted={isSubmitted}
+              surveyGroupSubmited={group.surveyGroupSubmited}
             />
           </TabPane>
         ))}
@@ -226,6 +259,9 @@ Dashboard.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({})),
     timeStamp: PropTypes.number,
   }),
+  organization: PropTypes.shape({
+    data: PropTypes.shape({ organizationLogo: PropTypes.string }),
+  }),
   info: PropTypes.shape({
     data: PropTypes.shape({
       surveyIntro: PropTypes.shape({}),
@@ -239,6 +275,7 @@ Dashboard.defaultProps = {
   projects: {},
   info: {},
   relations: {},
+  organization: {},
 };
 
 export default Dashboard;

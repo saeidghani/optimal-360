@@ -10,6 +10,7 @@ export default {
     projects: '',
     completionRate: '',
     raterGroups: '',
+    rganization: '',
     summary: '',
     ratees: '',
     raters: '',
@@ -41,6 +42,18 @@ export default {
           data: payload,
         });
 
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async fetchOrganization() {
+      return actionWrapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: '/survey-platform/organization',
+        });
+
+        this.fetchOrganization_reducer(res?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
@@ -141,6 +154,10 @@ export default {
     saveUserName: (state, payload) => ({
       ...state,
       userName: payload.userName,
+    }),
+    fetchOrganization_reducer: (state, payload) => ({
+      ...state,
+      organization: payload,
     }),
     fetchProjects_reducer: (state, payload) => ({
       ...state,

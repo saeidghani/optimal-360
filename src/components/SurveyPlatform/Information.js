@@ -21,7 +21,7 @@ import {
   lengthOfServiceInCurrentRoleOptions,
 } from '../../constants/demographicsData';
 
-const Information = ({ loading, fetchProfile, updateProfile, profile }) => {
+const Information = ({ loading, fetchProfile, updateProfile, profile, organization }) => {
   const [selectedSex, setSelectedSex] = React.useState('');
   const [selectItems, setSelectItems] = React.useState({});
   const [errors, setErrors] = React.useState({});
@@ -143,7 +143,11 @@ const Information = ({ loading, fetchProfile, updateProfile, profile }) => {
   };
 
   return (
-    <Layout title="Information" profileName={profile?.data?.name}>
+    <Layout
+      title="Information"
+      profileName={profile?.data?.name}
+      organizationSrc={organization?.data?.organizationLogo}
+    >
       <Loading visible={loading} />
       <div className="text-left text-heading hidden md:block">Information</div>
       <h1 className="text-xl text-heading font-medium mt-1 md:mt-12">
@@ -199,10 +203,14 @@ Information.propTypes = {
   profile: PropTypes.shape({
     data: PropTypes.shape({ name: PropTypes.string }),
   }),
+  organization: PropTypes.shape({
+    data: PropTypes.shape({ organizationLogo: PropTypes.string }),
+  }),
 };
 
 Information.defaultProps = {
   profile: {},
+  organization: {},
 };
 
 export default Information;

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -6,7 +6,8 @@ import Layout from '../../Common/SurveyPlatformLayout';
 import { dynamicMap } from '../../../routes/RouteMap';
 import { useQuery, stringify } from '../../../hooks/useQuery';
 
-import Questions from './Helper/Questions';
+import SelectQuestions from './Helper/SelectQuestions';
+import FeedbackQuestions from './Helper/FeedbackQuestions';
 
 const IndividualQuestions = ({
   loading,
@@ -15,15 +16,18 @@ const IndividualQuestions = ({
   addQuestionResponses,
   questions,
   relations,
+  organization,
   profileName,
 }) => {
   const history = useHistory();
   const { surveyGroupId, questionNumber } = useParams();
   const [parsedQuery] = useQuery();
-  const { relationId } = parsedQuery || {};
+  const { relationId, projectId } = parsedQuery || {};
 
-  const [relationValues, setRelationValues] = React.useState({});
-  const [showErr, setShowErr] = React.useState(false);
+  const [relationValues, setRelationValues] = useState({});
+  const [inputQuestionNumber, setInputQuestionNumber] = useState(questionNumber);
+  const [showErr, setShowErr] = useState(false);
+  const [jumpModalVisible, setJumpModalVisible] = useState(false);
 
   useEffect(() => {
     if (surveyGroupId) {
@@ -43,13 +47,19 @@ const IndividualQuestions = ({
   }, [fetchQuestions, surveyGroupId, questionNumber, relationId]);
 
   useEffect(() => {
+    const isFeedback = questions?.data?.isFeedback === true;
     if (questions?.data?.responses?.length > 0) {
       const newRelationValues = {};
-      newRelationValues[relationId] =
-        questions?.data?.responses[0]?.responseScore?.toString() || '';
+      if (isFeedback) {
+        newRelationValues[relationId] =
+          questions?.data?.responses[0]?.feedbackResponse?.toString() || '';
+      } else {
+        newRelationValues[relationId] =
+          questions?.data?.responses[0]?.questionResponse?.toString() || null;
+      }
       setRelationValues({ ...relationValues, ...newRelationValues });
     }
-  }, [questions]);
+  }, [questions?.timeStamp]);
 
   const dataSource = React.useMemo(() => {
     const rows = [];
@@ -79,13 +89,26 @@ const IndividualQuestions = ({
     return rows;
   }, [relations.timeStamp, questions.timeStamp]);
 
+  const ratees = React.useMemo(() => {
+    const relation = relations?.data?.find(
+      (rel) => rel?.relationId?.toString() === relationId?.toString(),
+    );
+    const { relationId: rateeId, rateeName } = relation || {};
+    return [{ rateeId, rateeName }];
+  }, [relations?.timeStamp]);
+
   const submitResponse = async () => {
+    const isFeedback = questions?.data?.isFeedback === true;
     const responses = [];
     const response = {};
     // eslint-disable-next-line no-unused-expressions
     Object.keys(relationValues)?.forEach((key) => {
       response.relationId = key * 1;
-      response.responseScore = !relationValues[key] ? null : relationValues[key] * 1;
+      if (isFeedback) {
+        response.feedbackResponse = relationValues[key];
+      } else {
+        response.questionResponse = !relationValues[key] ? null : relationValues[key] * 1;
+      }
       // eslint-disable-next-line no-unused-expressions
       questions?.data?.responses.forEach((res) => {
         if (res?.relationId?.toString() === key?.toString()) {
@@ -93,7 +116,11 @@ const IndividualQuestions = ({
         }
       });
     });
-    if (questions?.data?.question?.required && response?.responseScore === null) {
+    if (
+      questions?.data?.question?.required &&
+      ((!isFeedback && response?.questionResponse === null) ||
+        (isFeedback && !response?.feedbackResponse))
+    ) {
       setShowErr(true);
       return;
     }
@@ -102,22 +129,24 @@ const IndividualQuestions = ({
     responses.push(response);
     const questionId = questions?.data?.question?.id;
     if (questionNumber <= questions?.data?.totalQuestions) {
+      const body = {
+        isFeedback,
+        responses,
+      };
       try {
-        await addQuestionResponses({ surveyGroupId, questionId, responses });
+        await addQuestionResponses({ surveyGroupId, questionId, ...body });
         setRelationValues({});
         if (questionNumber < questions?.data?.totalQuestions) {
+          setInputQuestionNumber(questionNumber * 1 + 1);
           history.push(
             `${dynamicMap.surveyPlatform.individualQuestions({
               surveyGroupId,
               questionNumber: questionNumber * 1 + 1,
-            })}${stringify({ relationId })}`,
+            })}${stringify({ relationId, projectId })}`,
           );
         } else {
           history.push(
-            `${dynamicMap.surveyPlatform.individualFeedbacks({
-              surveyGroupId,
-              feedbackNumber: 1,
-            })}${stringify({ relationId })}`,
+            `${dynamicMap.surveyPlatform.dashboard()}${stringify({ projectId, surveyGroupId })}`,
           );
         }
       } catch (errors) {}
@@ -126,29 +155,118 @@ const IndividualQuestions = ({
 
   const handleBack = () => {
     setShowErr(false);
+    setInputQuestionNumber(questionNumber * 1 - 1);
     history.push(
       `${dynamicMap.surveyPlatform.individualQuestions({
         surveyGroupId,
         questionNumber: questionNumber * 1 - 1,
-      })}${stringify({ relationId })}`,
+      })}${stringify({ relationId, projectId })}`,
     );
   };
 
-  return (
-    <Layout hasBreadCrumb profileName={profileName}>
-      <Questions
-        loading={loading}
-        dataSource={dataSource}
-        questions={questions}
-        relationValues={relationValues}
-        showErr={showErr}
-        totalRelations={Object.keys(relationValues)?.length}
-        onSetRelationValues={(e, item, key) =>
-          setRelationValues({ ...relationValues, [key]: item?.value })
+  const handleInputQuestionNumber = (e) => {
+    const { value } = e.target;
+    if (value === '' || (value * 1 >= 1 && value * 1 <= questions?.data?.totalQuestions * 1)) {
+      setInputQuestionNumber(value);
+    }
+  };
+
+  const handleSelectQuestionsRelationValues = (e, item, key) => {
+    setRelationValues({
+      ...relationValues,
+      [key]: item?.value,
+    });
+  };
+
+  const handleFeedbackQuestionsRelationValues = (e, ratee) => {
+    setRelationValues({
+      ...relationValues,
+      [ratee?.rateeId]: e.target.value,
+    });
+  };
+
+  const handleInputPressEnter = async () => {
+    if (inputQuestionNumber) {
+      try {
+        const res = await fetchQuestions({
+          surveyGroupId,
+          questionNumber: inputQuestionNumber,
+          relationIds: `relation_ids[]=${relationId}`,
+        });
+        if (inputQuestionNumber?.toString() === res?.data?.data?.questionNumber?.toString()) {
+          setShowErr(false);
+          setInputQuestionNumber(inputQuestionNumber);
+          history.push(
+            `${dynamicMap.surveyPlatform.individualQuestions({
+              surveyGroupId,
+              questionNumber: inputQuestionNumber,
+            })}${stringify({ relationId, projectId })}`,
+          );
+        } else {
+          setJumpModalVisible(true);
         }
-        onNext={submitResponse}
-        onBack={handleBack}
-      />
+      } catch (err) {}
+    }
+  };
+
+  const handleJumpOk = () => {
+    setJumpModalVisible(false);
+    setInputQuestionNumber(questions?.data?.questionNumber);
+    history.push(
+      `${dynamicMap.surveyPlatform.individualQuestions({
+        surveyGroupId,
+        questionNumber: questions?.data?.questionNumber,
+      })}${stringify({ relationId, projectId })}`,
+    );
+  };
+
+  const handleJumpCancel = () => {
+    setJumpModalVisible(false);
+  };
+
+  return (
+    <Layout
+      hasBreadCrumb
+      profileName={profileName}
+      organizationSrc={organization?.data?.organizationLogo}
+    >
+      {!questions?.data?.isFeedback ? (
+        <SelectQuestions
+          loading={loading}
+          showErr={showErr}
+          dataSource={dataSource}
+          questions={questions}
+          relationValues={relationValues}
+          totalRelations={Object.keys(relationValues)?.length}
+          onSetRelationValues={handleSelectQuestionsRelationValues}
+          jumpModalVisible={jumpModalVisible}
+          onJumpOk={handleJumpOk}
+          onJumpCancel={handleJumpCancel}
+          inputQuestionNumber={inputQuestionNumber}
+          onSetInputQuestionNumber={handleInputQuestionNumber}
+          onInputPressEnter={handleInputPressEnter}
+          onNext={submitResponse}
+          onBack={handleBack}
+        />
+      ) : (
+        <FeedbackQuestions
+          loading={loading}
+          questions={questions}
+          ratees={ratees}
+          relationValues={relationValues}
+          totalRelations={Object.keys(relationValues)?.length}
+          showErr={showErr}
+          onSetRelationValues={handleFeedbackQuestionsRelationValues}
+          jumpModalVisible={jumpModalVisible}
+          onJumpOk={handleJumpOk}
+          onJumpCancel={handleJumpCancel}
+          inputQuestionNumber={inputQuestionNumber}
+          onSetInputQuestionNumber={handleInputQuestionNumber}
+          onInputPressEnter={handleInputPressEnter}
+          onNext={submitResponse}
+          onBack={handleBack}
+        />
+      )}
     </Layout>
   );
 };
@@ -160,14 +278,18 @@ IndividualQuestions.propTypes = {
   addQuestionResponses: PropTypes.func.isRequired,
   questions: PropTypes.shape({
     data: PropTypes.shape({
+      questionNumber: PropTypes.number,
       totalQuestions: PropTypes.number,
+      isFeedback: PropTypes.bool,
       question: PropTypes.shape({
         id: PropTypes.number,
         statement: PropTypes.string,
         required: PropTypes.bool,
       }),
       options: PropTypes.arrayOf(PropTypes.shape({})),
-      responses: PropTypes.arrayOf(PropTypes.shape({ responseScore: PropTypes.string })),
+      responses: PropTypes.arrayOf(
+        PropTypes.shape({ feedbackResponse: PropTypes.string, questionResponse: PropTypes.string }),
+      ),
     }),
     timeStamp: PropTypes.number,
   }),
@@ -176,11 +298,15 @@ IndividualQuestions.propTypes = {
     timeStamp: PropTypes.number,
   }),
   profileName: PropTypes.string.isRequired,
+  organization: PropTypes.shape({
+    data: PropTypes.shape({ organizationLogo: PropTypes.string }),
+  }),
 };
 
 IndividualQuestions.defaultProps = {
   questions: {},
   relations: {},
+  organization: {},
 };
 
 export default IndividualQuestions;

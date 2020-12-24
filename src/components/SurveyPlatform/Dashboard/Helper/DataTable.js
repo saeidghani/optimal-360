@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -14,9 +14,11 @@ const DataTable = ({
   tableClassName,
   extraDetailsClassName,
   relations,
+  isSubmitted,
+  surveyGroupSubmited,
 }) => {
   const [parsedQuery, , setQuery] = useQuery();
-  const { surveyGroupId, surveyMode, sort } = parsedQuery || {};
+  const { projectId, surveyGroupId, surveyMode, sort } = parsedQuery || {};
 
   const getSortOrder = (key) => {
     const sortOrder = parsedQuery?.sort?.includes(key)
@@ -45,20 +47,22 @@ const DataTable = ({
         sortOrder: getSortOrder('rateeName'),
         render: (rateeName, { key }) => {
           return (
-            <React.Fragment>
-              {surveyMode === 'individual' ? (
+            <Fragment>
+              {surveyMode !== 'individual' ? (
+                <span className="pl-4">{rateeName}</span>
+              ) : isSubmitted || surveyGroupSubmited ? (
+                <span className="text-primary-500 pl-4">{rateeName}</span>
+              ) : (
                 <Link
                   to={`${dynamicMap.surveyPlatform.individualQuestions({
                     surveyGroupId,
                     questionNumber: 1,
-                  })}${stringify({ relationId: key })}`}
+                  })}${stringify({ relationId: key, projectId })}`}
                 >
                   <span className="text-primary-500 pl-4">{rateeName}</span>
                 </Link>
-              ) : (
-                <span className="pl-4">{rateeName}</span>
               )}
-            </React.Fragment>
+            </Fragment>
           );
         },
       },
@@ -112,16 +116,24 @@ const DataTable = ({
       key: 'relationship',
       title: <span className="pl-4">Relationship</span>,
       width: 100,
-      render: (relationship) => (
-        <Link
-          to={`${dynamicMap.surveyPlatform.rateeGroupQuestions({
-            surveyGroupId,
-            questionNumber: 1,
-          })}${stringify({ relation: relationship })}`}
-        >
-          <span className="text-primary-500 pl-4">{relationship}</span>
-        </Link>
-      ),
+      render: (relationship) => {
+        return (
+          <Fragment>
+            {!isSubmitted || !surveyGroupSubmited ? (
+              <Link
+                to={`${dynamicMap.surveyPlatform.rateeGroupQuestions({
+                  surveyGroupId,
+                  questionNumber: 1,
+                })}${stringify({ relation: relationship, projectId })}`}
+              >
+                <span className="text-primary-500 pl-4">{relationship}</span>
+              </Link>
+            ) : (
+              <span className="text-primary-500 pl-4">{relationship}</span>
+            )}
+          </Fragment>
+        );
+      },
     },
     {
       key: 'names',
@@ -279,6 +291,8 @@ const DataTable = ({
 
 DataTable.propTypes = {
   loading: PropTypes.bool.isRequired,
+  isSubmitted: PropTypes.bool,
+  surveyGroupSubmited: PropTypes.bool,
   extraDetails: PropTypes.node,
   className: PropTypes.string,
   tableClassName: PropTypes.string,
@@ -295,6 +309,8 @@ DataTable.defaultProps = {
   extraDetailsClassName: '',
   extraDetails: null,
   relations: {},
+  isSubmitted: false,
+  surveyGroupSubmited: false,
 };
 
 export default DataTable;

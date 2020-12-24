@@ -6,21 +6,28 @@ import moment from 'moment';
 import Progress from '../../../Common/Progress';
 import { useQuery } from '../../../../hooks';
 import graphIcon from '../../../../assets/images/graph-icon.svg';
-
 import DataTable from './DataTable';
 
-const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations, isSubmitted }) => {
+const SurveyGroup = ({
+  loading,
+  fetchInfo,
+  fetchRelations,
+  info,
+  relations,
+  isSubmitted,
+  surveyGroupSubmited,
+}) => {
   const [parsedQuery, , setQuery] = useQuery();
   const { surveyGroupId, surveyMode } = parsedQuery || {};
 
   const { TabPane } = Tabs;
 
   React.useEffect(() => {
-    fetchInfo({ surveyGroupId });
+    if (surveyGroupId) fetchInfo({ surveyGroupId });
   }, [fetchInfo, surveyGroupId]);
 
   React.useEffect(() => {
-    fetchRelations({ surveyGroupId });
+    if (surveyGroupId) fetchRelations({ surveyGroupId });
   }, [fetchRelations, surveyGroupId]);
 
   const totalAvg = React.useMemo(() => {
@@ -115,7 +122,7 @@ const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations, isSu
         className="mt-10"
         percentage={totalAvg}
         subClassName="text-heading"
-        status={isSubmitted ? 'sub' : ''}
+        status={isSubmitted || surveyGroupSubmited ? 'sub' : ''}
         showPercent
       />
       <div className="mt-10 text-antgray-100">Collective Completion Rate</div>
@@ -128,6 +135,7 @@ const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations, isSu
         className="survey-mode-tabs"
         tabBarExtraContent={deadlineInfo}
         defaultActiveKey={surveyMode}
+        activeKey={surveyMode}
         onChange={onTabChange}
       >
         {surveyModes?.map((mode) => (
@@ -135,6 +143,8 @@ const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations, isSu
             <DataTable
               loading={loading}
               relations={relations}
+              isSubmitted={isSubmitted}
+              surveyGroupSubmited={surveyGroupSubmited}
               className={`${
                 mode?.key === 'all'
                   ? 'md:grid grid-cols-8 md:mt-0'
@@ -160,6 +170,7 @@ const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations, isSu
 SurveyGroup.propTypes = {
   loading: PropTypes.bool.isRequired,
   isSubmitted: PropTypes.bool,
+  surveyGroupSubmited: PropTypes.bool,
   fetchInfo: PropTypes.func.isRequired,
   fetchRelations: PropTypes.func.isRequired,
   info: PropTypes.shape({
@@ -179,6 +190,7 @@ SurveyGroup.defaultProps = {
   info: {},
   relations: {},
   isSubmitted: false,
+  surveyGroupSubmited: false,
 };
 
 export default SurveyGroup;

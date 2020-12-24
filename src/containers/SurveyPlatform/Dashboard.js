@@ -32,7 +32,7 @@ class Dashboard extends Component {
   };
 
   render() {
-    const { loading, profileName, projects, info, relations } = this.props;
+    const { loading, profileName, projects, info, relations, organization } = this.props;
 
     return (
       <Layout
@@ -40,6 +40,7 @@ class Dashboard extends Component {
         fetchProjects={this.fetchProjects}
         fetchInfo={this.fetchInfo}
         fetchRelations={this.fetchRelations}
+        organization={organization}
         submitResponses={this.submitResponses}
         projects={projects}
         info={info}
@@ -59,6 +60,7 @@ Dashboard.propTypes = {
   projects: PropTypes.shape({}),
   info: PropTypes.shape({}),
   relations: PropTypes.shape({}),
+  organization: PropTypes.shape({}),
   profileName: PropTypes.string,
 };
 
@@ -66,6 +68,7 @@ Dashboard.defaultProps = {
   projects: {},
   info: {},
   relations: {},
+  organization: {},
   profileName: '',
 };
 
@@ -75,6 +78,7 @@ const mapStateToProps = (state) => ({
   info: state.surveyPlatform?.info || {},
   relations: state.surveyPlatform?.relations || {},
   profileName: state.surveyPlatform?.profile?.data?.name || '',
+  organization: state.surveyPlatform?.organization || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({

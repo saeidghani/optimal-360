@@ -8,24 +8,27 @@ class ReferenceGuide extends Component {
   state = {};
 
   render() {
-    const { loading, profileName } = this.props;
+    const { loading, profileName, organization } = this.props;
 
-    return <Layout loading={loading} profileName={profileName} />;
+    return <Layout loading={loading} profileName={profileName} organization={organization} />;
   }
 }
 
 ReferenceGuide.propTypes = {
   loading: PropTypes.bool.isRequired,
   profileName: PropTypes.string,
+  organization: PropTypes.shape({}),
 };
 
 ReferenceGuide.defaultProps = {
   profileName: '',
+  organization: {},
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
   profileName: state.surveyPlatform?.profile?.data?.name || '',
+  organization: state.surveyPlatform?.organization || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({});

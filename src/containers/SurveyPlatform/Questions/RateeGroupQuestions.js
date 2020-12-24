@@ -26,7 +26,7 @@ class RateeGroupQuestions extends Component {
   };
 
   render() {
-    const { loading, profileName, questions, relations } = this.props;
+    const { loading, profileName, questions, relations, organization } = this.props;
 
     return (
       <Layout
@@ -37,6 +37,7 @@ class RateeGroupQuestions extends Component {
         questions={questions}
         relations={relations}
         profileName={profileName}
+        organization={organization}
       />
     );
   }
@@ -50,12 +51,14 @@ RateeGroupQuestions.propTypes = {
   questions: PropTypes.shape({}),
   relations: PropTypes.shape({}),
   profileName: PropTypes.string,
+  organization: PropTypes.shape({}),
 };
 
 RateeGroupQuestions.defaultProps = {
   questions: {},
   relations: {},
   profileName: '',
+  organization: {},
 };
 
 const mapStateToProps = (state) => ({
@@ -63,6 +66,7 @@ const mapStateToProps = (state) => ({
   questions: state.surveyPlatform?.questions || {},
   relations: state.surveyPlatform?.relations || {},
   profileName: state.surveyPlatform?.profile?.data?.name || '',
+  organization: state.surveyPlatform?.organization || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
