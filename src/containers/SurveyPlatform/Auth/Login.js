@@ -15,6 +15,12 @@ class _Login extends Component {
     return fetchProfile(query);
   };
 
+  fetchOrganization = async (surveyGroupId) => {
+    const { fetchOrganization } = this.props;
+
+    return fetchOrganization(surveyGroupId);
+  };
+
   login = async ({ email, password, rememberMe }) => {
     const { login } = this.props;
 
@@ -24,6 +30,7 @@ class _Login extends Component {
 
     await login({ username: email, password, rememberMe });
     await this.fetchProfile('');
+    await this.fetchOrganization('');
 
     setTimeout(() => window.location.replace(newPath), 4000);
   };
@@ -40,6 +47,7 @@ _Login.propTypes = {
   loading: PropTypes.bool.isRequired,
   fetchProfile: PropTypes.func.isRequired,
   profile: PropTypes.shape({}),
+  fetchOrganization: PropTypes.func.isRequired,
 };
 
 _Login.defaultProps = {
@@ -54,6 +62,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   login: dispatch.surveyPlatform?.login,
   fetchProfile: dispatch.surveyPlatform?.fetchProfile,
+  fetchOrganization: dispatch.surveyPlatform?.fetchOrganization,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(_Login);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { useParams } from 'react-router-dom';
@@ -7,10 +7,12 @@ import Button from '../../../Common/Button';
 import Progress from '../../../Common/Progress';
 import TextArea from '../../../Common/TextArea';
 import Loading from '../../../Common/Loading';
+import Input from '../../../Common/Input';
+import Modal from '../../../Common/Modal';
 
-const Feedbacks = ({
+const FeedbackQuestions = ({
   loading,
-  feedbacks,
+  questions,
   onNext,
   ratees,
   relationValues,
@@ -18,22 +20,48 @@ const Feedbacks = ({
   onSetRelationValues,
   onBack,
   showErr,
+  inputQuestionNumber,
+  jumpModalVisible,
+  onJumpOk,
+  onJumpCancel,
+  onInputPressEnter,
+  onSetInputQuestionNumber,
 }) => {
-  const { feedbackNumber } = useParams();
-
-  const handleNext = () => {
-    onNext();
-  };
+  const { questionNumber } = useParams();
 
   return (
     <div>
       <Loading visible={loading} />
+      <Modal
+        visible={jumpModalVisible}
+        handleCancel={onJumpCancel}
+        handleOk={onJumpOk}
+        width={588}
+        cancelText="Cancel"
+        okText="Jump to this question"
+        footerClassName="flex-row-reverse sm:justify-start"
+        okButtonProps={{
+          textClassName: 'text-red-500',
+          className: 'bg-transparent border-none shadow-none hover:bg-transparent',
+        }}
+        cancelButtonProps={{
+          type: 'button',
+          danger: true,
+          className: 'bg-red-500 hover:bg-red-500 hover:opacity-50',
+          textClassName: 'text-white',
+        }}
+      >
+        <div className="flex flex-col">
+          <span className="text-2xl mb-4">Attention!</span>
+          <p>You have not answered question {questions?.data?.questionNumber}, it’s required.</p>
+        </div>
+      </Modal>
       <div className="px-4 py-6 mt-16 flex flex-col justify-between md:px-8 md:bg-white md:rounded-lg md:shadow">
-        {feedbacks?.data?.totalFeedbacks && (
+        {questions?.data?.totalQuestions && (
           <div>
             <p>
-              {feedbackNumber}. {feedbacks?.data?.feedback?.statement}
-              {feedbacks?.data?.feedback?.required && <span className="text-red-500">*</span>}
+              {questionNumber}. {questions?.data?.question?.statement}
+              {questions?.data?.question?.required && <span className="text-red-500">*</span>}
             </p>
             {showErr && (
               <p className="text-red-500 mt-2">
@@ -48,30 +76,38 @@ const Feedbacks = ({
               className="flex justify-between md:border-b md:border-solid
             md:border-gray-200 md:pb-4"
             >
-              <div className="inline-flex flex-col md:flex-row mt-5">
+              <div className="inline-flex flex-col md:flex-row items-center mt-5">
                 <div className="w-40 -ml-12">
                   <Progress
                     showPercent={false}
                     type="line"
                     percentage={parseInt(
-                      (feedbackNumber / feedbacks?.data?.totalFeedbacks) * 100,
+                      (questionNumber / questions?.data?.totalQuestions) * 100,
                       10,
                     )}
                   />
                 </div>
-                <div className="text-antgray-100 text-sm md:ml-4">
-                  Question {feedbackNumber} of {feedbacks?.data?.totalFeedbacks}
-                </div>
+                <span className="text-antgray-100 text-sm md:ml-4">Question</span>
+                <Input
+                  inputClass="w-20 ml-3"
+                  name="inputQuestionNumber"
+                  value={inputQuestionNumber}
+                  onChange={onSetInputQuestionNumber}
+                  onPressEnter={onInputPressEnter}
+                />
+                <span className="text-antgray-100 text-sm md:ml-4">
+                  of {questions?.data?.totalQuestions}
+                </span>
               </div>
               <div className="flex ratees-center justify-end md:my-auto">
                 <span className="mr-3">
-                  {parseInt(((feedbackNumber - 1) / feedbacks?.data?.totalFeedbacks) * 100, 10)}%
+                  {parseInt(((questionNumber - 1) / questions?.data?.totalQuestions) * 100, 10)}%
                 </span>
                 <div className="w-12 h-12">
                   <Progress
                     showPercent={false}
                     percentage={parseInt(
-                      ((feedbackNumber - 1) / feedbacks?.data?.totalFeedbacks) * 100,
+                      ((questionNumber - 1) / questions?.data?.totalQuestions) * 100,
                       10,
                     )}
                   />
@@ -100,7 +136,7 @@ const Feedbacks = ({
       </div>
       <div className="flex flex-col mt-4 mb-16 md:mb-10 md:flex-row-reverse md:ml-auto">
         <Button
-          onClick={handleNext}
+          onClick={onNext}
           text="Next"
           className="mt-6 px-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
           textSize="base"
@@ -117,12 +153,13 @@ const Feedbacks = ({
   );
 };
 
-Feedbacks.propTypes = {
+FeedbackQuestions.propTypes = {
   loading: PropTypes.bool.isRequired,
-  feedbacks: PropTypes.shape({
+  questions: PropTypes.shape({
     data: PropTypes.shape({
-      totalFeedbacks: PropTypes.number,
-      feedback: PropTypes.shape({
+      totalQuestions: PropTypes.number,
+      questionNumber: PropTypes.number,
+      question: PropTypes.shape({
         id: PropTypes.number,
         statement: PropTypes.string,
         required: PropTypes.bool,
@@ -143,14 +180,26 @@ Feedbacks.propTypes = {
   relationValues: PropTypes.shape({}),
   showErr: PropTypes.bool,
   totalRelations: PropTypes.number.isRequired,
+  jumpModalVisible: PropTypes.bool,
+  inputQuestionNumber: PropTypes.string,
+  onSetInputQuestionNumber: PropTypes.func,
+  onInputPressEnter: PropTypes.func,
+  onJumpOk: PropTypes.func,
+  onJumpCancel: PropTypes.func,
 };
 
-Feedbacks.defaultProps = {
-  feedbacks: {},
+FeedbackQuestions.defaultProps = {
+  questions: {},
   relations: {},
   ratees: [{}],
   relationValues: {},
   showErr: false,
+  jumpModalVisible: false,
+  inputQuestionNumber: '',
+  onSetInputQuestionNumber: () => {},
+  onInputPressEnter: () => {},
+  onJumpOk: () => {},
+  onJumpCancel: () => {},
 };
 
-export default Feedbacks;
+export default FeedbackQuestions;

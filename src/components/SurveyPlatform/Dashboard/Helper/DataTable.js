@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { Fragment } from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Table from '../../../Common/Table';
@@ -14,9 +14,13 @@ const DataTable = ({
   tableClassName,
   extraDetailsClassName,
   relations,
+  isSubmitted,
+  surveyGroupSubmited,
+  visitedSurveyGroups,
 }) => {
   const [parsedQuery, , setQuery] = useQuery();
-  const { surveyGroupId, surveyMode, sort } = parsedQuery || {};
+  const { projectId, surveyGroupId, surveyMode, sort } = parsedQuery || {};
+  const history = useHistory();
 
   const getSortOrder = (key) => {
     const sortOrder = parsedQuery?.sort?.includes(key)
@@ -35,6 +39,27 @@ const DataTable = ({
     setQuery({ sort: newItem });
   };
 
+  const handleIndividualClick = (key) => {
+    localStorage.setItem('visitedSurveyGroups', JSON?.stringify(visitedSurveyGroups));
+    history.push(
+      `${dynamicMap.surveyPlatform.individualQuestions({
+        surveyGroupId,
+        questionNumber: 1,
+      })}${stringify({ relationId: key, projectId })}`,
+    );
+  };
+
+  const handleGroupClick = (relationship) => {
+    console.log(relationship);
+    localStorage.setItem('visitedSurveyGroups', JSON?.stringify(visitedSurveyGroups));
+    history.push(
+      `${dynamicMap.surveyPlatform.rateeGroupQuestions({
+        surveyGroupId,
+        questionNumber: 1,
+      })}${stringify({ relation: relationship, projectId })}`,
+    );
+  };
+
   const allAndIndividualColumns = React.useMemo(() => {
     const columns = [
       {
@@ -45,20 +70,20 @@ const DataTable = ({
         sortOrder: getSortOrder('rateeName'),
         render: (rateeName, { key }) => {
           return (
-            <React.Fragment>
-              {surveyMode === 'individual' ? (
-                <Link
-                  to={`${dynamicMap.surveyPlatform.individualQuestions({
-                    surveyGroupId,
-                    questionNumber: 1,
-                  })}${stringify({ relationId: key })}`}
-                >
-                  <span className="text-primary-500 pl-4">{rateeName}</span>
-                </Link>
-              ) : (
+            <Fragment>
+              {surveyMode !== 'individual' ? (
                 <span className="pl-4">{rateeName}</span>
+              ) : isSubmitted || surveyGroupSubmited ? (
+                <span className="text-primary-500 pl-4">{rateeName}</span>
+              ) : (
+                <span
+                  className="text-primary-500 pl-4 cursor-pointer"
+                  onClick={() => handleIndividualClick(key)}
+                >
+                  {rateeName}
+                </span>
               )}
-            </React.Fragment>
+            </Fragment>
           );
         },
       },
@@ -112,16 +137,22 @@ const DataTable = ({
       key: 'relationship',
       title: <span className="pl-4">Relationship</span>,
       width: 100,
-      render: (relationship) => (
-        <Link
-          to={`${dynamicMap.surveyPlatform.rateeGroupQuestions({
-            surveyGroupId,
-            questionNumber: 1,
-          })}${stringify({ relation: relationship })}`}
-        >
-          <span className="text-primary-500 pl-4">{relationship}</span>
-        </Link>
-      ),
+      render: (relationship) => {
+        return (
+          <Fragment>
+            {!isSubmitted || !surveyGroupSubmited ? (
+              <span
+                className="text-primary-500 pl-4 cursor-pointer"
+                onClick={() => handleGroupClick(relationship)}
+              >
+                {relationship}
+              </span>
+            ) : (
+              <span className="text-primary-500 pl-4">{relationship}</span>
+            )}
+          </Fragment>
+        );
+      },
     },
     {
       key: 'names',
@@ -279,6 +310,8 @@ const DataTable = ({
 
 DataTable.propTypes = {
   loading: PropTypes.bool.isRequired,
+  isSubmitted: PropTypes.bool,
+  surveyGroupSubmited: PropTypes.bool,
   extraDetails: PropTypes.node,
   className: PropTypes.string,
   tableClassName: PropTypes.string,
@@ -287,6 +320,7 @@ DataTable.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({})),
     timeStamp: PropTypes.number,
   }),
+  visitedSurveyGroups: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 DataTable.defaultProps = {
@@ -295,6 +329,9 @@ DataTable.defaultProps = {
   extraDetailsClassName: '',
   extraDetails: null,
   relations: {},
+  isSubmitted: false,
+  surveyGroupSubmited: false,
+  visitedSurveyGroups: [{}],
 };
 
 export default DataTable;

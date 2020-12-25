@@ -1,9 +1,10 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 import { QuestionOutlined } from '@ant-design/icons';
 import arrayMove from 'array-move';
 
+import Input from '../../../Common/Input';
 import Button from '../../../Common/Button';
 import Progress from '../../../Common/Progress';
 import Table from '../../../Common/Table';
@@ -11,21 +12,30 @@ import Radio from '../../../Common/Radio';
 import Modal from '../../../Common/Modal';
 import Tooltip from '../../../Common/Tooltip';
 import { dynamicMap } from '../../../../routes/RouteMap';
+import { stringify, useQuery } from '../../../../hooks/useQuery';
 
-const Questions = ({
+const SelectQuestions = ({
   loading,
   questions,
   relationValues,
   totalRelations,
+  inputQuestionNumber,
+  jumpModalVisible,
+  onJumpOk,
+  onJumpCancel,
+  onInputPressEnter,
+  onSetInputQuestionNumber,
   onSetRelationValues,
   onNext,
   onBack,
   dataSource,
   showErr,
 }) => {
-  const [visible, setVisible] = React.useState(false);
+  const [exitModalVisible, setExitModalVisible] = useState(false);
   const history = useHistory();
-  const { questionNumber } = useParams();
+  const [parsedQuery] = useQuery();
+  const { projectId } = parsedQuery || {};
+  const { questionNumber, surveyGroupId } = useParams();
 
   const renderHeader = React.useCallback(() => {
     return (
@@ -46,7 +56,7 @@ const Questions = ({
               </p>
             )}
             <div className="flex justify-between">
-              <div className="inline-flex flex-col md:flex-row mt-5">
+              <div className="inline-flex flex-col md:flex-row md:items-center mt-5">
                 <div className="w-40 -ml-12">
                   {questions?.data?.totalQuestions && (
                     <Progress
@@ -59,9 +69,17 @@ const Questions = ({
                     />
                   )}
                 </div>
-                <div className="text-antgray-100 text-sm md:ml-4">
-                  Question {questionNumber} of {questions?.data?.totalQuestions}
-                </div>
+                <span className="text-antgray-100 text-sm md:ml-4">Question</span>
+                <Input
+                  inputClass="w-20 ml-3"
+                  name="inputQuestionNumber"
+                  value={inputQuestionNumber}
+                  onChange={onSetInputQuestionNumber}
+                  onPressEnter={onInputPressEnter}
+                />
+                <span className="text-antgray-100 text-sm md:ml-4">
+                  of {questions?.data?.totalQuestions}
+                </span>
               </div>
               <div className="flex items-center justify-end md:my-auto">
                 <span className="mr-3">
@@ -84,7 +102,7 @@ const Questions = ({
         )}
       </div>
     );
-  }, [questions.timeStamp, showErr]);
+  }, [questions.timeStamp, showErr, inputQuestionNumber]);
 
   const columns = React.useMemo(() => {
     const zeroScoreIndex = questions?.data?.options?.findIndex(
@@ -154,27 +172,29 @@ const Questions = ({
 
   const handleBack = () => {
     if (questionNumber?.toString() === '1') {
-      setVisible(true);
+      setExitModalVisible(true);
     } else {
       onBack();
     }
   };
 
-  const handleOk = () => {
-    setVisible(false);
-    history.push(dynamicMap.surveyPlatform.dashboard());
+  const handleExit = () => {
+    setExitModalVisible(false);
+    history.push(
+      `${dynamicMap.surveyPlatform.dashboard()}${stringify({ projectId, surveyGroupId })}`,
+    );
   };
 
-  const handleCancel = () => {
-    setVisible(false);
+  const handleContinueToAnswer = () => {
+    setExitModalVisible(false);
   };
 
   return (
     <div>
       <Modal
-        visible={visible}
-        handleCancel={handleCancel}
-        handleOk={handleOk}
+        visible={exitModalVisible}
+        handleCancel={handleContinueToAnswer}
+        handleOk={handleExit}
         width={588}
         cancelText="Continue to Answer"
         okText="Yes, Exit!"
@@ -184,6 +204,30 @@ const Questions = ({
         <div className="flex flex-col">
           <span className="text-2xl mb-4">Attention!</span>
           <p>You have not completed this survey, are you sure to exit?</p>
+        </div>
+      </Modal>
+      <Modal
+        visible={jumpModalVisible}
+        handleCancel={onJumpCancel}
+        handleOk={onJumpOk}
+        width={588}
+        cancelText="Cancel"
+        okText="Jump to this question"
+        footerClassName="flex-row-reverse sm:justify-start"
+        okButtonProps={{
+          textClassName: 'text-red-500',
+          className: 'bg-transparent border-none shadow-none hover:bg-transparent',
+        }}
+        cancelButtonProps={{
+          type: 'button',
+          danger: true,
+          className: 'bg-red-500 hover:bg-red-500 hover:opacity-50',
+          textClassName: 'text-white',
+        }}
+      >
+        <div className="flex flex-col">
+          <span className="text-2xl mb-4">Attention!</span>
+          <p>You have not answered question {questions?.data?.questionNumber}, it’s required.</p>
         </div>
       </Modal>
       {questions?.data?.options && (
@@ -221,11 +265,12 @@ const Questions = ({
   );
 };
 
-Questions.propTypes = {
+SelectQuestions.propTypes = {
   loading: PropTypes.bool.isRequired,
   questions: PropTypes.shape({
     data: PropTypes.shape({
       totalQuestions: PropTypes.number,
+      questionNumber: PropTypes.number,
       question: PropTypes.shape({
         id: PropTypes.number,
         statement: PropTypes.string,
@@ -244,14 +289,26 @@ Questions.propTypes = {
   options: PropTypes.arrayOf(PropTypes.shape({})),
   showErr: PropTypes.bool,
   totalRelations: PropTypes.number.isRequired,
+  jumpModalVisible: PropTypes.bool,
+  inputQuestionNumber: PropTypes.string,
+  onSetInputQuestionNumber: PropTypes.func,
+  onInputPressEnter: PropTypes.func,
+  onJumpOk: PropTypes.func,
+  onJumpCancel: PropTypes.func,
 };
 
-Questions.defaultProps = {
+SelectQuestions.defaultProps = {
   questions: {},
   relationValues: {},
   dataSource: [{}],
   options: [{}],
   showErr: false,
+  jumpModalVisible: false,
+  inputQuestionNumber: '',
+  onSetInputQuestionNumber: () => {},
+  onInputPressEnter: () => {},
+  onJumpOk: () => {},
+  onJumpCancel: () => {},
 };
 
-export default Questions;
+export default SelectQuestions;

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, useHistory } from 'react-router-dom';
+import Cookie from 'js-cookie';
+
 import {
   MailOutlined,
   HomeOutlined,
@@ -11,13 +13,11 @@ import {
   FacebookOutlined,
 } from '@ant-design/icons';
 
-import Cookie from 'js-cookie';
 import ProfileDropdown from './ProfileDropdown';
 import BreadCrumb from './BreadCrumb';
-
-import { dynamicMap } from '../../routes/RouteMap';
-
 import optimal360Logo from '../../assets/images/optimal360Logo.png';
+import { dynamicMap } from '../../routes/RouteMap';
+import { fetchFullURL } from '../../lib/utils';
 
 const ClientAdminLayout = ({
   children,
@@ -28,6 +28,7 @@ const ClientAdminLayout = ({
   headerClassName,
   heading,
   profileName,
+  organizationSrc,
 }) => {
   const history = useHistory();
 
@@ -54,7 +55,7 @@ const ClientAdminLayout = ({
       >
         <img src={optimal360Logo} alt="" />
         <div className="lg:ml-16">
-          <img src="" className="w-24 lg:w-32" alt="" />
+          <img src={fetchFullURL(organizationSrc)} className="w-24 lg:w-32" alt="" />
         </div>
         <Link to={dynamicMap.clientAdmin.dashboard()}>
           <div className="flex justify-between items-center text-base">
@@ -85,7 +86,7 @@ const ClientAdminLayout = ({
           <LeftOutlined />
           <span className="ml-3">{title}</span>
         </div>
-        <img src="" className="ml-auto pr-2" alt="" />
+        <img src={fetchFullURL(organizationSrc)} className="ml-auto pr-2" alt="" />
         <ProfileDropdown title={profileName} options={profileDropdownOptions} />
       </div>
       <div
@@ -129,6 +130,7 @@ ClientAdminLayout.propTypes = {
   headerClassName: PropTypes.string,
   heading: PropTypes.string,
   profileName: PropTypes.string,
+  organizationSrc: PropTypes.string,
 };
 
 ClientAdminLayout.defaultProps = {
@@ -138,6 +140,7 @@ ClientAdminLayout.defaultProps = {
   hasBreadCrumb: false,
   headerClassName: '',
   profileName: '',
+  organizationSrc: '',
   heading: 'Dashboard',
 };
 

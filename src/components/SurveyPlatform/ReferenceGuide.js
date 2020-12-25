@@ -10,7 +10,7 @@ import Radio from '../Common/RadioGroup';
 import TextArea from '../Common/TextArea';
 import { dynamicMap } from '../../routes/RouteMap';
 
-const ReferenceGuide = ({ loading, profileName }) => {
+const ReferenceGuide = ({ loading, profileName, organization }) => {
   const [comment, setComment] = React.useState('');
   const items = {
     101: '4',
@@ -118,7 +118,11 @@ const ReferenceGuide = ({ loading, profileName }) => {
   ];
 
   return (
-    <Layout title="Reference Guide" profileName={profileName}>
+    <Layout
+      title="Reference Guide"
+      profileName={profileName}
+      organizationSrc={organization?.data?.organizationLogo}
+    >
       <div className="hidden text-left text-heading md:block">Reference Guide</div>
       <h1 className="hidden text-base text-primary-500 font-medium mt-1 md:mt-12 md:block">
         Reference Guide
@@ -291,8 +295,13 @@ const ReferenceGuide = ({ loading, profileName }) => {
 ReferenceGuide.propTypes = {
   loading: PropTypes.bool.isRequired,
   profileName: PropTypes.string.isRequired,
+  organization: PropTypes.shape({
+    data: PropTypes.shape({ organizationLogo: PropTypes.string }),
+  }),
 };
 
-ReferenceGuide.defaultProps = {};
+ReferenceGuide.defaultProps = {
+  organization: {},
+};
 
 export default ReferenceGuide;
