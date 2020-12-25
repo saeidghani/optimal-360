@@ -53,7 +53,7 @@ const SurveyPlatformLayout = ({
       >
         <img src={logo} alt="" />
         <div className="lg:ml-16">
-          <img src={fetchFullURL(organizationSrc)} className="w-24" alt="" />
+          <img src={fetchFullURL(organizationSrc)} className="w-10 md:w-24" alt="" />
         </div>
         <Link to={dynamicMap.surveyPlatform.dashboard()}>
           <div className="flex justify-between items-center text-base">
@@ -80,7 +80,7 @@ const SurveyPlatformLayout = ({
           <LeftOutlined />
           <span className="ml-3">{title}</span>
         </div>
-        <img src={fetchFullURL(organizationSrc)} className="ml-auto pr-2" alt="" />
+        <img src={fetchFullURL(organizationSrc)} className="ml-auto pr-2 w-20" alt="" />
         <ProfileDropdown title={profileName} options={profileDropdownOptions} />
       </div>
       <div

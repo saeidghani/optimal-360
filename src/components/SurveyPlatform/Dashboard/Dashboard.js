@@ -43,9 +43,23 @@ const Dashboard = ({
     const visitedGroups = localStorage.getItem('visitedSurveyGroups');
     if (visitedGroups) {
       const parsedVisitedGroups = JSON.parse(visitedGroups);
-      setVisitedSurveyGroups(parsedVisitedGroups);
+      const visitedGroup = parsedVisitedGroups?.find(
+        (g) => g?.projectId === projectId && g?.surveyGroupId === surveyGroupId,
+      );
+      if (!visitedGroup) {
+        setVisitedSurveyGroups([...parsedVisitedGroups, { projectId, surveyGroupId }]);
+        setWelcomeModalVisible(true);
+      } else {
+        setVisitedSurveyGroups([...parsedVisitedGroups]);
+      }
     } else {
-      setWelcomeModalVisible(true);
+      const visitedGroup = visitedSurveyGroups?.find(
+        (g) => g?.projectId === projectId && g?.surveyGroupId === surveyGroupId,
+      );
+      if (!visitedGroup) {
+        setVisitedSurveyGroups([{ projectId, surveyGroupId }]);
+        setWelcomeModalVisible(true);
+      }
     }
   }, []);
 
@@ -80,15 +94,10 @@ const Dashboard = ({
     if (!surveyGroupId && surveyGroups?.length > 0) {
       const newSurveyGroupId = surveyGroups[0]?.surveyGroupId?.toString();
       setQuery({ surveyGroupId: newSurveyGroupId });
-      const newObj = {
-        projectId,
-        surveyGroupId: newSurveyGroupId,
-      };
-      const visitedGroupIndex = visitedSurveyGroups?.indexOf({
-        projectId,
-        surveyGroupId: newSurveyGroupId,
-      });
-      if (visitedGroupIndex === -1) {
+      const visitedGroup = visitedSurveyGroups?.find(
+        (g) => g?.projectId === projectId && g?.surveyGroupId === newSurveyGroupId,
+      );
+      if (!visitedGroup) {
         setVisitedSurveyGroups([
           ...visitedSurveyGroups,
           { projectId, surveyGroupId: newSurveyGroupId },
@@ -108,8 +117,10 @@ const Dashboard = ({
   const onTabChange = (key) => {
     setQuery({ surveyGroupId: key, viewBy: '', page_number: '', page_size: '' });
     fetchInfo({ surveyGroupId: key });
-    const visitedGroupIndex = visitedSurveyGroups?.indexOf({ projectId, surveyGroupId: key });
-    if (visitedGroupIndex === -1) {
+    const visitedGroup = visitedSurveyGroups?.find(
+      (g) => g?.projectId === projectId && g?.surveyGroupId === key,
+    );
+    if (!visitedGroup) {
       setVisitedSurveyGroups([...visitedSurveyGroups, { projectId, surveyGroupId: key }]);
       setWelcomeModalVisible(true);
     }
@@ -224,6 +235,7 @@ const Dashboard = ({
               relations={relations}
               isSubmitted={isSubmitted}
               surveyGroupSubmited={group.surveyGroupSubmited}
+              visitedSurveyGroups={visitedSurveyGroups}
             />
           </TabPane>
         ))}

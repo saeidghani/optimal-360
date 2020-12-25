@@ -16,6 +16,7 @@ const SurveyGroup = ({
   relations,
   isSubmitted,
   surveyGroupSubmited,
+  visitedSurveyGroups,
 }) => {
   const [parsedQuery, , setQuery] = useQuery();
   const { surveyGroupId, surveyMode } = parsedQuery || {};
@@ -145,6 +146,7 @@ const SurveyGroup = ({
               relations={relations}
               isSubmitted={isSubmitted}
               surveyGroupSubmited={surveyGroupSubmited}
+              visitedSurveyGroups={visitedSurveyGroups}
               className={`${
                 mode?.key === 'all'
                   ? 'md:grid grid-cols-8 md:mt-0'

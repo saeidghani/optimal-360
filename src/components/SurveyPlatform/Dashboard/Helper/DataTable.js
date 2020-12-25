@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Table from '../../../Common/Table';
@@ -16,9 +16,11 @@ const DataTable = ({
   relations,
   isSubmitted,
   surveyGroupSubmited,
+  visitedSurveyGroups,
 }) => {
   const [parsedQuery, , setQuery] = useQuery();
   const { projectId, surveyGroupId, surveyMode, sort } = parsedQuery || {};
+  const history = useHistory();
 
   const getSortOrder = (key) => {
     const sortOrder = parsedQuery?.sort?.includes(key)
@@ -37,6 +39,27 @@ const DataTable = ({
     setQuery({ sort: newItem });
   };
 
+  const handleIndividualClick = (key) => {
+    localStorage.setItem('visitedSurveyGroups', JSON?.stringify(visitedSurveyGroups));
+    history.push(
+      `${dynamicMap.surveyPlatform.individualQuestions({
+        surveyGroupId,
+        questionNumber: 1,
+      })}${stringify({ relationId: key, projectId })}`,
+    );
+  };
+
+  const handleGroupClick = (relationship) => {
+    console.log(relationship);
+    localStorage.setItem('visitedSurveyGroups', JSON?.stringify(visitedSurveyGroups));
+    history.push(
+      `${dynamicMap.surveyPlatform.rateeGroupQuestions({
+        surveyGroupId,
+        questionNumber: 1,
+      })}${stringify({ relation: relationship, projectId })}`,
+    );
+  };
+
   const allAndIndividualColumns = React.useMemo(() => {
     const columns = [
       {
@@ -53,14 +76,12 @@ const DataTable = ({
               ) : isSubmitted || surveyGroupSubmited ? (
                 <span className="text-primary-500 pl-4">{rateeName}</span>
               ) : (
-                <Link
-                  to={`${dynamicMap.surveyPlatform.individualQuestions({
-                    surveyGroupId,
-                    questionNumber: 1,
-                  })}${stringify({ relationId: key, projectId })}`}
+                <span
+                  className="text-primary-500 pl-4 cursor-pointer"
+                  onClick={() => handleIndividualClick(key)}
                 >
-                  <span className="text-primary-500 pl-4">{rateeName}</span>
-                </Link>
+                  {rateeName}
+                </span>
               )}
             </Fragment>
           );
@@ -120,14 +141,12 @@ const DataTable = ({
         return (
           <Fragment>
             {!isSubmitted || !surveyGroupSubmited ? (
-              <Link
-                to={`${dynamicMap.surveyPlatform.rateeGroupQuestions({
-                  surveyGroupId,
-                  questionNumber: 1,
-                })}${stringify({ relation: relationship, projectId })}`}
+              <span
+                className="text-primary-500 pl-4 cursor-pointer"
+                onClick={() => handleGroupClick(relationship)}
               >
-                <span className="text-primary-500 pl-4">{relationship}</span>
-              </Link>
+                {relationship}
+              </span>
             ) : (
               <span className="text-primary-500 pl-4">{relationship}</span>
             )}
