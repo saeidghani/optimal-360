@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Table from '../../../Common/Table';
@@ -320,6 +320,7 @@ DataTable.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({})),
     timeStamp: PropTypes.number,
   }),
+  visitedSurveyGroups: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 DataTable.defaultProps = {
@@ -330,6 +331,7 @@ DataTable.defaultProps = {
   relations: {},
   isSubmitted: false,
   surveyGroupSubmited: false,
+  visitedSurveyGroups: [{}],
 };
 
 export default DataTable;
