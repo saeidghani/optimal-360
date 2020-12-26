@@ -26,6 +26,7 @@ const RateeGroupQuestions = ({
 
   const [relationValues, setRelationValues] = useState({});
   const [inputQuestionNumber, setInputQuestionNumber] = useState(questionNumber);
+  const [jumpQuestion, setJumpQuestion] = useState('');
   const [jumpModalVisible, setJumpModalVisible] = useState(false);
   const [showErr, setShowErr] = useState(false);
 
@@ -219,6 +220,7 @@ const RateeGroupQuestions = ({
           surveyGroupId,
           questionNumber: inputQuestionNumber,
           relationIds,
+          skipReducer: true,
         });
         if (inputQuestionNumber?.toString() === res?.data?.data?.questionNumber?.toString()) {
           setShowErr(false);
@@ -230,7 +232,10 @@ const RateeGroupQuestions = ({
             })}${stringify({ relation, projectId })}`,
           );
         } else {
-          setJumpModalVisible(true);
+          setJumpQuestion(res?.data?.data?.questionNumber);
+          if (res?.data?.data?.questionNumber?.toString() !== questionNumber?.toString()) {
+            setJumpModalVisible(true);
+          }
         }
       } catch (err) {}
     }
@@ -238,11 +243,11 @@ const RateeGroupQuestions = ({
 
   const handleJumpOk = () => {
     setJumpModalVisible(false);
-    setInputQuestionNumber(questions?.data?.questionNumber);
+    setInputQuestionNumber(jumpQuestion);
     history.push(
       `${dynamicMap.surveyPlatform.rateeGroupQuestions({
         surveyGroupId,
-        questionNumber: questions?.data?.questionNumber,
+        questionNumber: jumpQuestion,
       })}${stringify({ relation, projectId })}`,
     );
   };
@@ -270,6 +275,7 @@ const RateeGroupQuestions = ({
           onJumpOk={handleJumpOk}
           onJumpCancel={handleJumpCancel}
           inputQuestionNumber={inputQuestionNumber}
+          jumpQuestion={jumpQuestion}
           onSetInputQuestionNumber={handleInputQuestionNumber}
           onInputPressEnter={handleInputPressEnter}
           onBack={handleBack}
@@ -288,6 +294,7 @@ const RateeGroupQuestions = ({
           onJumpOk={handleJumpOk}
           onJumpCancel={handleJumpCancel}
           inputQuestionNumber={inputQuestionNumber}
+          jumpQuestion={jumpQuestion}
           onSetInputQuestionNumber={handleInputQuestionNumber}
           onInputPressEnter={handleInputPressEnter}
           onNext={submitResponse}

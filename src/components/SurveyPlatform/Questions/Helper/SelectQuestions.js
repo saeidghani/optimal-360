@@ -30,6 +30,7 @@ const SelectQuestions = ({
   onBack,
   dataSource,
   showErr,
+  jumpQuestion,
 }) => {
   const [exitModalVisible, setExitModalVisible] = useState(false);
   const history = useHistory();
@@ -227,7 +228,7 @@ const SelectQuestions = ({
       >
         <div className="flex flex-col">
           <span className="text-2xl mb-4">Attention!</span>
-          <p>You have not answered question {questions?.data?.questionNumber}, it’s required.</p>
+          <p>You have not answered question {jumpQuestion}, it’s required.</p>
         </div>
       </Modal>
       {questions?.data?.options && (
@@ -291,6 +292,7 @@ SelectQuestions.propTypes = {
   totalRelations: PropTypes.number.isRequired,
   jumpModalVisible: PropTypes.bool,
   inputQuestionNumber: PropTypes.string,
+  jumpQuestion: PropTypes.string,
   onSetInputQuestionNumber: PropTypes.func,
   onInputPressEnter: PropTypes.func,
   onJumpOk: PropTypes.func,
@@ -305,6 +307,7 @@ SelectQuestions.defaultProps = {
   showErr: false,
   jumpModalVisible: false,
   inputQuestionNumber: '',
+  jumpQuestion: '',
   onSetInputQuestionNumber: () => {},
   onInputPressEnter: () => {},
   onJumpOk: () => {},

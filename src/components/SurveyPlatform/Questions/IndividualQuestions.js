@@ -26,6 +26,7 @@ const IndividualQuestions = ({
 
   const [relationValues, setRelationValues] = useState({});
   const [inputQuestionNumber, setInputQuestionNumber] = useState(questionNumber);
+  const [jumpQuestion, setJumpQuestion] = useState('');
   const [showErr, setShowErr] = useState(false);
   const [jumpModalVisible, setJumpModalVisible] = useState(false);
 
@@ -192,6 +193,7 @@ const IndividualQuestions = ({
           surveyGroupId,
           questionNumber: inputQuestionNumber,
           relationIds: `relation_ids[]=${relationId}`,
+          skipReducer: true,
         });
         if (inputQuestionNumber?.toString() === res?.data?.data?.questionNumber?.toString()) {
           setShowErr(false);
@@ -203,7 +205,10 @@ const IndividualQuestions = ({
             })}${stringify({ relationId, projectId })}`,
           );
         } else {
-          setJumpModalVisible(true);
+          setJumpQuestion(res?.data?.data?.questionNumber);
+          if (res?.data?.data?.questionNumber?.toString() !== questionNumber?.toString()) {
+            setJumpModalVisible(true);
+          }
         }
       } catch (err) {}
     }
@@ -211,11 +216,11 @@ const IndividualQuestions = ({
 
   const handleJumpOk = () => {
     setJumpModalVisible(false);
-    setInputQuestionNumber(questions?.data?.questionNumber);
+    setInputQuestionNumber(jumpQuestion);
     history.push(
       `${dynamicMap.surveyPlatform.individualQuestions({
         surveyGroupId,
-        questionNumber: questions?.data?.questionNumber,
+        questionNumber: jumpQuestion,
       })}${stringify({ relationId, projectId })}`,
     );
   };
@@ -243,6 +248,7 @@ const IndividualQuestions = ({
           onJumpOk={handleJumpOk}
           onJumpCancel={handleJumpCancel}
           inputQuestionNumber={inputQuestionNumber}
+          jumpQuestion={jumpQuestion}
           onSetInputQuestionNumber={handleInputQuestionNumber}
           onInputPressEnter={handleInputPressEnter}
           onNext={submitResponse}
