@@ -25,6 +25,8 @@ const StatusDetails = (
     exportRelations,
     fetchRaterGroups,
     raterGroups,
+    importMissionCriticalsWithExcel,
+    exportMissionCriticalsToExcel,
   },
 ) => {
   const [parsedQuery, query, setQuery] = useQuery();
@@ -97,39 +99,39 @@ const StatusDetails = (
     ) :
       (
         <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row items-center">
-            <Button
-              size="middle"
-              textSize="xs"
-              text="View by raters"
-              textClassName="mr-2"
-              className="ml-3"
-              light={viewBy === 'ratees'}
-              onClick={() => (setQuery({ viewBy: 'raters' }))}
-            />
-            <Button
-              size="middle"
-              textSize="xs"
-              text="View by ratees"
-              textClassName="mr-2"
-              className="ml-3"
-              light={viewBy === 'raters'}
-              onClick={() => (setQuery({ viewBy: 'ratees' }))}
-            />
-          </div>
           <div className="flex flex-row">
-            <SearchBox
-              className="text-xs"
-              placeholder="Search"
-              loading={loading}
-              value={parsedQuery?.q || ''}
-              onSearch={(val) => setQuery({ q: val })}
-              onPressEnter={(e) => setQuery({ q: e.target.value })}
-              onChange={(e) => setQuery({ q: e.target.value })}
-            />
-            {
-              isNotPastEndDate && raterGroups?.length > 0 ? (
-                <>
+            <div className="flex flex-row items-center">
+              <Button
+                size="middle"
+                textSize="xs"
+                text="View by raters"
+                textClassName="mr-2"
+                className="ml-3"
+                light={viewBy === 'ratees'}
+                onClick={() => (setQuery({ viewBy: 'raters' }))}
+              />
+              <Button
+                size="middle"
+                textSize="xs"
+                text="View by ratees"
+                textClassName="mr-2"
+                className="ml-3"
+                light={viewBy === 'raters'}
+                onClick={() => (setQuery({ viewBy: 'ratees' }))}
+              />
+            </div>
+            <div className="flex flex-row">
+              <SearchBox
+                className="text-xs ml-6"
+                placeholder="Search"
+                loading={loading}
+                value={parsedQuery?.q || ''}
+                onSearch={(val) => setQuery({ q: val })}
+                onPressEnter={(e) => setQuery({ q: e.target.value })}
+                onChange={(e) => setQuery({ q: e.target.value })}
+              />
+              {
+                isNotPastEndDate && raterGroups?.length > 0 ? (
                   <Button
                     size="middle"
                     textSize="xs"
@@ -145,29 +147,62 @@ const StatusDetails = (
                       history.push(path);
                     }}
                   />
+                )
+                  : null}
+            </div>
+          </div>
+          <div className="flex flex-col ml-48">
+            {
+              isNotPastEndDate && raterGroups?.length > 0 ? (
+                <div className="flex flex-row">
                   <ImportExcelButton
-                    textClassName="mr-2"
-                    className="ml-3"
+                    textClassName="pr-3"
+                    className="mb-3 pr-3"
+                    buttonText="Import Relations Excel File"
                     beforeUpload={(file) => {
                       importRelations({ file, surveyGroupId });
                       return false;
                     }}
                   />
-                </>
-              ) : null}
-            <Button
-              size="middle"
-              textSize="xs"
-              text="Export Excel File"
-              textClassName="mr-2"
-              className="ml-3 mr-3"
-              type="gray"
-              icon="FileExcelOutlined"
-              iconPosition="right"
-              onClick={() => {
-                exportRelations({ surveyGroupId });
-              }}
-            />
+                  <ImportExcelButton
+                    textClassName="pr-3"
+                    className="mb-3 pr-3"
+                    buttonText="Import Mission Critical Competencies Excel File"
+                    beforeUpload={(file) => {
+                      importMissionCriticalsWithExcel({ file, surveyGroupId });
+                      return false;
+                    }}
+                  />
+                </div>
+              ) : null
+            }
+            <div className="flex flex-row">
+              <Button
+                size="middle"
+                textSize="xs"
+                text="Export Relations Excel File"
+                textClassName="pr-3.5"
+                type="gray"
+                icon="FileExcelOutlined"
+                iconPosition="right"
+                onClick={() => {
+                  exportRelations({ surveyGroupId });
+                }}
+              />
+              <Button
+                size="middle"
+                textSize="xs"
+                text="Export Mission Critical Competencies Excel File"
+                textClassName="pr-3.5"
+                className="ml-3"
+                type="gray"
+                icon="FileExcelOutlined"
+                iconPosition="right"
+                onClick={() => {
+                  exportMissionCriticalsToExcel({ surveyGroupId });
+                }}
+              />
+            </div>
           </div>
         </div>
       );
@@ -350,6 +385,8 @@ StatusDetails.propTypes = {
   }),
   fetchRaterGroups: PropTypes.func.isRequired,
   raterGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
+  importMissionCriticalsWithExcel: PropTypes.func.isRequired,
+  exportMissionCriticalsToExcel: PropTypes.func.isRequired,
 };
 
 StatusDetails.defaultProps = {

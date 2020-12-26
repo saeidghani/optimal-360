@@ -56,6 +56,7 @@ const RaterSelection = ({
       !selectedRaters?.find((el) => el.id === item.id)) || [];
     removeItems.map((item) => obj.removeRelations.push(item.relationId));
     addItems.map((item) =>
+      // eslint-disable-next-line radix
       obj.addRelations.push({ raterId: item.id, raterGroupId: parseInt(raterGroupId) }),
     );
   };
