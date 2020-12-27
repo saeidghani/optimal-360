@@ -25,10 +25,11 @@ const RateeGroupQuestions = ({
   const { relation, projectId } = parsedQuery;
 
   const [relationValues, setRelationValues] = useState({});
+  const [newAnswersCount, setNewAnswersCount] = useState(0);
   const [inputQuestionNumber, setInputQuestionNumber] = useState(questionNumber);
   const [jumpQuestion, setJumpQuestion] = useState('');
   const [jumpModalVisible, setJumpModalVisible] = useState(false);
-  const [showErr, setShowErr] = useState(false);
+  const [nextIsDisabled, setNextIsDisabled] = useState(true);
 
   useEffect(() => {
     if (surveyGroupId) {
@@ -70,6 +71,24 @@ const RateeGroupQuestions = ({
     });
     setRelationValues({ ...relationValues, ...newRelationValues });
   }, [questions?.timeStamp]);
+
+  useEffect(() => {
+    const relationsGroup = relations?.data?.filter(
+      ({ raterGroupName }) => raterGroupName === relation,
+    );
+    if (!questions?.data?.question?.required) {
+      setNextIsDisabled(false);
+    } else if (questions?.data?.responses?.length === relationsGroup?.length) {
+      setNextIsDisabled(false);
+    } else if (questions?.data?.responses?.length !== relationsGroup?.length) {
+      setNextIsDisabled(true);
+    } else if (
+      relationsGroup?.length === Object.keys(relationValues)?.length &&
+      relationsGroup?.length === newAnswersCount
+    ) {
+      setNextIsDisabled(false);
+    }
+  }, [relations, questions, relationValues, newAnswersCount]);
 
   const dataSource = React.useMemo(() => {
     const row = {};
@@ -141,10 +160,10 @@ const RateeGroupQuestions = ({
     });
 
     if (responses?.length !== Object.keys(relationValues)?.length) {
-      setShowErr(true);
+      setNextIsDisabled(true);
       return;
     }
-    setShowErr(false);
+    setNextIsDisabled(false);
 
     const questionId = questions?.data?.question?.id;
     if (questionNumber <= questions?.data?.totalQuestions) {
@@ -155,6 +174,8 @@ const RateeGroupQuestions = ({
       try {
         await addQuestionResponses({ surveyGroupId, questionId, ...body });
         setRelationValues({});
+        setNewAnswersCount(0);
+        setNextIsDisabled(true);
         if (questionNumber < questions?.data?.totalQuestions) {
           setInputQuestionNumber(questionNumber * 1 + 1);
           history.push(
@@ -173,7 +194,8 @@ const RateeGroupQuestions = ({
   };
 
   const handleBack = () => {
-    setShowErr(false);
+    setNextIsDisabled(true);
+    setNewAnswersCount(0);
     setInputQuestionNumber(questionNumber * 1 - 1);
     history.push(
       `${dynamicMap.surveyPlatform.rateeGroupQuestions({
@@ -191,6 +213,7 @@ const RateeGroupQuestions = ({
   };
 
   const handleSelectQuestionsRelationValues = (e, item, key) => {
+    setNewAnswersCount((count) => count + 1);
     setRelationValues({
       ...relationValues,
       [key]: item?.value,
@@ -198,6 +221,7 @@ const RateeGroupQuestions = ({
   };
 
   const handleFeedbackQuestionsRelationValues = (e, ratee) => {
+    setNewAnswersCount((count) => count + 1);
     setRelationValues({
       ...relationValues,
       [ratee?.rateeId]: e.target.value,
@@ -223,7 +247,8 @@ const RateeGroupQuestions = ({
           skipReducer: true,
         });
         if (inputQuestionNumber?.toString() === res?.data?.data?.questionNumber?.toString()) {
-          setShowErr(false);
+          setNextIsDisabled(true);
+          setNewAnswersCount(0);
           setInputQuestionNumber(inputQuestionNumber);
           history.push(
             `${dynamicMap.surveyPlatform.rateeGroupQuestions({
@@ -233,11 +258,7 @@ const RateeGroupQuestions = ({
           );
         } else {
           setJumpQuestion(res?.data?.data?.questionNumber);
-          if (res?.data?.data?.questionNumber?.toString() === questionNumber?.toString()) {
-            setShowErr(true);
-          } else {
-            setJumpModalVisible(true);
-          }
+          setJumpModalVisible(true);
         }
       } catch (err) {}
     }
@@ -245,6 +266,8 @@ const RateeGroupQuestions = ({
 
   const handleJumpOk = () => {
     setJumpModalVisible(false);
+    setNextIsDisabled(true);
+    setNewAnswersCount(0);
     setInputQuestionNumber(jumpQuestion);
     history.push(
       `${dynamicMap.surveyPlatform.rateeGroupQuestions({
@@ -267,7 +290,7 @@ const RateeGroupQuestions = ({
       {!questions?.data?.isFeedback ? (
         <SelectQuestions
           loading={loading}
-          showErr={showErr}
+          nextIsDisabled={nextIsDisabled}
           dataSource={dataSource}
           questions={questions}
           relationValues={relationValues}
@@ -290,7 +313,7 @@ const RateeGroupQuestions = ({
           ratees={ratees}
           relationValues={relationValues}
           totalRelations={Object.keys(relationValues)?.length}
-          showErr={showErr}
+          nextIsDisabled={nextIsDisabled}
           onSetRelationValues={handleFeedbackQuestionsRelationValues}
           jumpModalVisible={jumpModalVisible}
           onJumpOk={handleJumpOk}

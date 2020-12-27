@@ -25,10 +25,11 @@ const IndividualQuestions = ({
   const { relationId, projectId } = parsedQuery || {};
 
   const [relationValues, setRelationValues] = useState({});
+  const [newAnswersCount, setNewAnswersCount] = useState(0);
   const [inputQuestionNumber, setInputQuestionNumber] = useState(questionNumber);
   const [jumpQuestion, setJumpQuestion] = useState('');
-  const [showErr, setShowErr] = useState(false);
   const [jumpModalVisible, setJumpModalVisible] = useState(false);
+  const [nextIsDisabled, setNextIsDisabled] = useState(false);
 
   useEffect(() => {
     if (surveyGroupId) {
@@ -61,6 +62,18 @@ const IndividualQuestions = ({
       setRelationValues({ ...relationValues, ...newRelationValues });
     }
   }, [questions?.timeStamp]);
+
+  useEffect(() => {
+    if (!questions?.data?.question?.required) {
+      setNextIsDisabled(false);
+    } else if (questions?.data?.responses?.length === 1) {
+      setNextIsDisabled(false);
+    } else if (questions?.data?.responses?.length !== 1) {
+      setNextIsDisabled(true);
+    } else if (Object.keys(relationValues)?.length === 1 && newAnswersCount === 1) {
+      setNextIsDisabled(false);
+    }
+  }, [relations, questions, relationValues, newAnswersCount]);
 
   const dataSource = React.useMemo(() => {
     const rows = [];
@@ -122,10 +135,10 @@ const IndividualQuestions = ({
       ((!isFeedback && response?.questionResponse === null) ||
         (isFeedback && !response?.feedbackResponse))
     ) {
-      setShowErr(true);
+      setNextIsDisabled(true);
       return;
     }
-    setShowErr(false);
+    setNextIsDisabled(false);
 
     responses.push(response);
     const questionId = questions?.data?.question?.id;
@@ -137,6 +150,8 @@ const IndividualQuestions = ({
       try {
         await addQuestionResponses({ surveyGroupId, questionId, ...body });
         setRelationValues({});
+        setNextIsDisabled(true);
+        setNewAnswersCount(0);
         if (questionNumber < questions?.data?.totalQuestions) {
           setInputQuestionNumber(questionNumber * 1 + 1);
           history.push(
@@ -155,7 +170,8 @@ const IndividualQuestions = ({
   };
 
   const handleBack = () => {
-    setShowErr(false);
+    setNextIsDisabled(true);
+    setNewAnswersCount(0);
     setInputQuestionNumber(questionNumber * 1 - 1);
     history.push(
       `${dynamicMap.surveyPlatform.individualQuestions({
@@ -173,6 +189,7 @@ const IndividualQuestions = ({
   };
 
   const handleSelectQuestionsRelationValues = (e, item, key) => {
+    setNewAnswersCount((count) => count + 1);
     setRelationValues({
       ...relationValues,
       [key]: item?.value,
@@ -180,6 +197,7 @@ const IndividualQuestions = ({
   };
 
   const handleFeedbackQuestionsRelationValues = (e, ratee) => {
+    setNewAnswersCount((count) => count + 1);
     setRelationValues({
       ...relationValues,
       [ratee?.rateeId]: e.target.value,
@@ -196,7 +214,8 @@ const IndividualQuestions = ({
           skipReducer: true,
         });
         if (inputQuestionNumber?.toString() === res?.data?.data?.questionNumber?.toString()) {
-          setShowErr(false);
+          setNextIsDisabled(true);
+          setNewAnswersCount(0);
           setInputQuestionNumber(inputQuestionNumber);
           history.push(
             `${dynamicMap.surveyPlatform.individualQuestions({
@@ -206,11 +225,7 @@ const IndividualQuestions = ({
           );
         } else {
           setJumpQuestion(res?.data?.data?.questionNumber);
-          if (res?.data?.data?.questionNumber?.toString() === questionNumber?.toString()) {
-            setShowErr(true);
-          } else {
-            setJumpModalVisible(true);
-          }
+          setJumpModalVisible(true);
         }
       } catch (err) {}
     }
@@ -218,6 +233,8 @@ const IndividualQuestions = ({
 
   const handleJumpOk = () => {
     setJumpModalVisible(false);
+    setNextIsDisabled(true);
+    setNewAnswersCount(0);
     setInputQuestionNumber(jumpQuestion);
     history.push(
       `${dynamicMap.surveyPlatform.individualQuestions({
@@ -240,7 +257,7 @@ const IndividualQuestions = ({
       {!questions?.data?.isFeedback ? (
         <SelectQuestions
           loading={loading}
-          showErr={showErr}
+          nextIsDisabled={nextIsDisabled}
           dataSource={dataSource}
           questions={questions}
           relationValues={relationValues}
@@ -263,7 +280,7 @@ const IndividualQuestions = ({
           ratees={ratees}
           relationValues={relationValues}
           totalRelations={Object.keys(relationValues)?.length}
-          showErr={showErr}
+          nextIsDisabled={nextIsDisabled}
           onSetRelationValues={handleFeedbackQuestionsRelationValues}
           jumpModalVisible={jumpModalVisible}
           onJumpOk={handleJumpOk}

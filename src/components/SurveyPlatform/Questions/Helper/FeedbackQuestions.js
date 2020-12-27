@@ -17,7 +17,7 @@ const FeedbackQuestions = ({
   totalRelations,
   onSetRelationValues,
   onBack,
-  showErr,
+  nextIsDisabled,
   inputQuestionNumber,
   jumpModalVisible,
   onJumpOk,
@@ -61,15 +61,6 @@ const FeedbackQuestions = ({
               {questionNumber}. {questions?.data?.question?.statement}
               {questions?.data?.question?.required && <span className="text-red-500">*</span>}
             </p>
-            {showErr && (
-              <p className="text-red-500 mt-2">
-                {totalRelations === 1 ? (
-                  <span>Please answer the question</span>
-                ) : (
-                  <span>Please answer all the questions</span>
-                )}
-              </p>
-            )}
             <div
               className="flex justify-between md:border-b md:border-solid
             md:border-gray-200 md:pb-4"
@@ -139,6 +130,7 @@ const FeedbackQuestions = ({
           text="Next"
           className="mt-6 px-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
           textSize="base"
+          disabled={nextIsDisabled}
         />
         <Button
           onClick={onBack}
@@ -177,7 +169,7 @@ FeedbackQuestions.propTypes = {
   onNext: PropTypes.func.isRequired,
   ratees: PropTypes.arrayOf(PropTypes.shape({})),
   relationValues: PropTypes.shape({}),
-  showErr: PropTypes.bool,
+  nextIsDisabled: PropTypes.bool,
   totalRelations: PropTypes.number.isRequired,
   jumpModalVisible: PropTypes.bool,
   inputQuestionNumber: PropTypes.string,
@@ -193,7 +185,7 @@ FeedbackQuestions.defaultProps = {
   relations: {},
   ratees: [{}],
   relationValues: {},
-  showErr: false,
+  nextIsDisabled: false,
   jumpModalVisible: false,
   inputQuestionNumber: '',
   jumpQuestion: '',
