@@ -69,7 +69,11 @@ const ClientAdminLayout = ({
       >
         <img src={optimal360Logo} alt="" />
         <div className="lg:ml-16">
-          <img src={fetchFullURL(logo)} className="w-24 lg:w-32" alt="" />
+          <img
+            src={organizationSrc ? fetchFullURL(organizationSrc) : fetchFullURL(logo)}
+            className="w-24 lg:w-32"
+            alt=""
+          />
         </div>
         <Link to={dynamicMap.clientAdmin.dashboard()}>
           <div className="flex justify-between items-center text-base">

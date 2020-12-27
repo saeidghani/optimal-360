@@ -10,7 +10,7 @@ import { dynamicMap } from '../../routes/RouteMap';
 import Layout from '../Common/ClientAdminLayout';
 import { useQuery } from '../../hooks';
 
-const ReferenceGuide = () => {
+const ReferenceGuide = ({ userName }) => {
   const [parsedQuery, , setQuery] = useQuery();
   const { logo } = parsedQuery || {};
 
@@ -89,7 +89,7 @@ const ReferenceGuide = () => {
   ];
 
   return (
-    <Layout heading="Reference Guide" organizationSrc={logo}>
+    <Layout heading="Reference Guide" organizationSrc={logo} profileName={userName}>
       <span className="mt-10 text-primary-500 text-base font-semibold">Reference Guide</span>
       <p className="text-antgray-100 mt-4">
         You have been nominated in the multi-rater feedback project: 360-feedback survey. You have
