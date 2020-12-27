@@ -59,6 +59,7 @@ const AddQuestion = ({ visible, onSave, onCancel }) => {
               />
 
               <TextArea
+                fixedHeightForErrorMessage
                 name="definition"
                 value={values.definition}
                 onChange={(e) => setFieldValue('definition', e.target.value)}
