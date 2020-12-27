@@ -18,7 +18,6 @@ const SelectQuestions = ({
   loading,
   questions,
   relationValues,
-  totalRelations,
   inputQuestionNumber,
   jumpModalVisible,
   onJumpOk,
@@ -29,7 +28,7 @@ const SelectQuestions = ({
   onNext,
   onBack,
   dataSource,
-  showErr,
+  nextIsDisabled,
   jumpQuestion,
 }) => {
   const [exitModalVisible, setExitModalVisible] = useState(false);
@@ -47,15 +46,6 @@ const SelectQuestions = ({
               {questionNumber}. {questions?.data?.question?.statement}
               {questions?.data?.question?.required && <span className="text-red-500">*</span>}
             </p>
-            {showErr && (
-              <p className="text-red-500 mt-2">
-                {totalRelations?.toString() === '1' ? (
-                  <span>Please answer the question</span>
-                ) : (
-                  <span>Please answer all the questions</span>
-                )}
-              </p>
-            )}
             <div className="flex justify-between">
               <div className="inline-flex flex-col md:flex-row md:items-center mt-5">
                 <div className="w-40 -ml-12">
@@ -104,7 +94,7 @@ const SelectQuestions = ({
         )}
       </div>
     );
-  }, [questions.timeStamp, showErr, inputQuestionNumber]);
+  }, [questions.timeStamp, nextIsDisabled, inputQuestionNumber]);
 
   const columns = React.useMemo(() => {
     const zeroScoreIndex = questions?.data?.options?.findIndex(
@@ -253,6 +243,7 @@ const SelectQuestions = ({
               className="mt-6 px-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
               text="Next"
               onClick={handleNext}
+              disabled={nextIsDisabled}
             />
             <Button
               className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none
@@ -289,8 +280,7 @@ SelectQuestions.propTypes = {
   onBack: PropTypes.func.isRequired,
   dataSource: PropTypes.arrayOf(PropTypes.shape({})),
   options: PropTypes.arrayOf(PropTypes.shape({})),
-  showErr: PropTypes.bool,
-  totalRelations: PropTypes.number.isRequired,
+  nextIsDisabled: PropTypes.bool,
   jumpModalVisible: PropTypes.bool,
   inputQuestionNumber: PropTypes.string,
   jumpQuestion: PropTypes.string,
@@ -305,7 +295,7 @@ SelectQuestions.defaultProps = {
   relationValues: {},
   dataSource: [{}],
   options: [{}],
-  showErr: false,
+  nextIsDisabled: false,
   jumpModalVisible: false,
   inputQuestionNumber: '',
   jumpQuestion: '',

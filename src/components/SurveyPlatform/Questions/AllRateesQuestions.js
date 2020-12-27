@@ -25,10 +25,11 @@ const AllRateesQuestions = ({
   const { projectId } = parsedQuery || {};
 
   const [relationValues, setRelationValues] = useState({});
+  const [newAnswersCount, setNewAnswersCount] = useState(0);
   const [inputQuestionNumber, setInputQuestionNumber] = useState(questionNumber);
   const [jumpQuestion, setJumpQuestion] = useState('');
   const [jumpModalVisible, setJumpModalVisible] = useState(false);
-  const [showErr, setShowErr] = useState(false);
+  const [nextIsDisabled, setNextIsDisabled] = useState(true);
 
   const allRelationIds = React.useMemo(
     () => relations?.data?.map((relation) => relation.relationId),
@@ -74,6 +75,21 @@ const AllRateesQuestions = ({
       ...newRelationValues,
     });
   }, [questions?.timeStamp]);
+
+  useEffect(() => {
+    if (!questions?.data?.question?.required) {
+      setNextIsDisabled(false);
+    } else if (questions?.data?.responses?.length === allRelationIds?.length) {
+      setNextIsDisabled(false);
+    } else if (questions?.data?.responses?.length !== allRelationIds?.length) {
+      setNextIsDisabled(true);
+    } else if (
+      allRelationIds?.length === Object.keys(relationValues)?.length &&
+      allRelationIds?.length === newAnswersCount
+    ) {
+      setNextIsDisabled(false);
+    }
+  }, [relations, questions, relationValues, newAnswersCount]);
 
   const dataSource = React.useMemo(() => {
     const row = {};
@@ -137,10 +153,10 @@ const AllRateesQuestions = ({
     });
 
     if (responses?.length !== Object.keys(relationValues)?.length) {
-      setShowErr(true);
+      setNextIsDisabled(true);
       return;
     }
-    setShowErr(false);
+    setNextIsDisabled(false);
 
     const questionId = questions?.data?.question?.id;
     if (questionNumber <= questions?.data?.totalQuestions) {
@@ -151,6 +167,8 @@ const AllRateesQuestions = ({
       try {
         await addQuestionResponses({ surveyGroupId, questionId, ...body });
         setRelationValues({});
+        setNewAnswersCount(0);
+        setNextIsDisabled(true);
         if (questionNumber < questions?.data?.totalQuestions) {
           setInputQuestionNumber(questionNumber * 1 + 1);
           history.push(
@@ -169,7 +187,8 @@ const AllRateesQuestions = ({
   };
 
   const handleBack = () => {
-    setShowErr(false);
+    setNextIsDisabled(true);
+    setNewAnswersCount(0);
     setInputQuestionNumber(questionNumber * 1 - 1);
     history.push(
       `${dynamicMap.surveyPlatform.allRateesQuestions({
@@ -187,6 +206,7 @@ const AllRateesQuestions = ({
   };
 
   const handleSelectQuestionsRelationValues = (e, item, key) => {
+    setNewAnswersCount((count) => count + 1);
     setRelationValues({
       ...relationValues,
       [key]: item?.value,
@@ -194,6 +214,7 @@ const AllRateesQuestions = ({
   };
 
   const handleFeedbackQuestionsRelationValues = (e, ratee) => {
+    setNewAnswersCount((count) => count + 1);
     setRelationValues({
       ...relationValues,
       [ratee?.rateeId]: e.target.value,
@@ -215,7 +236,8 @@ const AllRateesQuestions = ({
           skipReducer: true,
         });
         if (inputQuestionNumber?.toString() === res?.data?.data?.questionNumber?.toString()) {
-          setShowErr(false);
+          setNextIsDisabled(true);
+          setNewAnswersCount(0);
           setInputQuestionNumber(inputQuestionNumber);
           history.push(
             `${dynamicMap.surveyPlatform.allRateesQuestions({
@@ -225,11 +247,7 @@ const AllRateesQuestions = ({
           );
         } else {
           setJumpQuestion(res?.data?.data?.questionNumber);
-          if (res?.data?.data?.questionNumber?.toString() === questionNumber?.toString()) {
-            setShowErr(true);
-          } else {
-            setJumpModalVisible(true);
-          }
+          setJumpModalVisible(true);
         }
       } catch (err) {}
     }
@@ -237,6 +255,8 @@ const AllRateesQuestions = ({
 
   const handleJumpOk = () => {
     setJumpModalVisible(false);
+    setNextIsDisabled(true);
+    setNewAnswersCount(0);
     setInputQuestionNumber(jumpQuestion);
     history.push(
       `${dynamicMap.surveyPlatform.allRateesQuestions({
@@ -259,7 +279,7 @@ const AllRateesQuestions = ({
       {!questions?.data?.isFeedback ? (
         <SelectQuestions
           loading={loading}
-          showErr={showErr}
+          nextIsDisabled={nextIsDisabled}
           dataSource={dataSource}
           questions={questions}
           relationValues={relationValues}
@@ -282,7 +302,7 @@ const AllRateesQuestions = ({
           ratees={ratees}
           relationValues={relationValues}
           totalRelations={Object.keys(relationValues)?.length}
-          showErr={showErr}
+          nextIsDisabled={nextIsDisabled}
           onSetRelationValues={handleFeedbackQuestionsRelationValues}
           onJumpOk={handleJumpOk}
           onJumpCancel={handleJumpCancel}

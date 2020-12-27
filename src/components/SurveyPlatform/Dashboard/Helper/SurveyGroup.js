@@ -144,31 +144,32 @@ const SurveyGroup = ({
         activeKey={surveyMode}
         onChange={onTabChange}
       >
-        {surveyModes?.map((mode) => (
-          <TabPane tab={mode?.title} key={mode?.key}>
-            <DataTable
-              loading={loading}
-              relations={relations}
-              isSubmitted={isSubmitted}
-              visitedSurveyGroups={visitedSurveyGroups}
-              resetQuestions={resetQuestions}
-              className={`${
-                mode?.key === 'all'
-                  ? 'md:grid grid-cols-8 md:mt-0'
-                  : 'pt-4 mt-8 md:mt-0 md:pt-6 bg-white rounded-lg shadow overflow-auto'
-              }`}
-              tableClassName={`${
-                mode?.key === 'all' ? 'col-span-5 overflow-auto' : 'overflow-auto'
-              }`}
-              extraDetailsClassName={`${
-                mode?.key === 'all' ? 'row-start-1 col-start-6 col-span-3' : ''
-              }`}
-              extraDetails={
-                mode?.key === 'all' ? <div className="hidden md:block">{extraDetails}</div> : null
-              }
-            />
-          </TabPane>
-        ))}
+        {!isSubmitted &&
+          surveyModes?.map((mode) => (
+            <TabPane tab={mode?.title} key={mode?.key}>
+              <DataTable
+                loading={loading}
+                relations={relations}
+                isSubmitted={isSubmitted}
+                visitedSurveyGroups={visitedSurveyGroups}
+                resetQuestions={resetQuestions}
+                className={`${
+                  mode?.key === 'all'
+                    ? 'md:grid grid-cols-8 md:mt-0'
+                    : 'pt-4 mt-8 md:mt-0 md:pt-6 bg-white rounded-lg shadow overflow-auto'
+                }`}
+                tableClassName={`${
+                  mode?.key === 'all' ? 'col-span-5 overflow-auto' : 'overflow-auto'
+                }`}
+                extraDetailsClassName={`${
+                  mode?.key === 'all' ? 'row-start-1 col-start-6 col-span-3' : ''
+                }`}
+                extraDetails={
+                  mode?.key === 'all' ? <div className="hidden md:block">{extraDetails}</div> : null
+                }
+              />
+            </TabPane>
+          ))}
       </Tabs>
     </div>
   );

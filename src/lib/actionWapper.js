@@ -4,7 +4,7 @@ const wrapper = (fn, errorHandler, notify) => {
   return fn()
     .then((res) => {
       if (res && config?.isDevEnv) {
-        console.log({ url: res?.config?.url, res });
+        // console.log({ url: res?.config?.url, res });
       }
 
       // https://www.notion.so/agencywolfe/Remove-successful-messages-7d463dcab3cc4f67bbad450fb5ea9c70

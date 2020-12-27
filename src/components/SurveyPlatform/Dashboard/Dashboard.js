@@ -58,8 +58,24 @@ const Dashboard = ({
         (g) => g?.projectId === projectId && g?.surveyGroupId === surveyGroupId,
       );
       if (!visitedGroup) {
+        const surveyGroups = projects?.data?.find(
+          (project) => project?.projectId?.toString() === projectId?.toString(),
+        )?.surveyGroups;
+
+        if (surveyGroupId) {
+          const currentSurveyGroup = surveyGroups?.find(
+            (g) => g?.surveyGroupId?.toString() === surveyGroupId?.toString(),
+          );
+          if (currentSurveyGroup?.surveyGroupSubmited) {
+            setIsSubmitted(true);
+            setWelcomeModalVisible(false);
+          } else {
+            setIsSubmitted(false);
+            console.log('welcome is on');
+            setWelcomeModalVisible(true);
+          }
+        }
         setVisitedSurveyGroups([{ projectId, surveyGroupId }]);
-        setWelcomeModalVisible(true);
       }
     }
   }, []);
@@ -113,22 +129,33 @@ const Dashboard = ({
           ...visitedSurveyGroups,
           { projectId, surveyGroupId: newSurveyGroupId },
         ]);
-        setWelcomeModalVisible(true);
+        if (surveyGroupId) {
+          if (currentSurveyGroup?.surveyGroupSubmited) {
+            setIsSubmitted(true);
+            setWelcomeModalVisible(false);
+          } else {
+            setIsSubmitted(false);
+            console.log('welcome is on');
+            setWelcomeModalVisible(true);
+          }
+        }
       }
     }
   }, [surveyGroups]);
 
   useEffect(() => {
-    const currentSurveyGroup = surveyGroups?.find(
-      (g) => g?.surveyGroupId?.toString() === surveyGroupId?.toString(),
-    );
-    if (currentSurveyGroup?.surveyGroupSubmited) {
-      setIsSubmitted(true);
-      setWelcomeModalVisible(false);
-    } else {
-      setIsSubmitted(false);
+    if (surveyGroupId) {
+      const currentSurveyGroup = surveyGroups?.find(
+        (g) => g?.surveyGroupId?.toString() === surveyGroupId?.toString(),
+      );
+      if (currentSurveyGroup?.surveyGroupSubmited) {
+        setIsSubmitted(true);
+        setWelcomeModalVisible(false);
+      } else {
+        setIsSubmitted(false);
+      }
     }
-  }, [surveyGroupId]);
+  }, [surveyGroups, surveyGroupId]);
 
   const projectName = React.useMemo(
     () =>
@@ -225,7 +252,7 @@ const Dashboard = ({
         </div>
       </Modal>
       <Modal
-        visible={welcomeModalVisible}
+        visible={!isSubmitted && welcomeModalVisible}
         handleCancel={() => setWelcomeModalVisible(false)}
         handleOk={handleWelcomeModalOk}
         okText=""
@@ -258,13 +285,17 @@ const Dashboard = ({
         onChange={onSurveyGroupTabChange}
       >
         {surveyGroups?.map((group) => (
-          <TabPane key={group?.surveyGroupId?.toString()} tab={group?.surveyGroupName} disabled>
+          <TabPane
+            key={group?.surveyGroupId?.toString()}
+            tab={group?.surveyGroupName}
+            disabled={isSubmitted}
+          >
             <SurveyGroup
               loading={loading}
               fetchInfo={fetchInfo}
               fetchRelations={fetchRelations}
-              info={!isSubmitted ? info : {}}
-              relations={!isSubmitted ? relations : {}}
+              info={info}
+              relations={relations}
               isSubmitted={isSubmitted}
               visitedSurveyGroups={visitedSurveyGroups}
               resetQuestions={resetQuestions}
@@ -274,7 +305,7 @@ const Dashboard = ({
       </Tabs>
       {!loading && surveyGroups?.length > 0 && (
         <div className="md:flex justify-end">
-          {surveyMode === 'all' && (
+          {surveyMode === 'all' && !isSubmitted && (
             <Button
               onClick={handleContinue}
               className="mt-6 mr-3 w-full md:w-auto"
