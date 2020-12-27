@@ -66,22 +66,17 @@ const IndividualQuestions = ({
   useEffect(() => {
     const isFeedback = questions?.data?.isFeedback === true;
     if (questions?.data?.question?.required) {
-      console.log(questions?.data?.question?.required);
       if (!isFeedback) {
         if (
           questions?.data?.responses?.length === 0 ||
           questions?.data?.responses[0]?.questionResponse === null
         ) {
-          console.log(questions?.data?.responses?.length);
-          console.log(questions?.data?.responses[0]?.questionResponse === null);
           setNextIsDisabled(true);
         }
       } else if (
         questions?.data?.responses?.length === 0 ||
         questions?.data?.responses[0]?.questionResponse === null
       ) {
-        console.log(questions?.data?.responses?.length);
-        console.log(questions?.data?.responses[0]?.feedbackResponse === null);
         setNextIsDisabled(true);
       }
     }

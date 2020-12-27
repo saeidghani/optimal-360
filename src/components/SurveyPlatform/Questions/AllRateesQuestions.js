@@ -79,7 +79,6 @@ const AllRateesQuestions = ({
   useEffect(() => {
     const isFeedback = questions?.data?.isFeedback === true;
     if (questions?.data?.question?.required) {
-      console.log(questions?.data?.question?.required);
       if (!isFeedback) {
         if (questions?.data?.responses?.length === 0) {
           setNextIsDisabled(true);
@@ -89,6 +88,7 @@ const AllRateesQuestions = ({
         questions?.data?.responses?.forEach((res) => {
           if (res?.questionResponse === null) allIsAnswered = false;
         });
+        if (questions?.data?.responses?.length !== allRelationIds?.length) allIsAnswered = false;
         if (!allIsAnswered) setNextIsDisabled(true);
       } else if (questions?.data?.responses?.length === 0) {
         setNextIsDisabled(true);
@@ -103,7 +103,7 @@ const AllRateesQuestions = ({
     } else {
       setNextIsDisabled(false);
     }
-  }, [questions.timeStamp, newAnswersCount, relationValues]);
+  }, [questions, newAnswersCount, relationValues]);
 
   useEffect(() => {
     let allIsAnswered = true;
@@ -113,6 +113,10 @@ const AllRateesQuestions = ({
     });
     if (allIsAnswered) setNextIsDisabled(false);
   }, [relationValues]);
+
+  useEffect(() => {
+    setNextIsDisabled(false);
+  }, [questionNumber]);
 
   const dataSource = React.useMemo(() => {
     const row = {};
