@@ -89,6 +89,7 @@ const FeedbackQuestions = ({
                 <Input
                   inputClass="w-20 ml-3"
                   name="inputQuestionNumber"
+                  fixedHeightForErrorMessage={false}
                   value={inputQuestionNumber}
                   onChange={onSetInputQuestionNumber}
                   onPressEnter={onInputPressEnter}

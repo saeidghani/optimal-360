@@ -206,7 +206,9 @@ const IndividualQuestions = ({
           );
         } else {
           setJumpQuestion(res?.data?.data?.questionNumber);
-          if (res?.data?.data?.questionNumber?.toString() !== questionNumber?.toString()) {
+          if (res?.data?.data?.questionNumber?.toString() === questionNumber?.toString()) {
+            setShowErr(true);
+          } else {
             setJumpModalVisible(true);
           }
         }

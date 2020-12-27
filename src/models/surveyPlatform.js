@@ -184,9 +184,9 @@ export default {
       ...state,
       questions: payload,
     }),
-    fetchFeedbacks_reducer: (state, payload) => ({
+    resetQuestions: (state) => ({
       ...state,
-      feedbacks: payload,
+      questions: {},
     }),
   },
 };
