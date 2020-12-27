@@ -46,7 +46,6 @@ class Dashboard extends Component {
   render() {
     const {
       loading,
-      organization,
       projects,
       completionRate,
       raterGroups,
@@ -66,7 +65,6 @@ class Dashboard extends Component {
         fetchSummary={this.fetchSummary}
         fetchRatees={this.fetchRatees}
         fetchRaters={this.fetchRaters}
-        organization={organization}
         projects={projects}
         raterGroups={raterGroups}
         summary={summary}
@@ -92,7 +90,6 @@ Dashboard.propTypes = {
   summary: PropTypes.shape({}),
   ratees: PropTypes.shape({}),
   raters: PropTypes.shape({}),
-  organization: PropTypes.shape({}),
   userName: PropTypes.string,
 };
 
@@ -104,7 +101,6 @@ Dashboard.defaultProps = {
   ratees: {},
   raters: {},
   userName: '',
-  organization: {},
 };
 
 const mapStateToProps = (state) => ({

@@ -13,11 +13,15 @@ import {
   FacebookOutlined,
 } from '@ant-design/icons';
 
+import axios from 'axios';
 import ProfileDropdown from './ProfileDropdown';
 import BreadCrumb from './BreadCrumb';
 import optimal360Logo from '../../assets/images/optimal360Logo.png';
 import { dynamicMap } from '../../routes/RouteMap';
 import { fetchFullURL } from '../../lib/utils';
+import exportIcon from '../../assets/images/export-icon.svg';
+import printIcon from '../../assets/images/print-icon.svg';
+import { stringify, useQuery } from '../../hooks/useQuery';
 
 const ClientAdminLayout = ({
   children,
@@ -29,8 +33,11 @@ const ClientAdminLayout = ({
   heading,
   profileName,
   organizationSrc,
+  surveyGroupId,
 }) => {
   const history = useHistory();
+  const [parsedQuery, , setQuery] = useQuery();
+  const { logo } = parsedQuery || {};
 
   const profileDropdownOptions = [
     {
@@ -44,6 +51,13 @@ const ClientAdminLayout = ({
     },
   ];
 
+  const handleExport = async (sgId) => {
+    await axios({
+      method: 'get',
+      url: `/client-admin/survey-groups/${sgId}/overview/export`,
+    });
+  };
+
   return (
     <div
       className={`min-h-screen relative bg-primary-200 flex flex-col
@@ -55,7 +69,11 @@ const ClientAdminLayout = ({
       >
         <img src={optimal360Logo} alt="" />
         <div className="lg:ml-16">
-          <img src={fetchFullURL(organizationSrc)} className="w-24 lg:w-32" alt="" />
+          <img
+            src={organizationSrc ? fetchFullURL(organizationSrc) : fetchFullURL(logo)}
+            className="w-24 lg:w-32"
+            alt=""
+          />
         </div>
         <Link to={dynamicMap.clientAdmin.dashboard()}>
           <div className="flex justify-between items-center text-base">
@@ -69,12 +87,23 @@ const ClientAdminLayout = ({
             <a href="mailto:e360support@optimalconsulting.com.sg">Customer Support</a>
           </span>
         </div>
-        <Link to={dynamicMap.clientAdmin.referenceGuide()}>
+        <Link
+          to={`${dynamicMap.clientAdmin.referenceGuide()}${stringify({ log: organizationSrc })}`}
+        >
           <div className="flex justify-between items-center text-gray-500 text-base">
             <QuestionCircleOutlined />
             <span className="ml-2 text-xs lg:text-base">Guides</span>
           </div>
         </Link>
+        <div className="flex">
+          <img
+            className="mr-5"
+            src={exportIcon}
+            onClick={() => handleExport(surveyGroupId)}
+            alt=""
+          />
+          <img src={printIcon} alt="" onClick={() => window.print()} />
+        </div>
         <ProfileDropdown
           title={profileName}
           options={profileDropdownOptions}

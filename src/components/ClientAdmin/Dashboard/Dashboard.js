@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs } from 'antd';
 import PropTypes from 'prop-types';
 
@@ -23,10 +23,11 @@ const Dashboard = ({
   fetchRatees,
   fetchRaters,
   userName,
-  organization,
 }) => {
   const [parsedQuery, , setQuery] = useQuery();
   const { projectId, surveyGroupId } = parsedQuery || {};
+
+  const [organizationLogo, setOrganizationLogo] = useState('');
 
   const { TabPane } = Tabs;
 
@@ -63,6 +64,11 @@ const Dashboard = ({
     }
   }, [surveyGroups]);
 
+  React.useEffect(() => {
+    const currentProject = projects?.data?.find((p) => p?.projectId?.toString() === projectId);
+    setOrganizationLogo(currentProject?.organizationLogo);
+  }, [projects.timeStamp, projectId]);
+
   const projectName = React.useMemo(
     () =>
       projectsList?.find((project) => project.value?.toString() === projectId?.toString())?.title ||
@@ -75,7 +81,7 @@ const Dashboard = ({
   };
 
   return (
-    <Layout profileName={userName} organizationSrc={organization?.data?.organizationLogo}>
+    <Layout profileName={userName} organizationSrc={organizationLogo} surveyGroupId={surveyGroupId}>
       <div className="grid grid-cols-12 mb-10 mt-8">
         <div className="col-start-1 col-span-6 text-base text-body mb-3">Select Project</div>
         <Dropdown

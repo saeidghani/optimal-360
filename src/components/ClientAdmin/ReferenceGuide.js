@@ -8,8 +8,12 @@ import Button from '../Common/Button';
 import { dynamicMap } from '../../routes/RouteMap';
 
 import Layout from '../Common/ClientAdminLayout';
+import { useQuery } from '../../hooks';
 
-const ReferenceGuide = ({ organization }) => {
+const ReferenceGuide = ({ userName }) => {
+  const [parsedQuery, , setQuery] = useQuery();
+  const { logo } = parsedQuery || {};
+
   const ReferenceGuideCards = [
     {
       title: 'Full grey color:',
@@ -85,7 +89,7 @@ const ReferenceGuide = ({ organization }) => {
   ];
 
   return (
-    <Layout heading="Reference Guide" organizationSrc={organization?.data?.organizationLogo}>
+    <Layout heading="Reference Guide" organizationSrc={logo} profileName={userName}>
       <span className="mt-10 text-primary-500 text-base font-semibold">Reference Guide</span>
       <p className="text-antgray-100 mt-4">
         You have been nominated in the multi-rater feedback project: 360-feedback survey. You have
@@ -231,14 +235,8 @@ const ReferenceGuide = ({ organization }) => {
   );
 };
 
-ReferenceGuide.propTypes = {
-  organization: PropTypes.shape({
-    data: PropTypes.shape({ organizationLogo: PropTypes.string }),
-  }),
-};
+ReferenceGuide.propTypes = {};
 
-ReferenceGuide.defaultProps = {
-  organization: {},
-};
+ReferenceGuide.defaultProps = {};
 
 export default ReferenceGuide;
