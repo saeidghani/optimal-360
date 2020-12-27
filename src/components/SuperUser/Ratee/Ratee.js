@@ -49,8 +49,11 @@ const Ratee = ({
   pastResult,
   fetchRaterGroups,
   raterGroups,
-  generateReport,
+  generateIndividualReports,
+  generateGroupReports,
   exportDemographicDataForIndividual,
+  importMissionCriticalsWithExcel,
+  exportMissionCriticalsToExcel,
 }) => {
   const history = useHistory();
   const [parsedQuery, , setQuery] = useQuery();
@@ -147,6 +150,8 @@ const Ratee = ({
             fetchRaterGroups={fetchRaterGroups}
             loading={loading}
             raterGroups={raterGroups}
+            importMissionCriticalsWithExcel={importMissionCriticalsWithExcel}
+            exportMissionCriticalsToExcel={exportMissionCriticalsToExcel}
           />
         </TabPane>
         <TabPane tab={allTabs[2].title} key={allTabs[2].key}>
@@ -168,7 +173,8 @@ const Ratee = ({
             exportDemographicData={exportDemographicData}
             individualReports={individualReports}
             groupReports={groupReports}
-            generateReport={generateReport}
+            generateGroupReports={generateGroupReports}
+            generateIndividualReports={generateIndividualReports}
             exportDemographicDataForIndividual={exportDemographicDataForIndividual}
           />
         </TabPane>
@@ -223,10 +229,13 @@ Ratee.propTypes = {
   setPastResult: PropTypes.func.isRequired,
   pastResultOptions: PropTypes.shape({}),
   pastResult: PropTypes.shape({}),
-  generateReport: PropTypes.func.isRequired,
+  generateGroupReports: PropTypes.func.isRequired,
+  generateIndividualReports: PropTypes.func.isRequired,
   fetchRaterGroups: PropTypes.func.isRequired,
   raterGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
   exportDemographicDataForIndividual: PropTypes.func.isRequired,
+  importMissionCriticalsWithExcel: PropTypes.func.isRequired,
+  exportMissionCriticalsToExcel: PropTypes.func.isRequired,
 };
 
 Ratee.defaultProps = {

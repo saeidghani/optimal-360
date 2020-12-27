@@ -20,7 +20,8 @@ const Result = ({
   exportDemographicData,
   individualReports,
   groupReports,
-  generateReport,
+  generateGroupReports,
+  generateIndividualReports,
   exportDemographicDataForIndividual,
 }) => {
   const history = useHistory();
@@ -67,12 +68,15 @@ const Result = ({
                   text="Force generate report"
                   textClassName="mr-2"
                   className="ml-3"
-                  onClick={() => { }}
+                  onClick={() => {
+                    generateIndividualReports({
+                      // eslint-disable-next-line radix
+                      surveyGroupId: parseInt(parsedQuery.surveyGroupId),
+                      rateeIds: selectedRows.map((el) => el.rateeId),
+                    });
+                  }}
                 />
-                : null
-            }
-            {
-              !selectedRowsReportAvailable?.includes(false) ?
+                :
                 <Button
                   size="middle"
                   textSize="xs"
@@ -81,7 +85,14 @@ const Result = ({
                   className="ml-3"
                   icon="FileExcelOutlined"
                   iconPosition="right"
-                /> : null
+                  onClick={() => {
+                    generateIndividualReports({
+                      // eslint-disable-next-line radix
+                      surveyGroupId: parseInt(parsedQuery.surveyGroupId),
+                      rateeIds: selectedRows.map((el) => el.rateeId),
+                    });
+                  }}
+                />
             }
             <Button
               size="middle"
@@ -107,16 +118,13 @@ const Result = ({
                   textClassName="mr-2"
                   className="ml-3"
                   onClick={() =>
-                    generateReport({
+                    generateGroupReports({
                       // eslint-disable-next-line radix
                       projectId: parseInt(parsedQuery.projectId),
                       surveyGroupIds: selectedRows.map((el) => el.id),
                     })}
                 />
-                : null
-            }
-            {
-              !selectedRowsReportAvailable?.includes(false) ?
+                :
                 <Button
                   size="middle"
                   textSize="xs"
@@ -125,13 +133,13 @@ const Result = ({
                   className="ml-3"
                   icon="FileExcelOutlined"
                   onClick={() =>
-                    generateReport({
+                    generateGroupReports({
                       // eslint-disable-next-line radix
                       projectId: parseInt(parsedQuery.projectId),
                       surveyGroupIds: selectedRows.map((el) => el.id),
                     })}
                   iconPosition="right"
-                /> : null
+                />
             }
             <Button
               size="middle"
@@ -723,7 +731,8 @@ Result.propTypes = {
     }),
     timeStamp: PropTypes.number,
   }),
-  generateReport: PropTypes.func.isRequired,
+  generateGroupReports: PropTypes.func.isRequired,
+  generateIndividualReports: PropTypes.func.isRequired,
   exportDemographicDataForIndividual: PropTypes.func.isRequired,
 };
 

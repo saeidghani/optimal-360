@@ -137,14 +137,29 @@ class Ratee extends Component {
     return fetchRaterGroups({ surveyGroupId });
   }
 
-  generateReport = ({ projectId, surveyGroupIds }) => {
-    const { generateReport } = this.props;
-    return generateReport({ projectId, surveyGroupIds });
+  generateGroupReports = ({ projectId, surveyGroupIds }) => {
+    const { generateGroupReports } = this.props;
+    return generateGroupReports({ projectId, surveyGroupIds });
+  }
+
+  generateIndividualReports = ({ surveyGroupId, rateeIds }) => {
+    const { generateIndividualReports } = this.props;
+    return generateIndividualReports({ surveyGroupId, rateeIds });
   }
 
   exportDemographicDataForIndividual = ({ surveyGroupIds, fields }) => {
     const { exportDemographicDataForIndividual } = this.props;
     return exportDemographicDataForIndividual({ surveyGroupIds, fields });
+  }
+
+  exportMissionCriticalsToExcel = ({ surveyGroupId }) => {
+    const { exportMissionCriticalsToExcel } = this.props;
+    return exportMissionCriticalsToExcel({ surveyGroupId });
+  }
+
+  importMissionCriticalsWithExcel = ({ file, surveyGroupId }) => {
+    const { importMissionCriticalsWithExcel } = this.props;
+    return importMissionCriticalsWithExcel({ file, surveyGroupId });
   }
 
   render() {
@@ -199,8 +214,11 @@ class Ratee extends Component {
         pastResult={pastResult}
         fetchRaterGroups={this.fetchRaterGroups}
         raterGroups={raterGroups}
-        generateReport={this.generateReport}
+        generateGroupReports={this.generateGroupReports}
+        generateIndividualReports={this.generateIndividualReports}
         exportDemographicDataForIndividual={this.exportDemographicDataForIndividual}
+        importMissionCriticalsWithExcel={this.importMissionCriticalsWithExcel}
+        exportMissionCriticalsToExcel={this.exportMissionCriticalsToExcel}
       />
     );
   }
@@ -241,8 +259,11 @@ Ratee.propTypes = {
   setPastResult: PropTypes.func.isRequired,
   fetchRaterGroups: PropTypes.func.isRequired,
   raterGroups: PropTypes.PropTypes.arrayOf(PropTypes.object).isRequired,
-  generateReport: PropTypes.func.isRequired,
+  generateGroupReports: PropTypes.func.isRequired,
+  generateIndividualReports: PropTypes.func.isRequired,
   exportDemographicDataForIndividual: PropTypes.func.isRequired,
+  importMissionCriticalsWithExcel: PropTypes.func.isRequired,
+  exportMissionCriticalsToExcel: PropTypes.func.isRequired,
 };
 
 Ratee.defaultProps = {
@@ -295,8 +316,11 @@ const mapDispatchToProps = (dispatch) => ({
   fetchPastResult: dispatch.ratee.fetchPastResult,
   setPastResult: dispatch.ratee.setPastResult,
   fetchRaterGroups: dispatch.ratee.fetchRaterGroups,
-  generateReport: dispatch.ratee.generateReport,
+  generateGroupReports: dispatch.ratee.generateGroupReports,
+  generateIndividualReports: dispatch.ratee.generateIndividualReports,
   exportDemographicDataForIndividual: dispatch.ratee.exportDemographicDataForIndividual,
+  importMissionCriticalsWithExcel: dispatch.ratee.importMissionCriticalsWithExcel,
+  exportMissionCriticalsToExcel: dispatch.ratee.exportMissionCriticalsToExcel,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Ratee);

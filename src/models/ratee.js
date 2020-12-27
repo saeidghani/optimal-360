@@ -440,13 +440,13 @@ export default {
         dispatch.util.alert);
     },
 
-    async generateReport({ projectId, surveyGroupIds }) {
+    async generateGroupReports({ projectId, surveyGroupIds }) {
       return actionWapper(async () => {
         const res = await axios({
           method: 'post',
           url: `/super-user/projects/${projectId}/results/group-reports/generate-reports`,
           data: { surveyGroupIds },
-          responseType: 'arraybuffer',
+          responseType: 'blob',
         });
         dispatch.util.saveZipFile({
           res: res?.data,
@@ -456,6 +456,53 @@ export default {
         dispatch.util.errorHandler,
         dispatch.util.alert);
     },
+
+    async generateIndividualReports({ surveyGroupId, rateeIds }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: `/super-user/survey-groups/${surveyGroupId}/results/individual-reports/generate-reports`,
+          data: { rateeIds },
+          responseType: 'blob',
+        });
+
+        dispatch.util.saveZipFile({
+          res: res?.data,
+          filename: `report-project-${surveyGroupId}--surveyGroups[${rateeIds}].zip`,
+        });
+      }, dispatch.util.errorHandler,
+        dispatch.util.alert);
+    },
+
+    async exportMissionCriticalsToExcel({ surveyGroupId }) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: `/super-user/survey-groups/${surveyGroupId}/mission-criticals/export`,
+          responseType: 'blob',
+        });
+        dispatch.util.saveFile({ blob: res.data, filename: `MissionCriticals-${surveyGroupId}` });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
+    async importMissionCriticalsWithExcel({ file, surveyGroupId }) {
+      // eslint-disable-next-line no-undef
+      const data = new FormData();
+      data.append('excel', file);
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'post',
+          url: `/super-user/survey-groups/${surveyGroupId}/mission-criticals/import`,
+          data,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler,
+        dispatch.util.alert);
+    },
+
   }),
 
   reducers: {
