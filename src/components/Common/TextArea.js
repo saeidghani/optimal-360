@@ -10,6 +10,7 @@ const _TextArea = ({
   onChange,
   onPressEnter,
   disabled,
+  fixedHeightForErrorMessage,
   bordered,
   rows,
   wrapperClassName,
@@ -37,7 +38,9 @@ const _TextArea = ({
       rows={rows}
     />
 
-    {errorMessage && <p className="text-red-500 h-5 mt-1">{errorMessage}</p>}
+    {/* {errorMessage && */}
+    <p className={`text-red-500 ${fixedHeightForErrorMessage && 'h-5'} mt-1`}>{errorMessage}</p>
+    {/* } */}
   </div>
 );
 
@@ -55,6 +58,7 @@ _TextArea.propTypes = {
   label: PropTypes.string,
   labelClassName: PropTypes.string,
   errorMessage: PropTypes.string,
+  fixedHeightForErrorMessage: PropTypes.bool,
 };
 
 _TextArea.defaultProps = {
@@ -67,6 +71,7 @@ _TextArea.defaultProps = {
   onPressEnter: () => {},
   disabled: false,
   bordered: false,
+  fixedHeightForErrorMessage: false,
   label: '',
   labelClassName: '',
   errorMessage: '',

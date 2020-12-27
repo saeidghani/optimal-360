@@ -39,11 +39,11 @@ const SetAdmin = ({ loading, setAdmin, fetchAdmin, clientAdmin }) => {
           initialValues={{
             email: clientAdmin?.data?.email,
             password: clientAdmin?.data?.password,
-            status: clientAdmin?.data?.active ? 'active' : 'inactive',
+            status: clientAdmin?.data?.status,
           }}
           validationSchema={schema}
           onSubmit={async ({ email, password, status }) => {
-            await setAdmin({ email, password, active: status === 'active', projectId });
+            await setAdmin({ email, password, status, projectId });
 
             const path = dynamicMap.superUser.projectsList();
             history.replace(`${path}?status=active&page_size=10&page_number=1`);
@@ -126,7 +126,7 @@ SetAdmin.propTypes = {
   fetchAdmin: PropTypes.func.isRequired,
   clientAdmin: PropTypes.shape({
     data: PropTypes.shape({
-      active: PropTypes.bool,
+      status: PropTypes.string,
       email: PropTypes.string,
       password: PropTypes.string,
     }),
