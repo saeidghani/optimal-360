@@ -342,7 +342,7 @@ const SurveyQuestionsList = ({
     <MainLayout
       wizardLayout
       title="Super User"
-      breadCrumbItems={['New Project', 'Survey Questions']}
+      breadCrumbItems={['New Project', 'Survey SelectQuestions']}
       titleClass="mb-2"
       contentClass="py-4"
       headerClassName="pl-21"

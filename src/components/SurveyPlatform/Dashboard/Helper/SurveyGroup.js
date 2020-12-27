@@ -6,21 +6,29 @@ import moment from 'moment';
 import Progress from '../../../Common/Progress';
 import { useQuery } from '../../../../hooks';
 import graphIcon from '../../../../assets/images/graph-icon.svg';
-
 import DataTable from './DataTable';
 
-const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations, isSubmitted }) => {
+const SurveyGroup = ({
+  loading,
+  fetchInfo,
+  fetchRelations,
+  info,
+  relations,
+  isSubmitted,
+  surveyGroupSubmited,
+  visitedSurveyGroups,
+}) => {
   const [parsedQuery, , setQuery] = useQuery();
   const { surveyGroupId, surveyMode } = parsedQuery || {};
 
   const { TabPane } = Tabs;
 
   React.useEffect(() => {
-    fetchInfo({ surveyGroupId });
+    if (surveyGroupId) fetchInfo({ surveyGroupId });
   }, [fetchInfo, surveyGroupId]);
 
   React.useEffect(() => {
-    fetchRelations({ surveyGroupId });
+    if (surveyGroupId) fetchRelations({ surveyGroupId });
   }, [fetchRelations, surveyGroupId]);
 
   const totalAvg = React.useMemo(() => {
@@ -100,7 +108,7 @@ const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations, isSu
   );
 
   const extraDetails = (
-    <div className="flex flex-col items-center mt-10">
+    <div className="flex flex-col items-center py-6 md:py-0 md:mt-10">
       <div className="md:hidden">{deadlineInfo}</div>
       <div className="flex items-center">
         <span className="relative w-10 h-10 rounded-full bg-primary-500">
@@ -115,7 +123,7 @@ const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations, isSu
         className="mt-10"
         percentage={totalAvg}
         subClassName="text-heading"
-        status={isSubmitted ? 'sub' : ''}
+        status={isSubmitted || surveyGroupSubmited ? 'sub' : ''}
         showPercent
       />
       <div className="mt-10 text-antgray-100">Collective Completion Rate</div>
@@ -123,11 +131,13 @@ const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations, isSu
   );
 
   return (
-    <div className="w-full p-8 bg-white shadow mt-8 md:mt-0">
+    <div className="w-full p-8 md:bg-white md:shadow mt-8 md:mt-0">
+      <div className="flex flex-col bg-white rounded-lg shadow mb-4 md:hidden">{extraDetails}</div>
       <Tabs
-        className="survey-mode-tabs"
-        tabBarExtraContent={deadlineInfo}
+        className="survey-mode-tabs bg-white p-2"
+        tabBarExtraContent={<div className="hidden md:block">{deadlineInfo}</div>}
         defaultActiveKey={surveyMode}
+        activeKey={surveyMode}
         onChange={onTabChange}
       >
         {surveyModes?.map((mode) => (
@@ -135,6 +145,9 @@ const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations, isSu
             <DataTable
               loading={loading}
               relations={relations}
+              isSubmitted={isSubmitted}
+              surveyGroupSubmited={surveyGroupSubmited}
+              visitedSurveyGroups={visitedSurveyGroups}
               className={`${
                 mode?.key === 'all'
                   ? 'md:grid grid-cols-8 md:mt-0'
@@ -160,8 +173,10 @@ const SurveyGroup = ({ loading, fetchInfo, fetchRelations, info, relations, isSu
 SurveyGroup.propTypes = {
   loading: PropTypes.bool.isRequired,
   isSubmitted: PropTypes.bool,
+  surveyGroupSubmited: PropTypes.bool,
   fetchInfo: PropTypes.func.isRequired,
   fetchRelations: PropTypes.func.isRequired,
+  visitedSurveyGroups: PropTypes.arrayOf(PropTypes.shape({})),
   info: PropTypes.shape({
     data: PropTypes.shape({
       endDate: PropTypes.string,
@@ -179,6 +194,8 @@ SurveyGroup.defaultProps = {
   info: {},
   relations: {},
   isSubmitted: false,
+  surveyGroupSubmited: false,
+  visitedSurveyGroups: [{}],
 };
 
 export default SurveyGroup;

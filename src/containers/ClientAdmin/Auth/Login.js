@@ -9,6 +9,12 @@ import Layout from '../../../components/ClientAdmin/Auth/Login';
 class _Login extends Component {
   state = {};
 
+  fetchOrganization = async (surveyGroupId) => {
+    const { fetchOrganization } = this.props;
+
+    return fetchOrganization(surveyGroupId);
+  };
+
   login = async ({ email, password, rememberMe }) => {
     const { login, saveUserName } = this.props;
 
@@ -18,6 +24,7 @@ class _Login extends Component {
 
     await login({ username: email, password, rememberMe });
     saveUserName({ userName: email });
+    await this.fetchOrganization;
 
     setTimeout(() => window.location.replace(newPath), 4000);
   };
@@ -33,6 +40,7 @@ _Login.propTypes = {
   login: PropTypes.func.isRequired,
   saveUserName: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
+  fetchOrganization: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -42,6 +50,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   login: dispatch.clientAdmin.login,
   saveUserName: dispatch.clientAdmin.saveUserName,
+  fetchOrganization: dispatch.clientAdmin?.fetchOrganization,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(_Login);

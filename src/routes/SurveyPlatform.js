@@ -12,9 +12,6 @@ import Dashboard from '../containers/SurveyPlatform/Dashboard';
 import AllQuestions from '../containers/SurveyPlatform/Questions/AllRateesQuestions';
 import IndividualQuestions from '../containers/SurveyPlatform/Questions/IndividualQuestions';
 import RateeGroupQuestions from '../containers/SurveyPlatform/Questions/RateeGroupQuestions';
-import IndividualFeedbacks from '../containers/SurveyPlatform/Feedbacks/IndividualFeedbacks';
-import AllRateesFeedbacks from '../containers/SurveyPlatform/Feedbacks/AllRateesFeedbacks';
-import RateeGroupFeedbacks from '../containers/SurveyPlatform/Feedbacks/RateeGroupFeedbacks';
 import ReferenceGuide from '../containers/SurveyPlatform/ReferenceGuide';
 
 import NotFound from '../components/404';
@@ -37,21 +34,6 @@ const Routes = () => (
       path={map.surveyPlatform.rateeGroupQuestions}
       exact
       component={RateeGroupQuestions}
-    />
-    <PrivateRoute
-      path={map.surveyPlatform.individualFeedbacks}
-      exact
-      component={IndividualFeedbacks}
-    />
-    <PrivateRoute
-      path={map.surveyPlatform.allRateesFeedbacks}
-      exact
-      component={AllRateesFeedbacks}
-    />
-    <PrivateRoute
-      path={map.surveyPlatform.rateeGroupFeedbacks}
-      exact
-      component={RateeGroupFeedbacks}
     />
     <Route component={NotFound} />
   </Switch>

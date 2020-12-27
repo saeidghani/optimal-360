@@ -20,7 +20,7 @@ class Information extends Component {
   };
 
   render() {
-    const { loading, profile } = this.props;
+    const { loading, profile, organization } = this.props;
 
     return (
       <Layout
@@ -28,6 +28,7 @@ class Information extends Component {
         fetchProfile={this.fetchProfile}
         updateProfile={this.updateProfile}
         profile={profile}
+        organization={organization}
       />
     );
   }
@@ -38,15 +39,18 @@ Information.propTypes = {
   fetchProfile: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
   profile: PropTypes.shape({}),
+  organization: PropTypes.shape({}),
 };
 
 Information.defaultProps = {
   profile: {},
+  organization: {},
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
   profile: state.surveyPlatform?.profile || {},
+  organization: state.surveyPlatform?.organization || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({

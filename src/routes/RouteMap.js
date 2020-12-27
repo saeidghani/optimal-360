@@ -56,10 +56,6 @@ const surveyPlatform = {
   allRateesQuestions: 'all-ratees/surveyGroup/:surveyGroupId/questions/:questionNumber',
   individualQuestions: 'individual/surveyGroup/:surveyGroupId/questions/:questionNumber',
   rateeGroupQuestions: 'ratee-group/surveyGroup/:surveyGroupId/questions/:questionNumber',
-
-  allRateesFeedbacks: 'allRatees/surveyGroup/:surveyGroupId/feedbacks/:feedbackNumber',
-  individualFeedbacks: 'individual/surveyGroup/:surveyGroupId/feedbacks/:feedbackNumber',
-  rateeGroupFeedbacks: 'rateeGroup/surveyGroup/:surveyGroupId/feedbacks/:feedbackNumber',
 };
 
 const ref = { ...{ superUser }, ...{ clientAdmin }, ...{ surveyPlatform } };

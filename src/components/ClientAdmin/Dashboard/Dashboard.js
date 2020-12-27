@@ -23,6 +23,7 @@ const Dashboard = ({
   fetchRatees,
   fetchRaters,
   userName,
+  organization,
 }) => {
   const [parsedQuery, , setQuery] = useQuery();
   const { projectId, surveyGroupId } = parsedQuery || {};
@@ -74,7 +75,7 @@ const Dashboard = ({
   };
 
   return (
-    <Layout profileName={userName}>
+    <Layout profileName={userName} organizationSrc={organization?.data?.organizationLogo}>
       <div className="grid grid-cols-12 mb-10 mt-8">
         <div className="col-start-1 col-span-6 text-base text-body mb-3">Select Project</div>
         <Dropdown
@@ -88,7 +89,7 @@ const Dashboard = ({
           options={projectsList}
         />
       </div>
-      <Tabs defaultActiveKey={surveyGroupId} onChange={onTabChange}>
+      <Tabs defaultActiveKey={surveyGroupId} activeKey={surveyGroupId} onChange={onTabChange}>
         {surveyGroups?.map((group) => (
           <TabPane key={group.surveyGroupId?.toString()} tab={group.surveyGroupName}>
             <SurveyGroup
@@ -140,6 +141,9 @@ Dashboard.propTypes = {
       }),
     ),
   }),
+  organization: PropTypes.shape({
+    data: PropTypes.shape({ organizationLogo: PropTypes.string }),
+  }),
   raterGroups: PropTypes.shape({}),
   summary: PropTypes.shape({}),
   ratees: PropTypes.shape({}),
@@ -154,6 +158,7 @@ Dashboard.defaultProps = {
   summary: {},
   ratees: {},
   raters: {},
+  organization: {},
   userName: '',
 };
 

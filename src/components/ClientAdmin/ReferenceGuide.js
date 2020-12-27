@@ -1,6 +1,7 @@
 import React from 'react';
 import { TeamOutlined } from '@ant-design/icons';
 
+import PropTypes from 'prop-types';
 import Progress from '../Common/Progress';
 import Button from '../Common/Button';
 
@@ -8,7 +9,7 @@ import { dynamicMap } from '../../routes/RouteMap';
 
 import Layout from '../Common/ClientAdminLayout';
 
-const ReferenceGuide = () => {
+const ReferenceGuide = ({ organization }) => {
   const ReferenceGuideCards = [
     {
       title: 'Full grey color:',
@@ -84,7 +85,7 @@ const ReferenceGuide = () => {
   ];
 
   return (
-    <Layout heading="Reference Guide">
+    <Layout heading="Reference Guide" organizationSrc={organization?.data?.organizationLogo}>
       <span className="mt-10 text-primary-500 text-base font-semibold">Reference Guide</span>
       <p className="text-antgray-100 mt-4">
         You have been nominated in the multi-rater feedback project: 360-feedback survey. You have
@@ -228,6 +229,16 @@ const ReferenceGuide = () => {
       </div>
     </Layout>
   );
+};
+
+ReferenceGuide.propTypes = {
+  organization: PropTypes.shape({
+    data: PropTypes.shape({ organizationLogo: PropTypes.string }),
+  }),
+};
+
+ReferenceGuide.defaultProps = {
+  organization: {},
 };
 
 export default ReferenceGuide;

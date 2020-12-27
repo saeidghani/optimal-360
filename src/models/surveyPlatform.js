@@ -9,6 +9,7 @@ export default {
   state: {
     profile: '',
     projects: '',
+    organization: '',
     info: '',
     relations: '',
     questions: '',
@@ -79,6 +80,18 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
+    async fetchOrganization() {
+      return actionWrapper(async () => {
+        const res = await axios({
+          method: 'get',
+          url: '/survey-platform/organization',
+        });
+
+        this.fetchOrganization_reducer(res?.data);
+        return res;
+      }, dispatch.util.errorHandler);
+    },
+
     async fetchInfo({ surveyGroupId }) {
       return actionWrapper(async () => {
         const res = await axios({
@@ -126,30 +139,6 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
-    async fetchFeedbacks({ surveyGroupId, feedbackNumber, relationIds }) {
-      return actionWrapper(async () => {
-        const res = await axios({
-          method: 'get',
-          url: `/survey-platform/survey-groups/${surveyGroupId}/feedbacks/${feedbackNumber}?${relationIds}`,
-        });
-
-        this.fetchFeedbacks_reducer(res?.data);
-        return res;
-      }, dispatch.util.errorHandler);
-    },
-
-    async addFeedbackResponses({ surveyGroupId, feedbackId, ...payload }) {
-      return actionWrapper(async () => {
-        const res = await axios({
-          method: 'post',
-          url: `/survey-platform/survey-groups/${surveyGroupId}/feedbacks/${feedbackId}`,
-          data: payload,
-        });
-
-        return res;
-      }, dispatch.util.errorHandler);
-    },
-
     async submitResponses({ surveyGroupId }) {
       return actionWrapper(async () => {
         const res = await axios({
@@ -178,6 +167,10 @@ export default {
     fetchProjects_reducer: (state, payload) => ({
       ...state,
       projects: payload,
+    }),
+    fetchOrganization_reducer: (state, payload) => ({
+      ...state,
+      organization: payload,
     }),
     fetchInfo_reducer: (state, payload) => ({
       ...state,

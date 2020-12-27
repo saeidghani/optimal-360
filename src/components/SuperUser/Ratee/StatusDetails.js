@@ -217,13 +217,15 @@ const StatusDetails = (
   };
 
   const columns = React.useMemo(() => [
-    viewBy === 'raters' ? {
-      key: 'raterName',
-      title: 'Rater Name',
-      width: 100,
-      sorter: true,
-      sortOrder: getSortOrder('raterName'),
-    } : {
+    viewBy === 'raters'
+      ? {
+        key: 'raterName',
+        title: 'Rater Name',
+        width: 100,
+        sorter: true,
+        sortOrder: getSortOrder('raterName'),
+      }
+      : {
         key: 'rateeName',
         title: 'Ratee Name',
         width: 100,
@@ -256,13 +258,15 @@ const StatusDetails = (
       sorter: true,
       sortOrder: getSortOrder('raterEmail'),
     },
-    viewBy === 'ratees' ? {
-      key: 'raterName',
-      title: 'Rater Name',
-      width: 100,
-      sorter: true,
-      sortOrder: getSortOrder('raterName'),
-    } : {
+    viewBy === 'ratees'
+      ? {
+        key: 'raterName',
+        title: 'Rater Name',
+        width: 100,
+        sorter: true,
+        sortOrder: getSortOrder('raterName'),
+      }
+      : {
         key: 'rateeName',
         title: 'Ratee Name',
         width: 100,
@@ -293,11 +297,10 @@ const StatusDetails = (
       key: 'raterGroupName',
       title: 'Rater Group',
       width: 100,
-
     },
     {
       key: 'questionsAnswered',
-      title: 'Questions Answered',
+      title: 'SelectQuestions Answered',
       width: 100,
       render: (_, { totalAnswered, totalQuestions }) => (
         <span>{`${totalAnswered}/${totalQuestions}`}</span>
