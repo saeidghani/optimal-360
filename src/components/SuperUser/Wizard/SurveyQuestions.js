@@ -278,11 +278,15 @@ const SurveyQuestionsList = ({
 
   const deleteFeedback = (oldFeedbacks, removableFeedback) => {
     const newFeedbacks = [...oldFeedbacks];
-
     const removeIndex = newFeedbacks.findIndex(
       (feedback) => feedback.id * 1 === removableFeedback.id * 1,
     );
-    newFeedbacks.splice(removeIndex, 1);
+
+    if (newFeedbacks[removeIndex].newAddedItem) {
+      newFeedbacks.splice(removeIndex, 1);
+    } else {
+      newFeedbacks[removeIndex].deleted = true;
+    }
 
     formRef.current.setValues({ ...formRef.current.values, feedbacks: newFeedbacks });
   };
@@ -299,7 +303,7 @@ const SurveyQuestionsList = ({
     };
 
     // eslint-disable-next-line
-  }, [parsedQuery?.surveyGroupId, surveyQuestionsStringified]);
+  }, [parsedQuery?.surveyGroupId, surveyQuestionsStringified, JSON.stringify(persistedData)]);
 
   const renderHeader = () => (
     <div
@@ -565,7 +569,9 @@ const SurveyQuestionsList = ({
                   <SortableFeedbacks
                     errors={errors}
                     touched={touched}
-                    items={values.feedbacks}
+                    items={values.feedbacks
+                      .filter((el) => !el.deleted)
+                      .sort((a, b) => a.showOrder - b.showOrder)}
                     onSortEnd={onFeedbackSortEnd}
                     handleFormChange={handleFeedbackChange}
                     deleteFeedback={(feedback) => deleteFeedback(values.feedbacks, feedback)}
