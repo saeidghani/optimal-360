@@ -10,20 +10,12 @@ const Welcome = ({ loading, clientWelcomeMessage, clientPicture, surveyMessage }
   return (
     <div>
       <Loading visible={loading} />
+      <p>welcome message</p>
       <div className="">
         <div
           className="text-xl font-medium"
           dangerouslySetInnerHTML={{ __html: clientWelcomeMessage }}
         />
-        <p className="text-gray-500 mt-5 text-base text-body opacity-75 font-normal leading-6">
-          You have been nominated in the multi-rater feedback project: 360-feedback survey. You have
-          until 26th February 2020 to complete the survey. Please complete the survey within the
-          stipulated time period. All your feedback is private and confidential. All your responses
-          will remain anonymous and a group report will be shared with the Management team and the
-          ratee. This data also will be used for normative and research purposes only in a
-          de-identified manner. Thank you for investing your invaluable time to provide your
-          feedback and contributing towards the growth of the team and organization!
-        </p>
       </div>
       <div className="bg-white mt-5 grid grid-cols-12 gap-x-2">
         <img

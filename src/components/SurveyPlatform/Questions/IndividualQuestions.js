@@ -64,16 +64,38 @@ const IndividualQuestions = ({
   }, [questions?.timeStamp]);
 
   useEffect(() => {
-    if (!questions?.data?.question?.required) {
-      setNextIsDisabled(false);
-    } else if (questions?.data?.responses?.length === 1) {
-      setNextIsDisabled(false);
-    } else if (questions?.data?.responses?.length !== 1) {
-      setNextIsDisabled(true);
-    } else if (Object.keys(relationValues)?.length === 1 && newAnswersCount === 1) {
-      setNextIsDisabled(false);
+    const isFeedback = questions?.data?.isFeedback === true;
+    if (questions?.data?.question?.required) {
+      console.log(questions?.data?.question?.required);
+      if (!isFeedback) {
+        if (
+          questions?.data?.responses?.length === 0 ||
+          questions?.data?.responses[0]?.questionResponse === null
+        ) {
+          console.log(questions?.data?.responses?.length);
+          console.log(questions?.data?.responses[0]?.questionResponse === null);
+          setNextIsDisabled(true);
+        }
+      } else if (
+        questions?.data?.responses?.length === 0 ||
+        questions?.data?.responses[0]?.questionResponse === null
+      ) {
+        console.log(questions?.data?.responses?.length);
+        console.log(questions?.data?.responses[0]?.feedbackResponse === null);
+        setNextIsDisabled(true);
+      }
     }
-  }, [relations, questions, relationValues, newAnswersCount]);
+    let allIsAnswered = true;
+    // eslint-disable-next-line no-unused-expressions
+    Object.keys(relationValues)?.forEach((key) => {
+      if (!relationValues[key]) allIsAnswered = false;
+    });
+    if (allIsAnswered) setNextIsDisabled(false);
+  }, [questions, newAnswersCount, relationValues]);
+
+  useEffect(() => {
+    setNextIsDisabled(false);
+  }, [questionNumber]);
 
   const dataSource = React.useMemo(() => {
     const rows = [];
@@ -135,7 +157,7 @@ const IndividualQuestions = ({
       ((!isFeedback && response?.questionResponse === null) ||
         (isFeedback && !response?.feedbackResponse))
     ) {
-      setNextIsDisabled(true);
+      setNextIsDisabled(false);
       return;
     }
     setNextIsDisabled(false);
@@ -150,7 +172,7 @@ const IndividualQuestions = ({
       try {
         await addQuestionResponses({ surveyGroupId, questionId, ...body });
         setRelationValues({});
-        setNextIsDisabled(true);
+        setNextIsDisabled(false);
         setNewAnswersCount(0);
         if (questionNumber < questions?.data?.totalQuestions) {
           setInputQuestionNumber(questionNumber * 1 + 1);
@@ -170,7 +192,7 @@ const IndividualQuestions = ({
   };
 
   const handleBack = () => {
-    setNextIsDisabled(true);
+    setNextIsDisabled(false);
     setNewAnswersCount(0);
     setInputQuestionNumber(questionNumber * 1 - 1);
     history.push(
@@ -214,7 +236,7 @@ const IndividualQuestions = ({
           skipReducer: true,
         });
         if (inputQuestionNumber?.toString() === res?.data?.data?.questionNumber?.toString()) {
-          setNextIsDisabled(true);
+          setNextIsDisabled(false);
           setNewAnswersCount(0);
           setInputQuestionNumber(inputQuestionNumber);
           history.push(
@@ -233,7 +255,7 @@ const IndividualQuestions = ({
 
   const handleJumpOk = () => {
     setJumpModalVisible(false);
-    setNextIsDisabled(true);
+    setNextIsDisabled(false);
     setNewAnswersCount(0);
     setInputQuestionNumber(jumpQuestion);
     history.push(
