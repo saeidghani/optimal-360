@@ -20,6 +20,9 @@ const usePersist = () => {
       localStorage.setItem(`clusters-${KEY}`, JSON.stringify(newData));
 
       _setData(newData);
+    } else {
+      _setData('');
+      localStorage.removeItem(`clusters-${KEY}`);
     }
   };
 

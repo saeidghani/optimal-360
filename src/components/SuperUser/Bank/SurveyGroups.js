@@ -214,7 +214,11 @@ const SurveyGroupCluster = ({
       (feedback) => feedback.id * 1 === removableFeedback.id * 1,
     );
 
-    newFeedbacks.splice(removeIndex, 1);
+    if (newFeedbacks[removeIndex].newAddedItem) {
+      newFeedbacks.splice(removeIndex, 1);
+    } else {
+      newFeedbacks[removeIndex].deleted = true;
+    }
 
     formRef.current.setValues({ ...formRef.current.values, feedbacks: newFeedbacks });
   };
@@ -456,7 +460,9 @@ const SurveyGroupCluster = ({
                   <SortableFeedbacks
                     errors={errors}
                     touched={touched}
-                    items={values.feedbacks}
+                    items={values.feedbacks
+                      .filter((el) => !el.deleted)
+                      .sort((a, b) => a.showOrder - b.showOrder)}
                     onSortEnd={onFeedbackSortEnd}
                     handleFormChange={handleFormChange}
                     deleteFeedback={(feedback) => deleteFeedback(values.feedbacks, feedback)}

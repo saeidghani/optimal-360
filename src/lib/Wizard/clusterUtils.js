@@ -66,17 +66,31 @@ const deleteItem = (parsedQuery, oldClusters, ids) => {
   const [clusterIndex, competencyIndex, questionIndex] = fetchIndex(parsedQuery, oldClusters, ids);
 
   if (!isIndexValid(competencyIndex) && !isIndexValid(questionIndex)) {
-    clusters.splice(clusterIndex, 1);
+    if (clusters[clusterIndex].newAddedItem) {
+      clusters.splice(clusterIndex, 1);
+    } else {
+      clusters[clusterIndex].deleted = true;
+    }
   }
 
   // if we're updating competencies
   if (isIndexValid(competencyIndex) && !isIndexValid(questionIndex)) {
-    clusters[clusterIndex].competencies.splice(competencyIndex, 1);
+    if (clusters[clusterIndex].competencies[competencyIndex].newAddedItem) {
+      clusters[clusterIndex].competencies.splice(competencyIndex, 1);
+    } else {
+      clusters[clusterIndex].competencies[competencyIndex].deleted = true;
+    }
   }
 
   // if we're updating questions
   if (isIndexValid(competencyIndex) && isIndexValid(questionIndex)) {
-    clusters[clusterIndex].competencies[competencyIndex].questions.splice(questionIndex, 1);
+    if (
+      clusters[clusterIndex].competencies[competencyIndex].questions[questionIndex].newAddedItem
+    ) {
+      clusters[clusterIndex].competencies[competencyIndex].questions.splice(questionIndex, 1);
+    } else {
+      clusters[clusterIndex].competencies[competencyIndex].questions[questionIndex].deleted = true;
+    }
   }
 
   return clusters;
@@ -122,7 +136,10 @@ const clusterSortRefactor = (parsedQuery, oldClusters, oldIndex, newIndex) => {
 
 const getTableData = (parsedQuery, values) => {
   const format = (arr) =>
-    arr.map((el) => ({ ...el, index: el.showOrder, name: el.name || el.label }));
+    arr
+      .filter((el) => !el.deleted)
+      .sort((a, b) => a.showOrder - b.showOrder)
+      .map((el) => ({ ...el, index: el.showOrder, name: el.name || el.label }));
 
   const { clusterId, competencyId } = parsedQuery;
 
