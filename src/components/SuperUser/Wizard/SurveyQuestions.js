@@ -303,7 +303,7 @@ const SurveyQuestionsList = ({
     };
 
     // eslint-disable-next-line
-  }, [parsedQuery?.surveyGroupId, surveyQuestionsStringified, JSON.stringify(persistedData)]);
+  }, [parsedQuery?.surveyGroupId, surveyQuestionsStringified]);
 
   const renderHeader = () => (
     <div
