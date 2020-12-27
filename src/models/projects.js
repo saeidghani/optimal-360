@@ -173,6 +173,8 @@ export default {
           data,
         });
 
+        await dispatch.projects.fetchClusterBenchmarks(surveyGroupId);
+
         return res;
       }, dispatch.util.errorHandler);
     },
@@ -233,6 +235,8 @@ export default {
           url: `/super-user/survey-groups/${surveyGroupId}/competencies-benchmark`,
           data,
         });
+
+        await dispatch.projects.fetchCompetencyBenchmarks(surveyGroupId);
 
         return res;
       }, dispatch.util.errorHandler);

@@ -71,7 +71,7 @@ const Dashboard = ({
             setWelcomeModalVisible(false);
           } else {
             setIsSubmitted(false);
-            console.log('welcome is on');
+
             setWelcomeModalVisible(true);
           }
         }
@@ -135,7 +135,7 @@ const Dashboard = ({
             setWelcomeModalVisible(false);
           } else {
             setIsSubmitted(false);
-            console.log('welcome is on');
+
             setWelcomeModalVisible(true);
           }
         }

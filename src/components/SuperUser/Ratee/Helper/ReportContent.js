@@ -74,8 +74,6 @@ const ReportContent = ({
 
   const formRef = React.useRef();
 
-  console.log({ reportSetting });
-
   React.useEffect(() => {
     fetchReportSetting({ surveyGroupId });
   }, [fetchReportSetting, surveyGroupId]);

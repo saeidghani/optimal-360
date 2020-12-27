@@ -33,9 +33,7 @@ _Select.propTypes = {
 _Select.defaultProps = {
   elements: [],
   className: '',
-  onChange: (value) => {
-    console.log(`chenged ${value}`);
-  },
+  onChange: () => {},
   size: 'large',
 };
 

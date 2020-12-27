@@ -56,147 +56,145 @@ const Result = ({
   }, [fetchIndividualReports, pageSize, pageNumber, parsedQuery.q, parsedQuery.sort]);
 
   const renderHeader = React.useCallback(() => {
-    return selectedRows && selectedRows?.length > 0 ?
-      resultBy === 'individual' ?
-        (
-          <div className="flex flex-row items-center">
-            {
-              selectedRowsReportAvailable?.includes(false) ?
-                <Button
-                  size="middle"
-                  textSize="xs"
-                  text="Force generate report"
-                  textClassName="mr-2"
-                  className="ml-3"
-                  onClick={() => {
-                    generateIndividualReports({
-                      // eslint-disable-next-line radix
-                      surveyGroupId: parseInt(parsedQuery.surveyGroupId),
-                      rateeIds: selectedRows.map((el) => el.rateeId),
-                    });
-                  }}
-                />
-                :
-                <Button
-                  size="middle"
-                  textSize="xs"
-                  text="Download report"
-                  textClassName="mr-2"
-                  className="ml-3"
-                  icon="FileExcelOutlined"
-                  iconPosition="right"
-                  onClick={() => {
-                    generateIndividualReports({
-                      // eslint-disable-next-line radix
-                      surveyGroupId: parseInt(parsedQuery.surveyGroupId),
-                      rateeIds: selectedRows.map((el) => el.rateeId),
-                    });
-                  }}
-                />
-            }
+    return selectedRows && selectedRows?.length > 0 ? (
+      resultBy === 'individual' ? (
+        <div className="flex flex-row items-center">
+          {selectedRowsReportAvailable?.includes(false) ? (
             <Button
               size="middle"
               textSize="xs"
-              text="Export results to Excel"
+              text="Force generate report"
               textClassName="mr-2"
               className="ml-3"
-              icon="FileExcelOutlined"
-              iconPosition="right"
-              onClick={() => setVisible(true)}
-            />
-            <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
-          </div>
-        ) :
-        (
-          <div className="flex flex-row items-center">
-            {
-              selectedRowsReportAvailable?.includes(false) ?
-                <Button
-                  size="middle"
-                  textSize="xs"
-                  text="Force generate report"
-                  textClassName="mr-2"
-                  className="ml-3"
-                  onClick={() =>
-                    generateGroupReports({
-                      // eslint-disable-next-line radix
-                      projectId: parseInt(parsedQuery.projectId),
-                      surveyGroupIds: selectedRows.map((el) => el.id),
-                    })}
-                />
-                :
-                <Button
-                  size="middle"
-                  textSize="xs"
-                  text="Download report"
-                  textClassName="mr-2"
-                  className="ml-3"
-                  icon="FileExcelOutlined"
-                  onClick={() =>
-                    generateGroupReports({
-                      // eslint-disable-next-line radix
-                      projectId: parseInt(parsedQuery.projectId),
-                      surveyGroupIds: selectedRows.map((el) => el.id),
-                    })}
-                  iconPosition="right"
-                />
-            }
-            <Button
-              size="middle"
-              textSize="xs"
-              text="Export results to Excel"
-              textClassName="mr-2"
-              className="ml-3"
-              icon="FileExcelOutlined"
-              iconPosition="right"
-              onClick={() => setVisibleModal(true)}
-            />
-            <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
-          </div>
-        ) :
-      (
-        <div className="flex justify-between items-center borderless-tab">
-          <Tabs
-            defaultActiveKey={resultBy || 'individual'}
-            onChange={tabChangeCallback}
-            className="relative contents"
-            tabBarStyle={{ color: '#262626' }}
-          >
-            <TabPane tab="Individual Report" key="individual" />
-            <TabPane tab="Group Report" key="group" />
-          </Tabs>
-          <div className="flex flex-row ">
-            {resultBy === 'individual' && (
-              <SearchBox
-                className="text-xs"
-                placeholder="Search"
-                loading={loading}
-                value={parsedQuery?.q || ''}
-                onChange={(e) => setQuery({ q: e.target.value })}
-                onSearch={(e) => setQuery({ q: e.target.value })}
-                onPressEnter={(e) => setQuery({ q: e.target.value })}
-              />
-            )}
-            <Button
-              size="middle"
-              textSize="xs"
-              text="Add Data"
-              textClassName="mr-2"
-              className="ml-3"
-              type="gray"
               onClick={() => {
-                const path = dynamicMap.superUser.groupReports({ surveyGroupId });
-                const params = stringify({
-                  projectId: parsedQuery?.projectId,
-                  surveyGroupId,
+                generateIndividualReports({
+                  // eslint-disable-next-line radix
+                  surveyGroupId: parseInt(parsedQuery.surveyGroupId),
+                  rateeIds: selectedRows.map((el) => el.rateeId),
                 });
-
-                history.push(`${path}${params}`);
               }}
             />
-          </div>
+          ) : (
+            <Button
+              size="middle"
+              textSize="xs"
+              text="Download report"
+              textClassName="mr-2"
+              className="ml-3"
+              icon="FileExcelOutlined"
+              iconPosition="right"
+              onClick={() => {
+                generateIndividualReports({
+                  // eslint-disable-next-line radix
+                  surveyGroupId: parseInt(parsedQuery.surveyGroupId),
+                  rateeIds: selectedRows.map((el) => el.rateeId),
+                });
+              }}
+            />
+          )}
+          <Button
+            size="middle"
+            textSize="xs"
+            text="Export results to Excel"
+            textClassName="mr-2"
+            className="ml-3"
+            icon="FileExcelOutlined"
+            iconPosition="right"
+            onClick={() => setVisible(true)}
+          />
+          <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
         </div>
-      );
+      ) : (
+        <div className="flex flex-row items-center">
+          {selectedRowsReportAvailable?.includes(false) ? (
+            <Button
+              size="middle"
+              textSize="xs"
+              text="Force generate report"
+              textClassName="mr-2"
+              className="ml-3"
+              onClick={() =>
+                generateGroupReports({
+                  // eslint-disable-next-line radix
+                  projectId: parseInt(parsedQuery.projectId),
+                  surveyGroupIds: selectedRows.map((el) => el.id),
+                })
+              }
+            />
+          ) : (
+            <Button
+              size="middle"
+              textSize="xs"
+              text="Download report"
+              textClassName="mr-2"
+              className="ml-3"
+              icon="FileExcelOutlined"
+              onClick={() =>
+                generateGroupReports({
+                  // eslint-disable-next-line radix
+                  projectId: parseInt(parsedQuery.projectId),
+                  surveyGroupIds: selectedRows.map((el) => el.id),
+                })
+              }
+              iconPosition="right"
+            />
+          )}
+          <Button
+            size="middle"
+            textSize="xs"
+            text="Export results to Excel"
+            textClassName="mr-2"
+            className="ml-3"
+            icon="FileExcelOutlined"
+            iconPosition="right"
+            onClick={() => setVisibleModal(true)}
+          />
+          <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
+        </div>
+      )
+    ) : (
+      <div className="flex justify-between items-center borderless-tab">
+        <Tabs
+          defaultActiveKey={resultBy || 'individual'}
+          onChange={tabChangeCallback}
+          className="relative contents"
+          tabBarStyle={{ color: '#262626' }}
+        >
+          <TabPane tab="Individual Report" key="individual" />
+          <TabPane tab="Group Report" key="group" />
+        </Tabs>
+        <div className="flex flex-row ">
+          {resultBy === 'individual' && (
+            <SearchBox
+              className="text-xs"
+              placeholder="Search"
+              loading={loading}
+              value={parsedQuery?.q || ''}
+              onChange={(e) => setQuery({ q: e.target.value })}
+              onSearch={(e) => setQuery({ q: e.target.value })}
+              onPressEnter={(e) => setQuery({ q: e.target.value })}
+            />
+          )}
+          <Button
+            size="middle"
+            textSize="xs"
+            text="Add Data"
+            textClassName="mr-2"
+            className="ml-3"
+            type="gray"
+            onClick={() => {
+              const path = dynamicMap.superUser.groupReports({ surveyGroupId });
+              const params = stringify({
+                projectId: parsedQuery?.projectId,
+                surveyGroupId,
+              });
+
+              history.push(`${path}${params}`);
+            }}
+          />
+        </div>
+      </div>
+    );
   }, [loading, selectedRows.length, resultBy, parsedQuery?.q]);
 
   const individualColumns = React.useMemo(() => [
@@ -251,7 +249,7 @@ const Result = ({
         </div>
       ),
       width: 100,
-      render: (minMet) => <div className={`${minMet && 'opacity-50'}`}>Min. Met</div>,
+      render: (minMet) => <div className={`${!minMet && 'opacity-50'}`}>Min. Met</div>,
     },
     {
       key: 'criticalCompetencyData',
@@ -266,10 +264,9 @@ const Result = ({
         <div className="w-16 flex-inline items-center justify-start">
           {criticalCompetencyData ? (
             <div className="w-5 h-5 bg-green-400 rounded-full" />
-          ) :
-            (
-              <CloseOutlined className="text-base ml-2 text-red-500" />
-            )}
+          ) : (
+            <CloseOutlined className="text-base ml-2 text-red-500" />
+          )}
         </div>
       ),
     },
@@ -286,10 +283,9 @@ const Result = ({
         <div className="w-16 flex-inline items-center justify-start">
           {previosResults ? (
             <div className="w-5 h-5 bg-orange rounded-full" />
-          ) :
-            (
-              <CloseOutlined className="text-base ml-2 text-red-500" />
-            )}
+          ) : (
+            <CloseOutlined className="text-base ml-2 text-red-500" />
+          )}
         </div>
       ),
     },
@@ -322,7 +318,9 @@ const Result = ({
       width: 200,
       render: (isReportAvailable) => (
         <div className="w-16 flex-inline items-center justify-start">
-          <span className={!isReportAvailable && 'text-red'}>{isReportAvailable ? 'Yes' : 'No'}</span>
+          <span className={!isReportAvailable && 'text-red'}>
+            {isReportAvailable ? 'Yes' : 'No'}
+          </span>
         </div>
       ),
     },
@@ -508,7 +506,7 @@ const Result = ({
             // eslint-disable-next-line no-unused-vars
             .filter(([_, item]) => item === true)
             .map((item) => item[0]);
-          console.log({ selectedRows, fields });
+
           exportDemographicDataForIndividual({
             fields,
             surveyGroupIds: selectedRows?.map((el) => el.id),
@@ -676,8 +674,8 @@ const Result = ({
         }}
         totalRecordSize={
           // eslint-disable-next-line radix
-          parseInt(resultBy === 'individual' ? individualReports : groupReports)?.metaData?.pagination
-            ?.totalRecords
+          parseInt(resultBy === 'individual' ? individualReports : groupReports)?.metaData
+            ?.pagination?.totalRecords
         }
       />
     </>
