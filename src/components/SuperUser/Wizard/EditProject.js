@@ -49,12 +49,12 @@ const ProjectInfo = ({
       id,
       key: `B-${id}`,
     })),
-    ...(project?.data?.projectSurveyGroups || []).map(({ name, id }) => ({
-      label: `P-${name}-${id}`,
-      value: `P-${name}`,
-      id,
-      key: `P-${id}`,
-    })),
+    // ...(project?.data?.projectSurveyGroups || []).map(({ name, id }) => ({
+    //   label: `P-${name}-${id}`,
+    //   value: `P-${name}`,
+    //   id,
+    //   key: `P-${id}`,
+    // })),
   ];
 
   return (
