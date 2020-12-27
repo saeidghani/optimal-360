@@ -63,7 +63,7 @@ _TreeSelect.defaultProps = {
   className: '',
   showSearch: '',
   value: '',
-  onChange: console.log('tree select change'),
+  onChange: () => {},
   dropdownStyle: '',
   placeholder: '',
   allowClear: '',

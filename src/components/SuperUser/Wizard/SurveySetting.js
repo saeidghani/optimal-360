@@ -24,22 +24,22 @@ import Loading from '../../Common/Loading';
 const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings, loading }) => {
   const schema = yup.object({
     surveySetting: yup.object({
-      startDate: yup.string().required('Start Date Cannot Be Empty').nullable(),
-      endDate: yup.string().required('End Date Cannot Be Empty').nullable(),
+      startDate: yup.string().required('Start date cannot be empty').nullable(),
+      endDate: yup.string().required('End date cannot be empty').nullable(),
       itemCaution: yup
         .number()
         .nullable()
-        .moreThan(0, 'Rates Invalidation Must Be Greater Than 0')
-        .required('Item Invalidation Cannot Be Empty'),
+        .moreThan(0, 'Item caution must be greater than 0')
+        .required('Item caution cannot be empty'),
     }),
     raterGroups: yup.array(
       yup.object({
-        abbr: yup.string().required('Abbr Cannot Be Empty'),
-        name: yup.string().required('Group Name Cannot Be Empty'),
+        abbr: yup.string().required('Abbr cannot be empty'),
+        name: yup.string().required('Group name cannot be empty'),
         minRater: yup
           .number()
-          .typeError('Min. Rates must be a number')
-          .min(1, 'Min. Rates must be greater than 0'),
+          .typeError('Min raters must be a number')
+          .min(1, 'Min raters must be greater than 0'),
       }),
     ),
     surveyModeInUserDashboard: yup
@@ -48,7 +48,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
         group: yup.bool(),
         all: yup.bool(),
       })
-      .test('surveyModeInUserDashboard', 'You Must Specify At least One Rating Group', (vals) => {
+      .test('surveyModeInUserDashboard', 'You must specify at least one rating group', (vals) => {
         const containsAtLeastOneTrueValue = Object.values(vals).find(
           (el) => typeof el === 'boolean' && el !== false,
         );
@@ -190,7 +190,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
       ),
     },
     {
-      title: 'Min.Rates',
+      title: 'Min Raters',
       key: 'minRater',
       render: (value, { id, disabled, index }) => (
         <Input
@@ -283,8 +283,9 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
         ) : null}
 
         <div
-          className={`px-6 py-5 col-span-10 ${parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
-            } `}
+          className={`px-6 py-5 col-span-10 ${
+            parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
+          } `}
         >
           <Steps currentPosition={0} />
 
@@ -309,7 +310,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                 const path = dynamicMap.superUser.emailSettings();
                 const params = history?.location?.search;
                 history.push(`${path}${params}`);
-              } catch (error) { }
+              } catch (error) {}
             }}
           >
             {({ values, errors, touched, handleSubmit, setFieldValue }) => (
@@ -420,7 +421,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                       }
                       className="ml-0 mb-6"
                     >
-                      Individual Rates
+                      Individual
                     </Checkbox>
 
                     <Checkbox
@@ -433,7 +434,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                       }
                       className="ml-0 mb-6"
                     >
-                      Pre-defined Rating Group (default Self, Mgr, Peer, etc.)
+                      Group
                     </Checkbox>
 
                     <Checkbox
@@ -446,7 +447,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                       }
                       className="ml-0"
                     >
-                      All Ratees
+                      All
                     </Checkbox>
 
                     {touched.surveyModeInUserDashboard && errors.surveyModeInUserDashboard && (

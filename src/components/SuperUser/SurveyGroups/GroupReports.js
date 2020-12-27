@@ -49,8 +49,11 @@ const GroupReports = ({
 
   React.useEffect(() => {
     const src = fetchTableData();
+
     setTableData(src);
-  }, [fetchTableData]);
+  }, [fetchTableData, parsedQuery.benchmarkType]);
+
+  const tableDataStringified = JSON.stringify({ tableData });
 
   const renderHeader = React.useCallback(
     () => (
@@ -95,7 +98,7 @@ const GroupReports = ({
                   await exportClusterBenchmark(surveyGroupId);
                 }
                 // eslint-disable-next-line no-empty
-              } catch (err) { }
+              } catch (err) {}
             }}
           />
 
@@ -108,7 +111,7 @@ const GroupReports = ({
                   await importClusterBenchmark({ surveyGroupId, file });
                 }
                 // eslint-disable-next-line no-empty
-              } catch (err) { }
+              } catch (err) {}
 
               return false;
             }}
@@ -118,7 +121,7 @@ const GroupReports = ({
     ),
 
     // eslint-disable-next-line
-    [loading, query, parsedQuery.benchmarkType],
+    [loading, query, parsedQuery.benchmarkType, tableDataStringified],
   );
 
   const renderFooter = React.useCallback(
@@ -143,45 +146,39 @@ const GroupReports = ({
           className="w-24.5 h-9.5"
           text="Submit"
           onClick={async () => {
-            console.log(clusterBenchmarks);
-            let benchmarks = [];
-            if (parsedQuery?.benchmarkType === 'competency') {
-              benchmarks = competencyBenchmarks?.data.map((row) => ({
-                id: row.id,
-                externalBenchmark:
-                  parseFloat(row.externalBenchmark ? row.externalBenchmark.toFixed(2) : 1.00),
-                surveyGroupId: row.surveyGroupId,
-                clusterId: row.clusterId,
-              }));
-            } else {
-              benchmarks = clusterBenchmarks?.data.map((row) => ({
-                id: row.id,
-                externalBenchmark:
-                  parseFloat(row.externalBenchmark ? row.externalBenchmark.toFixed(2) : 1.00),
-                surveyGroupId: row.surveyGroupId,
-              }));
-            }
+            const benchmarks = tableData.map((row) => ({
+              id: row.id,
+              externalBenchmark: row.externalBenchmark
+                ? parseFloat(row.externalBenchmark.toFixed(2))
+                : null,
+              surveyGroupId: row.surveyGroupId,
+              ...(row.clusterId && { clusterId: row.clusterId }),
+            }));
 
             try {
               if (parsedQuery?.benchmarkType === 'competency') {
                 await setCompetencyBenchmarks({ surveyGroupId, benchmarks });
+
                 const params = stringify({ surveyGroupId, projectId: parsedQuery?.projectId });
                 const path = `${dynamicMap.superUser.ratersList()}${params}`;
+
                 history.push(path);
               } else {
                 await setClusterBenchmarks({ surveyGroupId, benchmarks });
+
                 const params = stringify({ surveyGroupId, projectId: parsedQuery?.projectId });
                 const path = `${dynamicMap.superUser.ratersList()}${params}`;
+
                 history.push(path);
               }
               // eslint-disable-next-line no-empty
-            } catch (err) { }
+            } catch (err) {}
           }}
         />
       </div>
     ),
     // eslint-disable-next-line
-    [setCompetencyBenchmarks, parsedQuery.benchmarkType],
+    [setCompetencyBenchmarks, tableDataStringified],
   );
 
   const getSortOrder = (key) => {
@@ -208,8 +205,6 @@ const GroupReports = ({
 
     setTableData(newData);
   };
-
-  const tableDataStringified = JSON.stringify({ tableData });
 
   const columns = React.useMemo(
     () => [
@@ -241,8 +236,8 @@ const GroupReports = ({
             value={value}
             placeholder="External Benchmark"
             fixedHeightForErrorMessage={false}
-            formatter={(newVal) => `${newVal}`}
-            parser={(newVal) => newVal.replace('', '')}
+            formatter={(newVal) => (newVal ? `${newVal}` : null)}
+            parser={(newVal) => newVal || null}
             precision={2}
             step={0.01}
             min={1}
@@ -253,7 +248,7 @@ const GroupReports = ({
     ],
 
     // eslint-disable-next-line
-    [tableDataStringified, query],
+    [tableDataStringified, query, parsedQuery.benchmarkType],
   );
 
   return (
