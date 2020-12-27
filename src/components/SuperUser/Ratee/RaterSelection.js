@@ -246,6 +246,7 @@ const RaterSelection = ({
               type="link"
               text="Prev"
               onClick={() => {
+                clearSelectedAndDefault();
                 const params = stringify({ projectId, surveyGroupId, rateeId });
                 const path = `${dynamicMap.superUser.editRatee()}${params}`;
                 history.push(path);
