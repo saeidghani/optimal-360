@@ -26,6 +26,7 @@ const AllRateesQuestions = ({
 
   const [relationValues, setRelationValues] = useState({});
   const [inputQuestionNumber, setInputQuestionNumber] = useState(questionNumber);
+  const [jumpQuestion, setJumpQuestion] = useState('');
   const [jumpModalVisible, setJumpModalVisible] = useState(false);
   const [showErr, setShowErr] = useState(false);
 
@@ -211,6 +212,7 @@ const AllRateesQuestions = ({
           surveyGroupId,
           questionNumber: inputQuestionNumber,
           relationIds,
+          skipReducer: true,
         });
         if (inputQuestionNumber?.toString() === res?.data?.data?.questionNumber?.toString()) {
           setShowErr(false);
@@ -222,7 +224,12 @@ const AllRateesQuestions = ({
             })}${stringify({ projectId })}`,
           );
         } else {
-          setJumpModalVisible(true);
+          setJumpQuestion(res?.data?.data?.questionNumber);
+          if (res?.data?.data?.questionNumber?.toString() === questionNumber?.toString()) {
+            setShowErr(true);
+          } else {
+            setJumpModalVisible(true);
+          }
         }
       } catch (err) {}
     }
@@ -230,11 +237,11 @@ const AllRateesQuestions = ({
 
   const handleJumpOk = () => {
     setJumpModalVisible(false);
-    setInputQuestionNumber(questions?.data?.questionNumber);
+    setInputQuestionNumber(jumpQuestion);
     history.push(
       `${dynamicMap.surveyPlatform.allRateesQuestions({
         surveyGroupId,
-        questionNumber: questions?.data?.questionNumber,
+        questionNumber: jumpQuestion,
       })}${stringify({ projectId })}`,
     );
   };
@@ -262,6 +269,7 @@ const AllRateesQuestions = ({
           onJumpOk={handleJumpOk}
           onJumpCancel={handleJumpCancel}
           inputQuestionNumber={inputQuestionNumber}
+          jumpQuestion={jumpQuestion}
           onSetInputQuestionNumber={handleInputQuestionNumber}
           onInputPressEnter={handleInputPressEnter}
           onNext={submitResponse}
@@ -279,6 +287,7 @@ const AllRateesQuestions = ({
           onJumpOk={handleJumpOk}
           onJumpCancel={handleJumpCancel}
           inputQuestionNumber={inputQuestionNumber}
+          jumpQuestion={jumpQuestion}
           onSetInputQuestionNumber={handleInputQuestionNumber}
           onInputPressEnter={handleInputPressEnter}
           onNext={submitResponse}

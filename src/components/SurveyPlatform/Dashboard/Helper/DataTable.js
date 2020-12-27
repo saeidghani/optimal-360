@@ -15,8 +15,8 @@ const DataTable = ({
   extraDetailsClassName,
   relations,
   isSubmitted,
-  surveyGroupSubmited,
   visitedSurveyGroups,
+  resetQuestions,
 }) => {
   const [parsedQuery, , setQuery] = useQuery();
   const { projectId, surveyGroupId, surveyMode, sort } = parsedQuery || {};
@@ -41,6 +41,7 @@ const DataTable = ({
 
   const handleIndividualClick = (key) => {
     localStorage.setItem('visitedSurveyGroups', JSON?.stringify(visitedSurveyGroups));
+    resetQuestions();
     history.push(
       `${dynamicMap.surveyPlatform.individualQuestions({
         surveyGroupId,
@@ -50,8 +51,8 @@ const DataTable = ({
   };
 
   const handleGroupClick = (relationship) => {
-    console.log(relationship);
     localStorage.setItem('visitedSurveyGroups', JSON?.stringify(visitedSurveyGroups));
+    resetQuestions();
     history.push(
       `${dynamicMap.surveyPlatform.rateeGroupQuestions({
         surveyGroupId,
@@ -73,7 +74,7 @@ const DataTable = ({
             <Fragment>
               {surveyMode !== 'individual' ? (
                 <span className="pl-4">{rateeName}</span>
-              ) : isSubmitted || surveyGroupSubmited ? (
+              ) : isSubmitted ? (
                 <span className="text-primary-500 pl-4">{rateeName}</span>
               ) : (
                 <span
@@ -140,7 +141,7 @@ const DataTable = ({
       render: (relationship) => {
         return (
           <Fragment>
-            {!isSubmitted || !surveyGroupSubmited ? (
+            {!isSubmitted ? (
               <span
                 className="text-primary-500 pl-4 cursor-pointer"
                 onClick={() => handleGroupClick(relationship)}
@@ -311,7 +312,6 @@ const DataTable = ({
 DataTable.propTypes = {
   loading: PropTypes.bool.isRequired,
   isSubmitted: PropTypes.bool,
-  surveyGroupSubmited: PropTypes.bool,
   extraDetails: PropTypes.node,
   className: PropTypes.string,
   tableClassName: PropTypes.string,
@@ -321,6 +321,7 @@ DataTable.propTypes = {
     timeStamp: PropTypes.number,
   }),
   visitedSurveyGroups: PropTypes.arrayOf(PropTypes.shape({})),
+  resetQuestions: PropTypes.func.isRequired,
 };
 
 DataTable.defaultProps = {
@@ -330,7 +331,6 @@ DataTable.defaultProps = {
   extraDetails: null,
   relations: {},
   isSubmitted: false,
-  surveyGroupSubmited: false,
   visitedSurveyGroups: [{}],
 };
 

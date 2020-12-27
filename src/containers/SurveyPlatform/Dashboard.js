@@ -32,7 +32,15 @@ class Dashboard extends Component {
   };
 
   render() {
-    const { loading, profileName, projects, info, relations, organization } = this.props;
+    const {
+      loading,
+      profileName,
+      projects,
+      info,
+      relations,
+      organization,
+      resetQuestions,
+    } = this.props;
 
     return (
       <Layout
@@ -46,6 +54,7 @@ class Dashboard extends Component {
         info={info}
         relations={relations}
         profileName={profileName}
+        resetQuestions={resetQuestions}
       />
     );
   }
@@ -57,6 +66,7 @@ Dashboard.propTypes = {
   fetchInfo: PropTypes.func.isRequired,
   fetchRelations: PropTypes.func.isRequired,
   submitResponses: PropTypes.func.isRequired,
+  resetQuestions: PropTypes.func.isRequired,
   projects: PropTypes.shape({}),
   info: PropTypes.shape({}),
   relations: PropTypes.shape({}),
@@ -86,6 +96,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchInfo: dispatch.surveyPlatform?.fetchInfo,
   fetchRelations: dispatch.surveyPlatform?.fetchRelations,
   submitResponses: dispatch.surveyPlatform?.submitResponses,
+  resetQuestions: dispatch.surveyPlatform?.resetQuestions,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

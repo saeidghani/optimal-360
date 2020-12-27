@@ -116,13 +116,13 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
-    async fetchQuestions({ surveyGroupId, questionNumber, relationIds }) {
+    async fetchQuestions({ surveyGroupId, questionNumber, relationIds, skipReducer = false }) {
       return actionWrapper(async () => {
         const res = await axios({
           method: 'get',
           url: `/survey-platform/survey-groups/${surveyGroupId}/questions/${questionNumber}?${relationIds}`,
         });
-        this.fetchQuestions_reducer(res?.data);
+        if (!skipReducer) this.fetchQuestions_reducer(res?.data);
         return res;
       }, dispatch.util.errorHandler);
     },
@@ -184,9 +184,9 @@ export default {
       ...state,
       questions: payload,
     }),
-    fetchFeedbacks_reducer: (state, payload) => ({
+    resetQuestions: (state) => ({
       ...state,
-      feedbacks: payload,
+      questions: {},
     }),
   },
 };

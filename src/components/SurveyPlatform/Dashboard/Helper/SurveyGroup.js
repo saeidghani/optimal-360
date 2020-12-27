@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 import moment from 'moment';
@@ -12,10 +12,10 @@ const SurveyGroup = ({
   loading,
   fetchInfo,
   fetchRelations,
+  resetQuestions,
   info,
   relations,
   isSubmitted,
-  surveyGroupSubmited,
   visitedSurveyGroups,
 }) => {
   const [parsedQuery, , setQuery] = useQuery();
@@ -23,12 +23,14 @@ const SurveyGroup = ({
 
   const { TabPane } = Tabs;
 
-  React.useEffect(() => {
-    if (surveyGroupId) fetchInfo({ surveyGroupId });
+  useEffect(() => {
+    if (surveyGroupId && !isSubmitted) {
+      fetchInfo({ surveyGroupId });
+    }
   }, [fetchInfo, surveyGroupId]);
 
-  React.useEffect(() => {
-    if (surveyGroupId) fetchRelations({ surveyGroupId });
+  useEffect(() => {
+    if (surveyGroupId && !isSubmitted) fetchRelations({ surveyGroupId });
   }, [fetchRelations, surveyGroupId]);
 
   const totalAvg = React.useMemo(() => {
@@ -123,7 +125,7 @@ const SurveyGroup = ({
         className="mt-10"
         percentage={totalAvg}
         subClassName="text-heading"
-        status={isSubmitted || surveyGroupSubmited ? 'sub' : ''}
+        status={isSubmitted ? 'sub' : ''}
         showPercent
       />
       <div className="mt-10 text-antgray-100">Collective Completion Rate</div>
@@ -135,7 +137,9 @@ const SurveyGroup = ({
       <div className="flex flex-col bg-white rounded-lg shadow mb-4 md:hidden">{extraDetails}</div>
       <Tabs
         className="survey-mode-tabs bg-white p-2"
-        tabBarExtraContent={<div className="hidden md:block">{deadlineInfo}</div>}
+        tabBarExtraContent={
+          !isSubmitted ? <div className="hidden md:block">{deadlineInfo}</div> : null
+        }
         defaultActiveKey={surveyMode}
         activeKey={surveyMode}
         onChange={onTabChange}
@@ -146,8 +150,8 @@ const SurveyGroup = ({
               loading={loading}
               relations={relations}
               isSubmitted={isSubmitted}
-              surveyGroupSubmited={surveyGroupSubmited}
               visitedSurveyGroups={visitedSurveyGroups}
+              resetQuestions={resetQuestions}
               className={`${
                 mode?.key === 'all'
                   ? 'md:grid grid-cols-8 md:mt-0'
@@ -173,9 +177,9 @@ const SurveyGroup = ({
 SurveyGroup.propTypes = {
   loading: PropTypes.bool.isRequired,
   isSubmitted: PropTypes.bool,
-  surveyGroupSubmited: PropTypes.bool,
   fetchInfo: PropTypes.func.isRequired,
   fetchRelations: PropTypes.func.isRequired,
+  resetQuestions: PropTypes.func.isRequired,
   visitedSurveyGroups: PropTypes.arrayOf(PropTypes.shape({})),
   info: PropTypes.shape({
     data: PropTypes.shape({
@@ -194,7 +198,6 @@ SurveyGroup.defaultProps = {
   info: {},
   relations: {},
   isSubmitted: false,
-  surveyGroupSubmited: false,
   visitedSurveyGroups: [{}],
 };
 

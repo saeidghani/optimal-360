@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useParams } from 'react-router-dom';
@@ -6,12 +6,10 @@ import { useParams } from 'react-router-dom';
 import Button from '../../../Common/Button';
 import Progress from '../../../Common/Progress';
 import TextArea from '../../../Common/TextArea';
-import Loading from '../../../Common/Loading';
 import Input from '../../../Common/Input';
 import Modal from '../../../Common/Modal';
 
 const FeedbackQuestions = ({
-  loading,
   questions,
   onNext,
   ratees,
@@ -26,12 +24,12 @@ const FeedbackQuestions = ({
   onJumpCancel,
   onInputPressEnter,
   onSetInputQuestionNumber,
+  jumpQuestion,
 }) => {
   const { questionNumber } = useParams();
 
   return (
     <div>
-      <Loading visible={loading} />
       <Modal
         visible={jumpModalVisible}
         handleCancel={onJumpCancel}
@@ -53,7 +51,7 @@ const FeedbackQuestions = ({
       >
         <div className="flex flex-col">
           <span className="text-2xl mb-4">Attention!</span>
-          <p>You have not answered question {questions?.data?.questionNumber}, it’s required.</p>
+          <p>You have not answered question {jumpQuestion}, it’s required.</p>
         </div>
       </Modal>
       <div className="px-4 py-6 mt-16 flex flex-col justify-between md:px-8 md:bg-white md:rounded-lg md:shadow">
@@ -91,6 +89,7 @@ const FeedbackQuestions = ({
                 <Input
                   inputClass="w-20 ml-3"
                   name="inputQuestionNumber"
+                  fixedHeightForErrorMessage={false}
                   value={inputQuestionNumber}
                   onChange={onSetInputQuestionNumber}
                   onPressEnter={onInputPressEnter}
@@ -182,6 +181,7 @@ FeedbackQuestions.propTypes = {
   totalRelations: PropTypes.number.isRequired,
   jumpModalVisible: PropTypes.bool,
   inputQuestionNumber: PropTypes.string,
+  jumpQuestion: PropTypes.string,
   onSetInputQuestionNumber: PropTypes.func,
   onInputPressEnter: PropTypes.func,
   onJumpOk: PropTypes.func,
@@ -196,6 +196,7 @@ FeedbackQuestions.defaultProps = {
   showErr: false,
   jumpModalVisible: false,
   inputQuestionNumber: '',
+  jumpQuestion: '',
   onSetInputQuestionNumber: () => {},
   onInputPressEnter: () => {},
   onJumpOk: () => {},
