@@ -141,21 +141,23 @@ const GroupReports = ({
 
         <Button
           className="w-24.5 h-9.5"
-          text="Next"
+          text="Submit"
           onClick={async () => {
             console.log(clusterBenchmarks);
             let benchmarks = [];
             if (parsedQuery?.benchmarkType === 'competency') {
               benchmarks = competencyBenchmarks?.data.map((row) => ({
                 id: row.id,
-                externalBenchmark: parseFloat(row.externalBenchmark.toFixed(2)),
+                externalBenchmark:
+                  parseFloat(row.externalBenchmark ? row.externalBenchmark.toFixed(2) : 1.00),
                 surveyGroupId: row.surveyGroupId,
                 clusterId: row.clusterId,
               }));
             } else {
               benchmarks = clusterBenchmarks?.data.map((row) => ({
                 id: row.id,
-                externalBenchmark: parseFloat(row.externalBenchmark.toFixed(2)),
+                externalBenchmark:
+                  parseFloat(row.externalBenchmark ? row.externalBenchmark.toFixed(2) : 1.00),
                 surveyGroupId: row.surveyGroupId,
               }));
             }

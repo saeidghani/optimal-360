@@ -237,7 +237,7 @@ const StatusDetails = (
             <div className="inline-block">
               <Button
                 onClick={() => {
-                  const params = stringify({ projectId, surveyGroupId, rateeId });
+                  const params = stringify({ projectId, surveyGroupId, rateeId, rateeName: num });
                   const path = `${dynamicMap.superUser.editRatee()}${params}`;
                   history.push(path);
                 }}
@@ -278,7 +278,7 @@ const StatusDetails = (
             <div className="inline-block">
               <Button
                 onClick={() => {
-                  const params = stringify({ projectId, surveyGroupId, rateeId });
+                  const params = stringify({ projectId, surveyGroupId, rateeId, rateeName: num });
                   const path = `${dynamicMap.superUser.editRatee()}${params}`;
                   history.push(path);
                 }}

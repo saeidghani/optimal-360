@@ -40,10 +40,10 @@ const EditRatee = ({
   const renderHeader = React.useCallback(() => {
     return (
       <div className="flex flex-row justify-start items-center">
-        <p className="text-sm pl-6">Team Player</p>
+        <p className="text-sm pl-6">{parsedQuery?.rateeName}</p>
       </div>
     );
-  }, [loading]);
+  }, [loading, parsedQuery?.rateeName]);
 
   const columns = React.useMemo(() => [
     {
