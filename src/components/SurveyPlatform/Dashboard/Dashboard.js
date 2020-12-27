@@ -26,6 +26,7 @@ const Dashboard = ({
   info,
   relations,
   profileName,
+  resetQuestions,
 }) => {
   const [submitModalVisible, setSubmitModalVisible] = useState(false);
   const [thankYouModalVisible, setThankYouModalVisible] = useState(false);
@@ -77,6 +78,15 @@ const Dashboard = ({
     [projects.timeStamp],
   );
 
+  const findFirstSurveyGroup = (surveyGroups) => {
+    // eslint-disable-next-line no-unused-expressions
+    surveyGroups?.forEach((group) => {
+      if (!group?.surveyGroupSubmited) {
+        return group;
+      }
+    });
+  };
+
   useEffect(() => {
     if (!projectId && projectsList?.length > 0) {
       setQuery({ projectId: projectsList[0]?.value });
@@ -92,7 +102,8 @@ const Dashboard = ({
 
   useEffect(() => {
     if (!surveyGroupId && surveyGroups?.length > 0) {
-      const newSurveyGroupId = surveyGroups[0]?.surveyGroupId?.toString();
+      const currentSurveyGroup = findFirstSurveyGroup(surveyGroups) || surveyGroups[0];
+      const newSurveyGroupId = currentSurveyGroup?.surveyGroupId?.toString();
       setQuery({ surveyGroupId: newSurveyGroupId });
       const visitedGroup = visitedSurveyGroups?.find(
         (g) => g?.projectId === projectId && g?.surveyGroupId === newSurveyGroupId,
@@ -107,6 +118,18 @@ const Dashboard = ({
     }
   }, [surveyGroups]);
 
+  useEffect(() => {
+    const currentSurveyGroup = surveyGroups?.find(
+      (g) => g?.surveyGroupId?.toString() === surveyGroupId?.toString(),
+    );
+    if (currentSurveyGroup?.surveyGroupSubmited) {
+      setIsSubmitted(true);
+      setWelcomeModalVisible(false);
+    } else {
+      setIsSubmitted(false);
+    }
+  }, [surveyGroupId]);
+
   const projectName = React.useMemo(
     () =>
       projectsList?.find((project) => project.value?.toString() === projectId?.toString())?.title ||
@@ -114,9 +137,17 @@ const Dashboard = ({
     [projects.timeStamp, projectId],
   );
 
-  const onTabChange = (key) => {
+  const onSurveyGroupTabChange = (key) => {
     setQuery({ surveyGroupId: key, viewBy: '', page_number: '', page_size: '' });
-    fetchInfo({ surveyGroupId: key });
+    const currentSurveyGroup = surveyGroups?.find(
+      (g) => g?.surveyGroupId?.toString() === surveyGroupId?.toString(),
+    );
+    if (currentSurveyGroup?.surveyGroupSubmited) {
+      setIsSubmitted(true);
+    } else {
+      setIsSubmitted(false);
+      fetchInfo({ surveyGroupId: key });
+    }
     const visitedGroup = visitedSurveyGroups?.find(
       (g) => g?.projectId === projectId && g?.surveyGroupId === key,
     );
@@ -132,6 +163,7 @@ const Dashboard = ({
       (surveyGroup) => surveyGroup?.surveyGroupId?.toString() === surveyGroupId?.toString(),
     );
     if (!currentSurveyGroup?.surveyGroupSubmited) {
+      resetQuestions();
       history.push(
         `${dynamicMap.surveyPlatform.allRateesQuestions({
           surveyGroupId,
@@ -223,19 +255,19 @@ const Dashboard = ({
         className="survey-group-tabs"
         defaultActiveKey={surveyGroupId}
         activeKey={surveyGroupId}
-        onChange={onTabChange}
+        onChange={onSurveyGroupTabChange}
       >
         {surveyGroups?.map((group) => (
-          <TabPane key={group.surveyGroupId?.toString()} tab={group.surveyGroupName}>
+          <TabPane key={group?.surveyGroupId?.toString()} tab={group?.surveyGroupName} disabled>
             <SurveyGroup
               loading={loading}
               fetchInfo={fetchInfo}
               fetchRelations={fetchRelations}
-              info={info}
-              relations={relations}
+              info={!isSubmitted ? info : {}}
+              relations={!isSubmitted ? relations : {}}
               isSubmitted={isSubmitted}
-              surveyGroupSubmited={group.surveyGroupSubmited}
               visitedSurveyGroups={visitedSurveyGroups}
+              resetQuestions={resetQuestions}
             />
           </TabPane>
         ))}
@@ -254,6 +286,7 @@ const Dashboard = ({
             className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none
           w-full md:w-auto md:border-none"
             text="Submit All"
+            disabled={isSubmitted}
           />
         </div>
       )}
@@ -267,6 +300,7 @@ Dashboard.propTypes = {
   fetchInfo: PropTypes.func.isRequired,
   fetchRelations: PropTypes.func.isRequired,
   submitResponses: PropTypes.func.isRequired,
+  resetQuestions: PropTypes.func.isRequired,
   projects: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.shape({})),
     timeStamp: PropTypes.number,
