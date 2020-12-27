@@ -23,7 +23,7 @@ _Steps.defaultProps = {
   className: '',
   currentPosition: 0,
   size: 'default', // also small available
-  steps: ['Survey Setting', 'Email Settings', 'Survey Intro', 'Survey SelectQuestions'],
+  steps: ['Survey Setting', 'Email Settings', 'Survey Intro', 'Survey Questions'],
 };
 
 export default _Steps;
