@@ -29,7 +29,7 @@ const RateeGroupQuestions = ({
   const [inputQuestionNumber, setInputQuestionNumber] = useState(questionNumber);
   const [jumpQuestion, setJumpQuestion] = useState('');
   const [jumpModalVisible, setJumpModalVisible] = useState(false);
-  const [nextIsDisabled, setNextIsDisabled] = useState(true);
+  const [nextIsDisabled, setNextIsDisabled] = useState(false);
 
   useEffect(() => {
     if (surveyGroupId) {
@@ -73,22 +73,49 @@ const RateeGroupQuestions = ({
   }, [questions?.timeStamp]);
 
   useEffect(() => {
+    const isFeedback = questions?.data?.isFeedback === true;
     const relationsGroup = relations?.data?.filter(
       ({ raterGroupName }) => raterGroupName === relation,
     );
-    if (!questions?.data?.question?.required) {
-      setNextIsDisabled(false);
-    } else if (questions?.data?.responses?.length === relationsGroup?.length) {
-      setNextIsDisabled(false);
-    } else if (questions?.data?.responses?.length !== relationsGroup?.length) {
-      setNextIsDisabled(true);
-    } else if (
-      relationsGroup?.length === Object.keys(relationValues)?.length &&
-      relationsGroup?.length === newAnswersCount
-    ) {
+    if (questions?.data?.question?.required) {
+      if (!isFeedback) {
+        if (questions?.data?.responses?.length === 0) {
+          setNextIsDisabled(true);
+        }
+        let allIsAnswered = true;
+        // eslint-disable-next-line no-unused-expressions
+        questions?.data?.responses?.forEach((res) => {
+          if (res?.questionResponse === null) allIsAnswered = false;
+        });
+        if (questions?.data?.responses?.length !== relationsGroup?.length) allIsAnswered = false;
+        if (!allIsAnswered) setNextIsDisabled(true);
+      } else if (questions?.data?.responses?.length === 0) {
+        setNextIsDisabled(true);
+      } else {
+        let allIsAnswered = true;
+        // eslint-disable-next-line no-unused-expressions
+        questions?.data?.responses?.forEach((res) => {
+          if (res?.feedbackResponse === null) allIsAnswered = false;
+        });
+        if (!allIsAnswered) setNextIsDisabled(true);
+      }
+    } else {
       setNextIsDisabled(false);
     }
-  }, [relations, questions, relationValues, newAnswersCount]);
+  }, [questions, newAnswersCount, relationValues]);
+
+  useEffect(() => {
+    let allIsAnswered = true;
+    // eslint-disable-next-line no-unused-expressions
+    Object.keys(relationValues)?.forEach((key) => {
+      if (!relationValues[key]) allIsAnswered = false;
+    });
+    if (allIsAnswered) setNextIsDisabled(false);
+  }, [relationValues]);
+
+  useEffect(() => {
+    setNextIsDisabled(false);
+  }, [questionNumber]);
 
   const dataSource = React.useMemo(() => {
     const row = {};
@@ -160,10 +187,8 @@ const RateeGroupQuestions = ({
     });
 
     if (responses?.length !== Object.keys(relationValues)?.length) {
-      setNextIsDisabled(true);
       return;
     }
-    setNextIsDisabled(false);
 
     const questionId = questions?.data?.question?.id;
     if (questionNumber <= questions?.data?.totalQuestions) {
@@ -175,7 +200,6 @@ const RateeGroupQuestions = ({
         await addQuestionResponses({ surveyGroupId, questionId, ...body });
         setRelationValues({});
         setNewAnswersCount(0);
-        setNextIsDisabled(true);
         if (questionNumber < questions?.data?.totalQuestions) {
           setInputQuestionNumber(questionNumber * 1 + 1);
           history.push(
@@ -194,7 +218,6 @@ const RateeGroupQuestions = ({
   };
 
   const handleBack = () => {
-    setNextIsDisabled(true);
     setNewAnswersCount(0);
     setInputQuestionNumber(questionNumber * 1 - 1);
     history.push(
@@ -247,7 +270,6 @@ const RateeGroupQuestions = ({
           skipReducer: true,
         });
         if (inputQuestionNumber?.toString() === res?.data?.data?.questionNumber?.toString()) {
-          setNextIsDisabled(true);
           setNewAnswersCount(0);
           setInputQuestionNumber(inputQuestionNumber);
           history.push(
@@ -266,7 +288,6 @@ const RateeGroupQuestions = ({
 
   const handleJumpOk = () => {
     setJumpModalVisible(false);
-    setNextIsDisabled(true);
     setNewAnswersCount(0);
     setInputQuestionNumber(jumpQuestion);
     history.push(
