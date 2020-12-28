@@ -25,7 +25,6 @@ const IndividualQuestions = ({
   const { relationId, projectId } = parsedQuery || {};
 
   const [relationValues, setRelationValues] = useState({});
-  const [newAnswersCount, setNewAnswersCount] = useState(0);
   const [inputQuestionNumber, setInputQuestionNumber] = useState(questionNumber);
   const [jumpQuestion, setJumpQuestion] = useState('');
   const [jumpModalVisible, setJumpModalVisible] = useState(false);
@@ -66,27 +65,29 @@ const IndividualQuestions = ({
   useEffect(() => {
     const isFeedback = questions?.data?.isFeedback === true;
     if (questions?.data?.question?.required) {
-      if (!isFeedback) {
-        if (
-          questions?.data?.responses?.length === 0 ||
-          questions?.data?.responses[0]?.questionResponse === null
-        ) {
-          setNextIsDisabled(true);
-        }
-      } else if (
-        questions?.data?.responses?.length === 0 ||
-        questions?.data?.responses[0]?.questionResponse === null
-      ) {
+      if (questions?.data?.responses?.length === 0) {
         setNextIsDisabled(true);
       }
+      if (!isFeedback) {
+        if (questions?.data?.responses[0]?.questionResponse === null) {
+          setNextIsDisabled(true);
+        }
+      } else if (questions?.data?.responses[0]?.feedbackResponse === null) {
+        setNextIsDisabled(true);
+      }
+    } else {
+      setNextIsDisabled(false);
     }
+  }, [questions, relationValues]);
+
+  useEffect(() => {
     let allIsAnswered = true;
     // eslint-disable-next-line no-unused-expressions
     Object.keys(relationValues)?.forEach((key) => {
       if (!relationValues[key]) allIsAnswered = false;
     });
     if (allIsAnswered) setNextIsDisabled(false);
-  }, [questions, newAnswersCount, relationValues]);
+  }, [relationValues]);
 
   useEffect(() => {
     setNextIsDisabled(false);
@@ -168,7 +169,6 @@ const IndividualQuestions = ({
         await addQuestionResponses({ surveyGroupId, questionId, ...body });
         setRelationValues({});
         setNextIsDisabled(false);
-        setNewAnswersCount(0);
         if (questionNumber < questions?.data?.totalQuestions) {
           setInputQuestionNumber(questionNumber * 1 + 1);
           history.push(
@@ -188,8 +188,7 @@ const IndividualQuestions = ({
 
   const handleBack = () => {
     setNextIsDisabled(false);
-    setNewAnswersCount(0);
-    setInputQuestionNumber(questionNumber * 1 - 1);
+    if (questionNumber * 1 > 1) setInputQuestionNumber(questionNumber * 1 - 1);
     history.push(
       `${dynamicMap.surveyPlatform.individualQuestions({
         surveyGroupId,
@@ -206,7 +205,6 @@ const IndividualQuestions = ({
   };
 
   const handleSelectQuestionsRelationValues = (e, item, key) => {
-    setNewAnswersCount((count) => count + 1);
     setRelationValues({
       ...relationValues,
       [key]: item?.value,
@@ -214,7 +212,6 @@ const IndividualQuestions = ({
   };
 
   const handleFeedbackQuestionsRelationValues = (e, ratee) => {
-    setNewAnswersCount((count) => count + 1);
     setRelationValues({
       ...relationValues,
       [ratee?.rateeId]: e.target.value,
@@ -231,8 +228,6 @@ const IndividualQuestions = ({
           skipReducer: true,
         });
         if (inputQuestionNumber?.toString() === res?.data?.data?.questionNumber?.toString()) {
-          setNextIsDisabled(false);
-          setNewAnswersCount(0);
           setInputQuestionNumber(inputQuestionNumber);
           history.push(
             `${dynamicMap.surveyPlatform.individualQuestions({
@@ -251,7 +246,6 @@ const IndividualQuestions = ({
   const handleJumpOk = () => {
     setJumpModalVisible(false);
     setNextIsDisabled(false);
-    setNewAnswersCount(0);
     setInputQuestionNumber(jumpQuestion);
     history.push(
       `${dynamicMap.surveyPlatform.individualQuestions({
