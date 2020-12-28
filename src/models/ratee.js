@@ -161,6 +161,11 @@ export default {
             data,
           });
 
+          await dispatch.ratee.fetchStatusDetails({
+            query: '?page_size=10&page_number=1',
+            surveyGroupId,
+          });
+
           return res;
         },
         dispatch.util.errorHandler,
@@ -207,7 +212,7 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
-    async exportDemographicData({ surveyGroupId, fields, rateeIds }) { // for individual write for survey groups
+    async exportDemographicData({ surveyGroupId, fields, rateeIds }) {
       return actionWapper(async () => {
         const res = await axios({
           method: 'post',
@@ -491,11 +496,17 @@ export default {
       // eslint-disable-next-line no-undef
       const data = new FormData();
       data.append('excel', file);
+
       return actionWapper(async () => {
         const res = await axios({
           method: 'post',
           url: `/super-user/survey-groups/${surveyGroupId}/mission-criticals/import`,
           data,
+        });
+
+        await dispatch.ratee.fetchStatusDetails({
+          query: '?page_size=10&page_number=1',
+          surveyGroupId,
         });
 
         return res;

@@ -27,201 +27,127 @@ const StatusOverview = ({
     fetchRaterGroups({ surveyGroupId });
   }, [fetchSummary, surveyGroupId, pageSize, pageNumber]);
 
-  const columns = React.useMemo(() => [
-    {
-      key: 'rateeName',
-      title: (
-        <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100">Ratee</span>
-        </div>
-      ),
-      width: 100,
-    },
-    {
-      key: 'noSubmission',
-      title: (
-        <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100">No. Submission</span>
-        </div>
-      ),
-      width: 100,
-      render: (_, { totalRaters, totalSubmissions }) => (
-        <span className="text-xs">{totalSubmissions}/{totalRaters}</span>
-      ),
-    },
-    {
-      key: 'totalCompletionRate',
-      title: (
-        <div className="flex flex-col justify-between h-20 w-32">
-          <span className="text-antgray-100">Total Question Answered Rate</span>
-        </div>
-      ),
-      width: 100,
-      render: (_, { totalAnswers, totalQuestions, isTotalQuestionAnsweredRateSub }) => (
-        <div className="w-20 mt-5 flex-inline flex-col items-center justify-center">
-          <Progress
-            subClassName="mb-10"
-            status={isTotalQuestionAnsweredRateSub ? 'sub' : ''}
-            percentage={parseInt((totalAnswers / totalQuestions) * 100, 10)}
-          />
-        </div>
-      ),
-    },
-    {
-      key: 'self',
-      title: (
-        <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100 capitalize">by self</span>
-          <span className="text-body text-opacity-75 text-xs">Min. 1</span>
-        </div>
-      ),
-      width: 100,
-      render: (_, { groups }) => {
-        const { self } = groups || {};
-        return self && (
-          <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
-            <Progress
-              className="h-8"
-              subClassName="mb-12 pb-2"
-              status={self?.totalSubmissions === self?.totalRaters ? 'sub' : ''}
-              percentage={parseInt((self?.totalAnswers / self?.totalQuestions) * 100, 10)}
-            />
-            <div className="text-center">{self?.totalSubmissions}/{self?.totalRaters}</div>
+  const columns = React.useMemo(() => {
+    const initialColumns = [
+      {
+        key: 'rateeName',
+        title: (
+          <div className="flex flex-col justify-between h-20">
+            <span className="text-antgray-100">Ratee</span>
           </div>
-        );
+        ),
       },
-    },
-    {
-      // eslint-disable-next-line react/prop-types
-      key: allRaterGroups?.[0]?.name,
+      {
+        key: 'noSubmission',
+        title: (
+          <div className="flex flex-col justify-between h-20">
+            <span className="text-antgray-100">No. Submission</span>
+          </div>
+        ),
+        render: (_, { totalRaters, totalSubmissions }) => (
+          <span className="text-xs">{totalSubmissions}/{totalRaters}</span>
+        ),
+      },
+      {
+        key: 'totalCompletionRate',
+        title: (
+          <div className="flex flex-col justify-between h-20 w-32">
+            <span className="text-antgray-100">Total Question Answered Rate</span>
+          </div>
+        ),
+        render: (_, { totalAnswers, totalQuestions, isTotalQuestionAnsweredRateSub }) => (
+          <div className="w-20 mt-5 flex-inline flex-col items-center justify-center">
+            <Progress
+              subClassName="mb-10"
+              status={isTotalQuestionAnsweredRateSub ? 'sub' : ''}
+              percentage={parseInt((totalAnswers / totalQuestions) * 100, 10)}
+            />
+          </div>
+        ),
+      },
+      {
+        key: 'self',
+        title: (
+          <div className="flex flex-col justify-between h-20">
+            <span className="text-antgray-100 capitalize">by self</span>
+            <span className="text-body text-opacity-75 text-xs">Min. 1</span>
+          </div>
+        ),
+        render: (_, { groups }) => {
+          const { self } = groups || {};
+          return self && (
+            <div className="w-16 my-4 mx-auto flex-inline flex-col items-center justify-center">
+              <Progress
+                className="h-8"
+                subClassName="mb-12 pb-2"
+                status={self?.totalSubmissions === self?.totalRaters ? 'sub' : ''}
+                percentage={parseInt((self?.totalAnswers / self?.totalQuestions) * 100, 10)}
+              />
+              <div className="text-center">{self?.totalSubmissions}/{self?.totalRaters}</div>
+            </div>
+          );
+        },
+      },
+    ];
+
+    const otherColumns = (allRaterGroups || [])?.map(({ name, minRater }) => ({
+      key: name,
       title: (
-        <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100 capitalize">
-            {allRaterGroups?.[0]?.name ? `by ${allRaterGroups?.[0]?.name}` : null}
-          </span>
+        <div className="text-center flex flex-col justify-between h-20">
+          <span className="text-antgray-100 capitalize">By {name}</span>
           <span className="text-body text-opacity-75 text-xs">
-            {allRaterGroups?.[0]?.minRater ? `Min. ${allRaterGroups?.[0]?.minRater}` : null}
+            <span className="mr-1">Min.</span>
+            {minRater}
           </span>
         </div>
       ),
-      width: 100,
       render: (_, { groups }) => {
-        const { first } = groups || {};
-        return first && (
-          <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
-            <Progress
-              className="h-8"
-              subClassName="mb-12 pb-2"
-              status={first?.totalSubmissions === first?.totalRaters ? 'sub' : ''}
-              percentage={parseInt((first?.totalAnswers / first?.totalQuestions) * 100, 10)}
-            />
-            <div className="text-center">{first?.totalSubmissions}/{first?.totalRaters}</div>
-          </div>
+        return (
+          groups[name] && (
+            <div className="w-16 mt-5 mx-auto flex-inline flex-col items-center justify-center">
+              <Progress
+                className="h-8"
+                subClassName="mb-12 pb-2"
+                status={groups[name]?.totalSubmissions === groups[name]?.totalRaters ? 'sub' : ''}
+                percentage={parseInt((groups[name]?.totalAnswers / groups[name]?.totalQuestions) * 100, 10)}
+              />
+              <div className="text-center">{groups[name]?.totalSubmissions}/{groups[name]?.totalRaters}</div>
+            </div>
+          )
         );
       },
-    },
-    {
-      key: allRaterGroups?.[1]?.name,
-      title: (
-        <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100 capitalize">
-            {allRaterGroups?.[1]?.name ? `by ${allRaterGroups?.[1]?.name}` : null}
-          </span>
-          <span className="text-body text-opacity-75 text-xs">
-            {allRaterGroups?.[1]?.minRater ? `Min. ${allRaterGroups?.[1]?.minRater}` : null}
-          </span>
-        </div>
-      ),
-      width: 100,
-      render: (_, { groups }) => {
-        const { second } = groups || {};
-        return second && (
-          <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
-            <Progress
-              className="h-8"
-              subClassName="mb-12 pb-2"
-              status={second?.totalSubmissions === second?.totalRaters ? 'sub' : ''}
-              percentage={parseInt((second?.totalAnswers / second?.totalQuestions) * 100, 10)}
-            />
-            <div className="text-center">{second?.totalSubmissions}/{second?.totalRaters}</div>
-          </div>
-        );
-      },
-    },
-    {
-      key: allRaterGroups?.[2]?.name,
-      title: (
-        <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100 capitalize">
-            {allRaterGroups?.[2]?.name ? `by ${allRaterGroups?.[2]?.name}` : null}
-          </span>
-          <span className="text-body text-opacity-75 text-xs">
-            {allRaterGroups?.[2]?.minRater ? `Min. ${allRaterGroups?.[2]?.minRater}` : null}
-          </span>
-        </div>
-      ),
-      width: 100,
-      render: (_, { groups }) => {
-        const { third } = groups || {};
-        return third && (
-          <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
-            <Progress
-              className="h-8"
-              subClassName="mb-12 pb-2"
-              status={third?.totalSubmissions === third?.totalRaters ? 'sub' : ''}
-              percentage={parseInt((third?.totalAnswers / third?.totalQuestions) * 100, 10)}
-            />
-            <div className="text-center">{third?.totalSubmissions}/{third?.totalRaters}</div>
-          </div>
-        );
-      },
-    },
-    {
-      key: allRaterGroups?.[3]?.name,
-      title: (
-        <div className="flex flex-col justify-between h-20">
-          <span className="text-antgray-100 capitalize">
-            {allRaterGroups?.[3]?.name ? `by ${allRaterGroups?.[3]?.name}` : null}
-          </span>
-          <span className="text-body text-opacity-75 text-xs">
-            {allRaterGroups?.[3]?.minRater ? `Min. ${allRaterGroups?.[3]?.minRater}` : null}
-          </span>
-        </div>
-      ),
-      width: 50,
-      render: (_, { groups }) => {
-        const { fourth } = groups || {};
-        return fourth && (
-          <div className="w-16 mt-5 flex-inline flex-col items-center justify-center">
-            <Progress
-              className="h-8"
-              subClassName="mb-12 pb-2"
-              status={fourth?.totalSubmissions === fourth?.totalRaters ? 'sub' : ''}
-              percentage={parseInt((fourth?.totalAnswers / fourth?.totalQuestions) * 100, 10)}
-            />
-            <div className="text-center">{fourth?.totalSubmissions}/{fourth?.totalRaters}</div>
-          </div>
-        );
-      },
-    },
-    {
+    }));
+
+    const statusColumn = {
       key: 'status',
       title: '',
       width: 50,
       render: (_, { minMet }) => (
         <div
-          className={`ml-auto text-xs text-antgray-100 ${!minMet && 'opacity-30'}`}
+          className={`ml-auto pr-2 text-xs text-antgray-100 ${!minMet && 'opacity-25'}`}
           style={{
             writingMode: 'vertical-rl',
             textOrientation: 'mixed',
             transform: 'rotate(180deg)',
+            position: 'absolute',
+            top: '30px',
           }}
         >
           Met Min Req
         </div>
       ),
-    },
-  ]);
+    };
+
+    return [...initialColumns, ...otherColumns, statusColumn];
+  }, [allRaterGroups]);
+
+  const arrangeGroups = (groups) => {
+    const arrangedGroups = {};
+    groups.forEach((group) => {
+      arrangedGroups[group.raterGroupName] = group;
+    });
+    return arrangedGroups;
+  };
 
   const dataSource = React.useMemo(() => (summary?.data || []).map((
     {
@@ -236,29 +162,9 @@ const StatusOverview = ({
       totalAnswers,
       totalQuestions,
       minMet,
-      groups: {},
+      groups: arrangeGroups(raterGroups),
     };
 
-    raterGroups.forEach((group) => {
-      switch (group.raterGroupName) {
-        case allRaterGroups?.[0]?.name:
-          data.groups.first = group;
-          break;
-        case allRaterGroups?.[1]?.name:
-          data.groups.second = group;
-          break;
-        case allRaterGroups?.[2]?.name:
-          data.groups.third = group;
-          break;
-        case allRaterGroups?.[3]?.name:
-          data.groups.fourth = group;
-          break;
-        case 'self':
-          data.groups.self = group;
-          break;
-        default: return true;
-      }
-    });
     data.isTotalQuestionAnsweredRateSub = !((raterGroups.filter((obj) =>
       obj?.totalAnswers !== obj?.totalQuestions)).length);
     return (data);
@@ -308,6 +214,7 @@ const StatusOverview = ({
         )}
       </div>
       <Table
+        scroll={{ y: 700 }}
         size="middle"
         className="c-table-white-head p-6 mt-5 bg-white rounded-lg shadow"
         loading={loading}
