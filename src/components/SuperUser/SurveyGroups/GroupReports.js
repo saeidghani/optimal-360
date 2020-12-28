@@ -98,7 +98,7 @@ const GroupReports = ({
                   await exportClusterBenchmark(surveyGroupId);
                 }
                 // eslint-disable-next-line no-empty
-              } catch (err) {}
+              } catch (err) { }
             }}
           />
 
@@ -111,7 +111,7 @@ const GroupReports = ({
                   await importClusterBenchmark({ surveyGroupId, file });
                 }
                 // eslint-disable-next-line no-empty
-              } catch (err) {}
+              } catch (err) { }
 
               return false;
             }}
@@ -172,7 +172,7 @@ const GroupReports = ({
                 history.push(path);
               }
               // eslint-disable-next-line no-empty
-            } catch (err) {}
+            } catch (err) { }
           }}
         />
       </div>
