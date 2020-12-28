@@ -25,7 +25,6 @@ const AllRateesQuestions = ({
   const { projectId } = parsedQuery || {};
 
   const [relationValues, setRelationValues] = useState({});
-  const [newAnswersCount, setNewAnswersCount] = useState(0);
   const [inputQuestionNumber, setInputQuestionNumber] = useState(questionNumber);
   const [jumpQuestion, setJumpQuestion] = useState('');
   const [jumpModalVisible, setJumpModalVisible] = useState(false);
@@ -79,31 +78,28 @@ const AllRateesQuestions = ({
   useEffect(() => {
     const isFeedback = questions?.data?.isFeedback === true;
     if (questions?.data?.question?.required) {
-      if (!isFeedback) {
-        if (questions?.data?.responses?.length === 0) {
-          setNextIsDisabled(true);
-        }
-        let allIsAnswered = true;
-        // eslint-disable-next-line no-unused-expressions
-        questions?.data?.responses?.forEach((res) => {
-          if (res?.questionResponse === null) allIsAnswered = false;
-        });
-        if (questions?.data?.responses?.length !== allRelationIds?.length) allIsAnswered = false;
-        if (!allIsAnswered) setNextIsDisabled(true);
-      } else if (questions?.data?.responses?.length === 0) {
+      if (questions?.data?.responses?.length < allRelationIds?.length) {
         setNextIsDisabled(true);
-      } else {
-        let allIsAnswered = true;
+      }
+      if (!isFeedback) {
+        let allResponsesCorrect = true;
         // eslint-disable-next-line no-unused-expressions
         questions?.data?.responses?.forEach((res) => {
-          if (res?.feedbackResponse === null) allIsAnswered = false;
+          if (res?.questionResponse === null) allResponsesCorrect = false;
         });
-        if (!allIsAnswered) setNextIsDisabled(true);
+        if (!allResponsesCorrect) setNextIsDisabled(true);
+      } else {
+        let allResponsesCorrect = true;
+        // eslint-disable-next-line no-unused-expressions
+        questions?.data?.responses?.forEach((res) => {
+          if (res?.questionResponse === null) allResponsesCorrect = false;
+        });
+        if (!allResponsesCorrect) setNextIsDisabled(true);
       }
     } else {
       setNextIsDisabled(false);
     }
-  }, [questions, newAnswersCount, relationValues]);
+  }, [questions, relationValues]);
 
   useEffect(() => {
     let allIsAnswered = true;
@@ -192,7 +188,6 @@ const AllRateesQuestions = ({
       try {
         await addQuestionResponses({ surveyGroupId, questionId, ...body });
         setRelationValues({});
-        setNewAnswersCount(0);
         setNextIsDisabled(false);
         if (questionNumber < questions?.data?.totalQuestions) {
           setInputQuestionNumber(questionNumber * 1 + 1);
@@ -212,8 +207,7 @@ const AllRateesQuestions = ({
   };
 
   const handleBack = () => {
-    setNewAnswersCount(0);
-    setInputQuestionNumber(questionNumber * 1 - 1);
+    if (questionNumber * 1 > 1) setInputQuestionNumber(questionNumber * 1 - 1);
     history.push(
       `${dynamicMap.surveyPlatform.allRateesQuestions({
         surveyGroupId,
@@ -230,7 +224,6 @@ const AllRateesQuestions = ({
   };
 
   const handleSelectQuestionsRelationValues = (e, item, key) => {
-    setNewAnswersCount((count) => count + 1);
     setRelationValues({
       ...relationValues,
       [key]: item?.value,
@@ -238,7 +231,6 @@ const AllRateesQuestions = ({
   };
 
   const handleFeedbackQuestionsRelationValues = (e, ratee) => {
-    setNewAnswersCount((count) => count + 1);
     setRelationValues({
       ...relationValues,
       [ratee?.rateeId]: e.target.value,
@@ -260,7 +252,6 @@ const AllRateesQuestions = ({
           skipReducer: true,
         });
         if (inputQuestionNumber?.toString() === res?.data?.data?.questionNumber?.toString()) {
-          setNewAnswersCount(0);
           setInputQuestionNumber(inputQuestionNumber);
           history.push(
             `${dynamicMap.surveyPlatform.allRateesQuestions({
@@ -278,7 +269,6 @@ const AllRateesQuestions = ({
 
   const handleJumpOk = () => {
     setJumpModalVisible(false);
-    setNewAnswersCount(0);
     setInputQuestionNumber(jumpQuestion);
     history.push(
       `${dynamicMap.surveyPlatform.allRateesQuestions({
