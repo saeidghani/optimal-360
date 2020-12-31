@@ -423,7 +423,7 @@ const SurveyQuestionsList = ({
             parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
           } `}
         >
-          <Steps currentPosition={3} />
+          <Steps wizardSteps currentPosition={3} />
 
           <Formik
             innerRef={formRef}
