@@ -181,7 +181,7 @@ const EmailSettings = ({
             parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
           } `}
         >
-          <Steps currentPosition={1} />
+          <Steps wizardSteps currentPosition={1} />
 
           <Formik
             innerRef={formRef}

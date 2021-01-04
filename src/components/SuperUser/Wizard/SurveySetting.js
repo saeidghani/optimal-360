@@ -287,7 +287,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
             parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
           } `}
         >
-          <Steps currentPosition={0} />
+          <Steps wizardSteps currentPosition={0} />
 
           <Formik
             innerRef={formRef}
@@ -309,6 +309,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
 
                 const path = dynamicMap.superUser.emailSettings();
                 const params = history?.location?.search;
+
                 history.push(`${path}${params}`);
               } catch (error) {}
             }}
@@ -369,7 +370,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                         size="large"
                         className="w-1/2"
                         label="Item Caution"
-                        value={values.surveySetting.itemCaution}
+                        value={values.surveySetting.itemCaution || '0'}
                         onChange={(itemCaution) =>
                           setFieldValue('surveySetting', {
                             ...values.surveySetting,

@@ -25,7 +25,6 @@ export default {
   },
 
   effects: (dispatch) => ({
-
     async fetchSummary({ query, surveyGroupId }) {
       return actionWapper(async () => {
         const res = await axios({
@@ -75,18 +74,20 @@ export default {
     },
 
     async sendEmail({ raterIds, emailOptionId, surveyGroupId }) {
-      return actionWapper(async () => {
-        const res = await axios({
-          method: 'post',
-          url: `/super-user/survey-groups/${surveyGroupId}/send-email`,
-          data: {
-            raterIds,
-            emailOptionId,
-          },
-        });
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/send-email`,
+            data: {
+              raterIds,
+              emailOptionId,
+            },
+          });
 
-        return res;
-      }, dispatch.util.errorHandler,
+          return res;
+        },
+        dispatch.util.errorHandler,
         dispatch.util.alert,
       );
     },
@@ -104,15 +105,16 @@ export default {
     },
 
     async removeRateeRaters({ surveyGroupId, selectedRowsIds }) {
-      return actionWapper(async () => {
-        const res = await axios({
-          method: 'patch',
-          url: `/super-user/survey-groups/${surveyGroupId}/relations/remove`,
-          data: { relationIds: selectedRowsIds },
-        });
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'patch',
+            url: `/super-user/survey-groups/${surveyGroupId}/relations/remove`,
+            data: { relationIds: selectedRowsIds },
+          });
 
-        return res;
-      },
+          return res;
+        },
         dispatch.util.errorHandler,
         dispatch.util.alert,
       );
@@ -128,9 +130,7 @@ export default {
         dispatch.util.saveFile({ blob: res.data, filename: `raters-${surveyGroupId}` });
 
         return res;
-      },
-        dispatch.util.errorHandler,
-      );
+      }, dispatch.util.errorHandler);
     },
 
     async exportRelations({ surveyGroupId }) {
@@ -144,8 +144,7 @@ export default {
         dispatch.util.saveFile({ blob: res.data, filename: `relations-${surveyGroupId}` });
 
         return res;
-      }, dispatch.util.errorHandler,
-      );
+      }, dispatch.util.errorHandler);
     },
 
     async importRelations({ file, surveyGroupId }) {
@@ -174,15 +173,16 @@ export default {
     },
 
     async changeAssessmentsStatus({ surveyGroupId, status, selectedRowsIds }) {
-      return actionWapper(async () => {
-        const res = await axios({
-          method: 'patch',
-          url: `/super-user/survey-groups/${surveyGroupId}/assessments`,
-          data: { relationIds: selectedRowsIds, status },
-        });
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'patch',
+            url: `/super-user/survey-groups/${surveyGroupId}/assessments`,
+            data: { relationIds: selectedRowsIds, status },
+          });
 
-        return res;
-      },
+          return res;
+        },
         dispatch.util.errorHandler,
         dispatch.util.alert,
       );
@@ -226,8 +226,7 @@ export default {
 
         dispatch.util.saveFile({ blob: res.data, filename: `relations-${surveyGroupId}` });
         return res;
-      }, dispatch.util.errorHandler,
-      );
+      }, dispatch.util.errorHandler);
     },
 
     async exportDemographicDataForIndividual({ surveyGroupIds, fields }) {
@@ -286,28 +285,34 @@ export default {
     },
 
     async addMissionCriticalToRatee({ surveyGroupId, rateeId, competencyIds }) {
-      return actionWapper(async () => {
-        const res = await axios({
-          method: 'post',
-          url: `/super-user/survey-groups/${surveyGroupId}/ratees/${rateeId}/mission-criticals`,
-          data: { competencyIds },
-        });
-        return res;
-      }, dispatch.util.errorHandler,
-        dispatch.util.alert);
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/ratees/${rateeId}/mission-criticals`,
+            data: { competencyIds },
+          });
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
     },
 
     async setStaff({ surveyGroupId, rateeId }) {
-      return actionWapper(async () => {
-        const res = await axios({
-          method: 'post',
-          url: `/super-user/survey-groups/${surveyGroupId}/ratees`,
-          data: { rateeId },
-        });
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/ratees`,
+            data: { rateeId },
+          });
 
-        return res;
-      }, dispatch.util.errorHandler,
-        dispatch.util.alert);
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
     },
 
     fetchRaterGroups({ surveyGroupId }) {
@@ -318,8 +323,7 @@ export default {
         });
         this.fetchRaterGroups_reducer(res?.data?.data);
         return res;
-      },
-        dispatch.util.errorHandler);
+      }, dispatch.util.errorHandler);
     },
 
     clearRaterGroups() {
@@ -350,16 +354,19 @@ export default {
     },
 
     submitRaters({ surveyGroupId, rateeId, obj }) {
-      return actionWapper(async () => {
-        const res = await axios({
-          method: 'post',
-          // eslint-disable-next-line max-len
-          url: `/super-user/survey-groups/${surveyGroupId}/ratees/${rateeId}/relations`,
-          data: obj,
-        });
-        return res;
-      }, dispatch.util.errorHandler,
-        dispatch.util.alert);
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            // eslint-disable-next-line max-len
+            url: `/super-user/survey-groups/${surveyGroupId}/ratees/${rateeId}/relations`,
+            data: obj,
+          });
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
     },
 
     async fetchReportSetting({ surveyGroupId }) {
@@ -375,17 +382,19 @@ export default {
     },
 
     async setReportSetting({ surveyGroupId, reports }) {
-      return actionWapper(async () => {
-        const res = await axios({
-          method: 'post',
-          url: `/super-user/survey-groups/${surveyGroupId}/report-setting`,
-          data: { ...reports },
-        });
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/report-setting`,
+            data: { ...reports },
+          });
 
-        return res;
-      },
+          return res;
+        },
         dispatch.util.errorHandler,
-        dispatch.util.alert);
+        dispatch.util.alert,
+      );
     },
 
     async importClientCompetencyModel({ file, surveyGroupId }) {
@@ -432,51 +441,58 @@ export default {
     },
 
     async setPastResult({ surveyGroupId, selectedPastResults }) {
-      return actionWapper(async () => {
-        const res = await axios({
-          method: 'post',
-          url: `/super-user/survey-groups/${surveyGroupId}/past-result`,
-          data: { selectedPastResults },
-        });
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/past-result`,
+            data: { selectedPastResults },
+          });
 
-        return res;
-      },
+          return res;
+        },
         dispatch.util.errorHandler,
-        dispatch.util.alert);
+        dispatch.util.alert,
+      );
     },
 
     async generateGroupReports({ projectId, surveyGroupIds }) {
-      return actionWapper(async () => {
-        const res = await axios({
-          method: 'post',
-          url: `/super-user/projects/${projectId}/results/group-reports/generate-reports`,
-          data: { surveyGroupIds },
-          responseType: 'blob',
-        });
-        dispatch.util.saveZipFile({
-          res: res?.data,
-          filename: `report-project-${projectId}--surveyGroups[${surveyGroupIds}].zip`,
-        });
-      },
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/projects/${projectId}/results/group-reports/generate-reports`,
+            data: { surveyGroupIds },
+            responseType: 'blob',
+          });
+          dispatch.util.saveZipFile({
+            res: res?.data,
+            filename: `report-project-${projectId}--surveyGroups[${surveyGroupIds}].zip`,
+          });
+        },
         dispatch.util.errorHandler,
-        dispatch.util.alert);
+        dispatch.util.alert,
+      );
     },
 
     async generateIndividualReports({ surveyGroupId, rateeIds }) {
-      return actionWapper(async () => {
-        const res = await axios({
-          method: 'post',
-          url: `/super-user/survey-groups/${surveyGroupId}/results/individual-reports/generate-reports`,
-          data: { rateeIds },
-          responseType: 'blob',
-        });
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/results/individual-reports/generate-reports`,
+            data: { rateeIds },
+            responseType: 'blob',
+          });
 
-        dispatch.util.saveZipFile({
-          res: res?.data,
-          filename: `report-project-${surveyGroupId}--surveyGroups[${rateeIds}].zip`,
-        });
-      }, dispatch.util.errorHandler,
-        dispatch.util.alert);
+          dispatch.util.saveZipFile({
+            res: res?.data,
+            filename: `report-project-${surveyGroupId}--surveyGroups[${rateeIds}].zip`,
+          });
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
     },
 
     async exportMissionCriticalsToExcel({ surveyGroupId }) {
@@ -497,23 +513,25 @@ export default {
       const data = new FormData();
       data.append('excel', file);
 
-      return actionWapper(async () => {
-        const res = await axios({
-          method: 'post',
-          url: `/super-user/survey-groups/${surveyGroupId}/mission-criticals/import`,
-          data,
-        });
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/mission-criticals/import`,
+            data,
+          });
 
-        await dispatch.ratee.fetchStatusDetails({
-          query: '?page_size=10&page_number=1',
-          surveyGroupId,
-        });
+          await dispatch.ratee.fetchStatusDetails({
+            query: '?page_size=10&page_number=1',
+            surveyGroupId,
+          });
 
-        return res;
-      }, dispatch.util.errorHandler,
-        dispatch.util.alert);
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
     },
-
   }),
 
   reducers: {

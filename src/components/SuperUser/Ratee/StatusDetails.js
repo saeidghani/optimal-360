@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
+
 import { useQuery, useRateeSurveyGroup } from '../../../hooks';
 import { stringify } from '../../../hooks/useQuery';
 
@@ -13,6 +13,7 @@ import Table from '../../Common/Table';
 import SearchBox from '../../Common/SearchBox';
 import Button from '../../Common/Button';
 import ImportExcelButton from '../../Common/ImportExcelButton';
+import Modal from '../../Common/Modal';
 
 const StatusDetails = ({
   loading,
@@ -30,6 +31,7 @@ const StatusDetails = ({
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const [importRelationsFile, setImportRelationsFile] = React.useState('');
   const [, , surveyGroupId, surveyGroupObject] = useRateeSurveyGroup();
 
   const viewBy = parsedQuery?.viewBy || 'raters';
@@ -127,6 +129,7 @@ const StatusDetails = ({
               onChange={(e) => setQuery({ q: e.target.value })}
               value={parsedQuery?.q || ''}
             />
+
             {isNotPastEndDate && raterGroups?.length > 0 ? (
               <Button
                 size="middle"
@@ -146,6 +149,7 @@ const StatusDetails = ({
             ) : null}
           </div>
         </div>
+
         <div className="flex flex-col ml-48">
           {isNotPastEndDate && raterGroups?.length > 0 ? (
             <div className="flex flex-row">
@@ -154,10 +158,12 @@ const StatusDetails = ({
                 className="mb-3 pr-3"
                 buttonText="Import Relations Excel File"
                 beforeUpload={(file) => {
-                  importRelations({ file, surveyGroupId });
+                  setImportRelationsFile(file);
+
                   return false;
                 }}
               />
+
               <ImportExcelButton
                 textClassName="pr-3"
                 className="mb-3 pr-3"
@@ -169,6 +175,7 @@ const StatusDetails = ({
               />
             </div>
           ) : null}
+
           <div className="flex flex-row">
             <Button
               size="middle"
@@ -182,6 +189,7 @@ const StatusDetails = ({
                 exportRelations({ surveyGroupId });
               }}
             />
+
             <Button
               size="middle"
               textSize="xs"
@@ -323,41 +331,65 @@ const StatusDetails = ({
 
     setQuery({ sort: newItem });
   };
+
   return (
-    <Table
-      size="middle"
-      className="c-table-white-head p-6 mt-5 bg-white rounded-lg shadow"
-      onTableChange={({ sorter }) => sort(sorter)}
-      loading={loading}
-      columns={columns}
-      dataSource={statusDetails?.data || []}
-      rowKey="relationId"
-      renderHeader={renderHeader}
-      onPageSizeChange={(size) => {
-        setQuery({ page_size: size, page_number: 1 });
-      }}
-      pageSize={pageSize * 1}
-      pageNumber={pageNumber * 1}
-      // eslint-disable-next-line camelcase
-      onPaginationChange={(page_number, page_size) => {
-        setSelectedRows([]);
-        setQuery({
-          page_size,
-          page_number,
-        });
-      }}
-      rowSelection={isNotPastEndDate}
-      selectedRowKeys={selectedRows?.map((el) => el.relationId)}
-      onRowSelectionChange={(_, rows) => {
-        setSelectedRows(rows);
-      }}
-      totalRecordSize={statusDetails?.metaData?.pagination?.totalRecords * 1}
-      rowClassName={({ assessmentStatus }) => {
-        if (!assessmentStatus) {
-          return 'td-gray';
-        }
-      }}
-    />
+    <>
+      <Modal
+        okText="Yes"
+        cancelText="Cancel"
+        visible={!!importRelationsFile}
+        handleOk={async () => {
+          try {
+            await importRelations({ file: importRelationsFile, surveyGroupId });
+          } catch (err) {
+          } finally {
+            setImportRelationsFile('');
+          }
+        }}
+        handleCancel={() => setImportRelationsFile('')}
+      >
+        <h3 className="text-lg text-body mb-3">Attention!</h3>
+
+        <p className="text-sm text-secondary">
+          If you import this excel file, all prior relations will be deleted, continue?
+        </p>
+      </Modal>
+
+      <Table
+        size="middle"
+        className="c-table-white-head p-6 mt-5 bg-white rounded-lg shadow"
+        onTableChange={({ sorter }) => sort(sorter)}
+        loading={loading}
+        columns={columns}
+        dataSource={statusDetails?.data || []}
+        rowKey="relationId"
+        renderHeader={renderHeader}
+        onPageSizeChange={(size) => {
+          setQuery({ page_size: size, page_number: 1 });
+        }}
+        pageSize={pageSize * 1}
+        pageNumber={pageNumber * 1}
+        // eslint-disable-next-line camelcase
+        onPaginationChange={(page_number, page_size) => {
+          setSelectedRows([]);
+          setQuery({
+            page_size,
+            page_number,
+          });
+        }}
+        rowSelection={isNotPastEndDate}
+        selectedRowKeys={selectedRows?.map((el) => el.relationId)}
+        onRowSelectionChange={(_, rows) => {
+          setSelectedRows(rows);
+        }}
+        totalRecordSize={statusDetails?.metaData?.pagination?.totalRecords * 1}
+        rowClassName={({ assessmentStatus }) => {
+          if (!assessmentStatus) {
+            return 'td-gray';
+          }
+        }}
+      />
+    </>
   );
 };
 

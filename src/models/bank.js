@@ -73,7 +73,8 @@ export default {
             data,
           });
 
-          await dispatch.bank.fetchSurveyGroups('?page_size=10&page_number=1');
+          const query = window.location.search;
+          await dispatch.bank.fetchSurveyGroups(query);
 
           return res;
         },
