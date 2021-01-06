@@ -153,16 +153,20 @@ const SurveyGroups = ({
       : '';
   };
 
-  const handleTableChange = (endDate, surveyGroupId) => {
-    const newSurveyGroups = [...formRef.current.values];
+  const handleTableChange = async (endDate, surveyGroupId) => {
+    try {
+      await changeSurveyGroupEndDate({ projectId, endDate, surveyGroupId });
+    } catch (err) {}
 
-    const updateIndex = newSurveyGroups.findIndex(
-      (surveyGroup) => surveyGroup.id * 1 === surveyGroupId * 1,
-    );
+    // const newSurveyGroups = [...formRef.current.values];
 
-    newSurveyGroups[updateIndex].endDate = moment(endDate).toISOString();
+    // const updateIndex = newSurveyGroups.findIndex(
+    //   (surveyGroup) => surveyGroup.id * 1 === surveyGroupId * 1,
+    // );
 
-    formRef.current.setValues([...newSurveyGroups]);
+    // newSurveyGroups[updateIndex].endDate = moment(endDate).toISOString();
+
+    // formRef.current.setValues([...newSurveyGroups]);
   };
 
   const columns = React.useMemo(
@@ -287,50 +291,20 @@ const SurveyGroups = ({
       title="Super User"
       contentClass="py-6 pl-21 pr-6"
     >
-      <Formik
-        innerRef={formRef}
-        enableReinitialize
-        initialValues={surveyGroups.data}
-        // validationSchema={schema}
-        onSubmit={async (values) => {
-          console.log({ values });
-
-          // try {
-          //   await changeSurveyGroupEndDate({
-          //     projectId,
-          //     surveyGroupId: values.id,
-          //     endDate: values.endDate,
-          //   });
-          // } catch (err) {}
+      <Table
+        onTableChange={({ sorter }) => sort(sorter)}
+        className="p-6 bg-white rounded-lg shadow"
+        size="small"
+        selectedRowKeys={selectedRows?.map((el) => el.id.toString())}
+        loading={loading}
+        columns={columns}
+        dataSource={surveyGroups.data}
+        renderHeader={renderHeader}
+        pagination={false}
+        onRowSelectionChange={(_, rows) => {
+          setSelectedRows(rows);
         }}
-      >
-        {({ values, handleSubmit }) => (
-          <Table
-            onTableChange={({ sorter }) => sort(sorter)}
-            className="p-6 bg-white rounded-lg shadow"
-            size="small"
-            selectedRowKeys={selectedRows?.map((el) => el.id.toString())}
-            loading={loading}
-            columns={columns}
-            dataSource={values}
-            renderHeader={renderHeader}
-            footer={() => (
-              <div className="pt-5 pb-3 flex justify-end">
-                <Button
-                  className="w-24.5 h-9.5"
-                  text="Save"
-                  textSize="base"
-                  onClick={handleSubmit}
-                />
-              </div>
-            )}
-            pagination={false}
-            onRowSelectionChange={(_, rows) => {
-              setSelectedRows(rows);
-            }}
-          />
-        )}
-      </Formik>
+      />
     </MainLayout>
   );
 };
