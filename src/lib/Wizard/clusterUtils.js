@@ -231,7 +231,23 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
       clusters[clusterIndex].competencies[competencyIndex].questions,
     );
 
+    const questions = [];
+
+    clusters.forEach((cluster) => {
+      cluster.competencies.forEach((competency) => {
+        questions.push(...competency.questions);
+      });
+    });
+
     const newQuestion = { ...newItem, id, index, showOrder, newAddedItem };
+
+    // console.log({
+    //   newQuestion,
+    //   Qs: clusters[clusterIndex].competencies[competencyIndex].questions,
+    //   clusters,
+    //   questions,
+    // });
+
     clusters[clusterIndex].competencies[competencyIndex].questions.push(newQuestion);
 
     return { clusters, id };
