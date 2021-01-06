@@ -11,10 +11,12 @@ import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import Tag from '../../Common/Tag';
+import DatePicker from '../../Common/DatePicker';
 
 const SurveyGroups = ({
   fetchSurveyGroups,
   changeStatusOfSurveyGroups,
+  changeSurveyGroupEndDate,
   removeSurveyGroups,
   surveyGroups,
   loading,
@@ -148,6 +150,16 @@ const SurveyGroups = ({
       : '';
   };
 
+  const handleTableChange = async (endDate, surveyGroupId) => {
+    try {
+      await changeSurveyGroupEndDate({
+        projectId,
+        endDate: moment(endDate).toISOString(),
+        surveyGroupId,
+      });
+    } catch (err) {}
+  };
+
   const columns = React.useMemo(
     () => [
       {
@@ -194,7 +206,17 @@ const SurveyGroups = ({
       {
         key: 'endDate',
         title: 'End Date',
-        render: (date) => moment(date).format('DD/MM/YYYY'),
+        render: (date, { id }) => (
+          <DatePicker
+            allowClear={false}
+            size="large"
+            onChange={(endDate) => handleTableChange(endDate, id)}
+            // onChange={(endDate) => console.log({ endDate })}
+            value={date}
+            wrapperClassName="w-3/5 flex flex-row justify-center items-center"
+            // errorMessage={touched.surveySetting?.startDate && errors.surveySetting?.startDate}
+          />
+        ),
       },
       {
         key: 'status',
@@ -262,7 +284,7 @@ const SurveyGroups = ({
         selectedRowKeys={selectedRows?.map((el) => el.id.toString())}
         loading={loading}
         columns={columns}
-        dataSource={surveyGroups?.data || []}
+        dataSource={surveyGroups.data}
         renderHeader={renderHeader}
         pagination={false}
         onRowSelectionChange={(_, rows) => {
@@ -279,6 +301,7 @@ SurveyGroups.propTypes = {
   fetchSurveyGroups: PropTypes.func.isRequired,
   removeSurveyGroups: PropTypes.func.isRequired,
   changeStatusOfSurveyGroups: PropTypes.func.isRequired,
+  changeSurveyGroupEndDate: PropTypes.func.isRequired,
 };
 
 SurveyGroups.defaultProps = {
