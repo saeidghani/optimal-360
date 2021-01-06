@@ -303,7 +303,7 @@ export default {
       return actionWapper(
         async () => {
           const res = await axios({
-            method: 'patch',
+            method: 'post',
             url: `/super-user/survey-groups/${surveyGroupId}/end-date`,
             data: {
               newEndDate: endDate,

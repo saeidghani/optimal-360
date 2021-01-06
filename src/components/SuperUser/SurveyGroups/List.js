@@ -2,8 +2,6 @@
 import React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Formik } from 'formik';
-import * as yup from 'yup';
 import moment from 'moment';
 
 import { dynamicMap } from '../../../routes/RouteMap';
@@ -23,7 +21,6 @@ const SurveyGroups = ({
   surveyGroups,
   loading,
 }) => {
-  const formRef = React.useRef();
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
 
@@ -155,18 +152,12 @@ const SurveyGroups = ({
 
   const handleTableChange = async (endDate, surveyGroupId) => {
     try {
-      await changeSurveyGroupEndDate({ projectId, endDate, surveyGroupId });
+      await changeSurveyGroupEndDate({
+        projectId,
+        endDate: moment(endDate).toISOString(),
+        surveyGroupId,
+      });
     } catch (err) {}
-
-    // const newSurveyGroups = [...formRef.current.values];
-
-    // const updateIndex = newSurveyGroups.findIndex(
-    //   (surveyGroup) => surveyGroup.id * 1 === surveyGroupId * 1,
-    // );
-
-    // newSurveyGroups[updateIndex].endDate = moment(endDate).toISOString();
-
-    // formRef.current.setValues([...newSurveyGroups]);
   };
 
   const columns = React.useMemo(
@@ -215,9 +206,9 @@ const SurveyGroups = ({
       {
         key: 'endDate',
         title: 'End Date',
-        // width: 300,
         render: (date, { id }) => (
           <DatePicker
+            allowClear={false}
             size="large"
             onChange={(endDate) => handleTableChange(endDate, id)}
             // onChange={(endDate) => console.log({ endDate })}
@@ -227,11 +218,6 @@ const SurveyGroups = ({
           />
         ),
       },
-      // {
-      //   key: 'endDate',
-      //   title: 'End Date',
-      //   render: (date) => moment(date).format('DD/MM/YYYY'),
-      // },
       {
         key: 'status',
         title: 'Status',
