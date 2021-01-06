@@ -2,6 +2,8 @@
 import React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 import moment from 'moment';
 
 import { dynamicMap } from '../../../routes/RouteMap';
@@ -11,14 +13,17 @@ import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import Tag from '../../Common/Tag';
+import DatePicker from '../../Common/DatePicker';
 
 const SurveyGroups = ({
   fetchSurveyGroups,
   changeStatusOfSurveyGroups,
+  changeSurveyGroupEndDate,
   removeSurveyGroups,
   surveyGroups,
   loading,
 }) => {
+  const formRef = React.useRef();
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
 
@@ -148,6 +153,18 @@ const SurveyGroups = ({
       : '';
   };
 
+  const handleTableChange = (endDate, surveyGroupId) => {
+    const newSurveyGroups = [...formRef.current.values];
+
+    const updateIndex = newSurveyGroups.findIndex(
+      (surveyGroup) => surveyGroup.id * 1 === surveyGroupId * 1,
+    );
+
+    newSurveyGroups[updateIndex].endDate = moment(endDate).toISOString();
+
+    formRef.current.setValues([...newSurveyGroups]);
+  };
+
   const columns = React.useMemo(
     () => [
       {
@@ -194,8 +211,23 @@ const SurveyGroups = ({
       {
         key: 'endDate',
         title: 'End Date',
-        render: (date) => moment(date).format('DD/MM/YYYY'),
+        // width: 300,
+        render: (date, { id }) => (
+          <DatePicker
+            size="large"
+            onChange={(endDate) => handleTableChange(endDate, id)}
+            // onChange={(endDate) => console.log({ endDate })}
+            value={date}
+            wrapperClassName="w-3/5 flex flex-row justify-center items-center"
+            // errorMessage={touched.surveySetting?.startDate && errors.surveySetting?.startDate}
+          />
+        ),
       },
+      // {
+      //   key: 'endDate',
+      //   title: 'End Date',
+      //   render: (date) => moment(date).format('DD/MM/YYYY'),
+      // },
       {
         key: 'status',
         title: 'Status',
@@ -255,20 +287,50 @@ const SurveyGroups = ({
       title="Super User"
       contentClass="py-6 pl-21 pr-6"
     >
-      <Table
-        onTableChange={({ sorter }) => sort(sorter)}
-        className="p-6 bg-white rounded-lg shadow"
-        size="small"
-        selectedRowKeys={selectedRows?.map((el) => el.id.toString())}
-        loading={loading}
-        columns={columns}
-        dataSource={surveyGroups?.data || []}
-        renderHeader={renderHeader}
-        pagination={false}
-        onRowSelectionChange={(_, rows) => {
-          setSelectedRows(rows);
+      <Formik
+        innerRef={formRef}
+        enableReinitialize
+        initialValues={surveyGroups.data}
+        // validationSchema={schema}
+        onSubmit={async (values) => {
+          console.log({ values });
+
+          // try {
+          //   await changeSurveyGroupEndDate({
+          //     projectId,
+          //     surveyGroupId: values.id,
+          //     endDate: values.endDate,
+          //   });
+          // } catch (err) {}
         }}
-      />
+      >
+        {({ values, handleSubmit }) => (
+          <Table
+            onTableChange={({ sorter }) => sort(sorter)}
+            className="p-6 bg-white rounded-lg shadow"
+            size="small"
+            selectedRowKeys={selectedRows?.map((el) => el.id.toString())}
+            loading={loading}
+            columns={columns}
+            dataSource={values}
+            renderHeader={renderHeader}
+            footer={() => (
+              <div className="pt-5 pb-3 flex justify-end">
+                <Button
+                  className="w-24.5 h-9.5"
+                  text="Save"
+                  textSize="base"
+                  onClick={handleSubmit}
+                />
+              </div>
+            )}
+            pagination={false}
+            onRowSelectionChange={(_, rows) => {
+              setSelectedRows(rows);
+            }}
+          />
+        )}
+      </Formik>
     </MainLayout>
   );
 };
@@ -279,6 +341,7 @@ SurveyGroups.propTypes = {
   fetchSurveyGroups: PropTypes.func.isRequired,
   removeSurveyGroups: PropTypes.func.isRequired,
   changeStatusOfSurveyGroups: PropTypes.func.isRequired,
+  changeSurveyGroupEndDate: PropTypes.func.isRequired,
 };
 
 SurveyGroups.defaultProps = {
