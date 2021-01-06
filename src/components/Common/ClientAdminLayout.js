@@ -33,6 +33,7 @@ const ClientAdminLayout = ({
   heading,
   profileName,
   organizationSrc,
+  isReferenceGuide,
   surveyGroupId,
 }) => {
   const history = useHistory();
@@ -96,12 +97,14 @@ const ClientAdminLayout = ({
           </div>
         </Link>
         <div className="flex">
-          <img
-            className="mr-5"
-            src={exportIcon}
-            onClick={() => handleExport(surveyGroupId)}
-            alt=""
-          />
+          {!isReferenceGuide && (
+            <img
+              className="mr-5 cursor-pointer"
+              src={exportIcon}
+              onClick={() => handleExport(surveyGroupId)}
+              alt=""
+            />
+          )}
           <img src={printIcon} alt="" onClick={() => window.print()} />
         </div>
         <ProfileDropdown
@@ -156,6 +159,7 @@ ClientAdminLayout.propTypes = {
   wrapperClassName: PropTypes.string,
   title: PropTypes.string,
   hasBreadCrumb: PropTypes.bool,
+  isReferenceGuide: PropTypes.bool,
   headerClassName: PropTypes.string,
   heading: PropTypes.string,
   profileName: PropTypes.string,
@@ -167,6 +171,7 @@ ClientAdminLayout.defaultProps = {
   wrapperClassName: '',
   title: '',
   hasBreadCrumb: false,
+  isReferenceGuide: false,
   headerClassName: '',
   profileName: '',
   organizationSrc: '',

@@ -1,7 +1,7 @@
 import React from 'react';
 import { TeamOutlined } from '@ant-design/icons';
-
 import PropTypes from 'prop-types';
+
 import Progress from '../Common/Progress';
 import Button from '../Common/Button';
 
@@ -89,7 +89,12 @@ const ReferenceGuide = ({ userName }) => {
   ];
 
   return (
-    <Layout heading="Reference Guide" organizationSrc={logo} profileName={userName}>
+    <Layout
+      heading="Reference Guide"
+      organizationSrc={logo}
+      profileName={userName}
+      isReferenceGuide
+    >
       <span className="mt-10 text-primary-500 text-base font-semibold">Reference Guide</span>
       <p className="text-antgray-100 mt-4">
         You have been nominated in the multi-rater feedback project: 360-feedback survey. You have
@@ -235,8 +240,10 @@ const ReferenceGuide = ({ userName }) => {
   );
 };
 
-ReferenceGuide.propTypes = {};
+ReferenceGuide.propTypes = {
+  userName: PropTypes.string,
+};
 
-ReferenceGuide.defaultProps = {};
+ReferenceGuide.defaultProps = { userName: '' };
 
 export default ReferenceGuide;
