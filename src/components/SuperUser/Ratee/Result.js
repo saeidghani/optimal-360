@@ -642,6 +642,7 @@ const Result = ({
 
       <Table
         size="middle"
+        scroll={{ y: 700 }}
         className="p-6 mt-5 bg-white rounded-lg shadow"
         onTableChange={({ sorter }) => sort(sorter)}
         loading={loading}

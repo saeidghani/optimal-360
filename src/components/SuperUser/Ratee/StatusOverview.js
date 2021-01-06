@@ -68,7 +68,7 @@ const StatusOverview = ({
       {
         key: 'self',
         title: (
-          <div className="flex flex-col justify-between h-20">
+          <div className="text-center flex flex-col justify-between h-20">
             <span className="text-antgray-100 capitalize">by self</span>
             <span className="text-body text-opacity-75 text-xs">Min. 1</span>
           </div>
@@ -76,7 +76,7 @@ const StatusOverview = ({
         render: (_, { groups }) => {
           const { self } = groups || {};
           return self && (
-            <div className="w-16 my-4 mx-auto flex-inline flex-col items-center justify-center">
+            <div className="w-16 mt-6 mx-auto flex-inline flex-col items-center justify-center">
               <Progress
                 className="h-8"
                 subClassName="mb-12 pb-2"
@@ -214,7 +214,6 @@ const StatusOverview = ({
         )}
       </div>
       <Table
-        scroll={{ y: 700 }}
         size="middle"
         className="c-table-white-head p-6 mt-5 bg-white rounded-lg shadow"
         loading={loading}

@@ -27,6 +27,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
     // eslint-disable-next-line
   }, [history?.location?.pathname]);
 
+
   React.useEffect(() => {
     fetchOrganizations(query);
   }, [fetchOrganizations, query]);
@@ -143,7 +144,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
       <Table
         onTableChange={({ sorter }) => sort(sorter)}
         size="middle"
-        className="p-6 bg-white rounded-lg shadow"
+        className="p-6 bg-white rounded-lg shadow "
         loading={loading}
         on
         columns={columns}
