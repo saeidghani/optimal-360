@@ -87,6 +87,22 @@ const SurveyQuestionsList = ({
 
   const surveyQuestionsStringified = JSON.stringify(surveyQuestions);
 
+  const deepSort = (arr) => {
+    const sort = (arr1) => arr1.sort((a, b) => a.showOrder - b.showOrder);
+
+    const clusters = sort(arr).map((cluster) => ({
+      ...cluster,
+      competencies: sort(cluster.competencies).map((competency) => ({
+        ...competency,
+        questions: competency.questions.sort(
+          (a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder,
+        ),
+      })),
+    }));
+
+    return clusters;
+  };
+
   const handleFeedbackChange = (newVal, row, key, subKey) => {
     const newValues = formRef.current.values[key].map((el) => {
       if (el.id === row.id) {
@@ -182,23 +198,15 @@ const SurveyQuestionsList = ({
     setQuery(Q);
   };
 
-  const getQuestions = (clusters) => {
-    const questions = [];
-
-    clusters.forEach((cluster) => {
-      cluster.competencies.forEach((competency) => {
-        questions.push(...competency.questions);
-      });
-    });
-
-    return questions;
-  };
-
   const setClusters = (clusters) => {
     setPersistData(clusters);
-    const questions = getQuestions(clusters);
+    const questions = ClusterUtils.getQuestions(clusters);
 
-    formRef.current.setValues({ ...formRef.current.values, clusters, questions });
+    formRef.current.setValues({
+      ...formRef.current.values,
+      clusters: deepSort(clusters),
+      questions,
+    });
   };
 
   const updateCluster = (newVals, ids) => {
@@ -306,34 +314,13 @@ const SurveyQuestionsList = ({
     formRef.current.setValues({ ...formRef.current.values, feedbacks: newFeedbacks });
   };
 
-  // const onQuestionSortEnd = ({ oldIndex, newIndex, ...props }) => {
   const onQuestionSortEnd = ({ oldIndex, newIndex }, originalData) => {
-    const oldIndexSurveyPlatformShowOrder = originalData[oldIndex].surveyPlatformShowOrder;
-    const newIndexSurveyPlatformShowOrder = originalData[newIndex].surveyPlatformShowOrder;
-
     if (oldIndex !== newIndex && formRef?.current) {
-      const oldValues = formRef.current.values || {};
+      const oldValues = formRef?.current?.values || {};
 
-      const arrSwitch = (arr) =>
-        arrayMove([].concat(arr), oldIndex, newIndex)
-          .filter((el) => !!el)
-          .map((el, i) => ({
-            ...el,
-            index: i,
-            surveyPlatformShowOrder: i + 1,
-            name: el.name || el.label,
-          }));
+      const arrSwitch = (arr) => arrayMove([].concat(arr), oldIndex, newIndex);
 
-      const questions = arrSwitch(oldValues.questions);
-
-      console.log({
-        questions,
-        oldQs: oldValues.questions,
-        oldIndex,
-        newIndex,
-        oldIndexSurveyPlatformShowOrder,
-        newIndexSurveyPlatformShowOrder,
-      });
+      const questions = ClusterUtils.formatQuestionOrder(arrSwitch(originalData));
 
       formRef.current.setValues({ ...oldValues, questions });
     }
@@ -342,25 +329,30 @@ const SurveyQuestionsList = ({
   const randomizeQuestions = () => {
     const oldValues = { ...formRef.current.values };
 
-    console.log({ oldValues });
-    // const removeIndex = newFeedbacks.findIndex(
-    //   (feedback) => feedback.id * 1 === removableFeedback.id * 1,
-    // );
+    const questions = [...(oldValues?.questions || [])];
 
-    // formRef.current.setValues({ ...formRef.current.values, feedbacks: newFeedbacks });
+    const shuffledQuestions = questions
+      .map((value) => ({ sort: Math.random(), value }))
+      .sort((a, b) => a.sort - b.sort)
+      .map((a) => a.value);
+
+    formRef.current.setValues({
+      ...oldValues,
+      questions: ClusterUtils.formatQuestionOrder(shuffledQuestions),
+    });
   };
 
   const initialValues = React.useMemo(() => {
     const clusters =
       persistedData?.data?.length > 0 ? persistedData.data : surveyQuestions.clusters || [];
 
-    const questions = getQuestions(clusters);
+    const questions = ClusterUtils.getQuestions(clusters);
 
     return {
       ratingScales:
         surveyQuestions?.ratingScales?.length > 0 ? surveyQuestions.ratingScales : _ratingScales,
       feedbacks: surveyQuestions?.feedbacks?.length > 0 ? surveyQuestions.feedbacks : [],
-      clusters: clusters?.length > 0 ? clusters : [],
+      clusters: clusters?.length > 0 ? deepSort(clusters) : [],
       questions,
     };
 
@@ -642,10 +634,7 @@ const SurveyQuestionsList = ({
 
                 <div className="rounded-lg py-6 mt-12">
                   <SortableQuestions
-                    data={values.questions
-                      .filter((el) => !el.deleted)
-                      .sort((a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder)
-                      .map((el) => ({ ...el, index: el.showOrder }))}
+                    data={values.questions}
                     onQuestionSortEnd={onQuestionSortEnd}
                     onRandomize={randomizeQuestions}
                   />

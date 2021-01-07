@@ -162,6 +162,44 @@ const getTableData = (parsedQuery, values) => {
   return format(clusters);
 };
 
+const formatQuestionOrder = (arr) => {
+  const leastSurveyPlatformShowOrder = Math.min(...arr.map((el) => el.surveyPlatformShowOrder * 1));
+
+  return arr
+    .map((el, i) => ({
+      ...el,
+      surveyPlatformShowOrder: leastSurveyPlatformShowOrder + i,
+      index: leastSurveyPlatformShowOrder + i,
+    }))
+    .sort((a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder);
+};
+
+const getQuestions = (clusters) => {
+  const questions = [];
+
+  clusters
+    .filter((c) => !c.deleted)
+    .forEach((cluster) => {
+      cluster.competencies
+        .filter((c) => !c.deleted)
+        .forEach((competency) => {
+          questions.push(
+            ...competency.questions
+              .filter((q) => !q.deleted)
+              .map((q) => ({
+                ...q,
+                parentCompetencyId: competency.id,
+                parentCompetencyShowOrder: competency.showOrder,
+                parentClusterId: cluster.id,
+                parentClusterShowOrder: cluster.showOrder,
+              })),
+          );
+        });
+    });
+
+  return formatQuestionOrder(questions);
+};
+
 const addItem = (oldClusters, ids, newItem, parsedQuery) => {
   const clusters = [...oldClusters];
 
@@ -231,24 +269,39 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
       clusters[clusterIndex].competencies[competencyIndex].questions,
     );
 
-    const questions = [];
+    const newQuestion = {
+      ...newItem,
+      id,
+      index,
+      showOrder,
+      newAddedItem,
+      parentCompetencyId: clusters[clusterIndex].competencies[competencyIndex].id,
+      parentCompetencyShowOrder: clusters[clusterIndex].competencies[competencyIndex].showOrder,
+      parentClusterId: clusters[clusterIndex].id,
+      parentClusterShowOrder: clusters[clusterIndex].showOrder,
+    };
 
-    clusters.forEach((cluster) => {
-      cluster.competencies.forEach((competency) => {
-        questions.push(...competency.questions);
-      });
-    });
+    const getSurveyPlatformShowOrder = () => {
+      const lastQuestions = getQuestions(clusters.slice(0, clusterIndex));
 
-    const newQuestion = { ...newItem, id, index, showOrder, newAddedItem };
+      if (lastQuestions.length > 0) {
+        return lastQuestions[lastQuestions.length - 1].surveyPlatformShowOrder + 1;
+      }
 
-    // console.log({
-    //   newQuestion,
-    //   Qs: clusters[clusterIndex].competencies[competencyIndex].questions,
-    //   clusters,
-    //   questions,
-    // });
+      const NextQuestions = getQuestions(clusters.slice(clusterIndex));
 
-    clusters[clusterIndex].competencies[competencyIndex].questions.push(newQuestion);
+      return NextQuestions[NextQuestions.length - 1].surveyPlatformShowOrder - 1;
+    };
+
+    const surveyPlatformShowOrder = getSurveyPlatformShowOrder();
+
+    clusters[clusterIndex].competencies[competencyIndex].questions = formatQuestionOrder([
+      ...clusters[clusterIndex].competencies[competencyIndex].questions,
+      {
+        ...newQuestion,
+        surveyPlatformShowOrder,
+      },
+    ]);
 
     return { clusters, id };
   }
@@ -256,4 +309,12 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
   return { clusters };
 };
 
-export { updateItem, deleteItem, clusterSortRefactor, getTableData, addItem };
+export {
+  updateItem,
+  deleteItem,
+  clusterSortRefactor,
+  getTableData,
+  addItem,
+  formatQuestionOrder,
+  getQuestions,
+};

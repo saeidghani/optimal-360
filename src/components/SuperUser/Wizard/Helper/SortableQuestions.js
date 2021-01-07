@@ -18,26 +18,26 @@ const SorTableQuestions = ({ data, onQuestionSortEnd, onRandomize }) => {
       title: '',
       align: 'center',
       dataIndex: 'sort',
-      width: 100,
-      className: 'drag-visible',
+      width: 64,
+      className: 'drag-visible dragHandler',
       render: () => <DragHandle />,
     },
     {
       title: '#',
-      dataIndex: 'key',
-      width: 140,
       align: 'center',
-      className: 'drag-visible',
+      dataIndex: 'surveyPlatformShowOrder',
+      width: 64,
+      className: 'drag-visible dragHandler',
     },
     {
       title: 'Question Label',
-      align: 'left',
       dataIndex: 'label',
+      className: 'drag-visible',
     },
     {
       title: 'Question statement',
-      align: 'left',
       dataIndex: 'statement',
+      className: 'drag-visible',
     },
   ];
 
@@ -45,17 +45,19 @@ const SorTableQuestions = ({ data, onQuestionSortEnd, onRandomize }) => {
   const SortableContainer = sortableContainer((props) => <tbody {...props} />);
 
   // eslint-disable-next-line react/prop-types
-  const DraggableBodyRow = ({ className, style, ...restProps }) => {
+  const DraggableBodyRow = (rowProps) => {
     // function findIndex base on Table rowKey props and should always be a right array index
-    const index = data.findIndex((x) => x.id.toString() === restProps['data-row-key'].toString());
+    const index = data.findIndex(
+      (x) => x.surveyPlatformShowOrder.toString() === rowProps['data-row-key'].toString(),
+    );
 
-    return <SortableItem index={index} {...restProps} />;
+    return <SortableItem index={index} {...rowProps} />;
   };
 
   const DraggableContainer = (containerProps) => (
     <SortableContainer
       useDragHandle
-      helperClass="row-dragging"
+      helperClass="questions-row-dragging"
       onSortEnd={(val) => onQuestionSortEnd(val, data)}
       {...containerProps}
     />
@@ -76,12 +78,13 @@ const SorTableQuestions = ({ data, onQuestionSortEnd, onRandomize }) => {
       </div>
 
       <Table
+        tableClassName="clusters-table"
         scroll={{ y: 350 }}
         align="center"
         pagination={false}
         dataSource={data}
         columns={columns}
-        rowKey="id"
+        rowKey="surveyPlatformShowOrder"
         components={{
           body: {
             wrapper: DraggableContainer,
