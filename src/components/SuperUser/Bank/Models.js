@@ -17,11 +17,14 @@ const Models = ({
   fetchSurveyGroups,
   importSurveyGroups,
   exportSurveyGroup,
+  deleteSurveyGroup,
 }) => {
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
 
   const [pageSize, setPageSize] = React.useState(parsedQuery?.page_size || 10);
+  const [selectedRows, setSelectedRows] = React.useState([]);
+
   const pageNumber = parsedQuery?.page_number;
 
   React.useEffect(() => {
@@ -107,29 +110,59 @@ const Models = ({
   );
 
   const renderHeader = React.useCallback(
-    () => (
-      <div className="flex flex-row justify-end items-center">
-        <Button
-          className="flex items-center mr-3.5"
-          text="New Survey Group"
-          icon="PlusCircleOutlined"
-          textClassName="mr-2"
-          size="middle"
-          textSize="xs"
-          iconPosition="right"
-          type="gray"
-          onClick={() => history.push(dynamicMap.superUser.bankSurveyGroups())}
-        />
+    () => {
+      const surveyGroupIds = selectedRows?.length > 0 ? selectedRows.map((el) => el.id) : [];
 
-        <ImportExcelButton
-          beforeUpload={(file) => {
-            importSurveyGroups(file);
+      return (
+        <div className="flex flex-row justify-between items-center">
+          {selectedRows?.length > 0 ? (
+            <div className="flex items-center space-x-2">
+              <Button
+                onClick={async () => {
+                  const data = { surveyGroupIds };
+                  await deleteSurveyGroup(data);
+                  setSelectedRows([]);
+                  fetchSurveyGroups(query);
+                }}
+                size="middle"
+                className="text-base flex flex-row justify-center items-center
+            text-primary-500 bg-primary-500 bg-opacity-8 w-8 h-8"
+                icon="DeleteOutlined"
+              />
+              <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
+            </div>
+          ) : (
+            <div className="flex ml-auto">
+              <Button
+                className="flex items-center mr-3.5"
+                text="New Survey Group"
+                icon="PlusCircleOutlined"
+                textClassName="mr-2"
+                size="middle"
+                textSize="xs"
+                iconPosition="right"
+                type="gray"
+                onClick={() => history.push(dynamicMap.superUser.bankSurveyGroups())}
+              />
 
-            return false;
-          }}
-        />
-      </div>
-    ),
+              <ImportExcelButton
+                beforeUpload={(file) => {
+                  importSurveyGroups(file);
+
+                  return false;
+                }}
+              />
+            </div>
+          )}
+        </div>
+      );
+    },
+    // eslint-disable-next-line
+    [surveyGroups.timeStamp, selectedRows.length],
+  );
+
+  const dataSource = React.useMemo(
+    () => (surveyGroups?.data || []).map((item) => ({ ...item, key: `${item.id}` })),
     // eslint-disable-next-line
     [surveyGroups.timeStamp],
   );
@@ -137,7 +170,7 @@ const Models = ({
   return (
     <MainLayout
       title="Pre Defined Data"
-      breadCrumbItems={['Pre Defined Data']}
+      breadCrumbItems={['Pre Defined Data', selectedRows?.length > 0 ? 'Selected' : '']}
       titleClass="mb-2"
       contentClass="py-6 pl-21 pr-6"
       childrenPadding={false}
@@ -145,13 +178,13 @@ const Models = ({
       <Table
         showSorterTooltip={false}
         onTableChange={({ sorter }) => sort(sorter)}
-        rowSelection={false}
         className="p-6 bg-white rounded-lg shadow"
         size="middle"
         loading={loading}
         columns={columns}
-        dataSource={surveyGroups?.data || []}
+        dataSource={dataSource}
         renderHeader={renderHeader}
+        selectedRowKeys={selectedRows?.map((el) => el.key)}
         onPageSizeChange={(size) => {
           setPageSize(size);
           setQuery({ page_size: size, page_number: 1 });
@@ -160,10 +193,14 @@ const Models = ({
         pageNumber={pageNumber * 1}
         // eslint-disable-next-line camelcase
         onPaginationChange={(page_number, page_size) => {
+          setSelectedRows([]);
           setQuery({
             page_size,
             page_number,
           });
+        }}
+        onRowSelectionChange={(_, rows) => {
+          setSelectedRows(rows);
         }}
         totalRecordSize={surveyGroups?.metaData?.pagination?.totalRecords * 1}
       />
@@ -176,6 +213,7 @@ Models.propTypes = {
   importSurveyGroups: PropTypes.func.isRequired,
   fetchSurveyGroups: PropTypes.func.isRequired,
   exportSurveyGroup: PropTypes.func.isRequired,
+  deleteSurveyGroup: PropTypes.func.isRequired,
   surveyGroups: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
     metaData: PropTypes.shape({

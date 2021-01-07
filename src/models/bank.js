@@ -96,6 +96,18 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+
+    async deleteSurveyGroup(data) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'delete',
+          url: '/super-user/bank/survey-groups',
+          data,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
   }),
 
   reducers: {

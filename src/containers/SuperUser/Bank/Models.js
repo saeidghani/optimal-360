@@ -25,6 +25,12 @@ class Models extends React.Component {
     return exportSurveyGroup(surveyGroupId);
   };
 
+  deleteSurveyGroup = (data) => {
+    const { deleteSurveyGroup } = this.props;
+
+    return deleteSurveyGroup(data);
+  };
+
   render() {
     const { loading, surveyGroups } = this.props;
 
@@ -35,6 +41,7 @@ class Models extends React.Component {
         fetchSurveyGroups={this.fetchSurveyGroups}
         importSurveyGroups={this.importSurveyGroups}
         exportSurveyGroup={this.exportSurveyGroup}
+        deleteSurveyGroup={this.deleteSurveyGroup}
       />
     );
   }
@@ -45,6 +52,7 @@ Models.propTypes = {
   fetchSurveyGroups: PropTypes.func.isRequired,
   importSurveyGroups: PropTypes.func.isRequired,
   exportSurveyGroup: PropTypes.func.isRequired,
+  deleteSurveyGroup: PropTypes.func.isRequired,
   surveyGroups: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
     metaData: PropTypes.shape({
@@ -70,6 +78,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchSurveyGroups: dispatch.bank.fetchSurveyGroups,
   importSurveyGroups: dispatch.bank.importSurveyGroups,
   exportSurveyGroup: dispatch.bank.exportSurveyGroup,
+  deleteSurveyGroup: dispatch.bank.deleteSurveyGroup,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Models);
