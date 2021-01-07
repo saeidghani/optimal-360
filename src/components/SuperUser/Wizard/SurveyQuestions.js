@@ -223,7 +223,7 @@ const SurveyQuestionsList = ({
     setClusters(newClusters);
   };
 
-  const onClusterSortEnd = ({ oldIndex, newIndex }) => {
+  const onClusterSortEnd = ({ oldIndex, newIndex }, OD) => {
     if (oldIndex !== newIndex && formRef?.current) {
       const oldValues = formRef.current.values || {};
 

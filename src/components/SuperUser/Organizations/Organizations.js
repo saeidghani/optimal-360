@@ -31,7 +31,6 @@ const Organizations = ({ organizations, fetchOrganizations, loading, deleteOrgan
     // eslint-disable-next-line
   }, [history?.location?.pathname]);
 
-
   React.useEffect(() => {
     fetchOrganizations(query);
   }, [fetchOrganizations, query]);
@@ -213,7 +212,6 @@ const Organizations = ({ organizations, fetchOrganizations, loading, deleteOrgan
           });
         }}
         onRowSelectionChange={(_, rows) => {
-          console.log(rows);
           setSelectedRows(rows);
         }}
         totalRecordSize={organizations?.metaData?.pagination?.totalRecords * 1}

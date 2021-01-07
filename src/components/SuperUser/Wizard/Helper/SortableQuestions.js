@@ -25,7 +25,7 @@ const SorTableQuestions = ({ data, onQuestionSortEnd, onRandomize }) => {
     {
       title: '#',
       align: 'center',
-      dataIndex: 'surveyPlatformShowOrder',
+      dataIndex: 'index',
       width: 64,
       className: 'drag-visible dragHandler',
     },
@@ -50,8 +50,11 @@ const SorTableQuestions = ({ data, onQuestionSortEnd, onRandomize }) => {
     const index = data.findIndex(
       (x) => x.surveyPlatformShowOrder.toString() === rowProps['data-row-key'].toString(),
     );
+    const row = data.find(
+      (x) => x.surveyPlatformShowOrder.toString() === rowProps['data-row-key'].toString(),
+    );
 
-    return <SortableItem index={index} {...rowProps} />;
+    return row?.deleted ? null : <SortableItem index={index} {...rowProps} />;
   };
 
   const DraggableContainer = (containerProps) => (

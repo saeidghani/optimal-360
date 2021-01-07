@@ -108,6 +108,7 @@ const clusterSortRefactor = (parsedQuery, oldClusters, oldIndex, newIndex) => {
   const updatedClusterIndex = index === -1 ? 0 : index;
 
   if (!clusterId) {
+    // const i1 = oldClusters.findIndex
     const switchedArr = arrSwitch(oldClusters);
     return switchedArr;
   }
@@ -137,7 +138,7 @@ const clusterSortRefactor = (parsedQuery, oldClusters, oldIndex, newIndex) => {
 const getTableData = (parsedQuery, values) => {
   const format = (arr) =>
     arr
-      .filter((el) => !el.deleted)
+      // .filter((el) => !el.deleted)
       .sort((a, b) => a.showOrder - b.showOrder)
       .map((el) => ({ ...el, index: el.showOrder, name: el.name || el.label }));
 
@@ -164,13 +165,20 @@ const getTableData = (parsedQuery, values) => {
 
 const formatQuestionOrder = (arr) => {
   const leastSurveyPlatformShowOrder = Math.min(...arr.map((el) => el.surveyPlatformShowOrder * 1));
+  let indexCounter = 0;
 
   return arr
-    .map((el, i) => ({
-      ...el,
-      surveyPlatformShowOrder: leastSurveyPlatformShowOrder + i,
-      index: leastSurveyPlatformShowOrder + i,
-    }))
+    .map((el, i) => {
+      if (!el.deleted) {
+        indexCounter++;
+      }
+
+      return {
+        ...el,
+        surveyPlatformShowOrder: leastSurveyPlatformShowOrder + i,
+        index: leastSurveyPlatformShowOrder + indexCounter,
+      };
+    })
     .sort((a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder);
 };
 
@@ -178,20 +186,18 @@ const getQuestions = (clusters) => {
   const questions = [];
 
   clusters
-    .filter((c) => !c.deleted)
+    // .filter((c) => !c.deleted)
     .forEach((cluster) => {
       cluster.competencies
-        .filter((c) => !c.deleted)
+        // .filter((c) => !c.deleted)
         .forEach((competency) => {
           questions.push(
             ...competency.questions
-              .filter((q) => !q.deleted)
+              // .filter((q) => !q.deleted)
               .map((q) => ({
                 ...q,
-                parentCompetencyId: competency.id,
-                parentCompetencyShowOrder: competency.showOrder,
-                parentClusterId: cluster.id,
-                parentClusterShowOrder: cluster.showOrder,
+                deleted: q.deleted || competency.deleted || cluster.deleted,
+                surveyPlatformShowOrder: q.surveyPlatformShowOrder,
               })),
           );
         });
@@ -275,10 +281,6 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
       index,
       showOrder,
       newAddedItem,
-      parentCompetencyId: clusters[clusterIndex].competencies[competencyIndex].id,
-      parentCompetencyShowOrder: clusters[clusterIndex].competencies[competencyIndex].showOrder,
-      parentClusterId: clusters[clusterIndex].id,
-      parentClusterShowOrder: clusters[clusterIndex].showOrder,
     };
 
     const getSurveyPlatformShowOrder = () => {
