@@ -29,6 +29,7 @@ const RateeGroupQuestions = ({
   const [jumpQuestion, setJumpQuestion] = useState('');
   const [jumpModalVisible, setJumpModalVisible] = useState(false);
   const [nextIsDisabled, setNextIsDisabled] = useState(false);
+  const [isFeedback, setIsFeedback] = useState(false);
 
   useEffect(() => {
     if (surveyGroupId) {
@@ -58,7 +59,7 @@ const RateeGroupQuestions = ({
   }, [fetchQuestions, surveyGroupId, questionNumber, relations, relation]);
 
   useEffect(() => {
-    const isFeedback = questions?.data?.isFeedback === true;
+    setIsFeedback(questions?.data?.isFeedback === true);
     const newRelationValues = {};
     // eslint-disable-next-line no-unused-expressions
     questions?.data?.responses?.forEach((res) => {
@@ -72,7 +73,7 @@ const RateeGroupQuestions = ({
   }, [questions?.timeStamp]);
 
   useEffect(() => {
-    const isFeedback = questions?.data?.isFeedback === true;
+    const isFeedbackQ = questions?.data?.isFeedback === true;
     const relationsGroup = relations?.data?.filter(
       ({ raterGroupName }) => raterGroupName === relation,
     );
@@ -80,7 +81,7 @@ const RateeGroupQuestions = ({
       if (questions?.data?.responses?.length < relationsGroup?.length) {
         setNextIsDisabled(true);
       }
-      if (!isFeedback) {
+      if (!isFeedbackQ) {
         let allResponsesCorrect = true;
         // eslint-disable-next-line no-unused-expressions
         questions?.data?.responses?.forEach((res) => {
@@ -161,8 +162,7 @@ const RateeGroupQuestions = ({
     return allRatees;
   }, [relations?.timeStamp]);
 
-  const submitResponse = async () => {
-    const isFeedback = questions?.data?.isFeedback === true;
+  const responseHandler = () => {
     const responses = [];
     // eslint-disable-next-line no-unused-expressions
     Object.keys(relationValues)?.forEach((key) => {
@@ -181,13 +181,16 @@ const RateeGroupQuestions = ({
       });
       responses.push(response);
     });
+    return responses;
+  };
 
+  const submitResponse = async () => {
+    const responses = responseHandler();
     if (responses?.length !== Object.keys(relationValues)?.length) {
       return;
     }
-
-    const questionId = questions?.data?.question?.id;
     if (questionNumber <= questions?.data?.totalQuestions) {
+      const questionId = questions?.data?.question?.id;
       const body = {
         isFeedback,
         responses,
@@ -212,14 +215,25 @@ const RateeGroupQuestions = ({
     }
   };
 
-  const handleBack = () => {
+  const handleBack = async () => {
     if (questionNumber * 1 > 1) setInputQuestionNumber(questionNumber * 1 - 1);
-    history.push(
-      `${dynamicMap.surveyPlatform.rateeGroupQuestions({
-        surveyGroupId,
-        questionNumber: questionNumber * 1 - 1,
-      })}${stringify({ relation, projectId })}`,
-    );
+    const responses = responseHandler();
+
+    const questionId = questions?.data?.question?.id;
+    const body = {
+      isFeedback,
+      responses,
+    };
+    try {
+      await addQuestionResponses({ surveyGroupId, questionId, ...body });
+      setRelationValues({});
+      history.push(
+        `${dynamicMap.surveyPlatform.rateeGroupQuestions({
+          surveyGroupId,
+          questionNumber: questionNumber * 1 - 1,
+        })}${stringify({ relation, projectId })}`,
+      );
+    } catch (errors) {}
   };
 
   const handleInputQuestionNumber = (e) => {
