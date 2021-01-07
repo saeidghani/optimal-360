@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import { DeleteOutlined } from '@ant-design/icons';
 import { useQuery } from '../../../hooks';
 
 import { fetchFullURL } from '../../../lib/utils';
@@ -11,10 +12,13 @@ import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import SearchBox from '../../Common/SearchBox';
+import Modal from '../../Common/Modal';
 
-const Organizations = ({ organizations, fetchOrganizations, loading }) => {
+const Organizations = ({ organizations, fetchOrganizations, loading, deleteOrganizations }) => {
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
+  const [selectedRows, setSelectedRows] = React.useState([]);
+  const [deleteModalVisible, setDeleteModalVisible] = React.useState(false);
 
   React.useEffect(() => {
     if (!parsedQuery?.page_number || !parsedQuery?.page_size) {
@@ -33,33 +37,48 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
   }, [fetchOrganizations, query]);
 
   const renderHeader = React.useCallback(
-    () => (
-      <div className="flex flex-row justify-end items-center">
-        <div className="flex flex-row">
-          <SearchBox
-            className="text-xs"
-            loading={loading}
-            onSearch={(val) => setQuery({ q: val })}
-            onChange={(e) => setQuery({ q: e.target.value })}
-            onPressEnter={(e) => setQuery({ q: e.target.value })}
-            value={parsedQuery?.q}
-          />
-          <Button
-            size="middle"
-            textSize="xs"
-            text="New Organization"
-            textClassName="mr-2"
-            className="ml-3"
-            type="gray"
-            icon="BankOutlined"
-            iconPosition="right"
-            onClick={() => history.push(dynamicMap.superUser.addOrganization())}
-          />
+    () => {
+      return (
+        <div className="flex flex-row justify-between items-center">
+          {selectedRows?.length > 0 ? (
+            <div className="flex items-center space-x-2">
+              <Button
+                onClick={() => setDeleteModalVisible(true)}
+                size="middle"
+                className="text-base flex flex-row justify-center items-center
+            text-primary-500 bg-primary-500 bg-opacity-8 w-8 h-8"
+                icon="DeleteOutlined"
+              />
+              <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
+            </div>
+          ) : (
+            <div className="flex flex-row ml-auto">
+              <SearchBox
+                className="text-xs"
+                loading={loading}
+                onSearch={(val) => setQuery({ q: val })}
+                onChange={(e) => setQuery({ q: e.target.value })}
+                onPressEnter={(e) => setQuery({ q: e.target.value })}
+                value={parsedQuery?.q}
+              />
+              <Button
+                size="middle"
+                textSize="xs"
+                text="New Organization"
+                textClassName="mr-2"
+                className="ml-3"
+                type="gray"
+                icon="BankOutlined"
+                iconPosition="right"
+                onClick={() => history.push(dynamicMap.superUser.addOrganization())}
+              />
+            </div>
+          )}
         </div>
-      </div>
-    ),
+      );
+    },
     // eslint-disable-next-line
-    [],
+    [organizations.timeStamp, selectedRows?.length],
   );
 
   const getSortOrder = (key) => {
@@ -126,6 +145,12 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
     [parsedQuery?.sort],
   );
 
+  const dataSource = React.useMemo(
+    () => (organizations?.data || []).map((item) => ({ ...item, key: `${item.id}` })),
+    // eslint-disable-next-line
+    [organizations.timeStamp],
+  );
+
   const sort = (sorter) => {
     // eslint-disable-next-line operator-linebreak
     const order = parsedQuery?.sort?.[0] === '+' ? '-' : '+';
@@ -137,10 +162,33 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
   return (
     <MainLayout
       titleClass="mb-6 mt-3"
-      breadCrumbItems={['Organizations']}
+      breadCrumbItems={['Organizations', selectedRows?.length > 0 ? 'Selected' : '']}
       title="Organizations"
       contentClass="py-6 pl-21 pr-6"
     >
+      <Modal
+        okText="Yes, delete"
+        cancelText="No, cancel"
+        footerClassName="justify-center"
+        handleCancel={() => setDeleteModalVisible(false)}
+        handleOk={async () => {
+          const organizationIds = selectedRows?.length > 0 ? selectedRows.map((el) => el.id) : [];
+          const data = { organizationIds };
+          await deleteOrganizations(data);
+          setSelectedRows([]);
+          fetchOrganizations(query);
+          setDeleteModalVisible(false);
+        }}
+        visible={deleteModalVisible}
+      >
+        <div className="flex flex-col items-center">
+          <DeleteOutlined className="text-primary-600 text-2xl" />
+          <p className="mt-4">Are you sure you want to delete these organization?</p>
+          <p className="">
+            (With the removal of each organization, all its sub-projects will also be removed.)
+          </p>
+        </div>
+      </Modal>
       <Table
         onTableChange={({ sorter }) => sort(sorter)}
         size="middle"
@@ -148,9 +196,9 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
         loading={loading}
         on
         columns={columns}
-        rowSelection={false}
-        dataSource={organizations?.data || []}
+        dataSource={dataSource}
         renderHeader={renderHeader}
+        selectedRowKeys={selectedRows?.map((el) => el.key)}
         onPageSizeChange={(size) => {
           setQuery({ page_size: size, page_number: 1 });
         }}
@@ -158,10 +206,15 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
         pageNumber={parsedQuery?.page_number * 1}
         // eslint-disable-next-line camelcase
         onPaginationChange={(page_number, page_size) => {
+          setSelectedRows([]);
           setQuery({
             page_size,
             page_number,
           });
+        }}
+        onRowSelectionChange={(_, rows) => {
+          console.log(rows);
+          setSelectedRows(rows);
         }}
         totalRecordSize={organizations?.metaData?.pagination?.totalRecords * 1}
       />
@@ -171,6 +224,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading }) => {
 
 Organizations.propTypes = {
   fetchOrganizations: PropTypes.func.isRequired,
+  deleteOrganizations: PropTypes.func.isRequired,
   organizations: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
     metaData: PropTypes.shape({

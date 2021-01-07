@@ -14,7 +14,6 @@ const FeedbackQuestions = ({
   onNext,
   ratees,
   relationValues,
-  totalRelations,
   onSetRelationValues,
   onBack,
   nextIsDisabled,
@@ -113,12 +112,12 @@ const FeedbackQuestions = ({
             </span>
             <div
               className="w-full col-start-1 col-span-12 md:col-start-3 md:col-span-10
-            border border-solid border-antgray-100 rounded-md h-24"
+            border border-solid border-antgray-100 rounded-md"
             >
               <TextArea
                 value={relationValues[ratee?.rateeId]}
                 onChange={(e) => onSetRelationValues(e, ratee)}
-                rows={2}
+                rows={3}
               />
             </div>
           </div>
@@ -170,7 +169,6 @@ FeedbackQuestions.propTypes = {
   ratees: PropTypes.arrayOf(PropTypes.shape({})),
   relationValues: PropTypes.shape({}),
   nextIsDisabled: PropTypes.bool,
-  totalRelations: PropTypes.number.isRequired,
   jumpModalVisible: PropTypes.bool,
   inputQuestionNumber: PropTypes.string,
   jumpQuestion: PropTypes.string,

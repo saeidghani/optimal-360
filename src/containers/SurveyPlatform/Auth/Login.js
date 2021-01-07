@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
+import Cookie from 'js-cookie';
 import { parse } from '../../../hooks/useQuery';
 
 import Layout from '../../../components/SurveyPlatform/Auth/Login';
+import { map } from '../../../routes/RouteMap';
 
 class _Login extends Component {
   state = {};
@@ -26,12 +28,17 @@ class _Login extends Component {
 
     const { prevPath } = parse(window.location.search);
 
-    const newPath = prevPath || '/survey-platform/information';
-
     await login({ username: email, password, rememberMe });
     await this.fetchProfile('');
     await this.fetchOrganization('');
 
+    let defaultPath = map.surveyPlatform.information;
+    const notFirstVisit = Cookie.get('survey-platform-not-first-visit');
+    if (!notFirstVisit) {
+      defaultPath = map.surveyPlatform.referenceGuide;
+      Cookie.set('survey-platform-not-first-visit', true);
+    }
+    const newPath = prevPath || defaultPath;
     setTimeout(() => window.location.replace(newPath), 4000);
   };
 

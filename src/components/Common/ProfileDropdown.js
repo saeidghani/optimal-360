@@ -16,17 +16,17 @@ const ProfileDropdown = ({ title, options, src, iconClassName }) => {
             >
               {option.icon && <div className={`mr-2 ${iconClassName}`}>{option.icon}</div>}
               {option.onClick ? (
-                <span
+                <div
                   onClick={option.onClick}
-                  className={`${option.titleClassName ? option.titleClassName : ''}`}
+                  className={`w-full ${option.titleClassName ? option.titleClassName : ''}`}
                 >
                   {option.title}
-                </span>
+                </div>
               ) : (
                 <Link to={option.href}>
-                  <span className={`${option.titleClassName ? option.titleClassName : ''}`}>
+                  <div className={`${option.titleClassName ? option.titleClassName : ''}`}>
                     {option.title}
-                  </span>
+                  </div>
                 </Link>
               )}
             </Menu.Item>
