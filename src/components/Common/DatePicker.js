@@ -12,12 +12,13 @@ const _DatePicker = ({
   onChange,
   label,
   errorMessage,
+  allowClear,
 }) => (
   <div className={`${wrapperClassName}`}>
     {label ? <p className="text-heading2 text-sm font-normal mb-4">{label}</p> : null}
 
     <DatePicker
-      // value={value}
+      allowClear={allowClear}
       value={value ? moment(value) : ''}
       className={`w-full text-body c-datepicker ${className}`}
       onChange={onChange}
@@ -37,6 +38,7 @@ _DatePicker.propTypes = {
   size: PropTypes.string,
   label: PropTypes.string,
   errorMessage: PropTypes.string,
+  allowClear: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
 };
@@ -49,6 +51,7 @@ _DatePicker.defaultProps = {
   placeholder: 'Select Date',
   size: 'middle',
   value: '',
+  allowClear: true,
 };
 
 export default _DatePicker;
