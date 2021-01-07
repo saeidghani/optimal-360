@@ -32,6 +32,7 @@ import SecondaryMenu from '../../Common/Menu';
 import Button from '../../Common/Button';
 import DraggableTable from '../../Common/DataTable';
 import Loading from '../../Common/Loading';
+import SortableQuestions from './Helper/SortableQuestions';
 
 const SurveyQuestionsList = ({
   fetchSurveyGroups,
@@ -85,6 +86,22 @@ const SurveyQuestionsList = ({
   const [selectedQuestion, setSelectedQuestion] = React.useState('');
 
   const surveyQuestionsStringified = JSON.stringify(surveyQuestions);
+
+  const deepSort = (arr) => {
+    const sort = (arr1) => arr1.sort((a, b) => a.showOrder - b.showOrder);
+
+    const clusters = sort(arr).map((cluster) => ({
+      ...cluster,
+      competencies: sort(cluster.competencies).map((competency) => ({
+        ...competency,
+        questions: competency.questions.sort(
+          (a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder,
+        ),
+      })),
+    }));
+
+    return clusters;
+  };
 
   const handleFeedbackChange = (newVal, row, key, subKey) => {
     const newValues = formRef.current.values[key].map((el) => {
@@ -183,7 +200,13 @@ const SurveyQuestionsList = ({
 
   const setClusters = (clusters) => {
     setPersistData(clusters);
-    formRef.current.setValues({ ...formRef.current.values, clusters });
+    const questions = ClusterUtils.getQuestions(clusters);
+
+    formRef.current.setValues({
+      ...formRef.current.values,
+      clusters: deepSort(clusters),
+      questions,
+    });
   };
 
   const updateCluster = (newVals, ids) => {
@@ -200,7 +223,7 @@ const SurveyQuestionsList = ({
     setClusters(newClusters);
   };
 
-  const onClusterSortEnd = ({ oldIndex, newIndex }) => {
+  const onClusterSortEnd = ({ oldIndex, newIndex }, OD) => {
     if (oldIndex !== newIndex && formRef?.current) {
       const oldValues = formRef.current.values || {};
 
@@ -291,15 +314,46 @@ const SurveyQuestionsList = ({
     formRef.current.setValues({ ...formRef.current.values, feedbacks: newFeedbacks });
   };
 
+  const onQuestionSortEnd = ({ oldIndex, newIndex }, originalData) => {
+    if (oldIndex !== newIndex && formRef?.current) {
+      const oldValues = formRef?.current?.values || {};
+
+      const arrSwitch = (arr) => arrayMove([].concat(arr), oldIndex, newIndex);
+
+      const questions = ClusterUtils.formatQuestionOrder(arrSwitch(originalData));
+
+      formRef.current.setValues({ ...oldValues, questions });
+    }
+  };
+
+  const randomizeQuestions = () => {
+    const oldValues = { ...formRef.current.values };
+
+    const questions = [...(oldValues?.questions || [])];
+
+    const shuffledQuestions = questions
+      .map((value) => ({ sort: Math.random(), value }))
+      .sort((a, b) => a.sort - b.sort)
+      .map((a) => a.value);
+
+    formRef.current.setValues({
+      ...oldValues,
+      questions: ClusterUtils.formatQuestionOrder(shuffledQuestions),
+    });
+  };
+
   const initialValues = React.useMemo(() => {
     const clusters =
       persistedData?.data?.length > 0 ? persistedData.data : surveyQuestions.clusters || [];
+
+    const questions = ClusterUtils.getQuestions(clusters);
 
     return {
       ratingScales:
         surveyQuestions?.ratingScales?.length > 0 ? surveyQuestions.ratingScales : _ratingScales,
       feedbacks: surveyQuestions?.feedbacks?.length > 0 ? surveyQuestions.feedbacks : [],
-      clusters: clusters?.length > 0 ? clusters : [],
+      clusters: clusters?.length > 0 ? deepSort(clusters) : [],
+      questions,
     };
 
     // eslint-disable-next-line
@@ -575,6 +629,14 @@ const SurveyQuestionsList = ({
                     onSortEnd={onFeedbackSortEnd}
                     handleFormChange={handleFeedbackChange}
                     deleteFeedback={(feedback) => deleteFeedback(values.feedbacks, feedback)}
+                  />
+                </div>
+
+                <div className="rounded-lg py-6 mt-12">
+                  <SortableQuestions
+                    data={values.questions}
+                    onQuestionSortEnd={onQuestionSortEnd}
+                    onRandomize={randomizeQuestions}
                   />
                 </div>
 

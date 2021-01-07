@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Pagination } from 'antd';
 
@@ -162,13 +162,13 @@ _Table.propTypes = {
 };
 
 _Table.defaultProps = {
-  renderHeader: () => {},
-  onPageSizeChange: () => {},
-  onPaginationChange: () => {},
-  onRowSelectionChange: () => {},
+  renderHeader: () => { },
+  onPageSizeChange: () => { },
+  onPaginationChange: () => { },
+  onRowSelectionChange: () => { },
   className: '',
-  rowClassName: () => {},
-  onTableChange: () => {},
+  rowClassName: () => { },
+  onTableChange: () => { },
   onRowClick: null,
   loading: false,
   pageSize: 10,

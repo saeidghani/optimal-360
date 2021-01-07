@@ -191,7 +191,7 @@ const Organizations = ({ organizations, fetchOrganizations, loading, deleteOrgan
       <Table
         onTableChange={({ sorter }) => sort(sorter)}
         size="middle"
-        className="p-6 bg-white rounded-lg shadow"
+        className="p-6 bg-white rounded-lg shadow "
         loading={loading}
         on
         columns={columns}
@@ -212,7 +212,6 @@ const Organizations = ({ organizations, fetchOrganizations, loading, deleteOrgan
           });
         }}
         onRowSelectionChange={(_, rows) => {
-          console.log(rows);
           setSelectedRows(rows);
         }}
         totalRecordSize={organizations?.metaData?.pagination?.totalRecords * 1}

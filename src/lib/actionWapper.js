@@ -1,6 +1,8 @@
 import config from '../constants/config';
 
-const wrapper = (fn, errorHandler, notify) => {
+const wrapper = (fn, errorHandler, notify, options) => {
+  const { toast = false } = options || {};
+
   return fn()
     .then((res) => {
       if (res && config?.isDevEnv) {
@@ -8,9 +10,9 @@ const wrapper = (fn, errorHandler, notify) => {
       }
 
       // https://www.notion.so/agencywolfe/Remove-successful-messages-7d463dcab3cc4f67bbad450fb5ea9c70
-      // if (res?.data?.message && notify) {
-      //   notify({ message: res.data.message, type: 'success' });
-      // }
+      if (res?.data?.message && notify && toast) {
+        notify({ message: res.data.message, type: 'success' });
+      }
 
       return res;
     })
