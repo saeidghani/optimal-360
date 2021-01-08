@@ -88,7 +88,9 @@ const _Menu = ({
                           {competency?.questions?.length > 0
                             ? competency.questions
                                 .filter((el) => !el.deleted)
-                                .sort((a, b) => a.showOrder - b.showOrder)
+                                .sort(
+                                  (a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder,
+                                )
                                 .map((question) => (
                                   <Menu.Item
                                     className={`c-secondary-menu ${

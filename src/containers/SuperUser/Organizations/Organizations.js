@@ -13,6 +13,12 @@ class Organizations extends Component {
     return fetchOrganizations(query);
   };
 
+  deleteOrganizations = async (query) => {
+    const { deleteOrganizations } = this.props;
+
+    return deleteOrganizations(query);
+  };
+
   render() {
     const { loading, organizations } = this.props;
     return (
@@ -20,6 +26,7 @@ class Organizations extends Component {
         loading={loading}
         organizations={organizations}
         fetchOrganizations={this.fetchOrganizations}
+        deleteOrganizations={this.deleteOrganizations}
       />
     );
   }
@@ -27,6 +34,7 @@ class Organizations extends Component {
 
 Organizations.propTypes = {
   fetchOrganizations: PropTypes.func.isRequired,
+  deleteOrganizations: PropTypes.func.isRequired,
   organizations: PropTypes.shape({}),
   loading: PropTypes.bool.isRequired,
 };
@@ -42,6 +50,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchOrganizations: dispatch.organizations.fetchOrganizations,
+  deleteOrganizations: dispatch.organizations.deleteOrganizations,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Organizations);

@@ -135,6 +135,18 @@ export default {
         dispatch.util.alert,
       );
     },
+
+    async deleteOrganizations(data) {
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'delete',
+          url: '/super-user/organizations',
+          data,
+        });
+
+        return res;
+      }, dispatch.util.errorHandler);
+    },
   }),
 
   reducers: {

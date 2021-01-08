@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes, { element } from 'prop-types';
+import PropTypes from 'prop-types';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import * as yup from 'yup';
@@ -32,7 +32,7 @@ import SecondaryMenu from '../../Common/Menu';
 import Button from '../../Common/Button';
 import DraggableTable from '../../Common/DataTable';
 import Loading from '../../Common/Loading';
-import SorTableQuestions from './Helper/SortableQuestions';
+import SortableQuestions from './Helper/SortableQuestions';
 
 const SurveyQuestionsList = ({
   fetchSurveyGroups,
@@ -86,11 +86,22 @@ const SurveyQuestionsList = ({
   const [selectedQuestion, setSelectedQuestion] = React.useState('');
 
   const surveyQuestionsStringified = JSON.stringify(surveyQuestions);
-  const [tableQuestions, setTableQuestions] = React.useState([]);
-  const ques = [];
 
-  const res = surveyQuestions?.clusters?.reverse().map(
-    (ele) => ele.competencies?.reverse().map((item) => item.questions?.map((e) => ques.push(e))));
+  const deepSort = (arr) => {
+    const sort = (arr1) => arr1.sort((a, b) => a.showOrder - b.showOrder);
+
+    const clusters = sort(arr).map((cluster) => ({
+      ...cluster,
+      competencies: sort(cluster.competencies).map((competency) => ({
+        ...competency,
+        questions: competency.questions.sort(
+          (a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder,
+        ),
+      })),
+    }));
+
+    return clusters;
+  };
 
   const handleFeedbackChange = (newVal, row, key, subKey) => {
     const newValues = formRef.current.values[key].map((el) => {
@@ -114,8 +125,8 @@ const SurveyQuestionsList = ({
 
   React.useEffect(() => {
     if (surveyGroupId) fetchSurveyQuestions(surveyGroupId);
-    setTableQuestions(ques);
   }, [surveyGroupId, fetchSurveyQuestions]);
+
   const _handleSubmit = async (values) => {
     try {
       const { projectId } = parsedQuery;
@@ -156,7 +167,7 @@ const SurveyQuestionsList = ({
 
         history.push(`${path}${params}`);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const onMenuClick = ({ clusterId, competencyId, questionId }) => {
@@ -189,7 +200,13 @@ const SurveyQuestionsList = ({
 
   const setClusters = (clusters) => {
     setPersistData(clusters);
-    formRef.current.setValues({ ...formRef.current.values, clusters });
+    const questions = ClusterUtils.getQuestions(clusters);
+
+    formRef.current.setValues({
+      ...formRef.current.values,
+      clusters: deepSort(clusters),
+      questions,
+    });
   };
 
   const updateCluster = (newVals, ids) => {
@@ -202,13 +219,11 @@ const SurveyQuestionsList = ({
   const deleteCluster = (ids) => {
     const oldClusters = [...formRef.current?.values?.clusters];
     const newClusters = ClusterUtils.deleteItem(parsedQuery, oldClusters, ids);
-    const q = tableQuestions.filter((el) => el.id !== ids.questionId);
 
     setClusters(newClusters);
-    setTableQuestions(q);
   };
 
-  const onClusterSortEnd = ({ oldIndex, newIndex }) => {
+  const onClusterSortEnd = ({ oldIndex, newIndex }, OD) => {
     if (oldIndex !== newIndex && formRef?.current) {
       const oldValues = formRef.current.values || {};
 
@@ -299,15 +314,46 @@ const SurveyQuestionsList = ({
     formRef.current.setValues({ ...formRef.current.values, feedbacks: newFeedbacks });
   };
 
+  const onQuestionSortEnd = ({ oldIndex, newIndex }, originalData) => {
+    if (oldIndex !== newIndex && formRef?.current) {
+      const oldValues = formRef?.current?.values || {};
+
+      const arrSwitch = (arr) => arrayMove([].concat(arr), oldIndex, newIndex);
+
+      const questions = ClusterUtils.formatQuestionOrder(arrSwitch(originalData));
+
+      formRef.current.setValues({ ...oldValues, questions });
+    }
+  };
+
+  const randomizeQuestions = () => {
+    const oldValues = { ...formRef.current.values };
+
+    const questions = [...(oldValues?.questions || [])];
+
+    const shuffledQuestions = questions
+      .map((value) => ({ sort: Math.random(), value }))
+      .sort((a, b) => a.sort - b.sort)
+      .map((a) => a.value);
+
+    formRef.current.setValues({
+      ...oldValues,
+      questions: ClusterUtils.formatQuestionOrder(shuffledQuestions),
+    });
+  };
+
   const initialValues = React.useMemo(() => {
     const clusters =
       persistedData?.data?.length > 0 ? persistedData.data : surveyQuestions.clusters || [];
+
+    const questions = ClusterUtils.getQuestions(clusters);
 
     return {
       ratingScales:
         surveyQuestions?.ratingScales?.length > 0 ? surveyQuestions.ratingScales : _ratingScales,
       feedbacks: surveyQuestions?.feedbacks?.length > 0 ? surveyQuestions.feedbacks : [],
-      clusters: clusters?.length > 0 ? clusters : [],
+      clusters: clusters?.length > 0 ? deepSort(clusters) : [],
+      questions,
     };
 
     // eslint-disable-next-line
@@ -330,8 +376,8 @@ const SurveyQuestionsList = ({
             parsedQuery?.competencyId
               ? 'Add Question'
               : parsedQuery?.clusterId
-                ? 'Add Competency'
-                : 'Add Cluster'
+              ? 'Add Competency'
+              : 'Add Cluster'
           }
           className="text-base"
           onClick={() => {
@@ -427,8 +473,9 @@ const SurveyQuestionsList = ({
         ) : null}
 
         <div
-          className={`px-6 py-5 col-span-10 ${parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
-            } `}
+          className={`px-6 py-5 col-span-10 ${
+            parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
+          } `}
         >
           <Steps wizardSteps currentPosition={3} />
 
@@ -532,23 +579,22 @@ const SurveyQuestionsList = ({
                         }}
                         onCancel={() => setSelectedCluster('')}
                       />
-                    ) :
-                          (
-                            <DraggableTable
-                              tableClassName="clusters-table"
-                              renderHeader={renderHeader}
-                              onClusterEdit={(cluster) => setSelectedCluster(cluster)}
-                              onClusterDelete={(cluster) => deleteCluster({ clusterId: cluster.id })}
-                              onCompetencyEdit={(competency) => setSelectedCompetency(competency)}
-                              onCompetencyDelete={(competency) =>
-                                deleteCluster({ competencyId: competency.id })
-                              }
-                              onQuestionEdit={(question) => setSelectedQuestion(question)}
-                              onQuestionDelete={(question) => deleteCluster({ questionId: question.id })}
-                              data={ClusterUtils.getTableData(parsedQuery, values)}
-                              onSortEnd={onClusterSortEnd}
-                            />
-                          )}
+                    ) : (
+                      <DraggableTable
+                        tableClassName="clusters-table"
+                        renderHeader={renderHeader}
+                        onClusterEdit={(cluster) => setSelectedCluster(cluster)}
+                        onClusterDelete={(cluster) => deleteCluster({ clusterId: cluster.id })}
+                        onCompetencyEdit={(competency) => setSelectedCompetency(competency)}
+                        onCompetencyDelete={(competency) =>
+                          deleteCluster({ competencyId: competency.id })
+                        }
+                        onQuestionEdit={(question) => setSelectedQuestion(question)}
+                        onQuestionDelete={(question) => deleteCluster({ questionId: question.id })}
+                        data={ClusterUtils.getTableData(parsedQuery, values)}
+                        onSortEnd={onClusterSortEnd}
+                      />
+                    )}
                   </div>
 
                   <div className="col-span-8">
@@ -585,9 +631,15 @@ const SurveyQuestionsList = ({
                     deleteFeedback={(feedback) => deleteFeedback(values.feedbacks, feedback)}
                   />
                 </div>
-                <div className="rounded-lg p-6 mt-12">
-                  <SorTableQuestions data={tableQuestions} />
+
+                <div className="rounded-lg py-6 mt-12">
+                  <SortableQuestions
+                    data={values.questions}
+                    onQuestionSortEnd={onQuestionSortEnd}
+                    onRandomize={randomizeQuestions}
+                  />
                 </div>
+
                 <p className="text-red-500 h-5">
                   {touched.feedbacks && typeof errors.feedbacks === 'string' && errors.feedbacks}
                 </p>

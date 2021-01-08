@@ -74,7 +74,10 @@ const SurveyGroupCluster = ({
       : {};
 
   React.useEffect(() => {
-    setQuery({ clusterId: null, competencyId: null, questionId: null });
+    const { clusterId, competencyId, questionId } = parsedQuery || {};
+    if (clusterId || competencyId || questionId) {
+      setQuery({ clusterId: null, competencyId: null, questionId: null });
+    }
   }, [history.location.pathname]);
 
   const handleFormChange = (newVal, row, key, subKey) => {

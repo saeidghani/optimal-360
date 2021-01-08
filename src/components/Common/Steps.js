@@ -60,7 +60,7 @@ const _Steps = ({ wizardSteps, className, currentPosition, size, steps, onChange
 _Steps.propTypes = {
   className: PropTypes.string,
   currentPosition: PropTypes.number,
-  onChange: PropTypes.func,
+  onChange: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   size: PropTypes.string,
   wizardSteps: PropTypes.bool,
   steps: PropTypes.arrayOf(PropTypes.string),

@@ -211,10 +211,8 @@ const SurveyGroups = ({
             allowClear={false}
             size="large"
             onChange={(endDate) => handleTableChange(endDate, id)}
-            // onChange={(endDate) => console.log({ endDate })}
             value={date}
             wrapperClassName="w-3/5 flex flex-row justify-center items-center"
-            // errorMessage={touched.surveySetting?.startDate && errors.surveySetting?.startDate}
           />
         ),
       },
