@@ -33,6 +33,7 @@ const Dashboard = ({
   const [welcomeModalVisible, setWelcomeModalVisible] = useState(false);
   const [visitedSurveyGroups, setVisitedSurveyGroups] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [canSubmit, setCanSubmit] = useState(false);
 
   const history = useHistory();
   const [parsedQuery, , setQuery] = useQuery();
@@ -71,8 +72,12 @@ const Dashboard = ({
             setWelcomeModalVisible(false);
           } else {
             setIsSubmitted(false);
-
             setWelcomeModalVisible(true);
+          }
+          if (currentSurveyGroup?.canSubmit) {
+            setCanSubmit(true);
+          } else {
+            setCanSubmit(false);
           }
         }
         setVisitedSurveyGroups([{ projectId, surveyGroupId }]);
@@ -135,8 +140,12 @@ const Dashboard = ({
             setWelcomeModalVisible(false);
           } else {
             setIsSubmitted(false);
-
             setWelcomeModalVisible(true);
+          }
+          if (currentSurveyGroup?.canSubmit) {
+            setCanSubmit(true);
+          } else {
+            setCanSubmit(false);
           }
         }
       }
@@ -153,6 +162,11 @@ const Dashboard = ({
         setWelcomeModalVisible(false);
       } else {
         setIsSubmitted(false);
+      }
+      if (currentSurveyGroup?.canSubmit) {
+        setCanSubmit(true);
+      } else {
+        setCanSubmit(false);
       }
     }
   }, [surveyGroups, surveyGroupId]);
@@ -174,6 +188,11 @@ const Dashboard = ({
     } else {
       setIsSubmitted(false);
       fetchInfo({ surveyGroupId: key });
+    }
+    if (currentSurveyGroup?.canSubmit) {
+      setCanSubmit(true);
+    } else {
+      setCanSubmit(false);
     }
     const visitedGroup = visitedSurveyGroups?.find(
       (g) => g?.projectId === projectId && g?.surveyGroupId === key,
@@ -209,6 +228,7 @@ const Dashboard = ({
     try {
       await submitResponses({ surveyGroupId });
       setIsSubmitted(true);
+      setCanSubmit(false);
       setThankYouModalVisible(true);
     } catch {}
   };
@@ -317,7 +337,7 @@ const Dashboard = ({
             className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none
           w-full md:w-auto md:border-none"
             text="Submit All"
-            disabled={isSubmitted}
+            disabled={isSubmitted || !canSubmit}
           />
         </div>
       )}
