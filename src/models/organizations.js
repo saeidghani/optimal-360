@@ -147,6 +147,21 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+
+    async deleteStaff({ organizationId, staffIds }) {
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'DELETE',
+            url: `/super-user/organizations/${organizationId}/staffs`,
+            data: { staffIds },
+          });
+
+          return res;
+        },
+        dispatch.util.errorHandler,
+      );
+    },
   }),
 
   reducers: {

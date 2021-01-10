@@ -51,9 +51,12 @@ const Ratee = ({
   raterGroups,
   generateIndividualReports,
   generateGroupReports,
-  exportDemographicDataForIndividual,
+  exportDemographicDataForGroups,
   importMissionCriticalsWithExcel,
   exportMissionCriticalsToExcel,
+  importRelationError,
+  importMissionCriticalError,
+  clearExcelImportError,
 }) => {
   const history = useHistory();
   const [parsedQuery, , setQuery] = useQuery();
@@ -152,6 +155,9 @@ const Ratee = ({
             raterGroups={raterGroups}
             importMissionCriticalsWithExcel={importMissionCriticalsWithExcel}
             exportMissionCriticalsToExcel={exportMissionCriticalsToExcel}
+            importRelationError={importRelationError}
+            importMissionCriticalError={importMissionCriticalError}
+            clearExcelImportError={clearExcelImportError}
           />
         </TabPane>
         <TabPane tab={allTabs[2].title} key={allTabs[2].key}>
@@ -175,7 +181,7 @@ const Ratee = ({
             groupReports={groupReports}
             generateGroupReports={generateGroupReports}
             generateIndividualReports={generateIndividualReports}
-            exportDemographicDataForIndividual={exportDemographicDataForIndividual}
+            exportDemographicDataForGroups={exportDemographicDataForGroups}
           />
         </TabPane>
         <TabPane tab={allTabs[4].title} key={allTabs[4].key}>
@@ -233,9 +239,12 @@ Ratee.propTypes = {
   generateIndividualReports: PropTypes.func.isRequired,
   fetchRaterGroups: PropTypes.func.isRequired,
   raterGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
-  exportDemographicDataForIndividual: PropTypes.func.isRequired,
+  exportDemographicDataForGroups: PropTypes.func.isRequired,
   importMissionCriticalsWithExcel: PropTypes.func.isRequired,
   exportMissionCriticalsToExcel: PropTypes.func.isRequired,
+  importRelationError: PropTypes.arrayOf(PropTypes.object),
+  importMissionCriticalError: PropTypes.arrayOf(PropTypes.object),
+  clearExcelImportError: PropTypes.func.isRequired,
 };
 
 Ratee.defaultProps = {
@@ -249,6 +258,8 @@ Ratee.defaultProps = {
   reportSetting: {},
   pastResultOptions: {},
   pastResult: {},
+  importRelationError: {},
+  importMissionCriticalError: {},
 };
 
 export default Ratee;

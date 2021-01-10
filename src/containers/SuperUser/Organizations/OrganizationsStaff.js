@@ -25,6 +25,12 @@ class OrganizationsStaff extends Component {
     return importStaff(data);
   };
 
+  deleteStaff = ({ organizationId, staffIds }) => {
+    const { deleteStaff } = this.props;
+
+    return deleteStaff({ organizationId, staffIds });
+  };
+
   render() {
     const { loading, organizationsInfo, staff } = this.props;
 
@@ -33,6 +39,7 @@ class OrganizationsStaff extends Component {
         fetchOrganizationsInfo={this.fetchOrganizationsInfo}
         fetchOrganizationsStaff={this.fetchOrganizationsStaff}
         importStaff={this.importStaff}
+        deleteStaff={this.deleteStaff}
         organizationsInfo={organizationsInfo}
         staff={staff}
         loading={loading}
@@ -48,6 +55,7 @@ OrganizationsStaff.propTypes = {
   loading: PropTypes.bool.isRequired,
   staff: PropTypes.shape({}),
   organizationsInfo: PropTypes.shape({}),
+  deleteStaff: PropTypes.func.isRequired,
 };
 
 OrganizationsStaff.defaultProps = {
@@ -65,6 +73,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchOrganizationsStaff: dispatch.organizations.fetchOrganizationsStaff,
   fetchOrganizationsInfo: dispatch.organizations.fetchOrganizationsInfo,
   importStaff: dispatch.organizations.importStaff,
+  deleteStaff: dispatch.organizations.deleteStaff,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrganizationsStaff);

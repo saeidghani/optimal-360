@@ -31,6 +31,11 @@ class List extends Component {
     return changeSurveyGroupEndDate(data);
   };
 
+  exportDemographicDataForGroups = ({ surveyGroupIds, fields }) => {
+    const { exportDemographicDataForGroups } = this.props;
+    return exportDemographicDataForGroups({ surveyGroupIds, fields });
+  }
+
   render() {
     const { loading, surveyGroups } = this.props;
 
@@ -40,6 +45,7 @@ class List extends Component {
         removeSurveyGroups={this.removeSurveyGroups}
         changeStatusOfSurveyGroups={this.changeStatusOfSurveyGroups}
         changeSurveyGroupEndDate={this.changeSurveyGroupEndDate}
+        exportDemographicDataForGroups={this.exportDemographicDataForGroups}
         surveyGroups={surveyGroups}
         loading={loading}
       />
@@ -54,6 +60,7 @@ List.propTypes = {
   changeSurveyGroupEndDate: PropTypes.func.isRequired,
   changeStatusOfSurveyGroups: PropTypes.func.isRequired,
   surveyGroups: PropTypes.shape({}),
+  exportDemographicDataForGroups: PropTypes.func.isRequired,
 };
 
 List.defaultProps = {
@@ -70,6 +77,7 @@ const mapDispatchToProps = (dispatch) => ({
   removeSurveyGroups: dispatch.projects.removeSurveyGroups,
   changeStatusOfSurveyGroups: dispatch.projects.changeStatusOfSurveyGroups,
   changeSurveyGroupEndDate: dispatch.projects.changeSurveyGroupEndDate,
+  exportDemographicDataForGroups: dispatch.ratee.exportDemographicDataForGroups,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(List);
