@@ -18,6 +18,7 @@ const OrganizationsStaff = ({
   fetchOrganizationsInfo,
   fetchOrganizationsStaff,
   loading,
+  deleteStaff,
 }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
@@ -42,22 +43,22 @@ const OrganizationsStaff = ({
     fetchOrganizationsInfo(organizationId);
   }, [fetchOrganizationsInfo, organizationId]);
 
-  React.useEffect(() => {
-    const left = document.querySelector('thead');
-    const stop = (left?.offsetParent?.offsetTop + 200);
-    const handleScroll = () => {
-      const scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-      if (scrollTop >= stop) {
-        left.classList.add('scroll');
-      } else {
-        left.classList.remove('scroll');
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  // React.useEffect(() => {
+  //   const left = document.querySelector('thead');
+  //   const stop = (left?.offsetParent?.offsetTop + 200);
+  //   const handleScroll = () => {
+  //     const scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+  //     if (scrollTop >= stop) {
+  //       left.classList.add('scroll');
+  //     } else {
+  //       left.classList.remove('scroll');
+  //     }
+  //   };
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll);
+  //   };
+  // }, []);
 
   const renderHeader = React.useCallback(() => {
     return (
@@ -77,9 +78,8 @@ const OrganizationsStaff = ({
               <div className="inline-flex flex-row items-center justify-between">
                 <Button
                   onClick={async () => {
-                    // await removeProjects(selectedRowsIds);
-                    // setSelectedRows([]);
-                    // fetch();
+                    await deleteStaff({ organizationId, staffIds: selectedRows.map((el) => el.id) });
+                    setSelectedRows([]);
                   }}
                   size="middle"
                   className="text-base flex flex-row justify-center ml-8 mr-4 items-center
@@ -87,7 +87,6 @@ const OrganizationsStaff = ({
                   icon="DeleteOutlined"
                 />
                 <p className="text-sm text-base font-normal">selected {selectedRows.length} items </p>
-
               </div>
             ) : null
           }
@@ -142,6 +141,8 @@ const OrganizationsStaff = ({
       key: 'name',
       title: 'Name',
       width: '30%',
+      sorter: true,
+      sortOrder: getSortOrder('name'),
     },
     {
       key: 'department',
@@ -251,6 +252,7 @@ OrganizationsStaff.propTypes = {
     logo: PropTypes.string,
   }),
   loading: PropTypes.bool.isRequired,
+  deleteStaff: PropTypes.func.isRequired,
 };
 
 OrganizationsStaff.defaultProps = {

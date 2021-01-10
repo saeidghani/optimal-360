@@ -39,7 +39,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
         minRater: yup
           .number()
           .typeError('Min raters must be a number')
-          .min(1, 'Min raters must be greater than 0'),
+          .min(0, 'Min raters must be equal or greater than 0'),
       }),
     ),
     surveyModeInUserDashboard: yup
@@ -283,9 +283,8 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
         ) : null}
 
         <div
-          className={`px-6 py-5 col-span-10 ${
-            parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
-          } `}
+          className={`px-6 py-5 col-span-10 ${parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
+            } `}
         >
           <Steps wizardSteps currentPosition={0} />
 
@@ -311,7 +310,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                 const params = history?.location?.search;
 
                 history.push(`${path}${params}`);
-              } catch (error) {}
+              } catch (error) { }
             }}
           >
             {({ values, errors, touched, handleSubmit, setFieldValue }) => (

@@ -22,6 +22,8 @@ export default {
     selectedRaters: [],
     defaultSelectedRaters: [],
     obj: {},
+    importMissionCriticalError: '',
+    importRelationError: '',
   },
 
   effects: (dispatch) => ({
@@ -159,7 +161,7 @@ export default {
             url: `/super-user/survey-groups/${surveyGroupId}/relations/import`,
             data,
           });
-
+          await this.importRelations_reducer(res?.data?.data);
           await dispatch.ratee.fetchStatusDetails({
             query: '?page_size=10&page_number=1',
             surveyGroupId,
@@ -229,7 +231,7 @@ export default {
       }, dispatch.util.errorHandler);
     },
 
-    async exportDemographicDataForIndividual({ surveyGroupIds, fields }) {
+    async exportDemographicDataForGroups({ surveyGroupIds, fields }) {
       return actionWapper(async () => {
         const res = await axios({
           method: 'post',
@@ -520,7 +522,7 @@ export default {
             url: `/super-user/survey-groups/${surveyGroupId}/mission-criticals/import`,
             data,
           });
-
+          await this.importMissionCriticalsWithExcel_reducer(res?.data?.data);
           await dispatch.ratee.fetchStatusDetails({
             query: '?page_size=10&page_number=1',
             surveyGroupId,
@@ -531,6 +533,11 @@ export default {
         dispatch.util.errorHandler,
         dispatch.util.alert,
       );
+    },
+
+    clearExcelImportError() {
+      this.importMissionCriticalsWithExcel_reducer('');
+      this.importRelations_reducer('');
     },
   }),
 
@@ -614,5 +621,16 @@ export default {
       ...state,
       pastResult: payload,
     }),
+
+    importMissionCriticalsWithExcel_reducer: (state, payload) => ({
+      ...state,
+      importMissionCriticalError: payload,
+    }),
+
+    importRelations_reducer: (state, payload) => ({
+      ...state,
+      importRelationError: payload,
+    }),
+
   },
 };
