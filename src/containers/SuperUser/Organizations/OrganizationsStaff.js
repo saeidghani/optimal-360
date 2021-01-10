@@ -3,7 +3,6 @@ import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
 import Layout from '../../../components/SuperUser/Organizations/OrganizationsStaff';
-
 class OrganizationsStaff extends Component {
   state = {};
 
@@ -31,8 +30,14 @@ class OrganizationsStaff extends Component {
     return deleteStaff({ organizationId, staffIds });
   };
 
+  clearDeleteStaffError = () => {
+    const { clearDeleteStaffError } = this.props;
+
+    return clearDeleteStaffError();
+  };
+
   render() {
-    const { loading, organizationsInfo, staff } = this.props;
+    const { loading, organizationsInfo, staff, deleteStaffError } = this.props;
 
     return (
       <Layout
@@ -40,7 +45,9 @@ class OrganizationsStaff extends Component {
         fetchOrganizationsStaff={this.fetchOrganizationsStaff}
         importStaff={this.importStaff}
         deleteStaff={this.deleteStaff}
+        clearDeleteStaffError={this.clearDeleteStaffError}
         organizationsInfo={organizationsInfo}
+        deleteStaffError={deleteStaffError}
         staff={staff}
         loading={loading}
       />
@@ -56,17 +63,21 @@ OrganizationsStaff.propTypes = {
   staff: PropTypes.shape({}),
   organizationsInfo: PropTypes.shape({}),
   deleteStaff: PropTypes.func.isRequired,
+  deleteStaffError: PropTypes.arrayOf(PropTypes.object),
+  clearDeleteStaffError: PropTypes.func.isRequired,
 };
 
 OrganizationsStaff.defaultProps = {
   staff: {},
   organizationsInfo: {},
+  deleteStaffError: [],
 };
 
 const mapStateToProps = (state) => ({
   loading: state.loading.global || false,
   staff: state.organizations?.staff || {},
   organizationsInfo: state.organizations?.organizationsInfo || {},
+  deleteStaffError: state.organizations.deleteStaffError,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -74,6 +85,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchOrganizationsInfo: dispatch.organizations.fetchOrganizationsInfo,
   importStaff: dispatch.organizations.importStaff,
   deleteStaff: dispatch.organizations.deleteStaff,
+  clearDeleteStaffError: dispatch.organizations.clearDeleteStaffError,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrganizationsStaff);
