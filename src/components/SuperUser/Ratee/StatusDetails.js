@@ -228,7 +228,7 @@ const StatusDetails = ({
 
   const renderImportRelationErrorHeader = React.useCallback(() => {
     return (
-      <div className="flex flex-row justify-between items-center">
+      <div className="flex flex-col">
         <div className="flex flex-row">
           <Button
             size="middle"
@@ -248,13 +248,23 @@ const StatusDetails = ({
             className="mr-3 px-3"
           />
         </div>
+        {
+          parsedQuery?.errorType === 'ratee'
+            ?
+            (
+              <div className="mt-5">
+                There are some ratees in your imported excel file that have a relation but do not have the “Self” relation!
+              </div>
+            )
+            : null
+        }
       </div>
     );
   }, [parsedQuery?.errorType]);
 
   const renderImportMissionCriticalErrorHeader = React.useCallback(() => {
     return (
-      <div className="flex flex-row justify-between items-center">
+      <div className="flex flex-col">
         <div className="flex flex-row">
           <Button
             size="middle"
@@ -274,6 +284,17 @@ const StatusDetails = ({
             className="mr-3 px-3"
           />
         </div>
+        {
+          parsedQuery?.errorType === 'competencyName'
+            ?
+            (
+              <div className="mt-5">
+                There are some invalid competencies in the excel file you have imported!
+              </div>
+            )
+            : null
+        }
+
       </div>
     );
   }, [parsedQuery?.errorType]);

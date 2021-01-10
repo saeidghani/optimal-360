@@ -9,6 +9,7 @@ export default {
     staff: '',
     organizationsInfo: '',
     staffDetails: '',
+    deleteStaffError: '',
   },
 
   effects: (dispatch) => ({
@@ -156,11 +157,22 @@ export default {
             url: `/super-user/organizations/${organizationId}/staffs`,
             data: { staffIds },
           });
-
-          return res;
+          if (res?.data?.data.length > 0 && res?.data?.data !== true) {
+            await this.deleteStaff_reducer(res?.data?.data);
+          } else {
+            dispatch.organizations.fetchOrganizationsStaff({
+              organizationId,
+              query: '?page_number=1&page_size=10',
+            });
+            return res;
+          }
         },
         dispatch.util.errorHandler,
       );
+    },
+
+    clearDeleteStaffError() {
+      this.deleteStaff_reducer('');
     },
   }),
 
@@ -183,6 +195,11 @@ export default {
     fetchStaffDetails_reducer: (state, payload) => ({
       ...state,
       staffDetails: payload,
+    }),
+
+    deleteStaff_reducer: (state, payload) => ({
+      ...state,
+      deleteStaffError: payload,
     }),
   },
 };
