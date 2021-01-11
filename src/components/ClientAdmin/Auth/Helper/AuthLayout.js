@@ -53,6 +53,13 @@ const Layout = ({ children, className, wrapperClassName, isLogin }) => {
       </div>
 
       <div className={`flex flex-col justify-center items-center  ${className}`}>{children}</div>
+      <div className="grid grid-cols-12 gap-x-4 mt-6 md:mt-0">
+        <div className="col-start-2 col-span-10">
+          <p className="mt-4 mb-4" style={{ color: '#224086' }}>
+            &#169; 2020 Optimal Consulting Group Pte. Ltd. All Rights Reserved
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
