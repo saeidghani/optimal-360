@@ -25,7 +25,7 @@ const SorTableQuestions = ({ data, onQuestionSortEnd, onRandomize }) => {
     {
       title: '#',
       align: 'center',
-      dataIndex: 'index',
+      dataIndex: 'originalSurveyPlatformShowOrder',
       width: 64,
       className: 'drag-visible dragHandler',
     },
@@ -48,10 +48,10 @@ const SorTableQuestions = ({ data, onQuestionSortEnd, onRandomize }) => {
   const DraggableBodyRow = (rowProps) => {
     // function findIndex base on Table rowKey props and should always be a right array index
     const index = data.findIndex(
-      (x) => x.surveyPlatformShowOrder.toString() === rowProps['data-row-key'].toString(),
+      (x) => x.surveyPlatformShowOrder?.toString() === rowProps['data-row-key']?.toString(),
     );
     const row = data.find(
-      (x) => x.surveyPlatformShowOrder.toString() === rowProps['data-row-key'].toString(),
+      (x) => x.surveyPlatformShowOrder?.toString() === rowProps['data-row-key']?.toString(),
     );
 
     return row?.deleted ? null : <SortableItem index={index} {...rowProps} />;
