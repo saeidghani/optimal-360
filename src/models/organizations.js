@@ -9,6 +9,7 @@ export default {
     staff: '',
     organizationsInfo: '',
     staffDetails: '',
+    deleteStaffError: '',
   },
 
   effects: (dispatch) => ({
@@ -147,6 +148,32 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+
+    async deleteStaff({ organizationId, staffIds }) {
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'DELETE',
+            url: `/super-user/organizations/${organizationId}/staffs`,
+            data: { staffIds },
+          });
+          if (res?.data?.data.length > 0 && res?.data?.data !== true) {
+            await this.deleteStaff_reducer(res?.data?.data);
+          } else {
+            dispatch.organizations.fetchOrganizationsStaff({
+              organizationId,
+              query: '?page_number=1&page_size=10',
+            });
+            return res;
+          }
+        },
+        dispatch.util.errorHandler,
+      );
+    },
+
+    clearDeleteStaffError() {
+      this.deleteStaff_reducer('');
+    },
   }),
 
   reducers: {
@@ -168,6 +195,11 @@ export default {
     fetchStaffDetails_reducer: (state, payload) => ({
       ...state,
       staffDetails: payload,
+    }),
+
+    deleteStaff_reducer: (state, payload) => ({
+      ...state,
+      deleteStaffError: payload,
     }),
   },
 };

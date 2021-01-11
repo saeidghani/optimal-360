@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { QuestionOutlined, SaveOutlined } from '@ant-design/icons';
 
+import { useHistory } from 'react-router-dom';
 import Layout from '../Common/SurveyPlatformLayout';
 
 import Button from '../Common/Button';
@@ -11,6 +12,7 @@ import TextArea from '../Common/TextArea';
 import { dynamicMap } from '../../routes/RouteMap';
 
 const ReferenceGuide = ({ loading, profileName, organization }) => {
+  const history = useHistory();
   const [comment, setComment] = React.useState('');
   const items = {
     101: '4',
@@ -285,7 +287,8 @@ const ReferenceGuide = ({ loading, profileName, organization }) => {
         <Button
           className="c-force-padding-y-px mt-16 shadow-none w-full px-5 md:w-auto md:border-none"
           text="Ok, Got it!"
-          href={dynamicMap.surveyPlatform.dashboard()}
+          onClick={() => history.push(dynamicMap.surveyPlatform.dashboard())}
+          // href={dynamicMap.surveyPlatform.dashboard()}
         />
       </div>
     </Layout>

@@ -1,6 +1,4 @@
 import React from 'react';
-// import { DeleteOutlined } from '@ant';
-import { DeleteOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '../../../hooks';
@@ -10,6 +8,7 @@ import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import ImportExcelButton from '../../Common/ImportExcelButton';
+import Modal from '../../Common/Modal';
 
 const OrganizationsStaff = ({
   importStaff,
@@ -18,12 +17,16 @@ const OrganizationsStaff = ({
   fetchOrganizationsInfo,
   fetchOrganizationsStaff,
   loading,
+  deleteStaff,
+  deleteStaffError,
+  clearDeleteStaffError,
 }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const { organizationId } = useParams();
   const [selectedRows, setSelectedRows] = React.useState([]);
-
+  const [visible, setVisible] = React.useState(false);
+  console.log({ deleteStaffError });
   React.useEffect(() => {
     if (!parsedQuery?.page_number || !parsedQuery?.page_size) {
       setQuery({
@@ -36,28 +39,35 @@ const OrganizationsStaff = ({
 
   React.useEffect(() => {
     fetchOrganizationsStaff({ organizationId, query });
-  }, [fetchOrganizationsStaff, organizationId, query]);
+  }, [fetchOrganizationsStaff, organizationId, query, deleteStaff]);
 
   React.useEffect(() => {
     fetchOrganizationsInfo(organizationId);
   }, [fetchOrganizationsInfo, organizationId]);
 
   React.useEffect(() => {
-    const left = document.querySelector('thead');
-    const stop = (left?.offsetParent?.offsetTop + 200);
-    const handleScroll = () => {
-      const scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-      if (scrollTop >= stop) {
-        left.classList.add('scroll');
-      } else {
-        left.classList.remove('scroll');
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+    if (deleteStaffError) {
+      setVisible(true);
+    }
+  }, [deleteStaffError]);
+
+  // React.useEffect(() => {
+  //   const left = document.querySelector('thead');
+  //   const stop = (left?.offsetParent?.offsetTop + 200);
+  //   const handleScroll = () => {
+  // eslint-disable-next-line max-len
+  //     const scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+  //     if (scrollTop >= stop) {
+  //       left.classList.add('scroll');
+  //     } else {
+  //       left.classList.remove('scroll');
+  //     }
+  //   };
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll);
+  //   };
+  // }, []);
 
   const renderHeader = React.useCallback(() => {
     return (
@@ -77,9 +87,8 @@ const OrganizationsStaff = ({
               <div className="inline-flex flex-row items-center justify-between">
                 <Button
                   onClick={async () => {
-                    // await removeProjects(selectedRowsIds);
-                    // setSelectedRows([]);
-                    // fetch();
+                    await deleteStaff({ organizationId, staffIds: selectedRows.map((el) => el.id) });
+                    setSelectedRows([]);
                   }}
                   size="middle"
                   className="text-base flex flex-row justify-center ml-8 mr-4 items-center
@@ -87,7 +96,6 @@ const OrganizationsStaff = ({
                   icon="DeleteOutlined"
                 />
                 <p className="text-sm text-base font-normal">selected {selectedRows.length} items </p>
-
               </div>
             ) : null
           }
@@ -130,6 +138,21 @@ const OrganizationsStaff = ({
       : '';
   };
 
+  const errorColumns = [
+    {
+      key: 'id',
+      title: 'ID',
+    },
+    {
+      key: 'email',
+      title: 'Staff',
+    },
+    {
+      key: 'surveyGroupName',
+      title: 'Survey Group',
+    },
+  ];
+
   const columns = [
     {
       key: 'id',
@@ -142,6 +165,8 @@ const OrganizationsStaff = ({
       key: 'name',
       title: 'Name',
       width: '30%',
+      sorter: true,
+      sortOrder: getSortOrder('name'),
     },
     {
       key: 'department',
@@ -202,6 +227,30 @@ const OrganizationsStaff = ({
       title="Staff"
       contentClass="py-6 pl-21 pr-6"
     >
+      <Modal
+        visible={visible}
+        width="100%"
+        wrapClassName="bg-lightGray"
+        closable
+        handleCancel={() => {
+          clearDeleteStaffError();
+          setVisible(false);
+        }}
+        className="h-screen error-table-modal max-w-full"
+      >
+        <span className="text-primary-500 text-xl mb-6 flex">Errors</span>
+        <Table
+          showSorterTooltip={false}
+          size="normal"
+          className="p-6 bg-white rounded-lg shadow"
+          columns={errorColumns}
+          renderHeader={() => 'There are some staffs that a relation has been defined for them.'}
+          dataSource={deleteStaffError || []}
+          pagination={false}
+          rowSelection={false}
+        />
+      </Modal>
+
       <Table
         onTableChange={({ sorter }) => sort(sorter)}
         renderHeader={renderHeader}
@@ -251,6 +300,9 @@ OrganizationsStaff.propTypes = {
     logo: PropTypes.string,
   }),
   loading: PropTypes.bool.isRequired,
+  deleteStaff: PropTypes.func.isRequired,
+  deleteStaffError: PropTypes.arrayOf(PropTypes.object),
+  clearDeleteStaffError: PropTypes.func.isRequired,
 };
 
 OrganizationsStaff.defaultProps = {
@@ -259,6 +311,7 @@ OrganizationsStaff.defaultProps = {
     timeStamp: '',
   },
   organizationsInfo: {},
+  deleteStaffError: [],
 };
 
 export default OrganizationsStaff;

@@ -105,7 +105,7 @@ const ClientAdminLayout = ({
               alt=""
             />
           )}
-          <img src={printIcon} alt="" onClick={() => window.print()} />
+          <img className="cursor-pointer" src={printIcon} alt="" onClick={() => window.print()} />
         </div>
         <ProfileDropdown
           title={profileName}
