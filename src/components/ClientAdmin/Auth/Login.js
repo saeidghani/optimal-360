@@ -9,8 +9,8 @@ import Button from '../../Common/Button';
 
 import { dynamicMap } from '../../../routes/RouteMap';
 
-import Shape from './Helper/AnimatedShape';
 import AuthLayout from './Helper/AuthLayout';
+import shape from '../../../assets/images/survey-platform-login-picture.svg';
 
 const Login = ({ login, loading }) => {
   const schema = yup.object({
@@ -24,11 +24,14 @@ const Login = ({ login, loading }) => {
   return (
     <AuthLayout isLogin>
       <div className="grid grid-cols-12 gap-x-4 w-full xl:mt-16">
-        <div
-          className="md:col-span-5 md:col-start-2 xl:col-span-6 xl:col-start-1
-              hidden md:flex justify-center items-center"
+        <p
+          className="text-2xl col-start-2 col-span-10 mt-4 mb-2 md:mt-0 md:col-start-2 md:col-span-6"
+          style={{ color: '#224086' }}
         >
-          <Shape />
+          DEVELOPING LEADERS . OPTIMISING PERFORMANCE
+        </p>
+        <div className="col-start-2 col-span-10 mt-2 md:col-start-2 md:col-span-6">
+          <img src={shape} alt="" />
         </div>
 
         <div

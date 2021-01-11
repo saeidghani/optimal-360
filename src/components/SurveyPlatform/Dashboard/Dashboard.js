@@ -62,7 +62,6 @@ const Dashboard = ({
         const surveyGroups = projects?.data?.find(
           (project) => project?.projectId?.toString() === projectId?.toString(),
         )?.surveyGroups;
-
         if (surveyGroupId) {
           const currentSurveyGroup = surveyGroups?.find(
             (g) => g?.surveyGroupId?.toString() === surveyGroupId?.toString(),
