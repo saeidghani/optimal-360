@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 import moment from 'moment';
@@ -132,45 +132,64 @@ const SurveyGroup = ({
     </div>
   );
 
+  const SubmittedMsg = () => (
+    <div className="flex flex-col p-4 h-48">
+      <h1 className="text-2xl">Attention!</h1>
+      <p className="mt-3">
+        You have already submitted this survey group and you are not able to see or change its
+        details
+      </p>
+    </div>
+  );
+
   return (
     <div className="w-full p-8 md:bg-white md:shadow mt-8 md:mt-0">
-      <div className="flex flex-col bg-white rounded-lg shadow mb-4 md:hidden">{extraDetails}</div>
-      <Tabs
-        className="survey-mode-tabs bg-white p-2"
-        tabBarExtraContent={
-          !isSubmitted ? <div className="hidden md:block">{deadlineInfo}</div> : null
-        }
-        defaultActiveKey={surveyMode}
-        activeKey={surveyMode}
-        onChange={onTabChange}
-      >
-        {!isSubmitted &&
-          surveyModes?.map((mode) => (
-            <TabPane tab={mode?.title} key={mode?.key}>
-              <DataTable
-                loading={loading}
-                relations={relations}
-                isSubmitted={isSubmitted}
-                visitedSurveyGroups={visitedSurveyGroups}
-                resetQuestions={resetQuestions}
-                className={`${
-                  mode?.key === 'all'
-                    ? 'md:grid grid-cols-8 md:mt-0'
-                    : 'pt-4 mt-8 md:mt-0 md:pt-6 bg-white rounded-lg shadow overflow-auto'
-                }`}
-                tableClassName={`${
-                  mode?.key === 'all' ? 'col-span-5 overflow-auto' : 'overflow-auto'
-                }`}
-                extraDetailsClassName={`${
-                  mode?.key === 'all' ? 'row-start-1 col-start-6 col-span-3' : ''
-                }`}
-                extraDetails={
-                  mode?.key === 'all' ? <div className="hidden md:block">{extraDetails}</div> : null
-                }
-              />
-            </TabPane>
-          ))}
-      </Tabs>
+      {isSubmitted ? (
+        <SubmittedMsg />
+      ) : (
+        <Fragment>
+          <div className="flex flex-col bg-white rounded-lg shadow mb-4 md:hidden">
+            {extraDetails}
+          </div>
+          <Tabs
+            className="survey-mode-tabs bg-white p-2"
+            tabBarExtraContent={
+              !isSubmitted ? <div className="hidden md:block">{deadlineInfo}</div> : null
+            }
+            defaultActiveKey={surveyMode}
+            activeKey={surveyMode}
+            onChange={onTabChange}
+          >
+            {surveyModes?.map((mode) => (
+              <TabPane tab={mode?.title} key={mode?.key}>
+                <DataTable
+                  loading={loading}
+                  relations={relations}
+                  isSubmitted={isSubmitted}
+                  visitedSurveyGroups={visitedSurveyGroups}
+                  resetQuestions={resetQuestions}
+                  className={`${
+                    mode?.key === 'all'
+                      ? 'md:grid grid-cols-8 md:mt-0'
+                      : 'pt-4 mt-8 md:mt-0 md:pt-6 bg-white rounded-lg shadow overflow-auto'
+                  }`}
+                  tableClassName={`${
+                    mode?.key === 'all' ? 'col-span-5 overflow-auto' : 'overflow-auto'
+                  }`}
+                  extraDetailsClassName={`${
+                    mode?.key === 'all' ? 'row-start-1 col-start-6 col-span-3' : ''
+                  }`}
+                  extraDetails={
+                    mode?.key === 'all' ? (
+                      <div className="hidden md:block">{extraDetails}</div>
+                    ) : null
+                  }
+                />
+              </TabPane>
+            ))}
+          </Tabs>
+        </Fragment>
+      )}
     </div>
   );
 };
