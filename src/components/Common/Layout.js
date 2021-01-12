@@ -13,7 +13,7 @@ const Layout = ({
   headerClassName,
   titleClass,
 }) => (
-  <div className="bg-primary-200 overflow-y-hidden min-h-screen">
+  <div className="bg-primary-200 min-h-screen">
     <Sidebar wizardLayout={wizardLayout} />
 
     <div className={`w-full ${contentClass}`}>
