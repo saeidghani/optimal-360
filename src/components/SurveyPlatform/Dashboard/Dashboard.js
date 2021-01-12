@@ -31,9 +31,9 @@ const Dashboard = ({
   const [submitModalVisible, setSubmitModalVisible] = useState(false);
   const [thankYouModalVisible, setThankYouModalVisible] = useState(false);
   const [welcomeModalVisible, setWelcomeModalVisible] = useState(false);
-  const [visitedSurveyGroups, setVisitedSurveyGroups] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [canSubmit, setCanSubmit] = useState(false);
+  const [visitedSurveyGroups, setVisitedSurveyGroups] = useState([]);
 
   const history = useHistory();
   const [parsedQuery, , setQuery] = useQuery();
@@ -54,7 +54,7 @@ const Dashboard = ({
     const currentGroupInVisited = visitedSurveyGroups?.find(
       (g) => g?.projectId === prjId && g?.surveyGroupId === sgId,
     );
-    if (!currentGroupInVisited) {
+    if (!currentGroupInVisited && prjId && sgId) {
       setVisitedSurveyGroups([...visitedSurveyGroups, { projectId, surveyGroupId }]);
     }
   };
@@ -128,21 +128,26 @@ const Dashboard = ({
     const visitedGroups = localStorage.getItem('visitedSurveyGroups');
     const parsedVisitedGroups = JSON.parse(visitedGroups);
     if (projectId && surveyGroupId) {
-      const currentGroup = parsedVisitedGroups?.find(
+      const currentGroupVisited = parsedVisitedGroups?.find(
         (g) => g?.projectId === projectId && g?.surveyGroupId === surveyGroupId,
       );
-      if (!currentGroup) {
+      const currentSurveyGroup = surveyGroups?.find(
+        (g) => g?.surveyGroupId?.toString() === surveyGroupId?.toString(),
+      );
+      if (!currentGroupVisited && !currentSurveyGroup?.surveyGroupSubmited) {
         setWelcomeModalVisible(true);
       }
     }
-  }, [visitedSurveyGroups, projectId, surveyGroupId]);
+  }, [visitedSurveyGroups, projectId, surveyGroupId, surveyGroups]);
 
   useEffect(() => {
     const currentSurveyGroup = findFirstSurveyGroup(surveyGroups) || surveyGroups[0];
     if (!surveyGroupId && surveyGroups?.length > 0) {
       const newSurveyGroupId = currentSurveyGroup?.surveyGroupId?.toString();
       setQuery({ surveyGroupId: newSurveyGroupId });
-      visitedGroupHandler(projectId, newSurveyGroupId);
+      if (projectId && newSurveyGroupId) {
+        visitedGroupHandler(projectId, newSurveyGroupId);
+      }
     }
   }, [surveyGroups]);
 
@@ -167,7 +172,9 @@ const Dashboard = ({
   const onSurveyGroupTabChange = (key) => {
     setQuery({ surveyGroupId: key, viewBy: '', page_number: '', page_size: '' });
     fetchInfo({ surveyGroupId: key });
-    visitedGroupHandler(projectId, key);
+    setTimeout(() => {
+      visitedGroupHandler(projectId, key);
+    }, 1000);
   };
 
   const handleContinue = () => {

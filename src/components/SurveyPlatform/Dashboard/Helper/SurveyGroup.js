@@ -24,13 +24,15 @@ const SurveyGroup = ({
   const { TabPane } = Tabs;
 
   useEffect(() => {
-    if (surveyGroupId && !isSubmitted) {
+    if (surveyGroupId) {
       fetchInfo({ surveyGroupId });
     }
   }, [fetchInfo, surveyGroupId]);
 
   useEffect(() => {
-    if (surveyGroupId && !isSubmitted) fetchRelations({ surveyGroupId });
+    if (surveyGroupId) {
+      fetchRelations({ surveyGroupId });
+    }
   }, [fetchRelations, surveyGroupId]);
 
   const totalAvg = React.useMemo(() => {
