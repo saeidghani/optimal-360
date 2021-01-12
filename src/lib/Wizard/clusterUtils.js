@@ -332,8 +332,6 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
       return 1;
     };
 
-    console.log({ clusters });
-
     const surveyPlatformShowOrder = getSurveyPlatformShowOrder();
 
     clusters[clusterIndex].competencies[competencyIndex].questions.push({
