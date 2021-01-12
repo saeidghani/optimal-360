@@ -26,7 +26,6 @@ const OrganizationsStaff = ({
   const { organizationId } = useParams();
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [visible, setVisible] = React.useState(false);
-  console.log({ deleteStaffError });
   React.useEffect(() => {
     if (!parsedQuery?.page_number || !parsedQuery?.page_size) {
       setQuery({
@@ -104,7 +103,6 @@ const OrganizationsStaff = ({
           <ImportExcelButton
             beforeUpload={(file) => {
               importStaff({ organizationId, file });
-
               return false;
             }}
           />
