@@ -8,13 +8,13 @@ import AutoComplete from '../../../Common/AutoComplete';
 import Button from '../../../Common/Button';
 
 const PastResult = ({
-                      loading,
-                      fetchPastResultOptions,
-                      fetchPastResult,
-                      setPastResult,
-                      pastResultOptions,
-                      pastResult,
-                    }) => {
+  loading,
+  fetchPastResultOptions,
+  fetchPastResult,
+  setPastResult,
+  pastResultOptions,
+  pastResult,
+}) => {
   const [parsedQuery] = useQuery();
 
   // which Competency assigned new value:
@@ -30,49 +30,51 @@ const PastResult = ({
 
   React.useEffect(() => {
     fetchPastResultOptions({ surveyGroupId });
-  }, [
-    fetchPastResultOptions,
-    surveyGroupId,
-  ]);
+  }, [fetchPastResultOptions, surveyGroupId]);
 
   React.useEffect(() => {
     fetchPastResult({ surveyGroupId });
-  }, [
-    fetchPastResult,
-    surveyGroupId,
-  ]);
+  }, [fetchPastResult, surveyGroupId]);
 
   const getOptions = (competencyId) => {
     let options;
-    const askingValue = inputtedPastResult[competencyId]
-      ?.replaceAll('-', '') // avoid this characters on searching
-      .replaceAll(' ', '')
-      .toLowerCase() || []; // we show all suggestions before type any character, if u want to show suggestions after type any character, delete <<|| []>>
+    const askingValue =
+      inputtedPastResult[competencyId]
+        ?.replaceAll('-', '') // avoid this characters on searching
+        .replaceAll(' ', '')
+        .toLowerCase() || []; // we show all suggestions before type any character, if u want to show suggestions after type any character, delete <<|| []>>
 
     if (_pastResultOptions.length > 0) {
-      options = (_pastResultOptions?.filter((each) => (
-          `${each.pastCompetencyId}${each?.pastCompetencyName?.toLowerCase()}${each.pastCompetencyYear}`
-        ).includes(askingValue))
-      ).map(({ pastCompetencyId, pastCompetencyName, pastCompetencyYear }) => ({
-        value: `${pastCompetencyId} - ${pastCompetencyName} - ${pastCompetencyYear}`,
-        key: pastCompetencyId,
-      }));
+      options = _pastResultOptions
+        ?.filter((each) =>
+          `${each.pastCompetencyId}${each?.pastCompetencyName?.toLowerCase()}${
+            each.pastCompetencyYear
+          }`.includes(askingValue),
+        )
+        .map(({ pastCompetencyId, pastCompetencyName, pastCompetencyYear }) => ({
+          value: `${pastCompetencyId} - ${pastCompetencyName} - ${pastCompetencyYear}`,
+          key: pastCompetencyId,
+        }));
     } else {
       options = [{ label: 'no result found' }];
     }
 
-    return options;
+    return options.map((el) => ({ ...el, id: el.key, label: el.value }));
   };
 
-  const getValue = (competencyId, rowPastCompetencyId, rowPastCompetencyName, rowPastCompetencyYear) => {
-    return inputtedPastResult[competencyId] || (
-      inputtedPastResult[competencyId] !== '' && (
-        selectedPastResult[competencyId] || (
-          rowPastCompetencyId ?
-            `${rowPastCompetencyId} - ${rowPastCompetencyName} - ${rowPastCompetencyYear}` :
-            ''
-        )
-      )
+  const getValue = (
+    competencyId,
+    rowPastCompetencyId,
+    rowPastCompetencyName,
+    rowPastCompetencyYear,
+  ) => {
+    return (
+      inputtedPastResult[competencyId] ||
+      (inputtedPastResult[competencyId] !== '' &&
+        (selectedPastResult[competencyId] ||
+          (rowPastCompetencyId
+            ? `${rowPastCompetencyId} - ${rowPastCompetencyName} - ${rowPastCompetencyYear}`
+            : '')))
     );
   };
 
@@ -108,18 +110,23 @@ const PastResult = ({
       title: 'Current Competency',
       width: 500,
       render: (id, _, index) => (
-        <span>{index + 1}. {id}</span>
+        <span>
+          {index + 1}. {id}
+        </span>
       ),
     },
     {
       key: 'competencyId',
       title: 'Past Competency',
       width: 500,
-      render: (competencyId, {
-        pastCompetencyId: rowPastCompetencyId,
-        pastCompetencyName: rowPastCompetencyName,
-        pastCompetencyYear: rowPastCompetencyYear,
-      }) => (
+      render: (
+        competencyId,
+        {
+          pastCompetencyId: rowPastCompetencyId,
+          pastCompetencyName: rowPastCompetencyName,
+          pastCompetencyYear: rowPastCompetencyYear,
+        },
+      ) => (
         <div className="autocomplete-container">
           <AutoComplete
             loading={loading}
@@ -131,7 +138,12 @@ const PastResult = ({
             onChange={(textValue) => {
               handleChange(competencyId, textValue);
             }}
-            value={getValue(competencyId, rowPastCompetencyId, rowPastCompetencyName, rowPastCompetencyYear)}
+            value={getValue(
+              competencyId,
+              rowPastCompetencyId,
+              rowPastCompetencyName,
+              rowPastCompetencyYear,
+            )}
           />
         </div>
       ),
@@ -143,7 +155,7 @@ const PastResult = ({
       <Table
         size="middle"
         className="c-table-white-head bg-white"
-        renderHeader={() => (<span style={{ marginTop: '-8px', display: 'block' }} />)}
+        renderHeader={() => <span style={{ marginTop: '-8px', display: 'block' }} />}
         loading={loading}
         columns={columns}
         dataSource={pastResult?.data || []}
@@ -170,26 +182,22 @@ PastResult.propTypes = {
   setPastResult: PropTypes.func.isRequired,
   pastResultOptions: PropTypes.shape({
     data: PropTypes.arrayOf(
-      PropTypes.shape(
-        {
-          pastCompetencyId: PropTypes.number,
-          pastCompetencyName: PropTypes.string,
-          pastCompetencyYear: PropTypes.number,
-        },
-      ),
+      PropTypes.shape({
+        pastCompetencyId: PropTypes.number,
+        pastCompetencyName: PropTypes.string,
+        pastCompetencyYear: PropTypes.number,
+      }),
     ),
   }),
   pastResult: PropTypes.shape({
     data: PropTypes.arrayOf(
-      PropTypes.shape(
-        {
-          competencyId: PropTypes.number,
-          competencyName: PropTypes.string,
-          pastCompetencyId: PropTypes.number,
-          pastCompetencyName: PropTypes.string,
-          pastCompetencyYear: PropTypes.number,
-        },
-      ),
+      PropTypes.shape({
+        competencyId: PropTypes.number,
+        competencyName: PropTypes.string,
+        pastCompetencyId: PropTypes.number,
+        pastCompetencyName: PropTypes.string,
+        pastCompetencyYear: PropTypes.number,
+      }),
     ),
   }),
 };

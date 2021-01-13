@@ -119,9 +119,11 @@ const SurveyQuestionsList = ({
         competency.questions.forEach((question, questionInex) => {
           const { surveyPlatformShowOrder } = questions.find(({ id }) => question.id === id);
 
-          syncedClusters[clusterIndex].competencies[competencyInex].questions[
-            questionInex
-          ].surveyPlatformShowOrder = surveyPlatformShowOrder;
+          if (Number.isFinite(surveyPlatformShowOrder)) {
+            syncedClusters[clusterIndex].competencies[competencyInex].questions[
+              questionInex
+            ].surveyPlatformShowOrder = surveyPlatformShowOrder;
+          }
         });
       });
     });
@@ -212,7 +214,7 @@ const SurveyQuestionsList = ({
   const setClusters = (clusters) => {
     setPersistData(clusters);
     const sortedClusters = ClusterUtils.deepSort(clusters);
-    const questions = ClusterUtils.getQuestions(sortedClusters, { noFormat: true });
+    const questions = ClusterUtils.getQuestions(clusters, { noFormat: true });
 
     formRef.current.setValues({
       ...formRef.current.values,
@@ -359,13 +361,10 @@ const SurveyQuestionsList = ({
   const initialValues = React.useMemo(() => {
     const sortedClusters = ClusterUtils.deepSort(
       persistedData?.data?.length > 0 ? persistedData.data : surveyQuestions.clusters || [],
+      { initilizeOriginalSurveyPlatformShowOrder: true },
     );
 
-    const questions = ClusterUtils.getQuestions(sortedClusters, { noFormat: true }).map((q, i) => ({
-      ...q,
-      surveyPlatformShowOrder: i + 1,
-      originalSurveyPlatformShowOrder: i + 1,
-    }));
+    const questions = ClusterUtils.getQuestions(sortedClusters, { noFormat: true });
 
     return {
       ratingScales:
@@ -508,6 +507,7 @@ const SurveyQuestionsList = ({
             {({ values, errors, touched, handleSubmit }) => (
               <Form className="pr-28" onSubmit={handleSubmit}>
                 <h4 className="text-secondary text-lg mb-8 mt-17">Rating Scale</h4>
+                <pre></pre>
 
                 {values.ratingScales.map((row, i) => (
                   <div key={i} className="grid grid-cols-12">

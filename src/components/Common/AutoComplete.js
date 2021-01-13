@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { AutoComplete } from 'antd';
 
-// import { debounce } from '../../lib/util';
+const { Option } = AutoComplete;
 
 const _AutoComplete = ({
   wrapperClassName,
@@ -58,20 +58,20 @@ const _AutoComplete = ({
       placeholder={placeholder}
       id={name}
       value={value}
-      options={options}
       className={`c-autocomplete c-sufix-prefix-gray text-12px w-full ${className}`}
       dropdownClassName="capitalize"
       onSelect={(_, val) => {
-        // setValue('');
-        onSelect(val);
+        const selectedItem = options.find(({ id }) => id * 1 === val.key * 1);
+
+        onSelect(selectedItem);
       }}
-      onChange={(val) => {
-        // TODO
-        // debounce(() => onChange(val));
-        onChange(val);
-      }}
+      onChange={(txt, selectedItem) => onChange(selectedItem.children || txt)}
       size={size}
-    />
+    >
+      {options.map(({ id, label }) => (
+        <Option key={id}>{label}</Option>
+      ))}
+    </AutoComplete>
 
     {errorMessage && <p className="text-red-500">{errorMessage}</p>}
   </div>

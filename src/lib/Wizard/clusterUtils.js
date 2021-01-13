@@ -142,7 +142,6 @@ const clusterSortRefactor = (parsedQuery, oldClusters, oldIndex, newIndex) => {
 const getTableData = (parsedQuery, values) => {
   const format = (arr) =>
     arr
-      // .filter((el) => !el.deleted)
       .sort((a, b) => a.showOrder - b.showOrder)
       .map((el) => ({ ...el, index: el.showOrder, name: el.name || el.label }));
 
@@ -157,7 +156,7 @@ const getTableData = (parsedQuery, values) => {
     competencies.find((el) => el.id * 1 === parsedQuery?.competencyId * 1) || {};
 
   if (competencyId) {
-    return format(questions);
+    return format(questions).sort((a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder);
   }
 
   if (clusterId) {
@@ -200,39 +199,31 @@ const getQuestions = (clusters, options) => {
     : formatQuestionOrder(questions);
 };
 
-const deepSort = (arr) => {
+const deepSort = (arr, options) => {
+  const {
+    initilizeOriginalSurveyPlatformShowOrder = false,
+    initilizeSurveyPlatformShowOrder = false,
+  } = options || {};
+
   const sort = (arr1) => arr1.sort((a, b) => a.showOrder - b.showOrder);
 
-  let counter = 0;
+  const questions = getQuestions(arr, { noFormat: true });
 
-  const clusters = sort(arr).map((cluster) => ({
+  const sortedClusters = sort(arr).map((cluster) => ({
     ...cluster,
     competencies: sort(cluster.competencies).map((competency) => ({
       ...competency,
       questions: competency.questions
-        .map(({ surveyPlatformShowOrder, ...q }) => {
-          counter++;
-
-          return { ...q, surveyPlatformShowOrder: surveyPlatformShowOrder || counter };
-        })
-        .sort((a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder),
-    })),
-  }));
-
-  const questions = getQuestions(clusters, { noFormat: true });
-
-  const sortedClusters = sort(clusters).map((cluster) => ({
-    ...cluster,
-    competencies: sort(cluster.competencies).map((competency) => ({
-      ...competency,
-      questions: competency.questions
-        .map(({ originalSurveyPlatformShowOrder, ...q }) => ({
+        .sort((a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder)
+        .map(({ originalSurveyPlatformShowOrder, surveyPlatformShowOrder, ...q }) => ({
           ...q,
-          originalSurveyPlatformShowOrder:
-            originalSurveyPlatformShowOrder ||
-            questions.find(({ id }) => id * 1 === q.id * 1).surveyPlatformShowOrder,
-        }))
-        .sort((a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder),
+          surveyPlatformShowOrder: initilizeSurveyPlatformShowOrder
+            ? questions.findIndex(({ id }) => id * 1 === q.id * 1) + 1
+            : surveyPlatformShowOrder,
+          originalSurveyPlatformShowOrder: initilizeOriginalSurveyPlatformShowOrder
+            ? questions.findIndex(({ id }) => id * 1 === q.id * 1) + 1
+            : originalSurveyPlatformShowOrder,
+        })),
     })),
   }));
 
@@ -334,13 +325,41 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
 
     const surveyPlatformShowOrder = getSurveyPlatformShowOrder();
 
-    clusters[clusterIndex].competencies[competencyIndex].questions.push({
-      ...newQuestion,
-      surveyPlatformShowOrder,
-      originalSurveyPlatformShowOrder: surveyPlatformShowOrder,
-    });
+    clusters[clusterIndex].competencies[competencyIndex].questions = formatQuestionOrder([
+      ...clusters[clusterIndex].competencies[competencyIndex].questions,
+      {
+        ...newQuestion,
+        surveyPlatformShowOrder,
+        originalSurveyPlatformShowOrder: surveyPlatformShowOrder,
+      },
+    ]);
 
-    return { clusters, id };
+    const sort = (arr1) => arr1.sort((a, b) => a.showOrder - b.showOrder);
+
+    const questions = getQuestions(clusters, { noFormat: true });
+
+    const sortedClusters = sort(clusters).map((cluster) => ({
+      ...cluster,
+      competencies: sort(cluster.competencies).map((competency) => ({
+        ...competency,
+        questions: competency.questions
+          .sort((a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder)
+          .map((q) => ({
+            ...q,
+            surveyPlatformShowOrder: questions.findIndex((q1) => q1.id * 1 === q.id * 1) + 1,
+            originalSurveyPlatformShowOrder:
+              questions.findIndex((q1) => q1.id * 1 === q.id * 1) + 1,
+          })),
+      })),
+    }));
+
+    // clusters[clusterIndex].competencies[competencyIndex].questions.push({
+    //   ...newQuestion,
+    //   surveyPlatformShowOrder,
+    //   originalSurveyPlatformShowOrder: surveyPlatformShowOrder,
+    // });
+
+    return { clusters: sortedClusters, id };
   }
 
   return { clusters };

@@ -26,7 +26,7 @@ const OrganizationsStaff = ({
   const { organizationId } = useParams();
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [visible, setVisible] = React.useState(false);
-  console.log({ deleteStaffError });
+
   React.useEffect(() => {
     if (!parsedQuery?.page_number || !parsedQuery?.page_size) {
       setQuery({
@@ -82,23 +82,21 @@ const OrganizationsStaff = ({
           </div>
 
           <p className="text-sm text-base font-normal ml-2">{organizationsInfo.name}</p>
-          {
-            selectedRows?.length > 0 ? (
-              <div className="inline-flex flex-row items-center justify-between">
-                <Button
-                  onClick={async () => {
-                    await deleteStaff({ organizationId, staffIds: selectedRows.map((el) => el.id) });
-                    setSelectedRows([]);
-                  }}
-                  size="middle"
-                  className="text-base flex flex-row justify-center ml-8 mr-4 items-center
+          {selectedRows?.length > 0 ? (
+            <div className="inline-flex flex-row items-center justify-between">
+              <Button
+                onClick={async () => {
+                  await deleteStaff({ organizationId, staffIds: selectedRows.map((el) => el.id) });
+                  setSelectedRows([]);
+                }}
+                size="middle"
+                className="text-base flex flex-row justify-center ml-8 mr-4 items-center
             text-primary-500 bg-primary-500 bg-opacity-8 w-8 h-8"
-                  icon="DeleteOutlined"
-                />
-                <p className="text-sm text-base font-normal">selected {selectedRows.length} items </p>
-              </div>
-            ) : null
-          }
+                icon="DeleteOutlined"
+              />
+              <p className="text-sm text-base font-normal">selected {selectedRows.length} items </p>
+            </div>
+          ) : null}
         </div>
         <div className="flex flex-row">
           <ImportExcelButton
