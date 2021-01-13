@@ -220,14 +220,7 @@ const DataTable = ({
 
   const findStatus = (totalAnswers, totalQuestions) => {
     const avg = parseInt((totalAnswers / totalQuestions) * 100, 10);
-    switch (avg) {
-      case avg > 0 && avg < 100:
-        return 'In progress';
-      case avg === 100:
-        return 'Completed';
-      default:
-        return 'Not started';
-    }
+    return avg === 0 ? 'Not started' : avg === 100 ? 'Completed' : 'In progress';
   };
 
   const allAndIndividualDataSource = React.useMemo(
