@@ -17,7 +17,7 @@ export default {
       return actionWapper(async () => {
         const res = await axios({
           method: 'get',
-          url: `/super-user/organizations${query}`,
+          url: `/super-user/organizations${query || ''}`,
         });
 
         await this.fetchOrganizations_reducer(res?.data);
@@ -145,30 +145,31 @@ export default {
           data,
         });
 
+        await dispatch.organizations.fetchOrganizations('?page_number=1&page_size=10');
+
         return res;
       }, dispatch.util.errorHandler);
     },
 
     async deleteStaff({ organizationId, staffIds }) {
-      return actionWapper(
-        async () => {
-          const res = await axios({
-            method: 'DELETE',
-            url: `/super-user/organizations/${organizationId}/staffs`,
-            data: { staffIds },
+      return actionWapper(async () => {
+        const res = await axios({
+          method: 'delete',
+          url: `/super-user/organizations/${organizationId}/staffs`,
+          data: { staffIds },
+        });
+
+        if (res?.data?.data.length > 0 && res?.data?.data !== true) {
+          await this.deleteStaff_reducer(res?.data?.data);
+        } else {
+          await dispatch.organizations.fetchOrganizationsStaff({
+            organizationId,
+            query: '?page_number=1&page_size=10',
           });
-          if (res?.data?.data.length > 0 && res?.data?.data !== true) {
-            await this.deleteStaff_reducer(res?.data?.data);
-          } else {
-            dispatch.organizations.fetchOrganizationsStaff({
-              organizationId,
-              query: '?page_number=1&page_size=10',
-            });
-            return res;
-          }
-        },
-        dispatch.util.errorHandler,
-      );
+
+          return res;
+        }
+      }, dispatch.util.errorHandler);
     },
 
     clearDeleteStaffError() {
