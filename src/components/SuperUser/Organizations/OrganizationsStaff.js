@@ -87,6 +87,11 @@ const OrganizationsStaff = ({
               <Button
                 onClick={async () => {
                   await deleteStaff({ organizationId, staffIds: selectedRows.map((el) => el.id) });
+                  setQuery({
+                    page_number: 1,
+                    page_size: 10,
+                  });
+
                   setSelectedRows([]);
                 }}
                 size="middle"
