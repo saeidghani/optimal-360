@@ -104,19 +104,71 @@
 
 
 @media print {
-  td .flex {
-      display: flex;
-      flex-direction: row;
-      text-align: left !important;
-  } 
-  td .flex > .text-center{
-      width: 100% !important;
-      text-align: left !important ;
-  } 
-  td .flex .w-full{
-      width: 100px !important;
-      margin: auto !important;
-  } 
+  table td div{
+    display: inline-block !important;
+}
+table td{
+  vertical-align: top !important;
+}
+table colgroup{
+    display: none !important;
+}
+table .w-full{
+    width:  auto !important;
+}
+table .ant-progress-inner{
+    /* display: flex; */
+    /* align-items: center; */
+    /* justify-content: center; */
+    overflow: hidden;
+    width: auto !important;
+    height: auto !important;
+    white-space: nowrap;
+    display: inline-block;
+}
+table .ant-progress-inner svg{
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+table .ant-progress{
+    display: inline-block !important;
+}
+table .ant-progress-circle .ant-progress-text{
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: auto !important;
+}
+td .flex.flex-col .mx-auto {
+    display: inline-block !important;
+} 
+td .flex.flex-col {
+    /* display: flex; */
+    /* flex-direction: row; */
+    display: block !important;
+    text-align: left !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+} 
+td .flex > .text-center{
+    /* width: 100% !important; */
+    text-align: left !important ;
+    margin-top: 0 !important;
+    margin-left: 5px !important;
+    line-height: 70px !important;
+    display: inline-block !important;
+} 
+td .flex .w-full{
+    width: auto !important;
+    margin-right: 5px !important;
+    margin: auto !important;
+} 
+
+
   footer,
   header {
     height: 50px;
