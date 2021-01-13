@@ -82,7 +82,7 @@ const Dashboard = ({
 
   return (
     <Layout profileName={userName} organizationSrc={organizationLogo} surveyGroupId={surveyGroupId}>
-      <div className="grid grid-cols-12 mb-10 mt-8">
+      <div className="grid grid-cols-12 mb-10 mt-8 select-project">
         <div className="col-start-1 col-span-6 text-base text-body mb-3">Select Project</div>
         <Dropdown
           className="c-autocomplete col-start-1 col-span-12

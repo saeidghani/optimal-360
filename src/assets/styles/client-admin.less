@@ -88,3 +88,120 @@
     top: 10px;
   }
 }
+
+@media print {
+  td .flex {
+      display: flex;
+      flex-direction: row;
+      text-align: left !important;
+  } 
+  td .flex > .text-center{
+      width: 100% !important;
+      text-align: left !important ;
+  } 
+  td .flex .w-full{
+      width: 100px !important;
+      margin: auto !important;
+  } 
+  footer,
+  header {
+    height: 50px;
+    border: solid 1px #000;
+    position: fixed;
+    width: 1440px;
+  }
+  .pagebreak { 
+    page-break-before: always;
+  } 
+  td{
+      border-bottom: solid 1px #f0f0f0 !important;
+  }
+  .lg\:px-20,
+  .lg\:px-24,
+  .lg\:px-32 {
+      padding-left: 120px !important;
+      padding-right: 120px !important;
+  }
+  .header {
+      width: 1440px !important;
+      top: 0;
+      left: 0;
+      z-index: 100;
+  }
+  .header>* {
+      display: none !important;
+  }
+  .header img,
+  .header .ant-dropdown-link {
+      display: block !important;
+  }
+  .flex.flex-row.justify-between.items-center.mt-10.flex.flex-col.justify-between.h-24{
+      display: none;
+  }
+  thead {
+      display: table-row-group;
+  }
+  .footer {
+      width: 1440px !important;
+      bottom: 0;
+      left: 0;
+      position: relative !important;
+  }
+  .social {
+      display: none !important;
+  }
+  .ant-tabs-nav {
+      display: none !important;
+  }
+  .flex.items-center.overflow-auto.mt-4 button.bg-primary-500 *{
+      color: #000 !important;
+  }
+  .flex.items-center.overflow-auto.mt-4 button.bg-primary-500 {
+      background: transparent !important;
+      border: 0 !important;
+      color: #000 !important;
+  }
+  .flex.items-center.overflow-auto.mt-4 button.bg-white{
+      display: none;
+  }
+  .page-heading {
+      position: fixed;
+      top: 100px;
+      z-index: 100;
+      background-color: rgba(245, 248, 252, var(--bg-opacity));
+      display: none;
+  }
+  .select-project {
+      top: 25px !important;
+      margin-bottom: 0 !important;
+      z-index: 100;
+      left: 400px;
+      color: #000;
+  }
+  .select-project .ant-select-selection-item {
+      font-size: 14px;
+      color: #1BB7D9;
+  }
+  .select-project .ant-select-selector {
+      border: 0 !important;
+      background-color: transparent !important;
+  }
+
+  .select-project .text-body {
+      display: none;
+  }
+  .select-project .ant-select {
+      background-color: transparent !important;
+      border: 0;
+  }
+  .select-project .ant-select-arrow {
+      display: none;
+  }
+  @page {
+      size: landscape;
+      margin: 0;
+  }
+  body {
+      -webkit-print-color-adjust: exact !important;
+  }
+}
