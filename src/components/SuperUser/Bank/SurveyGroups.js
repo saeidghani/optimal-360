@@ -11,10 +11,12 @@ import { useQuery, parse } from '../../../hooks/useQuery';
 
 import * as ClusterUtils from '../../../lib/Wizard/clusterUtils';
 
+import SortableFeedbacks from '../Wizard/Helper/SortableFeedbacks';
+import SortableQuestions from '../Wizard/Helper/SortableQuestions';
+
 import ClusterEditSection from '../Wizard/Helper/ClusterEditSection';
 import CompetencyEditSection from '../Wizard/Helper/CompetencyEditSection';
 import QuestionEditSection from '../Wizard/Helper/QuestionEditSection';
-import SortableFeedbacks from '../Wizard/Helper/SortableFeedbacks';
 
 import AddClusterModal from '../Wizard/Helper/AddClusterModal';
 import AddCompetencyModal from '../Wizard/Helper/AddCompetencyModal';
@@ -49,7 +51,7 @@ const SurveyGroupCluster = ({
   });
 
   const history = useHistory();
-  const [parsedQuery, query, setQuery] = useQuery();
+  const [parsedQuery, , setQuery] = useQuery();
 
   React.useEffect(() => {
     fetchSurveyGroupInfo(parsedQuery.surveyGroupId);
@@ -79,6 +81,24 @@ const SurveyGroupCluster = ({
       setQuery({ clusterId: null, competencyId: null, questionId: null });
     }
   }, [history.location.pathname]);
+
+  const syncSurveyPlatformShowOrder = (clusters, questions) => {
+    const syncedClusters = clusters;
+
+    syncedClusters.forEach((cluster, clusterIndex) => {
+      cluster.competencies.forEach((competency, competencyInex) => {
+        competency.questions.forEach((question, questionInex) => {
+          const { surveyPlatformShowOrder } = questions.find(({ id }) => question.id === id);
+
+          syncedClusters[clusterIndex].competencies[competencyInex].questions[
+            questionInex
+          ].surveyPlatformShowOrder = surveyPlatformShowOrder;
+        });
+      });
+    });
+
+    return syncedClusters;
+  };
 
   const handleFormChange = (newVal, row, key, subKey) => {
     const newValues = formRef.current.values[key].map((el) => {
@@ -120,7 +140,14 @@ const SurveyGroupCluster = ({
   };
 
   const setClusters = (clusters) => {
-    formRef.current.setValues({ ...formRef.current.values, clusters });
+    const sortedClusters = ClusterUtils.deepSort(clusters);
+    const questions = ClusterUtils.getQuestions(clusters, { noFormat: true });
+
+    formRef.current.setValues({
+      ...formRef.current.values,
+      clusters: sortedClusters,
+      questions,
+    });
   };
 
   const updateCluster = (newVals, ids) => {
@@ -226,15 +253,56 @@ const SurveyGroupCluster = ({
     formRef.current.setValues({ ...formRef.current.values, feedbacks: newFeedbacks });
   };
 
+  const reOrderQuestions = (arr) => arr.map((q, i) => ({ ...q, surveyPlatformShowOrder: i + 1 }));
+
+  const onQuestionSortEnd = ({ oldIndex, newIndex }, originalData) => {
+    if (oldIndex !== newIndex && formRef?.current) {
+      const oldValues = formRef?.current?.values || {};
+
+      const arrSwitch = (arr) => arrayMove([].concat(arr), oldIndex, newIndex);
+
+      const questions = reOrderQuestions(arrSwitch(originalData));
+
+      formRef.current.setValues({ ...oldValues, questions });
+    }
+  };
+
+  const randomizeQuestions = () => {
+    const oldValues = { ...formRef.current.values };
+
+    const questions = [...(oldValues?.questions || [])];
+
+    const shuffledQuestions = questions
+      .map((value) => ({ sort: Math.random(), value }))
+      .sort((a, b) => a.sort - b.sort)
+      .map((a) => a.value);
+
+    formRef.current.setValues({
+      ...oldValues,
+      questions: reOrderQuestions(shuffledQuestions),
+    });
+  };
+
   const initialValues = React.useMemo(() => {
-    const clusters = surveyGroupInfo.clusters || [];
+    const clusters = ClusterUtils.deepSort(surveyGroupInfo.clusters || [], {
+      initilizeOriginalSurveyPlatformShowOrder: true,
+      initilizeSurveyPlatformShowOrder: true,
+    }).map((el) => ({
+      ...el,
+      index: el.showOrder,
+      name: el.name || el.label,
+    }));
+
+    const questions = ClusterUtils.getQuestions(clusters, { noFormat: true });
+
     return {
       name: surveyGroupInfo?.name,
-      clusters: clusters.map((el) => ({ ...el, index: el.showOrder, name: el.name || el.label })),
+      clusters,
       feedbacks: surveyGroupInfo?.feedbacks?.length > 0 ? surveyGroupInfo.feedbacks : [],
+      questions,
     };
     // eslint-disable-next-line
-  }, [query, JSON.stringify(surveyGroupInfo)]);
+  }, [parsedQuery?.surveyGroupId, JSON.stringify(surveyGroupInfo)]);
 
   const renderHeader = () => (
     <div
@@ -327,13 +395,19 @@ const SurveyGroupCluster = ({
             validationSchema={schema}
             onSubmit={async (values) => {
               try {
+                const syncedClusters = syncSurveyPlatformShowOrder(
+                  values.clusters,
+                  values.questions,
+                );
+
                 if (parsedQuery.surveyGroupId) {
                   await setSurveyGroupInfo({
                     surveyGroupId: parsedQuery.surveyGroupId,
                     ...values,
+                    clusters: syncedClusters,
                   });
                 } else {
-                  await addSurveyGroup(values);
+                  await addSurveyGroup({ ...values, clusters: syncedClusters });
                 }
 
                 const nextPath =
@@ -475,6 +549,14 @@ const SurveyGroupCluster = ({
                 <p className="text-red-500 h-5">
                   {touched.feedbacks && typeof errors.feedbacks === 'string' && errors.feedbacks}
                 </p>
+
+                <div className="rounded-lg py-6 mt-12">
+                  <SortableQuestions
+                    data={values.questions}
+                    onQuestionSortEnd={onQuestionSortEnd}
+                    onRandomize={randomizeQuestions}
+                  />
+                </div>
 
                 <div className="mt-16 pb-22 flex justify-end">
                   <Button

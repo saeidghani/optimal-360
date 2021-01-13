@@ -174,8 +174,13 @@ const Organizations = ({ organizations, fetchOrganizations, loading, deleteOrgan
           const organizationIds = selectedRows?.length > 0 ? selectedRows.map((el) => el.id) : [];
           const data = { organizationIds };
           await deleteOrganizations(data);
+
+          setQuery({
+            page_number: 1,
+            page_size: 10,
+          });
+
           setSelectedRows([]);
-          fetchOrganizations(query);
           setDeleteModalVisible(false);
         }}
         visible={deleteModalVisible}

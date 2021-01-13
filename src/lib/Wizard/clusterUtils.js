@@ -99,16 +99,20 @@ const deleteItem = (parsedQuery, oldClusters, ids) => {
 const clusterSortRefactor = (parsedQuery, oldClusters, oldIndex, newIndex) => {
   const { clusterId, competencyId } = parsedQuery;
 
-  const arrSwitch = (arr) =>
+  const arrSwitch = (arr, options) =>
     arrayMove([].concat(arr), oldIndex, newIndex)
       .filter((el) => !!el)
-      .map((el, i) => ({ ...el, showOrder: i + 1, name: el.name || el.label }));
+      .map((el, i) => ({
+        ...el,
+        ...(options?.useSurveyPlatformShowOrder && { surveyPlatformShowOrder: i + 1 }),
+        showOrder: i + 1,
+        name: el.name || el.label,
+      }));
 
   const index = oldClusters.findIndex((cluster) => cluster.id * 1 === clusterId * 1);
   const updatedClusterIndex = index === -1 ? 0 : index;
 
   if (!clusterId) {
-    // const i1 = oldClusters.findIndex
     const switchedArr = arrSwitch(oldClusters);
     return switchedArr;
   }
@@ -128,7 +132,7 @@ const clusterSortRefactor = (parsedQuery, oldClusters, oldIndex, newIndex) => {
   );
   const { questions } = oldClusters?.[updatedClusterIndex]?.competencies?.[updatedCompetencyIndex];
 
-  const switchedArr = arrSwitch(questions);
+  const switchedArr = arrSwitch(questions, { useSurveyPlatformShowOrder: true });
   const newClusters = [...oldClusters];
   newClusters[updatedClusterIndex].competencies[updatedCompetencyIndex].questions = switchedArr;
 
@@ -138,7 +142,6 @@ const clusterSortRefactor = (parsedQuery, oldClusters, oldIndex, newIndex) => {
 const getTableData = (parsedQuery, values) => {
   const format = (arr) =>
     arr
-      // .filter((el) => !el.deleted)
       .sort((a, b) => a.showOrder - b.showOrder)
       .map((el) => ({ ...el, index: el.showOrder, name: el.name || el.label }));
 
@@ -153,7 +156,7 @@ const getTableData = (parsedQuery, values) => {
     competencies.find((el) => el.id * 1 === parsedQuery?.competencyId * 1) || {};
 
   if (competencyId) {
-    return format(questions);
+    return format(questions).sort((a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder);
   }
 
   if (clusterId) {
@@ -164,50 +167,71 @@ const getTableData = (parsedQuery, values) => {
 };
 
 const formatQuestionOrder = (arr) => {
-  const leastSurveyPlatformShowOrder = Math.min(...arr.map((el) => el.surveyPlatformShowOrder * 1));
-  let indexCounter = 0;
-
   return arr
-    .map((el, i) => {
-      if (!el.deleted) {
-        indexCounter++;
-      }
-
-      return {
-        ...el,
-        surveyPlatformShowOrder: leastSurveyPlatformShowOrder + i,
-        index: leastSurveyPlatformShowOrder + indexCounter,
-      };
-    })
+    .map((el, i) => ({
+      ...el,
+      surveyPlatformShowOrder: i + 1,
+    }))
     .sort((a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder);
 };
 
-const getQuestions = (clusters) => {
+const getQuestions = (clusters, options) => {
+  const { noFormat = false } = options || {};
   const questions = [];
 
-  clusters
-    // .filter((c) => !c.deleted)
-    .forEach((cluster) => {
-      cluster.competencies
-        // .filter((c) => !c.deleted)
-        .forEach((competency) => {
-          questions.push(
-            ...competency.questions
-              // .filter((q) => !q.deleted)
-              .map((q) => ({
-                ...q,
-                deleted: q.deleted || competency.deleted || cluster.deleted,
-                surveyPlatformShowOrder: q.surveyPlatformShowOrder,
-              })),
-          );
-        });
+  clusters.forEach((cluster) => {
+    cluster.competencies.forEach((competency) => {
+      questions.push(
+        ...competency.questions.map((q) => {
+          return {
+            ...q,
+            deleted: q.deleted || competency.deleted || cluster.deleted,
+            parentClusterId: cluster.id,
+            parentCompetencyId: competency.id,
+          };
+        }),
+      );
     });
+  });
 
-  return formatQuestionOrder(questions);
+  return noFormat
+    ? questions.sort((a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder)
+    : formatQuestionOrder(questions);
+};
+
+const deepSort = (arr, options) => {
+  const {
+    initilizeOriginalSurveyPlatformShowOrder = false,
+    initilizeSurveyPlatformShowOrder = false,
+  } = options || {};
+
+  const sort = (arr1) => arr1.sort((a, b) => a.showOrder - b.showOrder);
+
+  const questions = getQuestions(arr, { noFormat: true });
+
+  const sortedClusters = sort(arr).map((cluster) => ({
+    ...cluster,
+    competencies: sort(cluster.competencies).map((competency) => ({
+      ...competency,
+      questions: competency.questions
+        .sort((a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder)
+        .map(({ originalSurveyPlatformShowOrder, surveyPlatformShowOrder, ...q }) => ({
+          ...q,
+          surveyPlatformShowOrder: initilizeSurveyPlatformShowOrder
+            ? questions.findIndex(({ id }) => id * 1 === q.id * 1) + 1
+            : surveyPlatformShowOrder,
+          originalSurveyPlatformShowOrder: initilizeOriginalSurveyPlatformShowOrder
+            ? questions.findIndex(({ id }) => id * 1 === q.id * 1) + 1
+            : originalSurveyPlatformShowOrder,
+        })),
+    })),
+  }));
+
+  return sortedClusters;
 };
 
 const addItem = (oldClusters, ids, newItem, parsedQuery) => {
-  const clusters = [...oldClusters];
+  const clusters = deepSort(oldClusters);
 
   const generateNewItemProperties = (refArr) => {
     const index = refArr.length;
@@ -284,15 +308,19 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
     };
 
     const getSurveyPlatformShowOrder = () => {
-      const lastQuestions = getQuestions(clusters.slice(0, clusterIndex));
+      const lastQuestions = getQuestions(clusters.slice(0, clusterIndex + 1));
 
       if (lastQuestions.length > 0) {
-        return lastQuestions[lastQuestions.length - 1].surveyPlatformShowOrder + 1;
+        return lastQuestions[lastQuestions.length - 1]?.surveyPlatformShowOrder + 1;
       }
 
-      const NextQuestions = getQuestions(clusters.slice(clusterIndex));
+      const NextQuestions = getQuestions(clusters.slice(clusterIndex + 1));
 
-      return NextQuestions[NextQuestions.length - 1].surveyPlatformShowOrder - 1;
+      if (lastQuestions.length > 0) {
+        return NextQuestions[NextQuestions.length - 1]?.surveyPlatformShowOrder - 1;
+      }
+
+      return 1;
     };
 
     const surveyPlatformShowOrder = getSurveyPlatformShowOrder();
@@ -302,16 +330,43 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
       {
         ...newQuestion,
         surveyPlatformShowOrder,
+        originalSurveyPlatformShowOrder: surveyPlatformShowOrder,
       },
     ]);
 
-    return { clusters, id };
+    const sort = (arr1) => arr1.sort((a, b) => a.showOrder - b.showOrder);
+
+    const questions = getQuestions(clusters, { noFormat: true });
+
+    const sortedClusters = sort(clusters).map((cluster) => ({
+      ...cluster,
+      competencies: sort(cluster.competencies).map((competency) => ({
+        ...competency,
+        questions: competency.questions
+          .sort((a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder)
+          .map((q) => ({
+            ...q,
+            surveyPlatformShowOrder: questions.findIndex((q1) => q1.id * 1 === q.id * 1) + 1,
+            originalSurveyPlatformShowOrder:
+              questions.findIndex((q1) => q1.id * 1 === q.id * 1) + 1,
+          })),
+      })),
+    }));
+
+    // clusters[clusterIndex].competencies[competencyIndex].questions.push({
+    //   ...newQuestion,
+    //   surveyPlatformShowOrder,
+    //   originalSurveyPlatformShowOrder: surveyPlatformShowOrder,
+    // });
+
+    return { clusters: sortedClusters, id };
   }
 
   return { clusters };
 };
 
 export {
+  deepSort,
   updateItem,
   deleteItem,
   clusterSortRefactor,

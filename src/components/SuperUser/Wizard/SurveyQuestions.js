@@ -87,22 +87,6 @@ const SurveyQuestionsList = ({
 
   const surveyQuestionsStringified = JSON.stringify(surveyQuestions);
 
-  const deepSort = (arr) => {
-    const sort = (arr1) => arr1.sort((a, b) => a.showOrder - b.showOrder);
-
-    const clusters = sort(arr).map((cluster) => ({
-      ...cluster,
-      competencies: sort(cluster.competencies).map((competency) => ({
-        ...competency,
-        questions: competency.questions.sort(
-          (a, b) => a.surveyPlatformShowOrder - b.surveyPlatformShowOrder,
-        ),
-      })),
-    }));
-
-    return clusters;
-  };
-
   const handleFeedbackChange = (newVal, row, key, subKey) => {
     const newValues = formRef.current.values[key].map((el) => {
       if (el.id === row.id) {
@@ -127,11 +111,40 @@ const SurveyQuestionsList = ({
     if (surveyGroupId) fetchSurveyQuestions(surveyGroupId);
   }, [surveyGroupId, fetchSurveyQuestions]);
 
-  const _handleSubmit = async (values) => {
+  const syncSurveyPlatformShowOrder = (clusters, questions) => {
+    const syncedClusters = clusters;
+
+    syncedClusters.forEach((cluster, clusterIndex) => {
+      cluster.competencies.forEach((competency, competencyInex) => {
+        competency.questions.forEach((question, questionInex) => {
+          const { surveyPlatformShowOrder } = questions.find(({ id }) => question.id === id);
+
+          if (Number.isFinite(surveyPlatformShowOrder)) {
+            syncedClusters[clusterIndex].competencies[competencyInex].questions[
+              questionInex
+            ].surveyPlatformShowOrder = surveyPlatformShowOrder;
+          }
+        });
+      });
+    });
+
+    return syncedClusters;
+  };
+
+  const _handleSubmit = async ({ ratingScales, clusters, feedbacks, questions }) => {
     try {
       const { projectId } = parsedQuery;
 
-      await setSurveyQuestions({ ...values, surveyGroupId, projectId });
+      const syncedClusters = syncSurveyPlatformShowOrder(clusters, questions);
+
+      await setSurveyQuestions({
+        ratingScales,
+        clusters: syncedClusters,
+        feedbacks,
+        surveyGroupId,
+        projectId,
+      });
+
       const newSurveyGroups = await fetchSurveyGroups(projectId);
       setPersistData('');
 
@@ -200,11 +213,12 @@ const SurveyQuestionsList = ({
 
   const setClusters = (clusters) => {
     setPersistData(clusters);
-    const questions = ClusterUtils.getQuestions(clusters);
+    const sortedClusters = ClusterUtils.deepSort(clusters);
+    const questions = ClusterUtils.getQuestions(clusters, { noFormat: true });
 
     formRef.current.setValues({
       ...formRef.current.values,
-      clusters: deepSort(clusters),
+      clusters: sortedClusters,
       questions,
     });
   };
@@ -223,7 +237,7 @@ const SurveyQuestionsList = ({
     setClusters(newClusters);
   };
 
-  const onClusterSortEnd = ({ oldIndex, newIndex }, OD) => {
+  const onClusterSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex !== newIndex && formRef?.current) {
       const oldValues = formRef.current.values || {};
 
@@ -266,8 +280,8 @@ const SurveyQuestionsList = ({
 
   const addItemToClusters = (newItem) => {
     const currentClusterId = _selectedCluster?.id;
-
     const oldClusters = [...formRef.current?.values?.clusters];
+
     const { clusters, id } = ClusterUtils.addItem(
       oldClusters,
       {
@@ -314,13 +328,15 @@ const SurveyQuestionsList = ({
     formRef.current.setValues({ ...formRef.current.values, feedbacks: newFeedbacks });
   };
 
+  const reOrderQuestions = (arr) => arr.map((q, i) => ({ ...q, surveyPlatformShowOrder: i + 1 }));
+
   const onQuestionSortEnd = ({ oldIndex, newIndex }, originalData) => {
     if (oldIndex !== newIndex && formRef?.current) {
       const oldValues = formRef?.current?.values || {};
 
       const arrSwitch = (arr) => arrayMove([].concat(arr), oldIndex, newIndex);
 
-      const questions = ClusterUtils.formatQuestionOrder(arrSwitch(originalData));
+      const questions = reOrderQuestions(arrSwitch(originalData));
 
       formRef.current.setValues({ ...oldValues, questions });
     }
@@ -338,21 +354,23 @@ const SurveyQuestionsList = ({
 
     formRef.current.setValues({
       ...oldValues,
-      questions: ClusterUtils.formatQuestionOrder(shuffledQuestions),
+      questions: reOrderQuestions(shuffledQuestions),
     });
   };
 
   const initialValues = React.useMemo(() => {
-    const clusters =
-      persistedData?.data?.length > 0 ? persistedData.data : surveyQuestions.clusters || [];
+    const sortedClusters = ClusterUtils.deepSort(
+      persistedData?.data?.length > 0 ? persistedData.data : surveyQuestions.clusters || [],
+      { initilizeOriginalSurveyPlatformShowOrder: true },
+    );
 
-    const questions = ClusterUtils.getQuestions(clusters);
+    const questions = ClusterUtils.getQuestions(sortedClusters, { noFormat: true });
 
     return {
       ratingScales:
         surveyQuestions?.ratingScales?.length > 0 ? surveyQuestions.ratingScales : _ratingScales,
       feedbacks: surveyQuestions?.feedbacks?.length > 0 ? surveyQuestions.feedbacks : [],
-      clusters: clusters?.length > 0 ? deepSort(clusters) : [],
+      clusters: sortedClusters,
       questions,
     };
 
@@ -489,6 +507,7 @@ const SurveyQuestionsList = ({
             {({ values, errors, touched, handleSubmit }) => (
               <Form className="pr-28" onSubmit={handleSubmit}>
                 <h4 className="text-secondary text-lg mb-8 mt-17">Rating Scale</h4>
+                <pre></pre>
 
                 {values.ratingScales.map((row, i) => (
                   <div key={i} className="grid grid-cols-12">
@@ -632,6 +651,10 @@ const SurveyQuestionsList = ({
                   />
                 </div>
 
+                <p className="text-red-500 h-5">
+                  {touched.feedbacks && typeof errors.feedbacks === 'string' && errors.feedbacks}
+                </p>
+
                 <div className="rounded-lg py-6 mt-12">
                   <SortableQuestions
                     data={values.questions}
@@ -639,10 +662,6 @@ const SurveyQuestionsList = ({
                     onRandomize={randomizeQuestions}
                   />
                 </div>
-
-                <p className="text-red-500 h-5">
-                  {touched.feedbacks && typeof errors.feedbacks === 'string' && errors.feedbacks}
-                </p>
 
                 <div className="mt-16 pb-22 flex justify-end">
                   <Button

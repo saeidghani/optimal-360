@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useHistory } from 'react-router-dom';
 import Cookie from 'js-cookie';
@@ -16,6 +16,7 @@ import {
 import axios from 'axios';
 import ProfileDropdown from './ProfileDropdown';
 import BreadCrumb from './BreadCrumb';
+import Tooltip from './Tooltip';
 import optimal360Logo from '../../assets/images/optimal360Logo.png';
 import { dynamicMap } from '../../routes/RouteMap';
 import { fetchFullURL } from '../../lib/utils';
@@ -65,7 +66,7 @@ const ClientAdminLayout = ({
        ${wrapperClassName}`}
     >
       <div
-        className="bg-white w-full hidden md:flex justify-between items-center
+        className="bg-white w-full hidden md:flex justify-between items-center header
       px-4 py-6 lg:px-20 lg:py-10"
       >
         <img src={optimal360Logo} alt="" />
@@ -98,14 +99,25 @@ const ClientAdminLayout = ({
         </Link>
         <div className="flex">
           {!isReferenceGuide && (
-            <img
-              className="mr-5 cursor-pointer"
-              src={exportIcon}
-              onClick={() => handleExport(surveyGroupId)}
-              alt=""
-            />
+            <Fragment>
+              <Tooltip title="export">
+                <img
+                  className="mr-5 cursor-pointer"
+                  src={exportIcon}
+                  onClick={() => handleExport(surveyGroupId)}
+                  alt=""
+                />
+              </Tooltip>
+              <Tooltip title="print">
+                <img
+                  className="cursor-pointer"
+                  src={printIcon}
+                  alt=""
+                  onClick={() => window.print()}
+                />
+              </Tooltip>
+            </Fragment>
           )}
-          <img src={printIcon} alt="" onClick={() => window.print()} />
         </div>
         <ProfileDropdown
           title={profileName}
@@ -132,7 +144,7 @@ const ClientAdminLayout = ({
         {children}
       </div>
       <div
-        className="absolute bottom-0 w-full bg-antgray-100 bg-opacity-25 grid grid-cols-12 items-center
+        className="absolute footer bottom-0 w-full bg-antgray-100 bg-opacity-25 grid grid-cols-12 items-center
       gap-y-3 px-8 py-6 lg:px-32 lg:py-4 w-full	"
       >
         <img src={optimal360Logo} alt="" />
@@ -143,7 +155,7 @@ const ClientAdminLayout = ({
           Copyright 2020. Optimal 360 Ltd is registered in England and Wales with company number
           06740379
         </p>
-        <div className="flex justify-between items-center col-start-8 col-span-5 md:col-start-11 md:col-span-2 lg:px-8">
+        <div className="flex justify-between items-center col-start-8 col-span-5 md:col-start-11 md:col-span-2 lg:px-8 social">
           <TwitterOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
           <InstagramOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
           <FacebookOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />

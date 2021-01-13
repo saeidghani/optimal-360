@@ -184,12 +184,12 @@ const DataTable = ({
       title: <span className="text-left">Rate</span>,
       width: 100,
       render: (rates) => (
-        <div className="flex flex-col justify-between align-center pt-4 pl-5">
+        <div className="flex flex-col justify-between align-center pl-5 space-y-4">
           {rates?.map((rate) => (
-            <div className="w-16 flex justify-end items-center">
-              <div className="pb-4 mr-1 md:mr-4">{rate}%</div>
-              <div className="w-12 h-full">
-                <Progress className="-mb-12 ml-auto" percentage={rate} showPercent={false} />
+            <div className="w-16 h-12 flex justify-end items-center">
+              <div className="mr-1 md:mr-4">{rate}%</div>
+              <div className="">
+                <Progress width={40} className="ml-auto" percentage={rate} showPercent={false} />
               </div>
             </div>
           ))}
@@ -202,11 +202,12 @@ const DataTable = ({
       width: 100,
       render: (collectiveRate) => (
         <div className="flex flex-col justify-between align-center pt-4 pl-5 ml-8">
-          <div className="w-16 flex justify-end items-center">
-            <div className="pb-4 mr-1 md:mr-4">{collectiveRate}%</div>
-            <div className="w-12 h-full">
+          <div className="w-16 h-12 flex justify-end items-center">
+            <div className="mr-1 md:mr-4">{collectiveRate}%</div>
+            <div className="">
               <Progress
-                className="-mb-12 mt-2 ml-auto"
+                width={40}
+                className="ml-auto"
                 percentage={collectiveRate}
                 showPercent={false}
               />
@@ -219,14 +220,7 @@ const DataTable = ({
 
   const findStatus = (totalAnswers, totalQuestions) => {
     const avg = parseInt((totalAnswers / totalQuestions) * 100, 10);
-    switch (avg) {
-      case avg > 0 && avg < 100:
-        return 'In progress';
-      case avg === 100:
-        return 'Completed';
-      default:
-        return 'Not started';
-    }
+    return avg === 0 ? 'Not started' : avg === 100 ? 'Completed' : 'In progress';
   };
 
   const allAndIndividualDataSource = React.useMemo(
