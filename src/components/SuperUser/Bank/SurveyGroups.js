@@ -141,7 +141,7 @@ const SurveyGroupCluster = ({
 
   const setClusters = (clusters) => {
     const sortedClusters = ClusterUtils.deepSort(clusters);
-    const questions = ClusterUtils.getQuestions(sortedClusters, { noFormat: true });
+    const questions = ClusterUtils.getQuestions(clusters, { noFormat: true });
 
     formRef.current.setValues({
       ...formRef.current.values,
@@ -284,17 +284,16 @@ const SurveyGroupCluster = ({
   };
 
   const initialValues = React.useMemo(() => {
-    const clusters = ClusterUtils.deepSort(surveyGroupInfo.clusters || []).map((el) => ({
+    const clusters = ClusterUtils.deepSort(surveyGroupInfo.clusters || [], {
+      initilizeOriginalSurveyPlatformShowOrder: true,
+      initilizeSurveyPlatformShowOrder: true,
+    }).map((el) => ({
       ...el,
       index: el.showOrder,
       name: el.name || el.label,
     }));
 
-    const questions = ClusterUtils.getQuestions(clusters, { noFormat: true }).map((q, i) => ({
-      ...q,
-      surveyPlatformShowOrder: i + 1,
-      originalSurveyPlatformShowOrder: i + 1,
-    }));
+    const questions = ClusterUtils.getQuestions(clusters, { noFormat: true });
 
     return {
       name: surveyGroupInfo?.name,

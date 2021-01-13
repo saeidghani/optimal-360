@@ -67,6 +67,7 @@ const AddFeedbackModal = ({ visible, onSave, onCancel }) => {
                     label: val.charAt(0).toUpperCase() + val.slice(1),
                     value: val,
                     key: i,
+                    id: i,
                   }))}
                   onChange={() => {}}
                   value={

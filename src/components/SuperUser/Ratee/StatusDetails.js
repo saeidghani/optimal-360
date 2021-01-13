@@ -37,8 +37,9 @@ const StatusDetails = ({
   const [importRelationsFile, setImportRelationsFile] = React.useState('');
   const [, , surveyGroupId, surveyGroupObject] = useRateeSurveyGroup();
   const [relationErrorModalVisible, setRelationErrorModalVisible] = React.useState(false);
-  const [missionCriticalErrorModalVisible, setMissionCriticalErrorModalVisible] =
-    React.useState(false);
+  const [missionCriticalErrorModalVisible, setMissionCriticalErrorModalVisible] = React.useState(
+    false,
+  );
   const viewBy = parsedQuery?.viewBy || 'raters';
   const pageNumber = parsedQuery?.page_number || 1;
   const pageSize = parsedQuery?.page_size || 10;
@@ -48,7 +49,7 @@ const StatusDetails = ({
   const fetch = () => {
     fetchStatusDetails({ query, surveyGroupId });
   };
-  console.log(importMissionCriticalError?.importErrors, importRelationError?.importErrors);
+
   React.useEffect(() => {
     fetchRaterGroups({ surveyGroupId });
   }, [fetchRaterGroups, surveyGroupId]);
@@ -112,118 +113,117 @@ const StatusDetails = ({
         />
         <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
       </div>
-    ) :
-      (
-        <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row">
-            <div className="flex flex-row items-center">
-              <Button
-                size="middle"
-                textSize="xs"
-                text="View by raters"
-                textClassName="mr-2"
-                className="ml-3"
-                light={viewBy === 'ratees'}
-                onClick={() => setQuery({ viewBy: 'raters' })}
-              />
-              <Button
-                size="middle"
-                textSize="xs"
-                text="View by ratees"
-                textClassName="mr-2"
-                className="ml-3"
-                light={viewBy === 'raters'}
-                onClick={() => setQuery({ viewBy: 'ratees' })}
-              />
-            </div>
-            <div className="flex flex-row">
-              <SearchBox
-                className="text-xs ml-6"
-                placeholder="Search"
-                loading={loading}
-                onSearch={(val) => setQuery({ q: val })}
-                onPressEnter={(e) => setQuery({ q: e.target.value })}
-                onChange={(e) => setQuery({ q: e.target.value })}
-                value={parsedQuery?.q || ''}
-              />
-
-              {isNotPastEndDate && raterGroups?.length > 0 ? (
-                <Button
-                  size="middle"
-                  textSize="xs"
-                  text="Add Ratee"
-                  textClassName="mr-2"
-                  className="ml-3"
-                  type="gray"
-                  icon="PlusCircleOutlined"
-                  iconPosition="right"
-                  onClick={() => {
-                    const params = stringify({ projectId, surveyGroupId });
-                    const path = `${dynamicMap.superUser.addRatee()}${params}`;
-                    history.push(path);
-                  }}
-                />
-              ) : null}
-            </div>
+    ) : (
+      <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-row">
+          <div className="flex flex-row items-center">
+            <Button
+              size="middle"
+              textSize="xs"
+              text="View by raters"
+              textClassName="mr-2"
+              className="ml-3"
+              light={viewBy === 'ratees'}
+              onClick={() => setQuery({ viewBy: 'raters' })}
+            />
+            <Button
+              size="middle"
+              textSize="xs"
+              text="View by ratees"
+              textClassName="mr-2"
+              className="ml-3"
+              light={viewBy === 'raters'}
+              onClick={() => setQuery({ viewBy: 'ratees' })}
+            />
           </div>
+          <div className="flex flex-row">
+            <SearchBox
+              className="text-xs ml-6"
+              placeholder="Search"
+              loading={loading}
+              onSearch={(val) => setQuery({ q: val })}
+              onPressEnter={(e) => setQuery({ q: e.target.value })}
+              onChange={(e) => setQuery({ q: e.target.value })}
+              value={parsedQuery?.q || ''}
+            />
 
-          <div className="flex flex-col ml-48">
             {isNotPastEndDate && raterGroups?.length > 0 ? (
-              <div className="flex flex-row">
-                <ImportExcelButton
-                  textClassName="pr-3"
-                  className="mb-3 pr-3"
-                  buttonText="Import Relations Excel File"
-                  beforeUpload={(file) => {
-                    setImportRelationsFile(file);
-
-                    return false;
-                  }}
-                />
-
-                <ImportExcelButton
-                  textClassName="pr-3"
-                  className="mb-3 pr-3"
-                  buttonText="Import Mission Critical Competencies Excel File"
-                  beforeUpload={(file) => {
-                    importMissionCriticalsWithExcel({ file, surveyGroupId });
-                    return false;
-                  }}
-                />
-              </div>
-            ) : null}
-
-            <div className="flex flex-row">
               <Button
                 size="middle"
                 textSize="xs"
-                text="Export Relations Excel File"
-                textClassName="pr-3.5"
-                type="gray"
-                icon="FileExcelOutlined"
-                iconPosition="right"
-                onClick={() => {
-                  exportRelations({ surveyGroupId });
-                }}
-              />
-
-              <Button
-                size="middle"
-                textSize="xs"
-                text="Export Mission Critical Competencies Excel File"
-                textClassName="pr-3.5"
+                text="Add Ratee"
+                textClassName="mr-2"
                 className="ml-3"
                 type="gray"
-                icon="FileExcelOutlined"
+                icon="PlusCircleOutlined"
                 iconPosition="right"
                 onClick={() => {
-                  exportMissionCriticalsToExcel({ surveyGroupId });
+                  const params = stringify({ projectId, surveyGroupId });
+                  const path = `${dynamicMap.superUser.addRatee()}${params}`;
+                  history.push(path);
                 }}
               />
-            </div>
+            ) : null}
           </div>
         </div>
-      );
+
+        <div className="flex flex-col ml-48">
+          {isNotPastEndDate && raterGroups?.length > 0 ? (
+            <div className="flex flex-row">
+              <ImportExcelButton
+                textClassName="pr-3"
+                className="mb-3 pr-3"
+                buttonText="Import Relations Excel File"
+                beforeUpload={(file) => {
+                  setImportRelationsFile(file);
+
+                  return false;
+                }}
+              />
+
+              <ImportExcelButton
+                textClassName="pr-3"
+                className="mb-3 pr-3"
+                buttonText="Import Mission Critical Competencies Excel File"
+                beforeUpload={(file) => {
+                  importMissionCriticalsWithExcel({ file, surveyGroupId });
+                  return false;
+                }}
+              />
+            </div>
+          ) : null}
+
+          <div className="flex flex-row">
+            <Button
+              size="middle"
+              textSize="xs"
+              text="Export Relations Excel File"
+              textClassName="pr-3.5"
+              type="gray"
+              icon="FileExcelOutlined"
+              iconPosition="right"
+              onClick={() => {
+                exportRelations({ surveyGroupId });
+              }}
+            />
+
+            <Button
+              size="middle"
+              textSize="xs"
+              text="Export Mission Critical Competencies Excel File"
+              textClassName="pr-3.5"
+              className="ml-3"
+              type="gray"
+              icon="FileExcelOutlined"
+              iconPosition="right"
+              onClick={() => {
+                exportMissionCriticalsToExcel({ surveyGroupId });
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    );
   }, [loading, selectedRows.length, viewBy, parsedQuery.q]);
 
   const renderImportRelationErrorHeader = React.useCallback(() => {
@@ -248,16 +248,12 @@ const StatusDetails = ({
             className="mr-3 px-3"
           />
         </div>
-        {
-          parsedQuery?.errorType === 'ratee'
-            ?
-            (
-              <div className="mt-5">
-                There are some ratees in your imported excel file that have a relation but do not have the “Self” relation!
-              </div>
-            )
-            : null
-        }
+        {parsedQuery?.errorType === 'ratee' ? (
+          <div className="mt-5">
+            There are some ratees in your imported excel file that have a relation but do not have
+            the “Self” relation!
+          </div>
+        ) : null}
       </div>
     );
   }, [parsedQuery?.errorType]);
@@ -284,17 +280,11 @@ const StatusDetails = ({
             className="mr-3 px-3"
           />
         </div>
-        {
-          parsedQuery?.errorType === 'competencyName'
-            ?
-            (
-              <div className="mt-5">
-                There are some invalid competencies in the excel file you have imported!
-              </div>
-            )
-            : null
-        }
-
+        {parsedQuery?.errorType === 'competencyName' ? (
+          <div className="mt-5">
+            There are some invalid competencies in the excel file you have imported!
+          </div>
+        ) : null}
       </div>
     );
   }, [parsedQuery?.errorType]);
@@ -310,38 +300,38 @@ const StatusDetails = ({
   const columns = React.useMemo(() => [
     viewBy === 'raters'
       ? {
-        key: 'raterName',
-        title: 'Rater Name',
-        width: 100,
-        sorter: true,
-        sortOrder: getSortOrder('raterName'),
-      }
+          key: 'raterName',
+          title: 'Rater Name',
+          width: 100,
+          sorter: true,
+          sortOrder: getSortOrder('raterName'),
+        }
       : {
-        key: 'rateeName',
-        title: 'Ratee Name',
-        width: 100,
-        sorter: true,
-        sortOrder: getSortOrder('rateeName'),
-        render: (num, { rateeId }) => (
-          <div className="flex items-center">
-            <div className="text-12px inline-block">{num}</div>
-            <div className="inline-block">
-              <Button
-                onClick={() => {
-                  const params = stringify({ projectId, surveyGroupId, rateeId, rateeName: num });
-                  const path = `${dynamicMap.superUser.editRatee()}${params}`;
-                  history.push(path);
-                }}
-                size="middle"
-                textSize="xs"
-                type="link"
-                className="ml-2 p-0 h-6 w-6"
-                icon="EditOutlined"
-              />
+          key: 'rateeName',
+          title: 'Ratee Name',
+          width: 100,
+          sorter: true,
+          sortOrder: getSortOrder('rateeName'),
+          render: (num, { rateeId }) => (
+            <div className="flex items-center">
+              <div className="text-12px inline-block">{num}</div>
+              <div className="inline-block">
+                <Button
+                  onClick={() => {
+                    const params = stringify({ projectId, surveyGroupId, rateeId, rateeName: num });
+                    const path = `${dynamicMap.superUser.editRatee()}${params}`;
+                    history.push(path);
+                  }}
+                  size="middle"
+                  textSize="xs"
+                  type="link"
+                  className="ml-2 p-0 h-6 w-6"
+                  icon="EditOutlined"
+                />
+              </div>
             </div>
-          </div>
-        ),
-      },
+          ),
+        },
     {
       key: 'raterEmail',
       title: 'Rater Email',
@@ -351,39 +341,39 @@ const StatusDetails = ({
     },
     viewBy === 'ratees'
       ? {
-        key: 'raterName',
-        title: 'Rater Name',
-        width: 100,
-        sorter: true,
-        sortOrder: getSortOrder('raterName'),
-      }
+          key: 'raterName',
+          title: 'Rater Name',
+          width: 100,
+          sorter: true,
+          sortOrder: getSortOrder('raterName'),
+        }
       : {
-        key: 'rateeName',
-        title: 'Ratee Name',
-        width: 100,
-        sorter: true,
-        sortOrder: getSortOrder('rateeName'),
-        render: (num, { rateeId }) => (
-          <div className="flex items-center">
-            <div className="text-12px inline-block">{num}</div>
-            <div className="inline-block">
-              <Button
-                onClick={() => {
-                  const params = stringify({ projectId, surveyGroupId, rateeId, rateeName: num });
-                  const path = `${dynamicMap.superUser.editRatee()}${params}`;
-                  history.push(path);
-                }}
-                disabled={!isNotPastEndDate}
-                size="middle"
-                textSize="xs"
-                type="link"
-                className="ml-2 p-0 h-6 w-6"
-                icon="EditOutlined"
-              />
+          key: 'rateeName',
+          title: 'Ratee Name',
+          width: 100,
+          sorter: true,
+          sortOrder: getSortOrder('rateeName'),
+          render: (num, { rateeId }) => (
+            <div className="flex items-center">
+              <div className="text-12px inline-block">{num}</div>
+              <div className="inline-block">
+                <Button
+                  onClick={() => {
+                    const params = stringify({ projectId, surveyGroupId, rateeId, rateeName: num });
+                    const path = `${dynamicMap.superUser.editRatee()}${params}`;
+                    history.push(path);
+                  }}
+                  disabled={!isNotPastEndDate}
+                  size="middle"
+                  textSize="xs"
+                  type="link"
+                  className="ml-2 p-0 h-6 w-6"
+                  icon="EditOutlined"
+                />
+              </div>
             </div>
-          </div>
-        ),
-      },
+          ),
+        },
     {
       key: 'raterGroupName',
       title: 'Rater Group',
@@ -521,12 +511,9 @@ const StatusDetails = ({
               : relationErrorInvalidRateeColumns
           }
           dataSource={
-            (
-              parsedQuery?.errorType === 'rows'
-                ? importRelationError?.importErrors?.invalidRows
-                : importRelationError?.importErrors?.invalidRatees
-            )
-            || []
+            (parsedQuery?.errorType === 'rows'
+              ? importRelationError?.importErrors?.invalidRows
+              : importRelationError?.importErrors?.invalidRatees) || []
           }
           renderHeader={renderImportRelationErrorHeader}
           pagination={false}
@@ -557,12 +544,9 @@ const StatusDetails = ({
               : missionCriticalErrorCompetencyNameColumns
           }
           dataSource={
-            (
-              parsedQuery?.errorType === 'ratee'
-                ? importMissionCriticalError?.importErrors?.invalidRows
-                : importMissionCriticalError?.importErrors?.invalidCompetencies
-            )
-            || []
+            (parsedQuery?.errorType === 'ratee'
+              ? importMissionCriticalError?.importErrors?.invalidRows
+              : importMissionCriticalError?.importErrors?.invalidCompetencies) || []
           }
           renderHeader={renderImportMissionCriticalErrorHeader}
           pagination={false}
