@@ -112,7 +112,7 @@ const Ratee = ({
       contentClass="pl-21 pr-6 py-4"
       title="Super User"
       titleClass="my-2"
-      breadCrumbItems={['Super User', 'New Project', 'Participants/Raters']}
+      breadCrumbItems={['Super User', 'New Project', 'Ratees/Raters']}
     >
       <div className="grid grid-cols-7 mt-3 mb-10">
         <h2 className="col-start-1 my-6 pt-6 pl-3 font-medium text-base">Survey Group</h2>

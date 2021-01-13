@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useHistory } from 'react-router-dom';
 import Cookie from 'js-cookie';
@@ -16,6 +16,7 @@ import {
 import axios from 'axios';
 import ProfileDropdown from './ProfileDropdown';
 import BreadCrumb from './BreadCrumb';
+import Tooltip from './Tooltip';
 import optimal360Logo from '../../assets/images/optimal360Logo.png';
 import { dynamicMap } from '../../routes/RouteMap';
 import { fetchFullURL } from '../../lib/utils';
@@ -98,14 +99,25 @@ const ClientAdminLayout = ({
         </Link>
         <div className="flex">
           {!isReferenceGuide && (
-            <img
-              className="mr-5 cursor-pointer"
-              src={exportIcon}
-              onClick={() => handleExport(surveyGroupId)}
-              alt=""
-            />
+            <Fragment>
+              <Tooltip title="export">
+                <img
+                  className="mr-5 cursor-pointer"
+                  src={exportIcon}
+                  onClick={() => handleExport(surveyGroupId)}
+                  alt=""
+                />
+              </Tooltip>
+              <Tooltip title="print">
+                <img
+                  className="cursor-pointer"
+                  src={printIcon}
+                  alt=""
+                  onClick={() => window.print()}
+                />
+              </Tooltip>
+            </Fragment>
           )}
-          <img className="cursor-pointer" src={printIcon} alt="" onClick={() => window.print()} />
         </div>
         <ProfileDropdown
           title={profileName}

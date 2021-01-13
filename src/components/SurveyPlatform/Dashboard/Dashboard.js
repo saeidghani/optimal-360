@@ -31,9 +31,9 @@ const Dashboard = ({
   const [submitModalVisible, setSubmitModalVisible] = useState(false);
   const [thankYouModalVisible, setThankYouModalVisible] = useState(false);
   const [welcomeModalVisible, setWelcomeModalVisible] = useState(false);
-  const [visitedSurveyGroups, setVisitedSurveyGroups] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [canSubmit, setCanSubmit] = useState(false);
+  const [visitedSurveyGroups, setVisitedSurveyGroups] = useState([]);
 
   const history = useHistory();
   const [parsedQuery, , setQuery] = useQuery();
@@ -41,52 +41,23 @@ const Dashboard = ({
 
   const { TabPane } = Tabs;
 
-  useEffect(() => {
-    const visitedGroups = localStorage.getItem('visitedSurveyGroups');
-    if (visitedGroups) {
-      const parsedVisitedGroups = JSON.parse(visitedGroups);
-      const visitedGroup = parsedVisitedGroups?.find(
-        (g) => g?.projectId === projectId && g?.surveyGroupId === surveyGroupId,
-      );
-      if (!visitedGroup) {
-        setVisitedSurveyGroups([...parsedVisitedGroups, { projectId, surveyGroupId }]);
-        setWelcomeModalVisible(true);
-      } else {
-        setVisitedSurveyGroups([...parsedVisitedGroups]);
+  const findFirstSurveyGroup = (surveyGroups) => {
+    // eslint-disable-next-line no-unused-expressions
+    surveyGroups?.forEach((group) => {
+      if (!group?.surveyGroupSubmited) {
+        return group;
       }
-    } else {
-      const visitedGroup = visitedSurveyGroups?.find(
-        (g) => g?.projectId === projectId && g?.surveyGroupId === surveyGroupId,
-      );
-      if (!visitedGroup) {
-        const surveyGroups = projects?.data?.find(
-          (project) => project?.projectId?.toString() === projectId?.toString(),
-        )?.surveyGroups;
-        if (surveyGroupId) {
-          const currentSurveyGroup = surveyGroups?.find(
-            (g) => g?.surveyGroupId?.toString() === surveyGroupId?.toString(),
-          );
-          if (currentSurveyGroup?.surveyGroupSubmited) {
-            setIsSubmitted(true);
-            setWelcomeModalVisible(false);
-          } else {
-            setIsSubmitted(false);
-            setWelcomeModalVisible(true);
-          }
-          if (currentSurveyGroup?.canSubmit) {
-            setCanSubmit(true);
-          } else {
-            setCanSubmit(false);
-          }
-        }
-        setVisitedSurveyGroups([{ projectId, surveyGroupId }]);
-      }
-    }
-  }, []);
+    });
+  };
 
-  useEffect(() => {
-    fetchProjects('');
-  }, [fetchProjects]);
+  const visitedGroupHandler = (prjId, sgId) => {
+    const currentGroupInVisited = visitedSurveyGroups?.find(
+      (g) => g?.projectId === prjId && g?.surveyGroupId === sgId,
+    );
+    if (!currentGroupInVisited && prjId && sgId) {
+      setVisitedSurveyGroups([...visitedSurveyGroups, { projectId, surveyGroupId }]);
+    }
+  };
 
   const projectsList = React.useMemo(
     () =>
@@ -98,21 +69,6 @@ const Dashboard = ({
     [projects.timeStamp],
   );
 
-  const findFirstSurveyGroup = (surveyGroups) => {
-    // eslint-disable-next-line no-unused-expressions
-    surveyGroups?.forEach((group) => {
-      if (!group?.surveyGroupSubmited) {
-        return group;
-      }
-    });
-  };
-
-  useEffect(() => {
-    if (!projectId && projectsList?.length > 0) {
-      setQuery({ projectId: projectsList[0]?.value });
-    }
-  }, [projectId, projectsList]);
-
   const surveyGroups = React.useMemo(
     () =>
       projects?.data?.find((project) => project?.projectId?.toString() === projectId?.toString())
@@ -120,33 +76,77 @@ const Dashboard = ({
     [projects.timeStamp, projectId],
   );
 
+  const projectName = React.useMemo(
+    () =>
+      projectsList?.find((project) => project.value?.toString() === projectId?.toString())?.title ||
+      '',
+    [projects.timeStamp, projectId],
+  );
+
   useEffect(() => {
-    if (!surveyGroupId && surveyGroups?.length > 0) {
-      const currentSurveyGroup = findFirstSurveyGroup(surveyGroups) || surveyGroups[0];
-      const newSurveyGroupId = currentSurveyGroup?.surveyGroupId?.toString();
-      setQuery({ surveyGroupId: newSurveyGroupId });
-      const visitedGroup = visitedSurveyGroups?.find(
-        (g) => g?.projectId === projectId && g?.surveyGroupId === newSurveyGroupId,
-      );
-      if (!visitedGroup) {
-        setVisitedSurveyGroups([
-          ...visitedSurveyGroups,
-          { projectId, surveyGroupId: newSurveyGroupId },
-        ]);
-        if (surveyGroupId) {
-          if (currentSurveyGroup?.surveyGroupSubmited) {
-            setIsSubmitted(true);
-            setWelcomeModalVisible(false);
-          } else {
-            setIsSubmitted(false);
-            setWelcomeModalVisible(true);
-          }
-          if (currentSurveyGroup?.canSubmit) {
-            setCanSubmit(true);
-          } else {
-            setCanSubmit(false);
+    fetchProjects('');
+  }, [fetchProjects]);
+
+  useEffect(() => {
+    if (!projectId && projects?.data?.length > 0) {
+      const activeProjects = [];
+      // eslint-disable-next-line no-restricted-syntax
+      for (const project of projects?.data) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const group of project.surveyGroups) {
+          if (!group.surveyGroupSubmited) {
+            activeProjects.push(project);
           }
         }
+      }
+      const activeProjectId =
+        activeProjects?.length > 0 ? activeProjects[0]?.projectId : projects?.data[0]?.projectId;
+      setQuery({ projectId: activeProjectId });
+    }
+  }, [projectId, projects.timeStamp]);
+
+  useEffect(() => {
+    const visitedGroups = localStorage.getItem('visitedSurveyGroups');
+    if (projectId && surveyGroupId) {
+      if (visitedGroups) {
+        const parsedVisitedGroups = JSON.parse(visitedGroups);
+        const visitedGroup = parsedVisitedGroups?.find(
+          (g) => g?.projectId === projectId && g?.surveyGroupId === surveyGroupId,
+        );
+        if (!visitedGroup) {
+          setVisitedSurveyGroups([...parsedVisitedGroups, { projectId, surveyGroupId }]);
+        } else {
+          setVisitedSurveyGroups([...parsedVisitedGroups]);
+        }
+      } else {
+        visitedGroupHandler(projectId, surveyGroupId);
+      }
+    }
+  }, [projectId, surveyGroupId]);
+
+  useEffect(() => {
+    const visitedGroups = localStorage.getItem('visitedSurveyGroups');
+    const parsedVisitedGroups = JSON.parse(visitedGroups);
+    if (projectId && surveyGroupId) {
+      const currentGroupVisited = parsedVisitedGroups?.find(
+        (g) => g?.projectId === projectId && g?.surveyGroupId === surveyGroupId,
+      );
+      const currentSurveyGroup = surveyGroups?.find(
+        (g) => g?.surveyGroupId?.toString() === surveyGroupId?.toString(),
+      );
+      if (!currentGroupVisited && !currentSurveyGroup?.surveyGroupSubmited) {
+        setWelcomeModalVisible(true);
+      }
+    }
+  }, [visitedSurveyGroups, projectId, surveyGroupId, surveyGroups]);
+
+  useEffect(() => {
+    const currentSurveyGroup = findFirstSurveyGroup(surveyGroups) || surveyGroups[0];
+    if (!surveyGroupId && surveyGroups?.length > 0) {
+      const newSurveyGroupId = currentSurveyGroup?.surveyGroupId?.toString();
+      setQuery({ surveyGroupId: newSurveyGroupId });
+      if (projectId && newSurveyGroupId) {
+        visitedGroupHandler(projectId, newSurveyGroupId);
       }
     }
   }, [surveyGroups]);
@@ -158,7 +158,6 @@ const Dashboard = ({
       );
       if (currentSurveyGroup?.surveyGroupSubmited) {
         setIsSubmitted(true);
-        setWelcomeModalVisible(false);
       } else {
         setIsSubmitted(false);
       }
@@ -170,44 +169,17 @@ const Dashboard = ({
     }
   }, [surveyGroups, surveyGroupId]);
 
-  const projectName = React.useMemo(
-    () =>
-      projectsList?.find((project) => project.value?.toString() === projectId?.toString())?.title ||
-      '',
-    [projects.timeStamp, projectId],
-  );
-
   const onSurveyGroupTabChange = (key) => {
     setQuery({ surveyGroupId: key, viewBy: '', page_number: '', page_size: '' });
-    const currentSurveyGroup = surveyGroups?.find(
-      (g) => g?.surveyGroupId?.toString() === surveyGroupId?.toString(),
-    );
-    if (currentSurveyGroup?.surveyGroupSubmited) {
-      setIsSubmitted(true);
-    } else {
-      setIsSubmitted(false);
-      fetchInfo({ surveyGroupId: key });
-    }
-    if (currentSurveyGroup?.canSubmit) {
-      setCanSubmit(true);
-    } else {
-      setCanSubmit(false);
-    }
-    const visitedGroup = visitedSurveyGroups?.find(
-      (g) => g?.projectId === projectId && g?.surveyGroupId === key,
-    );
-    if (!visitedGroup) {
-      setVisitedSurveyGroups([...visitedSurveyGroups, { projectId, surveyGroupId: key }]);
-      setWelcomeModalVisible(true);
-    }
+    fetchInfo({ surveyGroupId: key });
+    setTimeout(() => {
+      visitedGroupHandler(projectId, key);
+    }, 1000);
   };
 
   const handleContinue = () => {
     localStorage.setItem('visitedSurveyGroups', JSON?.stringify(visitedSurveyGroups));
-    const currentSurveyGroup = surveyGroups?.find(
-      (surveyGroup) => surveyGroup?.surveyGroupId?.toString() === surveyGroupId?.toString(),
-    );
-    if (!currentSurveyGroup?.surveyGroupSubmited) {
+    if (!isSubmitted) {
       resetQuestions();
       history.push(
         `${dynamicMap.surveyPlatform.allRateesQuestions({
@@ -226,8 +198,7 @@ const Dashboard = ({
     setSubmitModalVisible(false);
     try {
       await submitResponses({ surveyGroupId });
-      setIsSubmitted(true);
-      setCanSubmit(false);
+      await fetchProjects('');
       setThankYouModalVisible(true);
     } catch {}
   };
@@ -241,7 +212,11 @@ const Dashboard = ({
   };
 
   return (
-    <Layout profileName={profileName} organizationSrc={organization?.data?.organizationLogo}>
+    <Layout
+      profileName={profileName}
+      organizationSrc={organization?.data?.organizationLogo}
+      visitedSurveyGroups={visitedSurveyGroups}
+    >
       <Modal
         visible={submitModalVisible}
         handleOk={handleSubmitModalOk}
@@ -307,7 +282,7 @@ const Dashboard = ({
           <TabPane
             key={group?.surveyGroupId?.toString()}
             tab={group?.surveyGroupName}
-            disabled={isSubmitted}
+            // disabled={isSubmitted}
           >
             <SurveyGroup
               loading={loading}
@@ -352,7 +327,7 @@ Dashboard.propTypes = {
   submitResponses: PropTypes.func.isRequired,
   resetQuestions: PropTypes.func.isRequired,
   projects: PropTypes.shape({
-    data: PropTypes.arrayOf(PropTypes.shape({})),
+    data: PropTypes.arrayOf(PropTypes.shape({ projectId: PropTypes.number })),
     timeStamp: PropTypes.number,
   }),
   organization: PropTypes.shape({

@@ -27,6 +27,7 @@ const SurveyPlatformLayout = ({
   headerClassName,
   profileName,
   organizationSrc,
+  visitedSurveyGroups,
 }) => {
   const history = useHistory();
 
@@ -41,6 +42,13 @@ const SurveyPlatformLayout = ({
       },
     },
   ];
+
+  const handleGuidesClick = () => {
+    if (visitedSurveyGroups) {
+      localStorage.setItem('visitedSurveyGroups', JSON?.stringify(visitedSurveyGroups));
+    }
+    history.push(dynamicMap.surveyPlatform.referenceGuide());
+  };
 
   return (
     <div
@@ -67,12 +75,15 @@ const SurveyPlatformLayout = ({
             <a href="mailto:e360support@optimalconsulting.com.sg">Customer Support</a>
           </span>
         </div>
-        <Link to={dynamicMap.surveyPlatform.referenceGuide()}>
-          <div className="flex justify-between items-center text-gray-500 text-base">
-            <QuestionCircleOutlined />
-            <span className="ml-2 text-xs lg:text-base">Guides</span>
-          </div>
-        </Link>
+        <div
+          className="flex justify-between items-center text-gray-500 text-base"
+          onClick={handleGuidesClick}
+        >
+          <QuestionCircleOutlined />
+          <span className="ml-2 text-xs cursor-pointer hover:text-primary-500 lg:text-base">
+            Guides
+          </span>
+        </div>
         <ProfileDropdown title={profileName} options={profileDropdownOptions} />
       </div>
       <div className="flex items-center md:hidden px-6 pt-6">
@@ -126,6 +137,7 @@ SurveyPlatformLayout.propTypes = {
   headerClassName: PropTypes.string,
   profileName: PropTypes.string,
   organizationSrc: PropTypes.string,
+  visitedSurveyGroups: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 SurveyPlatformLayout.defaultProps = {
@@ -136,6 +148,7 @@ SurveyPlatformLayout.defaultProps = {
   headerClassName: '',
   profileName: '',
   organizationSrc: '',
+  visitedSurveyGroups: null,
 };
 
 export default SurveyPlatformLayout;

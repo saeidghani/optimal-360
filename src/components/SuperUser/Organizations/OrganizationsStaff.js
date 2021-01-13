@@ -102,7 +102,6 @@ const OrganizationsStaff = ({
           <ImportExcelButton
             beforeUpload={(file) => {
               importStaff({ organizationId, file });
-
               return false;
             }}
           />
