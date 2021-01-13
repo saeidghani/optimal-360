@@ -501,7 +501,6 @@ const StatusDetails = ({
       <Modal
         visible={relationErrorModalVisible}
         width="100%"
-        wrapClassName="bg-lightGray"
         closable
         handleCancel={() => {
           clearExcelImportError();
@@ -524,7 +523,7 @@ const StatusDetails = ({
             (
               parsedQuery?.errorType === 'rows'
                 ? importRelationError?.importErrors?.invalidRows
-                : importRelationError?.importErrors?.invalidRatees
+                : importRelationError?.importErrors?.invalidRatees.map((el) => ({ rateeEmail: el }))
             )
             || []
           }
@@ -537,7 +536,6 @@ const StatusDetails = ({
       <Modal
         visible={missionCriticalErrorModalVisible}
         width="100%"
-        wrapClassName="bg-lightGray"
         closable
         handleCancel={() => {
           clearExcelImportError();
@@ -561,6 +559,7 @@ const StatusDetails = ({
               parsedQuery?.errorType === 'ratee'
                 ? importMissionCriticalError?.importErrors?.invalidRows
                 : importMissionCriticalError?.importErrors?.invalidCompetencies
+                  .map((el) => ({ competencyName: el }))
             )
             || []
           }

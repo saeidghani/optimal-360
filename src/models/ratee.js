@@ -161,12 +161,14 @@ export default {
             url: `/super-user/survey-groups/${surveyGroupId}/relations/import`,
             data,
           });
-          await this.importRelations_reducer(res?.data?.data);
-          await dispatch.ratee.fetchStatusDetails({
-            query: '?page_size=10&page_number=1',
-            surveyGroupId,
-          });
-
+          if (res?.data?.data !== true) {
+            await this.importRelations_reducer(res?.data?.data);
+          } else {
+            await dispatch.ratee.fetchStatusDetails({
+              query: '?page_size=10&page_number=1',
+              surveyGroupId,
+            });
+          }
           return res;
         },
         dispatch.util.errorHandler,
@@ -522,12 +524,14 @@ export default {
             url: `/super-user/survey-groups/${surveyGroupId}/mission-criticals/import`,
             data,
           });
-          await this.importMissionCriticalsWithExcel_reducer(res?.data?.data);
-          await dispatch.ratee.fetchStatusDetails({
-            query: '?page_size=10&page_number=1',
-            surveyGroupId,
-          });
-
+          if (res?.data?.data !== true) {
+            await this.importMissionCriticalsWithExcel_reducer(res?.data?.data);
+          } else {
+            await dispatch.ratee.fetchStatusDetails({
+              query: '?page_size=10&page_number=1',
+              surveyGroupId,
+            });
+          }
           return res;
         },
         dispatch.util.errorHandler,
