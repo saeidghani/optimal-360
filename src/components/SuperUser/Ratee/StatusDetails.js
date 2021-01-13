@@ -491,7 +491,6 @@ const StatusDetails = ({
       <Modal
         visible={relationErrorModalVisible}
         width="100%"
-        wrapClassName="bg-lightGray"
         closable
         handleCancel={() => {
           clearExcelImportError();
@@ -511,9 +510,18 @@ const StatusDetails = ({
               : relationErrorInvalidRateeColumns
           }
           dataSource={
+<<<<<<< HEAD
+            (
+              parsedQuery?.errorType === 'rows'
+                ? importRelationError?.importErrors?.invalidRows
+                : importRelationError?.importErrors?.invalidRatees.map((el) => ({ rateeEmail: el }))
+            )
+            || []
+=======
             (parsedQuery?.errorType === 'rows'
               ? importRelationError?.importErrors?.invalidRows
               : importRelationError?.importErrors?.invalidRatees) || []
+>>>>>>> bff6380f68ee2c72b1ed9bc12b0e5ae1e27fa08e
           }
           renderHeader={renderImportRelationErrorHeader}
           pagination={false}
@@ -524,7 +532,6 @@ const StatusDetails = ({
       <Modal
         visible={missionCriticalErrorModalVisible}
         width="100%"
-        wrapClassName="bg-lightGray"
         closable
         handleCancel={() => {
           clearExcelImportError();
@@ -544,9 +551,19 @@ const StatusDetails = ({
               : missionCriticalErrorCompetencyNameColumns
           }
           dataSource={
+<<<<<<< HEAD
+            (
+              parsedQuery?.errorType === 'ratee'
+                ? importMissionCriticalError?.importErrors?.invalidRows
+                : importMissionCriticalError?.importErrors?.invalidCompetencies
+                  .map((el) => ({ competencyName: el }))
+            )
+            || []
+=======
             (parsedQuery?.errorType === 'ratee'
               ? importMissionCriticalError?.importErrors?.invalidRows
               : importMissionCriticalError?.importErrors?.invalidCompetencies) || []
+>>>>>>> bff6380f68ee2c72b1ed9bc12b0e5ae1e27fa08e
           }
           renderHeader={renderImportMissionCriticalErrorHeader}
           pagination={false}
