@@ -298,6 +298,27 @@ export default {
         dispatch.util.alert,
       );
     },
+
+    async changeSurveyGroupEndDate({ projectId, surveyGroupId, endDate }) {
+      return actionWapper(
+        async () => {
+          const res = await axios({
+            method: 'post',
+            url: `/super-user/survey-groups/${surveyGroupId}/end-date`,
+            data: {
+              newEndDate: endDate,
+            },
+          });
+
+          await dispatch.projects.fetchSurveyGroups({ projectId });
+
+          return res;
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+        { toast: true },
+      );
+    },
   }),
 
   reducers: {

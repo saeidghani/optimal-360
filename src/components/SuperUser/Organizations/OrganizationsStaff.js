@@ -2,15 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '../../../hooks';
-
 import { dynamicMap } from '../../../routes/RouteMap';
-
 import { fetchFullURL } from '../../../lib/utils';
-
 import MainLayout from '../../Common/Layout';
 import Table from '../../Common/Table';
 import Button from '../../Common/Button';
 import ImportExcelButton from '../../Common/ImportExcelButton';
+import Modal from '../../Common/Modal';
 
 const OrganizationsStaff = ({
   importStaff,
@@ -19,10 +17,15 @@ const OrganizationsStaff = ({
   fetchOrganizationsInfo,
   fetchOrganizationsStaff,
   loading,
+  deleteStaff,
+  deleteStaffError,
+  clearDeleteStaffError,
 }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const { organizationId } = useParams();
+  const [selectedRows, setSelectedRows] = React.useState([]);
+  const [visible, setVisible] = React.useState(false);
 
   React.useEffect(() => {
     if (!parsedQuery?.page_number || !parsedQuery?.page_size) {
@@ -31,60 +34,98 @@ const OrganizationsStaff = ({
         page_size: 10,
       });
     }
-
     // eslint-disable-next-line
   }, [history?.location?.pathname]);
 
   React.useEffect(() => {
     fetchOrganizationsStaff({ organizationId, query });
-  }, [fetchOrganizationsStaff, organizationId, query]);
+  }, [fetchOrganizationsStaff, organizationId, query, deleteStaff]);
 
   React.useEffect(() => {
     fetchOrganizationsInfo(organizationId);
   }, [fetchOrganizationsInfo, organizationId]);
 
-  const renderHeader = () => (
-    <div className="flex flex-row justify-between items-center">
-      <div className="inline-flex flex-row items-center justify-between">
-        <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
-          <img
-            className="rounded-full w-10 h-10"
-            src={fetchFullURL(organizationsInfo.logo)}
-            alt="logo"
+  React.useEffect(() => {
+    if (deleteStaffError) {
+      setVisible(true);
+    }
+  }, [deleteStaffError]);
+
+  // React.useEffect(() => {
+  //   const left = document.querySelector('thead');
+  //   const stop = (left?.offsetParent?.offsetTop + 200);
+  //   const handleScroll = () => {
+  // eslint-disable-next-line max-len
+  //     const scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+  //     if (scrollTop >= stop) {
+  //       left.classList.add('scroll');
+  //     } else {
+  //       left.classList.remove('scroll');
+  //     }
+  //   };
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll);
+  //   };
+  // }, []);
+
+  const renderHeader = React.useCallback(() => {
+    return (
+      <div className="flex flex-row justify-between items-center">
+        <div className="inline-flex flex-row items-center justify-between">
+          <div className="w-10 h-10 rounded border-gray-200 rounded-full border relative">
+            <img
+              className="rounded-full w-10 h-10"
+              src={fetchFullURL(organizationsInfo.logo)}
+              alt="logo"
+            />
+          </div>
+
+          <p className="text-sm text-base font-normal ml-2">{organizationsInfo.name}</p>
+          {selectedRows?.length > 0 ? (
+            <div className="inline-flex flex-row items-center justify-between">
+              <Button
+                onClick={async () => {
+                  await deleteStaff({ organizationId, staffIds: selectedRows.map((el) => el.id) });
+                  setSelectedRows([]);
+                }}
+                size="middle"
+                className="text-base flex flex-row justify-center ml-8 mr-4 items-center
+            text-primary-500 bg-primary-500 bg-opacity-8 w-8 h-8"
+                icon="DeleteOutlined"
+              />
+              <p className="text-sm text-base font-normal">selected {selectedRows.length} items </p>
+            </div>
+          ) : null}
+        </div>
+        <div className="flex flex-row">
+          <ImportExcelButton
+            beforeUpload={(file) => {
+              importStaff({ organizationId, file });
+              return false;
+            }}
+          />
+
+          <Button
+            size="middle"
+            textSize="xs"
+            text="New Staff Member"
+            type="gray"
+            className="mx-3 px-3 flex-row-reverse"
+            textClassName="mr-2"
+            icon="UserAddOutlined"
+            onClick={() => {
+              const path = dynamicMap.superUser.addOrganizationStaff({
+                organizationId,
+              });
+
+              history.push(path);
+            }}
           />
         </div>
-
-        <p className="text-sm text-base font-normal ml-2">{organizationsInfo.name}</p>
       </div>
-
-      <div className="flex flex-row">
-        <ImportExcelButton
-          beforeUpload={(file) => {
-            importStaff({ organizationId, file });
-
-            return false;
-          }}
-        />
-
-        <Button
-          size="middle"
-          textSize="xs"
-          text="New Staff Member"
-          type="gray"
-          className="mx-3 px-3 flex-row-reverse"
-          textClassName="mr-2"
-          icon="UserAddOutlined"
-          onClick={() => {
-            const path = dynamicMap.superUser.addOrganizationStaff({
-              organizationId,
-            });
-
-            history.push(path);
-          }}
-        />
-      </div>
-    </div>
-  );
+    );
+  }, [selectedRows.length, organizationsInfo]);
 
   const getSortOrder = (key) => {
     return parsedQuery?.sort?.includes(key)
@@ -94,33 +135,50 @@ const OrganizationsStaff = ({
       : '';
   };
 
+  const errorColumns = [
+    {
+      key: 'id',
+      title: 'ID',
+    },
+    {
+      key: 'email',
+      title: 'Staff',
+    },
+    {
+      key: 'surveyGroupName',
+      title: 'Survey Group',
+    },
+  ];
+
   const columns = [
     {
       key: 'id',
       title: 'ID',
       sorter: true,
-      width: 196,
+      width: '15%',
       sortOrder: getSortOrder('id'),
     },
     {
       key: 'name',
       title: 'Name',
-      width: 324,
+      width: '30%',
+      sorter: true,
+      sortOrder: getSortOrder('name'),
     },
     {
       key: 'department',
       title: 'Department',
-      width: 220,
+      width: '20%',
     },
     {
       key: 'jobDesignation',
       title: 'Job Designation',
-      width: 220,
+      width: '22%',
     },
     {
       key: 'email',
       title: 'Email',
-      width: 340,
+      width: '30%',
     },
     {
       key: 'password',
@@ -166,15 +224,42 @@ const OrganizationsStaff = ({
       title="Staff"
       contentClass="py-6 pl-21 pr-6"
     >
+      <Modal
+        visible={visible}
+        width="100%"
+        wrapClassName="bg-lightGray"
+        closable
+        handleCancel={() => {
+          clearDeleteStaffError();
+          setVisible(false);
+        }}
+        className="h-screen error-table-modal max-w-full"
+      >
+        <span className="text-primary-500 text-xl mb-6 flex">Errors</span>
+        <Table
+          showSorterTooltip={false}
+          size="normal"
+          className="p-6 bg-white rounded-lg shadow"
+          columns={errorColumns}
+          renderHeader={() => 'There are some staffs that a relation has been defined for them.'}
+          dataSource={deleteStaffError || []}
+          pagination={false}
+          rowSelection={false}
+        />
+      </Modal>
+
       <Table
         onTableChange={({ sorter }) => sort(sorter)}
+        renderHeader={renderHeader}
         size="middle"
         className="p-6 bg-white rounded-lg shadow"
         loading={loading}
         columns={columns}
-        rowSelection={false}
+        selectedRowKeys={selectedRows?.map((el) => el.id)}
+        onRowSelectionChange={(_, rows) => {
+          setSelectedRows(rows);
+        }}
         dataSource={staff?.data || []}
-        renderHeader={renderHeader}
         onPageSizeChange={(size) => setQuery({ page_size: size, page_number: 1 })}
         pageSize={(parsedQuery?.page_size || 10) * 1}
         pageNumber={parsedQuery?.page_number * 1}
@@ -212,6 +297,9 @@ OrganizationsStaff.propTypes = {
     logo: PropTypes.string,
   }),
   loading: PropTypes.bool.isRequired,
+  deleteStaff: PropTypes.func.isRequired,
+  deleteStaffError: PropTypes.arrayOf(PropTypes.object),
+  clearDeleteStaffError: PropTypes.func.isRequired,
 };
 
 OrganizationsStaff.defaultProps = {
@@ -220,6 +308,7 @@ OrganizationsStaff.defaultProps = {
     timeStamp: '',
   },
   organizationsInfo: {},
+  deleteStaffError: [],
 };
 
 export default OrganizationsStaff;

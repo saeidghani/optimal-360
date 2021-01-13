@@ -1,4 +1,5 @@
 import React from 'react';
+import { CopyrightCircleOutlined } from '@ant-design/icons';
 import { PropTypes } from 'prop-types';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
@@ -23,16 +24,24 @@ const Login = ({ login, loading }) => {
 
   return (
     <div className="min-h-screen bg-white relative flex flex-row items-center justify-center">
-      <div className="absolute top-0 left-0 flex flex-row pl-8 pt-6 md:pl-20 lg:pl-32 lg:pt-12">
+      <div className="absolute top-0 left-0 flex flex-row pl-8 pt-6 md:pl-20 lg:pl-32 lg:pt-8">
         <Logo />
       </div>
-
       <div className="grid grid-cols-12 gap-x-4x w-full xl:mt-16">
         <div
           className="md:col-span-5 md:col-start-2 xl:col-span-6 xl:col-start-1
-       hidden md:flex justify-center items-center"
+       hidden md:flex justify-center items-start flex-col"
         >
-          <Shape />
+          <div className="pl-32 mt-4 text-blue">
+            <p className="text-2xl  font-medium">DEVELOPING LEADERS . OPTIMISING PERFORMANCE</p>
+            <Shape className="pt-4" />
+            <div className="flex place-items-center">
+              <CopyrightCircleOutlined className="mr-2" />
+              <p className="text-sm font-normal">
+                2020 Optimal Consulting Group Pte. Ltd. All Rights Reserved
+              </p>
+            </div>
+          </div>
         </div>
 
         <div

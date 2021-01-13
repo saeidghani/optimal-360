@@ -82,8 +82,9 @@ const SortableTable = ({
   const DraggableBodyRow = (rowProps) => {
     // function findIndex base on Table rowKey props and should always be a right array index
     const index = data.findIndex((x) => x.id.toString() === rowProps['data-row-key'].toString());
+    const row = data.find((x) => x.id.toString() === rowProps['data-row-key'].toString());
 
-    return <SortableItem index={index} {...rowProps} />;
+    return row?.deleted ? null : <SortableItem index={index} {...rowProps} />;
   };
 
   const DraggableContainer = (containerProps) => (

@@ -29,6 +29,7 @@ const AllRateesQuestions = ({
   const [jumpQuestion, setJumpQuestion] = useState('');
   const [jumpModalVisible, setJumpModalVisible] = useState(false);
   const [nextIsDisabled, setNextIsDisabled] = useState(false);
+  const [isFeedback, setIsFeedback] = useState(false);
 
   const allRelationIds = React.useMemo(
     () => relations?.data?.map((relation) => relation.relationId),
@@ -59,11 +60,12 @@ const AllRateesQuestions = ({
   }, [fetchQuestions, surveyGroupId, questionNumber, allRelationIds]);
 
   useEffect(() => {
-    const isFeedback = questions?.data?.isFeedback === true;
+    const isFeedbackQ = questions?.data?.isFeedback === true;
+    setIsFeedback(isFeedbackQ);
     const newRelationValues = {};
     // eslint-disable-next-line no-unused-expressions
     questions?.data?.responses?.forEach((res) => {
-      if (isFeedback) {
+      if (isFeedbackQ) {
         newRelationValues[res.relationId] = res?.feedbackResponse?.toString() || '';
       } else {
         newRelationValues[res.relationId] = res?.questionResponse?.toString() || null;
@@ -76,12 +78,12 @@ const AllRateesQuestions = ({
   }, [questions?.timeStamp]);
 
   useEffect(() => {
-    const isFeedback = questions?.data?.isFeedback === true;
+    const isFeedbackQ = questions?.data?.isFeedback === true;
     if (questions?.data?.question?.required) {
       if (questions?.data?.responses?.length < allRelationIds?.length) {
         setNextIsDisabled(true);
       }
-      if (!isFeedback) {
+      if (!isFeedbackQ) {
         let allResponsesCorrect = true;
         // eslint-disable-next-line no-unused-expressions
         questions?.data?.responses?.forEach((res) => {
@@ -154,8 +156,7 @@ const AllRateesQuestions = ({
     return allRatees;
   }, [relations?.timeStamp]);
 
-  const submitResponse = async () => {
-    const isFeedback = questions?.data?.isFeedback === true;
+  const responseHandler = () => {
     const responses = [];
     // eslint-disable-next-line no-unused-expressions
     Object.keys(relationValues)?.forEach((key) => {
@@ -174,11 +175,14 @@ const AllRateesQuestions = ({
       });
       responses.push(response);
     });
+    return responses;
+  };
 
+  const submitResponse = async () => {
+    const responses = responseHandler();
     if (responses?.length !== Object.keys(relationValues)?.length) {
       return;
     }
-
     const questionId = questions?.data?.question?.id;
     if (questionNumber <= questions?.data?.totalQuestions) {
       const body = {
@@ -206,14 +210,34 @@ const AllRateesQuestions = ({
     }
   };
 
-  const handleBack = () => {
-    if (questionNumber * 1 > 1) setInputQuestionNumber(questionNumber * 1 - 1);
+  const goBack = () => {
     history.push(
       `${dynamicMap.surveyPlatform.allRateesQuestions({
         surveyGroupId,
         questionNumber: questionNumber * 1 - 1,
       })}${stringify({ projectId })}`,
     );
+  };
+
+  const handleBack = async () => {
+    if (questionNumber * 1 > 1) setInputQuestionNumber(questionNumber * 1 - 1);
+    const responses = responseHandler();
+
+    const questionId = questions?.data?.question?.id;
+    const body = {
+      isFeedback,
+      responses,
+    };
+    if (responses?.length !== Object.keys(relationValues)?.length) {
+      setRelationValues({});
+      goBack();
+    } else {
+      try {
+        await addQuestionResponses({ surveyGroupId, questionId, ...body });
+        setRelationValues({});
+        goBack();
+      } catch (errors) {}
+    }
   };
 
   const handleInputQuestionNumber = (e) => {
@@ -297,11 +321,11 @@ const AllRateesQuestions = ({
           relationValues={relationValues}
           totalRelations={Object.keys(relationValues)?.length}
           jumpModalVisible={jumpModalVisible}
+          inputQuestionNumber={inputQuestionNumber}
+          jumpQuestion={jumpQuestion}
           onSetRelationValues={handleSelectQuestionsRelationValues}
           onJumpOk={handleJumpOk}
           onJumpCancel={handleJumpCancel}
-          inputQuestionNumber={inputQuestionNumber}
-          jumpQuestion={jumpQuestion}
           onSetInputQuestionNumber={handleInputQuestionNumber}
           onInputPressEnter={handleInputPressEnter}
           onNext={submitResponse}
@@ -310,16 +334,17 @@ const AllRateesQuestions = ({
       ) : (
         <FeedbackQuestions
           loading={loading}
+          nextIsDisabled={nextIsDisabled}
           questions={questions}
-          ratees={ratees}
           relationValues={relationValues}
           totalRelations={Object.keys(relationValues)?.length}
-          nextIsDisabled={nextIsDisabled}
+          jumpModalVisible={jumpModalVisible}
+          inputQuestionNumber={inputQuestionNumber}
+          jumpQuestion={jumpQuestion}
+          ratees={ratees}
           onSetRelationValues={handleFeedbackQuestionsRelationValues}
           onJumpOk={handleJumpOk}
           onJumpCancel={handleJumpCancel}
-          inputQuestionNumber={inputQuestionNumber}
-          jumpQuestion={jumpQuestion}
           onSetInputQuestionNumber={handleInputQuestionNumber}
           onInputPressEnter={handleInputPressEnter}
           onNext={submitResponse}

@@ -22,7 +22,7 @@ const Result = ({
   groupReports,
   generateGroupReports,
   generateIndividualReports,
-  exportDemographicDataForIndividual,
+  exportDemographicDataForGroups,
 }) => {
   const history = useHistory();
   const [parsedQuery, query, setQuery] = useQuery();
@@ -74,7 +74,8 @@ const Result = ({
                 });
               }}
             />
-          ) : (
+          ) :
+            (
               <Button
                 size="middle"
                 textSize="xs"
@@ -104,7 +105,8 @@ const Result = ({
           />
           <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
         </div>
-      ) : (
+      ) :
+        (
           <div className="flex flex-row items-center">
             {selectedRowsReportAvailable?.includes(false) ? (
               <Button
@@ -121,7 +123,8 @@ const Result = ({
                   })
                 }
               />
-            ) : (
+            ) :
+              (
                 <Button
                   size="middle"
                   textSize="xs"
@@ -152,7 +155,8 @@ const Result = ({
             <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
           </div>
         )
-    ) : (
+    ) :
+      (
         <div className="flex justify-between items-center borderless-tab">
           <Tabs
             defaultActiveKey={resultBy || 'individual'}
@@ -264,7 +268,8 @@ const Result = ({
         <div className="w-16 flex-inline items-center justify-start">
           {criticalCompetencyData ? (
             <div className="w-5 h-5 bg-green-400 rounded-full" />
-          ) : (
+          ) :
+            (
               <CloseOutlined className="text-base ml-2 text-red-500" />
             )}
         </div>
@@ -283,7 +288,8 @@ const Result = ({
         <div className="w-16 flex-inline items-center justify-start">
           {previosResults ? (
             <div className="w-5 h-5 bg-orange rounded-full" />
-          ) : (
+          ) :
+            (
               <CloseOutlined className="text-base ml-2 text-red-500" />
             )}
         </div>
@@ -506,7 +512,7 @@ const Result = ({
             // eslint-disable-next-line no-unused-vars
             .filter(([_, item]) => item === true)
             .map((item) => item[0]);
-          exportDemographicDataForIndividual({
+          exportDemographicDataForGroups({
             fields,
             surveyGroupIds: selectedRows?.map((el) => el.id),
           });
@@ -730,7 +736,7 @@ Result.propTypes = {
   }),
   generateGroupReports: PropTypes.func.isRequired,
   generateIndividualReports: PropTypes.func.isRequired,
-  exportDemographicDataForIndividual: PropTypes.func.isRequired,
+  exportDemographicDataForGroups: PropTypes.func.isRequired,
 };
 
 Result.defaultProps = {

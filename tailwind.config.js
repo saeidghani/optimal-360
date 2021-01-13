@@ -34,6 +34,7 @@ module.exports = {
         body: '#303854',
         antgreen: '#48D2A1', // used for steps
         antteal: '#00d6a2', // used for primary Progress
+        blue: '#224086', // used for login titles
         secondary: '#3D3D3D',
         template: 'rgba(196, 196, 196, 0.2)',
         'list-border': '#F0F0F0',

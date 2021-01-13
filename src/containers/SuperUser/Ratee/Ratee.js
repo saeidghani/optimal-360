@@ -147,9 +147,9 @@ class Ratee extends Component {
     return generateIndividualReports({ surveyGroupId, rateeIds });
   }
 
-  exportDemographicDataForIndividual = ({ surveyGroupIds, fields }) => {
-    const { exportDemographicDataForIndividual } = this.props;
-    return exportDemographicDataForIndividual({ surveyGroupIds, fields });
+  exportDemographicDataForGroups = ({ surveyGroupIds, fields }) => {
+    const { exportDemographicDataForGroups } = this.props;
+    return exportDemographicDataForGroups({ surveyGroupIds, fields });
   }
 
   exportMissionCriticalsToExcel = ({ surveyGroupId }) => {
@@ -160,6 +160,11 @@ class Ratee extends Component {
   importMissionCriticalsWithExcel = ({ file, surveyGroupId }) => {
     const { importMissionCriticalsWithExcel } = this.props;
     return importMissionCriticalsWithExcel({ file, surveyGroupId });
+  }
+
+  clearExcelImportError = () => {
+    const { clearExcelImportError } = this.props;
+    return clearExcelImportError();
   }
 
   render() {
@@ -176,6 +181,8 @@ class Ratee extends Component {
       pastResultOptions,
       pastResult,
       raterGroups,
+      importRelationError,
+      importMissionCriticalError,
     } = this.props;
 
     return (
@@ -216,9 +223,12 @@ class Ratee extends Component {
         raterGroups={raterGroups}
         generateGroupReports={this.generateGroupReports}
         generateIndividualReports={this.generateIndividualReports}
-        exportDemographicDataForIndividual={this.exportDemographicDataForIndividual}
+        exportDemographicDataForGroups={this.exportDemographicDataForGroups}
         importMissionCriticalsWithExcel={this.importMissionCriticalsWithExcel}
         exportMissionCriticalsToExcel={this.exportMissionCriticalsToExcel}
+        importRelationError={importRelationError}
+        importMissionCriticalError={importMissionCriticalError}
+        clearExcelImportError={this.clearExcelImportError}
       />
     );
   }
@@ -258,12 +268,15 @@ Ratee.propTypes = {
   fetchPastResult: PropTypes.func.isRequired,
   setPastResult: PropTypes.func.isRequired,
   fetchRaterGroups: PropTypes.func.isRequired,
-  raterGroups: PropTypes.PropTypes.arrayOf(PropTypes.object).isRequired,
+  raterGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
   generateGroupReports: PropTypes.func.isRequired,
   generateIndividualReports: PropTypes.func.isRequired,
-  exportDemographicDataForIndividual: PropTypes.func.isRequired,
+  exportDemographicDataForGroups: PropTypes.func.isRequired,
   importMissionCriticalsWithExcel: PropTypes.func.isRequired,
   exportMissionCriticalsToExcel: PropTypes.func.isRequired,
+  importRelationError: PropTypes.arrayOf(PropTypes.object),
+  importMissionCriticalError: PropTypes.arrayOf(PropTypes.object),
+  clearExcelImportError: PropTypes.func.isRequired,
 };
 
 Ratee.defaultProps = {
@@ -277,6 +290,8 @@ Ratee.defaultProps = {
   reportSetting: {},
   pastResultOptions: {},
   pastResult: {},
+  importRelationError: {},
+  importMissionCriticalError: {},
 };
 
 const mapStateToProps = (state) => ({
@@ -292,6 +307,8 @@ const mapStateToProps = (state) => ({
   pastResultOptions: state.ratee?.pastResultOptions || {},
   pastResult: state.ratee?.pastResult || {},
   raterGroups: state.ratee.raterGroups,
+  importRelationError: state.ratee.importRelationError,
+  importMissionCriticalError: state.ratee.importMissionCriticalError,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -318,9 +335,10 @@ const mapDispatchToProps = (dispatch) => ({
   fetchRaterGroups: dispatch.ratee.fetchRaterGroups,
   generateGroupReports: dispatch.ratee.generateGroupReports,
   generateIndividualReports: dispatch.ratee.generateIndividualReports,
-  exportDemographicDataForIndividual: dispatch.ratee.exportDemographicDataForIndividual,
+  exportDemographicDataForGroups: dispatch.ratee.exportDemographicDataForGroups,
   importMissionCriticalsWithExcel: dispatch.ratee.importMissionCriticalsWithExcel,
   exportMissionCriticalsToExcel: dispatch.ratee.exportMissionCriticalsToExcel,
+  clearExcelImportError: dispatch.ratee.clearExcelImportError,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Ratee);

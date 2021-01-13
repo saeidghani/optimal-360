@@ -85,11 +85,11 @@ const AddRatee = ({
               options={
                 staff?.length > 0
                   ? staff.map(({ name, id }) => ({
-                    label: name,
-                    value: name,
-                    id,
-                    key: id,
-                  }))
+                      label: name,
+                      value: name,
+                      id,
+                      key: id,
+                    }))
                   : [{ label: 'no result found' }]
               }
               onSelect={handleSelectStaff}

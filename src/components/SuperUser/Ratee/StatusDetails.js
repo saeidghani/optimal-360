@@ -27,13 +27,19 @@ const StatusDetails = ({
   raterGroups,
   importMissionCriticalsWithExcel,
   exportMissionCriticalsToExcel,
+  importRelationError,
+  importMissionCriticalError,
+  clearExcelImportError,
 }) => {
   const [parsedQuery, query, setQuery] = useQuery();
   const history = useHistory();
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [importRelationsFile, setImportRelationsFile] = React.useState('');
   const [, , surveyGroupId, surveyGroupObject] = useRateeSurveyGroup();
-
+  const [relationErrorModalVisible, setRelationErrorModalVisible] = React.useState(false);
+  const [missionCriticalErrorModalVisible, setMissionCriticalErrorModalVisible] = React.useState(
+    false,
+  );
   const viewBy = parsedQuery?.viewBy || 'raters';
   const pageNumber = parsedQuery?.page_number || 1;
   const pageSize = parsedQuery?.page_size || 10;
@@ -52,6 +58,17 @@ const StatusDetails = ({
     fetch();
     setSelectedRows([]);
   }, [fetchStatusDetails, surveyGroupId, pageSize, pageNumber, parsedQuery.q, parsedQuery.sort]);
+
+  React.useEffect(() => {
+    if (importRelationError) {
+      setRelationErrorModalVisible(true);
+      setQuery({ errorType: 'rows' });
+    }
+    if (importMissionCriticalError) {
+      setMissionCriticalErrorModalVisible(true);
+      setQuery({ errorType: 'ratee' });
+    }
+  }, [importRelationError, importMissionCriticalError]);
 
   const renderHeader = React.useCallback(() => {
     const selectedRowsIds = selectedRows?.length > 0 ? selectedRows.map((el) => el.relationId) : [];
@@ -209,6 +226,69 @@ const StatusDetails = ({
     );
   }, [loading, selectedRows.length, viewBy, parsedQuery.q]);
 
+  const renderImportRelationErrorHeader = React.useCallback(() => {
+    return (
+      <div className="flex flex-col">
+        <div className="flex flex-row">
+          <Button
+            size="middle"
+            onClick={() => setQuery({ errorType: 'rows', page_number: 1 })}
+            textSize="xs"
+            text="Invalid Rows"
+            className="mr-3 px-3"
+            light={parsedQuery?.errorType !== 'rows'}
+          />
+
+          <Button
+            size="middle"
+            onClick={() => setQuery({ errorType: 'ratee', page_number: 1 })}
+            textSize="xs"
+            text="Invalid Ratee"
+            light={parsedQuery?.errorType !== 'ratee'}
+            className="mr-3 px-3"
+          />
+        </div>
+        {parsedQuery?.errorType === 'ratee' ? (
+          <div className="mt-5">
+            There are some ratees in your imported excel file that have a relation but do not have
+            the “Self” relation!
+          </div>
+        ) : null}
+      </div>
+    );
+  }, [parsedQuery?.errorType]);
+
+  const renderImportMissionCriticalErrorHeader = React.useCallback(() => {
+    return (
+      <div className="flex flex-col">
+        <div className="flex flex-row">
+          <Button
+            size="middle"
+            onClick={() => setQuery({ errorType: 'ratee', page_number: 1 })}
+            textSize="xs"
+            text="Ratee"
+            className="mr-3 px-3"
+            light={parsedQuery?.errorType !== 'ratee'}
+          />
+
+          <Button
+            size="middle"
+            onClick={() => setQuery({ errorType: 'competencyName', page_number: 1 })}
+            textSize="xs"
+            text="Competency Name"
+            light={parsedQuery?.errorType !== 'competencyName'}
+            className="mr-3 px-3"
+          />
+        </div>
+        {parsedQuery?.errorType === 'competencyName' ? (
+          <div className="mt-5">
+            There are some invalid competencies in the excel file you have imported!
+          </div>
+        ) : null}
+      </div>
+    );
+  }, [parsedQuery?.errorType]);
+
   const getSortOrder = (key) => {
     return parsedQuery?.sort?.includes(key)
       ? parsedQuery?.sort?.[0] === '+'
@@ -324,6 +404,58 @@ const StatusDetails = ({
     },
   ]);
 
+  const relationErrorInvalidRowsColumns = React.useMemo(() => [
+    {
+      key: 'rowNumber',
+      title: 'Row Number',
+    },
+    {
+      key: 'ratee',
+      title: 'Ratee Email',
+    },
+    {
+      key: 'rater',
+      title: 'Rater Email',
+    },
+    {
+      key: 'raterGroup',
+      title: 'Rater Group',
+    },
+    {
+      key: 'errorMessage',
+      title: 'Error Message',
+    },
+  ]);
+
+  const relationErrorInvalidRateeColumns = React.useMemo(() => [
+    {
+      key: 'rateeEmail',
+      title: 'Ratee Email',
+    },
+  ]);
+
+  const missionCriticalErrorRateeColumns = React.useMemo(() => [
+    {
+      key: 'rowNumber',
+      title: 'Row Number',
+    },
+    {
+      key: 'ratee',
+      title: 'Ratee Email',
+    },
+    {
+      key: 'errorMessage',
+      title: 'Error Message',
+    },
+  ]);
+
+  const missionCriticalErrorCompetencyNameColumns = React.useMemo(() => [
+    {
+      key: 'competencyName',
+      title: 'Competency Name',
+    },
+  ]);
+
   const sort = (sorter) => {
     // eslint-disable-next-line operator-linebreak
     const order = parsedQuery?.sort?.[0] === '+' ? '-' : '+';
@@ -341,6 +473,7 @@ const StatusDetails = ({
         handleOk={async () => {
           try {
             await importRelations({ file: importRelationsFile, surveyGroupId });
+            // eslint-disable-next-line no-empty
           } catch (err) {
           } finally {
             setImportRelationsFile('');
@@ -353,6 +486,72 @@ const StatusDetails = ({
         <p className="text-sm text-secondary">
           If you import this excel file, all prior relations will be deleted, continue?
         </p>
+      </Modal>
+
+      <Modal
+        visible={relationErrorModalVisible}
+        width="100%"
+        wrapClassName="bg-lightGray"
+        closable
+        handleCancel={() => {
+          clearExcelImportError();
+          setQuery({ errorType: '' });
+          setRelationErrorModalVisible(false);
+        }}
+        className="h-screen error-table-modal max-w-full"
+      >
+        <span className="text-primary-500 text-xl mb-6 flex">Errors</span>
+        <Table
+          showSorterTooltip={false}
+          size="normal"
+          className="p-6 bg-white rounded-lg shadow"
+          columns={
+            parsedQuery?.errorType === 'rows'
+              ? relationErrorInvalidRowsColumns
+              : relationErrorInvalidRateeColumns
+          }
+          dataSource={
+            (parsedQuery?.errorType === 'rows'
+              ? importRelationError?.importErrors?.invalidRows
+              : importRelationError?.importErrors?.invalidRatees) || []
+          }
+          renderHeader={renderImportRelationErrorHeader}
+          pagination={false}
+          rowSelection={false}
+        />
+      </Modal>
+
+      <Modal
+        visible={missionCriticalErrorModalVisible}
+        width="100%"
+        wrapClassName="bg-lightGray"
+        closable
+        handleCancel={() => {
+          clearExcelImportError();
+          setQuery({ errorType: '' });
+          setMissionCriticalErrorModalVisible(false);
+        }}
+        className="h-screen error-table-modal max-w-full"
+      >
+        <span className="text-primary-500 text-xl mb-6 flex">Errors</span>
+        <Table
+          showSorterTooltip={false}
+          size="normal"
+          className="p-6 bg-white rounded-lg shadow"
+          columns={
+            parsedQuery?.errorType === 'ratee'
+              ? missionCriticalErrorRateeColumns
+              : missionCriticalErrorCompetencyNameColumns
+          }
+          dataSource={
+            (parsedQuery?.errorType === 'ratee'
+              ? importMissionCriticalError?.importErrors?.invalidRows
+              : importMissionCriticalError?.importErrors?.invalidCompetencies) || []
+          }
+          renderHeader={renderImportMissionCriticalErrorHeader}
+          pagination={false}
+          rowSelection={false}
+        />
       </Modal>
 
       <Table
@@ -415,10 +614,15 @@ StatusDetails.propTypes = {
   raterGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
   importMissionCriticalsWithExcel: PropTypes.func.isRequired,
   exportMissionCriticalsToExcel: PropTypes.func.isRequired,
+  importRelationError: PropTypes.arrayOf(PropTypes.object),
+  importMissionCriticalError: PropTypes.arrayOf(PropTypes.object),
+  clearExcelImportError: PropTypes.func.isRequired,
 };
 
 StatusDetails.defaultProps = {
   statusDetails: {},
+  importRelationError: {},
+  importMissionCriticalError: {},
 };
 
 export default StatusDetails;

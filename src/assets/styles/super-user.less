@@ -1,3 +1,21 @@
+.ant-table-thead  tr  th {
+  position: sticky!important;
+  top: 0!important;
+  z-index: 100!important;
+}
+.ant-tabs {
+  overflow: unset;
+}
+.error-table-modal .ant-modal-content {
+  border-radius: 0;
+  background-color: #f8F5FC;
+  height: inherit;
+}
+.error-table-modal .ant-modal-content .ant-modal-close{
+  right: 25px;
+  top: 25px;
+  color: black;
+}
 .all-ratee-tabs {
   & > .ant-tabs-nav {
     .ant-tabs-tab {
@@ -72,6 +90,17 @@
 
   & .dragHandler {
     width: 48px;
+  }
+}
+
+.questions-row-dragging {
+  & {
+    display: inline-table;
+    padding: 0 17px;
+  }
+
+  & .dragHandler {
+    width: 64px;
   }
 }
 
@@ -152,5 +181,4 @@
   .autocomplete-container {
     max-width: 388px;
   }
-
 }

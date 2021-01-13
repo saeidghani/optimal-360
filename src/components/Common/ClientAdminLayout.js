@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useHistory } from 'react-router-dom';
 import Cookie from 'js-cookie';
@@ -16,6 +16,7 @@ import {
 import axios from 'axios';
 import ProfileDropdown from './ProfileDropdown';
 import BreadCrumb from './BreadCrumb';
+import Tooltip from './Tooltip';
 import optimal360Logo from '../../assets/images/optimal360Logo.png';
 import { dynamicMap } from '../../routes/RouteMap';
 import { fetchFullURL } from '../../lib/utils';
@@ -33,6 +34,7 @@ const ClientAdminLayout = ({
   heading,
   profileName,
   organizationSrc,
+  isReferenceGuide,
   surveyGroupId,
 }) => {
   const history = useHistory();
@@ -96,13 +98,26 @@ const ClientAdminLayout = ({
           </div>
         </Link>
         <div className="flex">
-          <img
-            className="mr-5"
-            src={exportIcon}
-            onClick={() => handleExport(surveyGroupId)}
-            alt=""
-          />
-          <img src={printIcon} alt="" onClick={() => window.print()} />
+          {!isReferenceGuide && (
+            <Fragment>
+              <Tooltip title="export">
+                <img
+                  className="mr-5 cursor-pointer"
+                  src={exportIcon}
+                  onClick={() => handleExport(surveyGroupId)}
+                  alt=""
+                />
+              </Tooltip>
+              <Tooltip title="print">
+                <img
+                  className="cursor-pointer"
+                  src={printIcon}
+                  alt=""
+                  onClick={() => window.print()}
+                />
+              </Tooltip>
+            </Fragment>
+          )}
         </div>
         <ProfileDropdown
           title={profileName}
@@ -156,6 +171,7 @@ ClientAdminLayout.propTypes = {
   wrapperClassName: PropTypes.string,
   title: PropTypes.string,
   hasBreadCrumb: PropTypes.bool,
+  isReferenceGuide: PropTypes.bool,
   headerClassName: PropTypes.string,
   heading: PropTypes.string,
   profileName: PropTypes.string,
@@ -167,6 +183,7 @@ ClientAdminLayout.defaultProps = {
   wrapperClassName: '',
   title: '',
   hasBreadCrumb: false,
+  isReferenceGuide: false,
   headerClassName: '',
   profileName: '',
   organizationSrc: '',

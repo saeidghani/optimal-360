@@ -17,11 +17,11 @@ import Steps from '../../Common/Steps';
 import Button from '../../Common/Button';
 import TextEditor from '../../Common/TextEditor';
 import UploadAvatar from '../../Common/UploadAvatar';
+import Input from '../../Common/Input';
 
 const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading }) => {
   const history = useHistory();
   const { search } = history?.location;
-
   const [surveyGroups, currentSurveyGroupName, surveyGroupId] = useSurveyGroup();
 
   const formRef = React.useRef();
@@ -29,6 +29,8 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
     clientWelcomeMessage: yup.string().required('client welcome message is required'),
     clientPicture: yup.string().required('client picture is required'),
     surveyMessage: yup.string().required('survey message is required'),
+    clientName: yup.string().required('client name is required'),
+    clientJob: yup.string().required('client job position is required'),
   });
 
   const [parsedQuery] = useQuery();
@@ -47,7 +49,7 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
       breadCrumbItems={['New Project', 'Survey Intro']}
       title="Super User"
       titleClass="mb-2"
-      contentClass="py-4"
+      contentClass="pt-4"
       headerClassName="pl-21"
       childrenPadding={false}
     >
@@ -85,9 +87,8 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
         ) : null}
 
         <div
-          className={`px-6 py-5 col-span-10 ${
-            parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
-          } `}
+          className={`px-6 py-5 col-span-10 ${parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
+            } `}
         >
           <Steps wizardSteps currentPosition={2} />
 
@@ -103,7 +104,7 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
                 const path = dynamicMap.superUser.surveyQuestions();
 
                 history.push(`${path}${search}`);
-              } catch (error) {}
+              } catch (error) { }
             }}
           >
             {({ values, errors, touched, handleSubmit, setFieldValue }) => (
@@ -143,7 +144,35 @@ const SurveyIntro = ({ surveyIntro, fetchSurveyIntro, setSurveyIntro, loading })
                     <p className="text-red-500 py-2">{errors.surveyMessage}</p>
                   )}
 
-                  <div className="pt-23.5 pb-22 flex justify-end">
+                  <div className="mt-18 flex flex-row justify-between">
+                    <div className="flex items-baseline">
+                      <span>Client Name:</span>
+                      <Input
+                        placeholder="Client Name"
+                        inputClass="text-14px"
+                        wrapperClassName="ml-6 w-64"
+                        value={values.clientName}
+                        onChange={(e) => setFieldValue('clientName', e.target.value)}
+                        errorMessage={touched.clientName && errors.clientName && (
+                          <p className="text-red-500 pt-2">{errors.clientName}</p>
+                        )}
+                      />
+                    </div>
+                    <div className="flex items-baseline">
+                      <span>Client Job Position:</span>
+                      <Input
+                        placeholder="Client Job Position"
+                        inputClass="text-14px"
+                        wrapperClassName="ml-6 w-64"
+                        value={values.clientJob}
+                        onChange={(e) => setFieldValue('clientJob', e.target.value)}
+                        errorMessage={touched.clientJob && errors.clientJob && (
+                          <p className="text-red-500 pt-2">{errors.clientJob}</p>
+                        )}
+                      />
+                    </div>
+                  </div>
+                  <div className="pt-8 pb-22 flex justify-end">
                     <Button
                       className="w-24.5 h-9.5"
                       type="link"
@@ -180,11 +209,19 @@ SurveyIntro.propTypes = {
     clientPicture: PropTypes.string,
     clientWelcomeMessage: PropTypes.string,
     surveyMessage: PropTypes.string,
+    clientName: PropTypes.string,
+    clientJob: PropTypes.string,
   }),
 };
 
 SurveyIntro.defaultProps = {
-  surveyIntro: { clientPicture: '', clientWelcomeMessage: '', surveyMessage: '' },
+  surveyIntro: {
+    clientPicture: '',
+    clientWelcomeMessage: '',
+    surveyMessage: '',
+    clientName: '',
+    clientJob: '',
+  },
 };
 
 export default SurveyIntro;

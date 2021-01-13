@@ -24,7 +24,6 @@ import {
 const Information = ({ loading, fetchProfile, updateProfile, profile, organization }) => {
   const [selectedSex, setSelectedSex] = React.useState('');
   const [selectItems, setSelectItems] = React.useState({});
-  const [errors, setErrors] = React.useState({});
 
   React.useEffect(() => {
     fetchProfile('');
@@ -41,17 +40,17 @@ const Information = ({ loading, fetchProfile, updateProfile, profile, organizati
       highestEducation,
       ageGroup,
       lengthOfService,
-    } = profile?.data || {};
+    } = profile || {};
     setSelectedSex(sex || 'female');
     setSelectItems({
-      employmentLocation,
-      sector,
-      industry,
-      jobFunction,
-      jobLevel,
-      highestEducation,
-      ageGroup,
-      lengthOfService,
+      employmentLocation: employmentLocation || '',
+      sector: sector || '',
+      industry: industry || '',
+      jobFunction: jobFunction || '',
+      jobLevel: jobLevel || '',
+      highestEducation: highestEducation || '',
+      ageGroup: ageGroup || '',
+      lengthOfService: lengthOfService || '',
     });
   }, [profile]);
 
@@ -120,26 +119,14 @@ const Information = ({ loading, fetchProfile, updateProfile, profile, organizati
       ...selectItems,
       [name]: value,
     });
-
-    setErrors({
-      ...errors,
-      [name]: false,
-    });
   };
+
   const handleSubmit = async () => {
     const data = { sex: selectedSex, ...selectItems };
-    const dataErrors = {};
-    // eslint-disable-next-line no-unused-expressions
-    Object.keys(data)?.forEach((key) => {
-      if (!data[key]) dataErrors[key] = true;
-    });
-    setErrors(dataErrors);
-    if (Object.keys(dataErrors)?.length === 0) {
-      try {
-        await updateProfile(data);
-        history.push(dynamicMap.surveyPlatform.dashboard());
-      } catch (err) {}
-    }
+    try {
+      await updateProfile(data);
+      history.push(dynamicMap.surveyPlatform.dashboard());
+    } catch (err) {}
   };
 
   return (
@@ -174,9 +161,7 @@ const Information = ({ loading, fetchProfile, updateProfile, profile, organizati
             <div className="text-sm text-body mb-3">{item.title}</div>
             <div className="cursor-pointer">
               <Dropdown
-                className={`c-autocomplete w-full ${
-                  errors[item.name] ? 'border border-solid border-red-500' : ''
-                }`}
+                className="c-autocomplete w-full"
                 showSearch={false}
                 options={item.dropdownOptions}
                 placeholder="Select"

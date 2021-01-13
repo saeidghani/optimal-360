@@ -29,6 +29,7 @@ const IndividualQuestions = ({
   const [jumpQuestion, setJumpQuestion] = useState('');
   const [jumpModalVisible, setJumpModalVisible] = useState(false);
   const [nextIsDisabled, setNextIsDisabled] = useState(false);
+  const [isFeedback, setIsFeedback] = useState(false);
 
   useEffect(() => {
     if (surveyGroupId) {
@@ -48,10 +49,11 @@ const IndividualQuestions = ({
   }, [fetchQuestions, surveyGroupId, questionNumber, relationId]);
 
   useEffect(() => {
-    const isFeedback = questions?.data?.isFeedback === true;
+    const isFeedbackQ = questions?.data?.isFeedback === true;
+    setIsFeedback(isFeedbackQ);
     if (questions?.data?.responses?.length > 0) {
       const newRelationValues = {};
-      if (isFeedback) {
+      if (isFeedbackQ) {
         newRelationValues[relationId] =
           questions?.data?.responses[0]?.feedbackResponse?.toString() || '';
       } else {
@@ -63,12 +65,12 @@ const IndividualQuestions = ({
   }, [questions?.timeStamp]);
 
   useEffect(() => {
-    const isFeedback = questions?.data?.isFeedback === true;
+    const isFeedbackQ = questions?.data?.isFeedback === true;
     if (questions?.data?.question?.required) {
       if (questions?.data?.responses?.length === 0) {
         setNextIsDisabled(true);
       }
-      if (!isFeedback) {
+      if (!isFeedbackQ) {
         if (questions?.data?.responses[0]?.questionResponse === null) {
           setNextIsDisabled(true);
         }
@@ -129,8 +131,7 @@ const IndividualQuestions = ({
     return [{ rateeId, rateeName }];
   }, [relations?.timeStamp]);
 
-  const submitResponse = async () => {
-    const isFeedback = questions?.data?.isFeedback === true;
+  const responseHandler = () => {
     const responses = [];
     const response = {};
     // eslint-disable-next-line no-unused-expressions
@@ -148,6 +149,13 @@ const IndividualQuestions = ({
         }
       });
     });
+    responses.push(response);
+    return { response, responses };
+  };
+
+  const submitResponse = async () => {
+    const { response, responses } = responseHandler();
+
     if (
       questions?.data?.question?.required &&
       ((!isFeedback && response?.questionResponse === null) ||
@@ -158,9 +166,8 @@ const IndividualQuestions = ({
     }
     setNextIsDisabled(false);
 
-    responses.push(response);
-    const questionId = questions?.data?.question?.id;
     if (questionNumber <= questions?.data?.totalQuestions) {
+      const questionId = questions?.data?.question?.id;
       const body = {
         isFeedback,
         responses,
@@ -186,15 +193,39 @@ const IndividualQuestions = ({
     }
   };
 
-  const handleBack = () => {
-    setNextIsDisabled(false);
-    if (questionNumber * 1 > 1) setInputQuestionNumber(questionNumber * 1 - 1);
+  const goBack = () => {
     history.push(
       `${dynamicMap.surveyPlatform.individualQuestions({
         surveyGroupId,
         questionNumber: questionNumber * 1 - 1,
       })}${stringify({ relationId, projectId })}`,
     );
+  };
+
+  const handleBack = async () => {
+    const { responses, response } = responseHandler();
+    setNextIsDisabled(false);
+    if (questionNumber * 1 > 1) setInputQuestionNumber(questionNumber * 1 - 1);
+
+    const questionId = questions?.data?.question?.id;
+    const body = {
+      isFeedback,
+      responses,
+    };
+    if (
+      questions?.data?.question?.required &&
+      ((!isFeedback && response?.questionResponse === null) ||
+        (isFeedback && !response?.feedbackResponse))
+    ) {
+      setRelationValues({});
+      goBack();
+    } else {
+      try {
+        await addQuestionResponses({ surveyGroupId, questionId, ...body });
+        setRelationValues({});
+        goBack();
+      } catch (errors) {}
+    }
   };
 
   const handleInputQuestionNumber = (e) => {
@@ -245,7 +276,6 @@ const IndividualQuestions = ({
 
   const handleJumpOk = () => {
     setJumpModalVisible(false);
-    setNextIsDisabled(false);
     setInputQuestionNumber(jumpQuestion);
     history.push(
       `${dynamicMap.surveyPlatform.individualQuestions({
@@ -273,12 +303,12 @@ const IndividualQuestions = ({
           questions={questions}
           relationValues={relationValues}
           totalRelations={Object.keys(relationValues)?.length}
-          onSetRelationValues={handleSelectQuestionsRelationValues}
           jumpModalVisible={jumpModalVisible}
+          jumpQuestion={jumpQuestion}
+          inputQuestionNumber={inputQuestionNumber}
+          onSetRelationValues={handleSelectQuestionsRelationValues}
           onJumpOk={handleJumpOk}
           onJumpCancel={handleJumpCancel}
-          inputQuestionNumber={inputQuestionNumber}
-          jumpQuestion={jumpQuestion}
           onSetInputQuestionNumber={handleInputQuestionNumber}
           onInputPressEnter={handleInputPressEnter}
           onNext={submitResponse}
@@ -292,11 +322,12 @@ const IndividualQuestions = ({
           relationValues={relationValues}
           totalRelations={Object.keys(relationValues)?.length}
           nextIsDisabled={nextIsDisabled}
-          onSetRelationValues={handleFeedbackQuestionsRelationValues}
           jumpModalVisible={jumpModalVisible}
+          jumpQuestion={jumpQuestion}
+          inputQuestionNumber={inputQuestionNumber}
+          onSetRelationValues={handleFeedbackQuestionsRelationValues}
           onJumpOk={handleJumpOk}
           onJumpCancel={handleJumpCancel}
-          inputQuestionNumber={inputQuestionNumber}
           onSetInputQuestionNumber={handleInputQuestionNumber}
           onInputPressEnter={handleInputPressEnter}
           onNext={submitResponse}
