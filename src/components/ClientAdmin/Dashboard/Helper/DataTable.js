@@ -565,7 +565,7 @@ const DataTable = ({
   return (
     <Table
       size="middle"
-      className="sticky-header-table p-6 bg-white rounded-lg shadow"
+      className="sticky-header-table p-6 bg-white rounded-lg shadow parent-table"
       tableClassName="c-table-thead-white overflow-x-auto align-top md:overflow-x-visible"
       loading={loading}
       columns={viewBy === 'ratee-summary' ? rateeSummaryColumns : rateeAndRaterDetailsColumns}
