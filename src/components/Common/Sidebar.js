@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useLocation, useHistory } from 'react-router-dom';
-import { UserOutlined } from '@ant-design/icons';
 
+import Cookie from 'js-cookie';
 import { stringify } from '../../hooks/useQuery';
 import { dynamicMap } from '../../routes/RouteMap';
 
@@ -11,6 +11,7 @@ import Modal from './Modal';
 import Tooltip from './Tooltip';
 
 import logo from '../../assets/images/360-icon.svg';
+import ProfileDropdown from './ProfileDropdown';
 
 const Sidebar = ({ wizardLayout }) => {
   const history = useHistory();
@@ -39,6 +40,18 @@ const Sidebar = ({ wizardLayout }) => {
       </p>
     </Modal>
   );
+
+  const profileDropdownOptions = [
+    {
+      key: 1,
+      title: 'Logout',
+      // eslint-disable-next-line no-undef
+      onClick: () => {
+        Cookie.remove('token');
+        history.push(dynamicMap.superUser.login());
+      },
+    },
+  ];
 
   return (
     <div
@@ -206,10 +219,10 @@ const Sidebar = ({ wizardLayout }) => {
       </div>
 
       <div
-        className="c-user-icon-sidebar flex justify-center p-3 mb-4
-      items-center rounded-full bg-primary-500 text-xl text-white"
+        className="c-user-icon-sidebar flex justify-center mb-4 ml-2
+      items-center rounded-full text-xl text-white"
       >
-        <UserOutlined />
+        <ProfileDropdown options={profileDropdownOptions} justUserOutline />
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs } from 'antd';
+import { Tabs, notification } from 'antd';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import { FileTextOutlined, CheckOutlined } from '@ant-design/icons';
+import { FileTextOutlined, CheckOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
 import Layout from '../../Common/SurveyPlatformLayout';
 import Modal from '../../Common/Modal';
@@ -163,6 +163,9 @@ const Dashboard = ({
       }
       if (currentSurveyGroup?.canSubmit) {
         setCanSubmit(true);
+        notification.open({
+          message: 'Please submit your responses',
+        });
       } else {
         setCanSubmit(false);
       }
@@ -258,22 +261,32 @@ const Dashboard = ({
       >
         <Welcome loading={loading} {...info?.data?.surveyIntro} />
       </Modal>
-      <div className="grid grid-cols-12 mb-10 mt-8">
+      <div className="grid grid-cols-12 mt-8">
         <div className="col-start-1 col-span-6 text-base text-body mb-3">Select Project</div>
-        <Dropdown
-          className="c-autocomplete col-start-1 col-span-12
-          md:col-start-1 md:col-span-4 lg:col-start-1 lg:col-span-3 w-full"
-          type="gray"
-          showSearch={false}
-          value={projectName}
-          handleChange={(val) => {
-            setQuery({ projectId: val, surveyGroupId: '' });
-          }}
-          options={projectsList}
-        />
+        <div
+          className="col-start-1 col-span-12
+          md:col-start-1 md:col-span-4 lg:col-start-1 lg:col-span-3"
+        >
+          <Dropdown
+            className="c-autocomplete w-full"
+            type="gray"
+            showSearch={false}
+            value={projectName}
+            handleChange={(val) => {
+              setQuery({ projectId: val, surveyGroupId: '' });
+            }}
+            options={projectsList}
+          />
+        </div>
+        <p className="col-start-5 col-span-7">
+          Welcome to your Dashboard! At any time you would like to know how to navigate the
+          Dashboard, please go to the <span className="font-bold">Reference Guide</span> at the top
+          of the page. Please select <span className="font-bold">Instructions Page</span> at the top
+          of the page for instructions to the survey questions.
+        </p>
       </div>
       <Tabs
-        className="survey-group-tabs"
+        className="survey-group-tabs mt-4"
         defaultActiveKey={surveyGroupId}
         activeKey={surveyGroupId}
         onChange={onSurveyGroupTabChange}
@@ -281,8 +294,12 @@ const Dashboard = ({
         {surveyGroups?.map((group) => (
           <TabPane
             key={group?.surveyGroupId?.toString()}
-            tab={group?.surveyGroupName}
-            // disabled={isSubmitted}
+            tab={
+              <span className="flex items-center space-x-2">
+                <span>{group?.surveyGroupName}</span>
+                <ExclamationCircleOutlined onClick={() => setWelcomeModalVisible(true)} />
+              </span>
+            }
           >
             <SurveyGroup
               loading={loading}

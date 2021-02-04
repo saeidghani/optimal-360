@@ -8,12 +8,12 @@ import {
   HomeOutlined,
   QuestionCircleOutlined,
   LeftOutlined,
-  TwitterOutlined,
+  LinkedinOutlined,
   InstagramOutlined,
   FacebookOutlined,
 } from '@ant-design/icons';
 
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
 import ProfileDropdown from './ProfileDropdown';
 import BreadCrumb from './BreadCrumb';
 import Tooltip from './Tooltip';
@@ -40,6 +40,7 @@ const ClientAdminLayout = ({
   const history = useHistory();
   const [parsedQuery, , setQuery] = useQuery();
   const { logo } = parsedQuery || {};
+  const dispatch = useDispatch();
 
   const profileDropdownOptions = [
     {
@@ -54,10 +55,7 @@ const ClientAdminLayout = ({
   ];
 
   const handleExport = async (sgId) => {
-    await axios({
-      method: 'get',
-      url: `/client-admin/survey-groups/${sgId}/overview/export`,
-    });
+    await dispatch?.clientAdmin?.generateReports(sgId);
   };
 
   return (
@@ -101,12 +99,9 @@ const ClientAdminLayout = ({
           {!isReferenceGuide && (
             <Fragment>
               <Tooltip title="export">
-                <img
-                  className="mr-5 cursor-pointer"
-                  src={exportIcon}
-                  onClick={() => handleExport(surveyGroupId)}
-                  alt=""
-                />
+                <a onClick={() => handleExport(surveyGroupId)} download>
+                  <img className="mr-5 cursor-pointer" src={exportIcon} alt="" />
+                </a>
               </Tooltip>
               <Tooltip title="print">
                 <img
@@ -156,7 +151,7 @@ const ClientAdminLayout = ({
           06740379
         </p>
         <div className="flex justify-between items-center col-start-8 col-span-5 md:col-start-11 md:col-span-2 lg:px-8 social">
-          <TwitterOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
+          <LinkedinOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
           <InstagramOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
           <FacebookOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
         </div>

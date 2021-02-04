@@ -6,7 +6,7 @@ import {
   HomeOutlined,
   QuestionCircleOutlined,
   LeftOutlined,
-  TwitterOutlined,
+  LinkedinOutlined,
   InstagramOutlined,
   FacebookOutlined,
 } from '@ant-design/icons';
@@ -39,6 +39,17 @@ const SurveyPlatformLayout = ({
       onClick: () => {
         Cookie.remove('token');
         history.push(dynamicMap.surveyPlatform.login());
+      },
+    },
+    {
+      key: 2,
+      title: 'Edit Demographic',
+      // eslint-disable-next-line no-undef
+      onClick: () => {
+        if (visitedSurveyGroups) {
+          localStorage.setItem('visitedSurveyGroups', JSON?.stringify(visitedSurveyGroups));
+        }
+        history.push(dynamicMap.surveyPlatform.information());
       },
     },
   ];
@@ -119,7 +130,7 @@ const SurveyPlatformLayout = ({
           className="flex justify-between items-center col-start-8 col-span-5
         md:col-start-11 md:col-span-2 lg:px-8"
         >
-          <TwitterOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
+          <LinkedinOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
           <InstagramOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
           <FacebookOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
         </div>
