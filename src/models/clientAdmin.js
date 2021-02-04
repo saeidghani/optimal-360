@@ -142,7 +142,7 @@ export default {
     },
 
     async generateReports(surveyGroupId) {
-      return actionWapper(
+      return actionWrapper(
         async () => {
           const res = await axios({
             method: 'get',
