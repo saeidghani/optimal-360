@@ -238,13 +238,9 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
     const showOrder =
       refArr?.length > 0 ? Math.max(...refArr.map((el) => el.showOrder * 1)) + 1 : 1;
 
-    // creating a unique id
-    const refArrIds = refArr?.length > 0 ? refArr.map((el) => el.id * 1) : [1];
-    const id = refArrIds.reduce((prevValue, currentValue) => prevValue + currentValue) + 1;
-
     return {
       index,
-      id,
+      id: Date.now(),
       showOrder,
       newAddedItem: true,
     };
@@ -254,7 +250,6 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
 
   if (!ids.clusterId && !isIndexValid(competencyIndex) && !isIndexValid(clusterIndex)) {
     // means that we're adding a cluster
-
     const { id, index, showOrder, newAddedItem } = generateNewItemProperties(clusters);
 
     const newCluster = {
@@ -274,7 +269,6 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
 
   if (isIndexValid(clusterIndex) && !isIndexValid(competencyIndex)) {
     // means that we're adding a competency
-
     const { id, index, showOrder, newAddedItem } = generateNewItemProperties(
       clusters[clusterIndex].competencies,
     );
@@ -294,7 +288,6 @@ const addItem = (oldClusters, ids, newItem, parsedQuery) => {
 
   if (isIndexValid(clusterIndex) && isIndexValid(competencyIndex)) {
     // means that we're adding a question
-
     const { id, index, showOrder, newAddedItem } = generateNewItemProperties(
       clusters[clusterIndex].competencies[competencyIndex].questions,
     );
