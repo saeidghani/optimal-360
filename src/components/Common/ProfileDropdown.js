@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Menu, Dropdown, Avatar } from 'antd';
 import { DownOutlined, UserOutlined, MoreOutlined } from '@ant-design/icons';
 
-const ProfileDropdown = ({ title, options, src, iconClassName }) => {
+const ProfileDropdown = ({ title, options, src, iconClassName, justUserOutline }) => {
   const _Menu = (
     <Menu>
       {options?.length > 0
@@ -40,8 +40,8 @@ const ProfileDropdown = ({ title, options, src, iconClassName }) => {
       <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
         <div className="hidden md:block">
           <Avatar src={src} className="bg-primary-500" icon={<UserOutlined />} />
-          <span className="mx-2 text-xs lg:text-base">{title}</span>
-          <DownOutlined className="text-xs" />
+          {title && <span className="mx-2 text-xs lg:text-base">{title}</span>}
+          {!justUserOutline && <DownOutlined className="text-xs" />}
         </div>
         <MoreOutlined className="md:hidden text-xl" />
       </a>
@@ -63,12 +63,14 @@ ProfileDropdown.propTypes = {
   ).isRequired,
   src: PropTypes.string,
   iconClassName: PropTypes.string,
+  justUserOutline: PropTypes.bool,
 };
 
 ProfileDropdown.defaultProps = {
   title: '',
   src: '',
   iconClassName: '',
+  justUserOutline: false,
 };
 
 export default ProfileDropdown;

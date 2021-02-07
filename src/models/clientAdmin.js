@@ -140,6 +140,25 @@ export default {
         return res;
       }, dispatch.util.errorHandler);
     },
+
+    async generateReports(surveyGroupId) {
+      return actionWrapper(
+        async () => {
+          const res = await axios({
+            method: 'get',
+            url: `/client-admin/survey-groups/${surveyGroupId}/overview/export`,
+            responseType: 'blob',
+          });
+
+          dispatch.util.saveZipFile({
+            res: res?.data,
+            filename: `report-project-${surveyGroupId}.zip`,
+          });
+        },
+        dispatch.util.errorHandler,
+        dispatch.util.alert,
+      );
+    },
   }),
 
   reducers: {
