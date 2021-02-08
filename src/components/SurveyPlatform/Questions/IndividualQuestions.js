@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -28,14 +28,26 @@ const IndividualQuestions = ({
   const [inputQuestionNumber, setInputQuestionNumber] = useState(questionNumber);
   const [jumpQuestion, setJumpQuestion] = useState('');
   const [jumpModalVisible, setJumpModalVisible] = useState(false);
+  const [progressAvg, setProgressAvg] = useState(0);
   const [nextIsDisabled, setNextIsDisabled] = useState(false);
   const [isFeedback, setIsFeedback] = useState(false);
+  const [exitModalVisible, setExitModalVisible] = useState(false);
+  const [exitPath, setExitPath] = useState('');
 
   useEffect(() => {
     if (surveyGroupId) {
       fetchRelations({ surveyGroupId });
     }
-  }, [fetchRelations, surveyGroupId]);
+  }, [fetchRelations, surveyGroupId, questionNumber]);
+
+  useEffect(() => {
+    const currentRelation =
+      relations?.data?.find(
+        (relation) => relation?.relationId?.toString() === relationId?.toString(),
+      ) || {};
+    const { totalAnswers, totalQuestions } = currentRelation;
+    setProgressAvg(parseInt((totalAnswers / totalQuestions) * 100, 10) || 0);
+  }, [relations?.timeStamp]);
 
   useEffect(() => {
     if (surveyGroupId && questionNumber && relationId) {
@@ -95,7 +107,7 @@ const IndividualQuestions = ({
     setNextIsDisabled(false);
   }, [questionNumber]);
 
-  const dataSource = React.useMemo(() => {
+  const dataSource = useMemo(() => {
     const rows = [];
     const row = {};
     // eslint-disable-next-line no-unused-expressions
@@ -123,7 +135,7 @@ const IndividualQuestions = ({
     return rows;
   }, [relations.timeStamp, questions.timeStamp]);
 
-  const ratees = React.useMemo(() => {
+  const ratees = useMemo(() => {
     const relation = relations?.data?.find(
       (rel) => rel?.relationId?.toString() === relationId?.toString(),
     );
@@ -294,6 +306,8 @@ const IndividualQuestions = ({
       hasBreadCrumb
       profileName={profileName}
       organizationSrc={organization?.data?.organizationLogo}
+      onSetExitModalVisible={setExitModalVisible}
+      onSetExitPath={setExitPath}
     >
       {!questions?.data?.isFeedback ? (
         <SelectQuestions
@@ -303,9 +317,14 @@ const IndividualQuestions = ({
           questions={questions}
           relationValues={relationValues}
           totalRelations={Object.keys(relationValues)?.length}
+          progressAvg={progressAvg}
           jumpModalVisible={jumpModalVisible}
           jumpQuestion={jumpQuestion}
           inputQuestionNumber={inputQuestionNumber}
+          exitModalVisible={exitModalVisible}
+          exitPath={exitPath}
+          onSetExitPath={setExitPath}
+          onSetExitModalVisible={setExitModalVisible}
           onSetRelationValues={handleSelectQuestionsRelationValues}
           onJumpOk={handleJumpOk}
           onJumpCancel={handleJumpCancel}
@@ -321,10 +340,15 @@ const IndividualQuestions = ({
           ratees={ratees}
           relationValues={relationValues}
           totalRelations={Object.keys(relationValues)?.length}
+          progressAvg={progressAvg}
           nextIsDisabled={nextIsDisabled}
           jumpModalVisible={jumpModalVisible}
           jumpQuestion={jumpQuestion}
           inputQuestionNumber={inputQuestionNumber}
+          exitModalVisible={exitModalVisible}
+          exitPath={exitPath}
+          onSetExitPath={setExitPath}
+          onSetExitModalVisible={setExitModalVisible}
           onSetRelationValues={handleFeedbackQuestionsRelationValues}
           onJumpOk={handleJumpOk}
           onJumpCancel={handleJumpCancel}

@@ -1,18 +1,14 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory, useParams } from 'react-router-dom';
 import { QuestionOutlined } from '@ant-design/icons';
 import arrayMove from 'array-move';
 
-import Input from '../../../Common/Input';
-import Button from '../../../Common/Button';
-import Progress from '../../../Common/Progress';
 import Table from '../../../Common/Table';
 import Radio from '../../../Common/Radio';
-import Modal from '../../../Common/Modal';
 import Tooltip from '../../../Common/Tooltip';
-import { dynamicMap } from '../../../../routes/RouteMap';
-import { stringify, useQuery } from '../../../../hooks/useQuery';
+import QuestionHeader from './QuestionHeader';
+import QuestionModals from './QuestionModals';
+import QuestionNav from './QuestionNav';
 
 const SelectQuestions = ({
   loading,
@@ -30,72 +26,12 @@ const SelectQuestions = ({
   dataSource,
   nextIsDisabled,
   jumpQuestion,
+  progressAvg,
+  exitModalVisible,
+  onSetExitModalVisible,
+  exitPath,
+  onSetExitPath,
 }) => {
-  const [exitModalVisible, setExitModalVisible] = useState(false);
-  const history = useHistory();
-  const [parsedQuery] = useQuery();
-  const { projectId } = parsedQuery || {};
-  const { questionNumber, surveyGroupId } = useParams();
-
-  const renderHeader = React.useCallback(() => {
-    return (
-      <div className="w-full">
-        {questions?.data?.totalQuestions && (
-          <React.Fragment>
-            <p>
-              {questionNumber}. {questions?.data?.question?.statement}
-              {questions?.data?.question?.required && <span className="text-red-500">*</span>}
-            </p>
-            <div className="flex justify-between">
-              <div className="inline-flex flex-col md:flex-row md:items-center mt-5">
-                <div className="w-40 -ml-12">
-                  {questions?.data?.totalQuestions && (
-                    <Progress
-                      showPercent={false}
-                      type="line"
-                      percentage={parseInt(
-                        (questionNumber / questions?.data?.totalQuestions) * 100,
-                        10,
-                      )}
-                    />
-                  )}
-                </div>
-                <span className="text-antgray-100 text-sm md:ml-4">Question</span>
-                <Input
-                  inputClass="w-20 ml-3"
-                  name="inputQuestionNumber"
-                  fixedHeightForErrorMessage={false}
-                  value={inputQuestionNumber}
-                  onChange={onSetInputQuestionNumber}
-                  onPressEnter={onInputPressEnter}
-                />
-                <span className="text-antgray-100 text-sm md:ml-4">
-                  of {questions?.data?.totalQuestions}
-                </span>
-              </div>
-              <div className="flex items-center justify-end md:my-auto">
-                <span className="mr-3">
-                  {parseInt(((questionNumber - 1) / questions?.data?.totalQuestions) * 100, 10)}%
-                </span>
-                <div className="w-12 h-12">
-                  {questions?.data?.totalQuestions && (
-                    <Progress
-                      showPercent={false}
-                      percentage={parseInt(
-                        ((questionNumber - 1) / questions?.data?.totalQuestions) * 100,
-                        10,
-                      )}
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-          </React.Fragment>
-        )}
-      </div>
-    );
-  }, [questions.timeStamp, nextIsDisabled, inputQuestionNumber]);
-
   const columns = React.useMemo(() => {
     const zeroScoreIndex = questions?.data?.options?.findIndex(
       ({ score }) => score?.toString() === '0',
@@ -158,73 +94,29 @@ const SelectQuestions = ({
     ];
   }, [relationValues, questions?.timeStamp]);
 
-  const handleNext = () => {
-    onNext();
-  };
-
-  const handleBack = () => {
-    if (questionNumber?.toString() === '1') {
-      setExitModalVisible(true);
-    } else {
-      onBack();
-    }
-  };
-
-  const handleExit = () => {
-    setExitModalVisible(false);
-    history.push(
-      `${dynamicMap.surveyPlatform.dashboard()}${stringify({ projectId, surveyGroupId })}`,
-    );
-  };
-
-  const handleContinueToAnswer = () => {
-    setExitModalVisible(false);
-  };
-
   return (
     <div>
-      <Modal
-        visible={exitModalVisible}
-        handleCancel={handleContinueToAnswer}
-        handleOk={handleExit}
-        width={588}
-        cancelText="Continue to Answer"
-        okText="Yes, Exit!"
-        okButtonProps={{ danger: true }}
-        cancelButtonProps={{ textClassName: 'text-red-500' }}
-      >
-        <div className="flex flex-col">
-          <span className="text-2xl mb-4">Attention!</span>
-          <p>You have not completed this survey, are you sure to exit?</p>
-        </div>
-      </Modal>
-      <Modal
-        visible={jumpModalVisible}
-        handleCancel={onJumpCancel}
-        handleOk={onJumpOk}
-        width={588}
-        cancelText="Cancel"
-        okText="Jump to this question"
-        footerClassName="flex-row-reverse sm:justify-start"
-        okButtonProps={{
-          textClassName: 'text-red-500',
-          className: 'bg-transparent border-none shadow-none hover:bg-transparent',
-        }}
-        cancelButtonProps={{
-          type: 'button',
-          danger: true,
-          className: 'bg-red-500 hover:bg-red-500 hover:opacity-50',
-          textClassName: 'text-white',
-        }}
-      >
-        <div className="flex flex-col">
-          <span className="text-2xl mb-4">Attention!</span>
-          <p>You have not answered question {jumpQuestion}, it’s required.</p>
-        </div>
-      </Modal>
+      <QuestionModals
+        jumpModalVisible={jumpModalVisible}
+        onJumpOk={onJumpOk}
+        onJumpCancel={onJumpCancel}
+        jumpQuestion={jumpQuestion}
+        exitModalVisible={exitModalVisible}
+        onSetExitModalVisible={onSetExitModalVisible}
+        exitPath={exitPath}
+        onSetExitPath={onSetExitPath}
+      />
       {questions?.data?.options && (
         <Fragment>
-          <div className="p-4 mt-6 bg-white rounded-lg shadow md:hidden">{renderHeader()}</div>
+          <div className="p-4 mt-6 bg-white rounded-lg shadow md:hidden">
+            <QuestionHeader
+              questions={questions?.data}
+              inputQuestionNumber={inputQuestionNumber}
+              onInputPressEnter={onInputPressEnter}
+              onSetInputQuestionNumber={onSetInputQuestionNumber}
+              progressAvg={progressAvg}
+            />
+          </div>
           <Table
             size="middle"
             className="c-table-last-column-divide p-4 mt-8 md:mt-16 md:p-6 bg-white rounded-lg shadow"
@@ -233,25 +125,27 @@ const SelectQuestions = ({
             loading={loading}
             columns={columns}
             dataSource={dataSource}
-            title={() => <div className="hidden md:block">{renderHeader()}</div>}
+            title={() => (
+              <div className="hidden md:block">
+                <QuestionHeader
+                  questions={questions?.data}
+                  inputQuestionNumber={inputQuestionNumber}
+                  onInputPressEnter={onInputPressEnter}
+                  onSetInputQuestionNumber={onSetInputQuestionNumber}
+                  progressAvg={progressAvg}
+                />
+              </div>
+            )}
             pageNumber={1}
             rowSelection={false}
             pagination={false}
           />
-          <div className="flex flex-col items-center md:flex-row-reverse">
-            <Button
-              className="mt-6 px-6 outline-none border-primary-500 shadow-none w-full md:w-auto md:border-none"
-              text="Next"
-              onClick={handleNext}
-              disabled={nextIsDisabled}
-            />
-            <Button
-              className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none
-          w-full md:mr-4 md:w-auto md:border-none"
-              text="Back"
-              onClick={handleBack}
-            />
-          </div>
+          <QuestionNav
+            onNext={onNext}
+            onBack={onBack}
+            nextIsDisabled={nextIsDisabled}
+            onSetExitModalVisible={onSetExitModalVisible}
+          />
         </Fragment>
       )}
     </div>
@@ -288,6 +182,11 @@ SelectQuestions.propTypes = {
   onInputPressEnter: PropTypes.func,
   onJumpOk: PropTypes.func,
   onJumpCancel: PropTypes.func,
+  progressAvg: PropTypes.number,
+  exitModalVisible: PropTypes.bool,
+  onSetExitModalVisible: PropTypes.func,
+  onSetExitPath: PropTypes.func,
+  exitPath: PropTypes.string,
 };
 
 SelectQuestions.defaultProps = {
@@ -297,12 +196,17 @@ SelectQuestions.defaultProps = {
   options: [{}],
   nextIsDisabled: false,
   jumpModalVisible: false,
+  exitModalVisible: false,
   inputQuestionNumber: '',
   jumpQuestion: '',
+  exitPath: '',
+  progressAvg: 0,
   onSetInputQuestionNumber: () => {},
   onInputPressEnter: () => {},
   onJumpOk: () => {},
   onJumpCancel: () => {},
+  onSetExitModalVisible: () => {},
+  onSetExitPath: () => {},
 };
 
 export default SelectQuestions;

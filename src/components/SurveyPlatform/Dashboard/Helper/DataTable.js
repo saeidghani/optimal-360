@@ -6,6 +6,10 @@ import Table from '../../../Common/Table';
 import Progress from '../../../Common/Progress';
 import { dynamicMap } from '../../../../routes/RouteMap';
 import { useQuery, stringify } from '../../../../hooks/useQuery';
+import {
+  findInitialIndividualQuestionNumber,
+  findInitialRateeGroupQuestionNumber,
+} from '../../../../lib/SurveyPlatform/questionsUtils';
 
 const DataTable = ({
   loading,
@@ -45,7 +49,7 @@ const DataTable = ({
     history.push(
       `${dynamicMap.surveyPlatform.individualQuestions({
         surveyGroupId,
-        questionNumber: 1,
+        questionNumber: findInitialIndividualQuestionNumber(projectId, surveyGroupId, key),
       })}${stringify({ relationId: key, projectId })}`,
     );
   };
@@ -56,7 +60,7 @@ const DataTable = ({
     history.push(
       `${dynamicMap.surveyPlatform.rateeGroupQuestions({
         surveyGroupId,
-        questionNumber: 1,
+        questionNumber: findInitialRateeGroupQuestionNumber(projectId, surveyGroupId, relationship),
       })}${stringify({ relation: relationship, projectId })}`,
     );
   };
