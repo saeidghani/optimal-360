@@ -173,7 +173,7 @@ const Dashboard = ({
     }
   }, [surveyGroups, surveyGroupId]);
 
-  const onSurveyGroupTabChange = (key) => {
+  const handleSurveyGroupTabChange = (key) => {
     setQuery({ surveyGroupId: key, viewBy: '', page_number: '', page_size: '' });
     fetchInfo({ surveyGroupId: key });
     setTimeout(() => {
@@ -290,7 +290,7 @@ const Dashboard = ({
         className="survey-group-tabs mt-4"
         defaultActiveKey={surveyGroupId}
         activeKey={surveyGroupId}
-        onChange={onSurveyGroupTabChange}
+        onChange={handleSurveyGroupTabChange}
       >
         {surveyGroups?.map((group) => (
           <TabPane

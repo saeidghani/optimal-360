@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 import moment from 'moment';
@@ -6,7 +6,8 @@ import moment from 'moment';
 import Progress from '../../../Common/Progress';
 import { useQuery } from '../../../../hooks';
 import graphIcon from '../../../../assets/images/graph-icon.svg';
-import DataTable from './DataTable';
+import RelationsTable from './RelationsTable';
+import { findProgressAvg } from '../../../../lib/SurveyPlatform/questionsUtils';
 
 const SurveyGroup = ({
   loading,
@@ -35,26 +36,9 @@ const SurveyGroup = ({
     }
   }, [fetchRelations, surveyGroupId]);
 
-  const totalAvg = React.useMemo(() => {
-    const avgs = [];
-    // eslint-disable-next-line no-unused-expressions
-    relations?.data?.forEach((item) => {
-      const avg = parseInt((item.totalAnswers / item.totalQuestions) * 100, 10);
-      avgs.push(avg);
-    });
-    let result = 0;
-    if (avgs?.length > 0) {
-      const avgsSum = avgs.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
-      result = parseInt(avgsSum / avgs.length, 10) || 0;
-    }
-    return result;
-  }, [relations.timeStamp]);
+  const progressAvg = useMemo(() => findProgressAvg(relations?.data), [relations.timeStamp]);
 
-  const onTabChange = (key) => {
-    setQuery({ surveyMode: key });
-  };
-
-  const surveyModes = React.useMemo(() => {
+  const surveyModes = useMemo(() => {
     const modes = [];
     if (info?.data?.surveyModeInUserDashboard) {
       // eslint-disable-next-line no-unused-expressions
@@ -92,6 +76,10 @@ const SurveyGroup = ({
     return { leftDays, leftHours };
   };
 
+  const handleTabChange = (key) => {
+    setQuery({ surveyMode: key });
+  };
+
   const deadlineInfo = (
     <div className="flex">
       <span className="text-xs md:text-sm">
@@ -120,12 +108,12 @@ const SurveyGroup = ({
         </span>
         <span className="mx-2 text-body text-sm">Status / Action:</span>
         <span className="text-heading text-xl">
-          {totalAvg === 0 ? 'Not started' : totalAvg === 100 ? 'Completed' : 'In progress'}
+          {progressAvg === 0 ? 'Not started' : progressAvg === 100 ? 'Completed' : 'In progress'}
         </span>
       </div>
       <Progress
         className="mt-10"
-        percentage={totalAvg}
+        percentage={progressAvg}
         subClassName="text-heading"
         status={isSubmitted ? 'sub' : ''}
         showPercent
@@ -160,11 +148,11 @@ const SurveyGroup = ({
             }
             defaultActiveKey={surveyMode}
             activeKey={surveyMode}
-            onChange={onTabChange}
+            onChange={handleTabChange}
           >
             {surveyModes?.map((mode) => (
               <TabPane tab={mode?.title} key={mode?.key}>
-                <DataTable
+                <RelationsTable
                   loading={loading}
                   relations={relations}
                   isSubmitted={isSubmitted}
