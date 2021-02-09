@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {
   MailOutlined,
   HomeOutlined,
@@ -28,8 +28,19 @@ const SurveyPlatformLayout = ({
   profileName,
   organizationSrc,
   visitedSurveyGroups,
+  onSetExitModalVisible,
+  onSetExitPath,
 }) => {
   const history = useHistory();
+
+  const handleNavItemClick = (path) => {
+    if (history.location.pathname.includes('questions')) {
+      onSetExitModalVisible(true);
+      onSetExitPath(path);
+    } else {
+      history.push(path);
+    }
+  };
 
   const profileDropdownOptions = [
     {
@@ -49,7 +60,7 @@ const SurveyPlatformLayout = ({
         if (visitedSurveyGroups) {
           localStorage.setItem('visitedSurveyGroups', JSON?.stringify(visitedSurveyGroups));
         }
-        history.push(dynamicMap.surveyPlatform.information());
+        handleNavItemClick(dynamicMap.surveyPlatform.information());
       },
     },
   ];
@@ -58,7 +69,7 @@ const SurveyPlatformLayout = ({
     if (visitedSurveyGroups) {
       localStorage.setItem('visitedSurveyGroups', JSON?.stringify(visitedSurveyGroups));
     }
-    history.push(dynamicMap.surveyPlatform.referenceGuide());
+    handleNavItemClick(dynamicMap.surveyPlatform.referenceGuide());
   };
 
   return (
@@ -74,12 +85,13 @@ const SurveyPlatformLayout = ({
         <div className="lg:ml-16">
           <img src={fetchFullURL(organizationSrc)} className="w-10 md:w-24" alt="" />
         </div>
-        <Link to={dynamicMap.surveyPlatform.dashboard()}>
-          <div className="flex justify-between items-center text-base">
-            <HomeOutlined />
-            <span className="ml-2 text-xs lg:text-base">Home</span>
-          </div>
-        </Link>
+        <div
+          className="flex justify-between items-center text-base cursor-pointer"
+          onClick={() => handleNavItemClick(dynamicMap.surveyPlatform.dashboard())}
+        >
+          <HomeOutlined />
+          <span className="ml-2 text-xs lg:text-base">Home</span>
+        </div>
         <div className="hidden sm:flex justify-between items-center text-gray-500 text-base">
           <MailOutlined />
           <span className="ml-2">
@@ -149,6 +161,8 @@ SurveyPlatformLayout.propTypes = {
   profileName: PropTypes.string,
   organizationSrc: PropTypes.string,
   visitedSurveyGroups: PropTypes.arrayOf(PropTypes.shape({})),
+  onSetExitModalVisible: PropTypes.func,
+  onSetExitPath: PropTypes.func,
 };
 
 SurveyPlatformLayout.defaultProps = {
@@ -160,6 +174,8 @@ SurveyPlatformLayout.defaultProps = {
   profileName: '',
   organizationSrc: '',
   visitedSurveyGroups: null,
+  onSetExitModalVisible: () => {},
+  onSetExitPath: () => {},
 };
 
 export default SurveyPlatformLayout;

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -6,8 +6,12 @@ import Table from '../../../Common/Table';
 import Progress from '../../../Common/Progress';
 import { dynamicMap } from '../../../../routes/RouteMap';
 import { useQuery, stringify } from '../../../../hooks/useQuery';
+import {
+  findInitialIndividualQuestionNumber,
+  findInitialRateeGroupQuestionNumber,
+} from '../../../../lib/SurveyPlatform/questionsUtils';
 
-const DataTable = ({
+const RelationsTable = ({
   loading,
   extraDetails,
   className,
@@ -45,7 +49,7 @@ const DataTable = ({
     history.push(
       `${dynamicMap.surveyPlatform.individualQuestions({
         surveyGroupId,
-        questionNumber: 1,
+        questionNumber: findInitialIndividualQuestionNumber(projectId, surveyGroupId, key),
       })}${stringify({ relationId: key, projectId })}`,
     );
   };
@@ -56,12 +60,12 @@ const DataTable = ({
     history.push(
       `${dynamicMap.surveyPlatform.rateeGroupQuestions({
         surveyGroupId,
-        questionNumber: 1,
+        questionNumber: findInitialRateeGroupQuestionNumber(projectId, surveyGroupId, relationship),
       })}${stringify({ relation: relationship, projectId })}`,
     );
   };
 
-  const allAndIndividualColumns = React.useMemo(() => {
+  const allAndIndividualColumns = useMemo(() => {
     const columns = [
       {
         key: 'rateeName',
@@ -133,7 +137,7 @@ const DataTable = ({
     return columns;
   }, [surveyMode, sort]);
 
-  const groupColumns = React.useMemo(() => [
+  const groupColumns = useMemo(() => [
     {
       key: 'relationship',
       title: <span className="pl-4">Relationship</span>,
@@ -223,7 +227,7 @@ const DataTable = ({
     return avg === 0 ? 'Not started' : avg === 100 ? 'Completed' : 'In progress';
   };
 
-  const allAndIndividualDataSource = React.useMemo(
+  const allAndIndividualDataSource = useMemo(
     () =>
       relations?.data?.map(
         ({ rateeName, raterGroupName, relationId, totalAnswers, totalQuestions }) => {
@@ -241,7 +245,7 @@ const DataTable = ({
     [relations.timeStamp],
   );
 
-  const groupDataSource = React.useMemo(() => {
+  const groupDataSource = useMemo(() => {
     const rows = [];
     const raterGroupNames = relations?.data?.map(({ raterGroupName }) => raterGroupName);
     const items = {};
@@ -303,7 +307,7 @@ const DataTable = ({
   );
 };
 
-DataTable.propTypes = {
+RelationsTable.propTypes = {
   loading: PropTypes.bool.isRequired,
   isSubmitted: PropTypes.bool,
   extraDetails: PropTypes.node,
@@ -318,7 +322,7 @@ DataTable.propTypes = {
   resetQuestions: PropTypes.func.isRequired,
 };
 
-DataTable.defaultProps = {
+RelationsTable.defaultProps = {
   className: '',
   tableClassName: '',
   extraDetailsClassName: '',
@@ -328,4 +332,4 @@ DataTable.defaultProps = {
   visitedSurveyGroups: [{}],
 };
 
-export default DataTable;
+export default RelationsTable;

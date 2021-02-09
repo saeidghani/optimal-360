@@ -14,6 +14,7 @@ import { dynamicMap } from '../../../routes/RouteMap';
 
 import SurveyGroup from './Helper/SurveyGroup';
 import Welcome from './Helper/Welcome';
+import { findInitialAllQuestionNumber } from '../../../lib/SurveyPlatform/questionsUtils';
 
 const Dashboard = ({
   loading,
@@ -172,7 +173,7 @@ const Dashboard = ({
     }
   }, [surveyGroups, surveyGroupId]);
 
-  const onSurveyGroupTabChange = (key) => {
+  const handleSurveyGroupTabChange = (key) => {
     setQuery({ surveyGroupId: key, viewBy: '', page_number: '', page_size: '' });
     fetchInfo({ surveyGroupId: key });
     setTimeout(() => {
@@ -187,7 +188,7 @@ const Dashboard = ({
       history.push(
         `${dynamicMap.surveyPlatform.allRateesQuestions({
           surveyGroupId,
-          questionNumber: 1,
+          questionNumber: findInitialAllQuestionNumber(projectId, surveyGroupId),
         })}${stringify({ projectId })}`,
       );
     }
@@ -278,7 +279,7 @@ const Dashboard = ({
             options={projectsList}
           />
         </div>
-        <p className="col-start-5 col-span-7">
+        <p className="ml-4 col-start-5 col-span-7">
           Welcome to your Dashboard! At any time you would like to know how to navigate the
           Dashboard, please go to the <span className="font-bold">Reference Guide</span> at the top
           of the page. Please select <span className="font-bold">Instructions Page</span> at the top
@@ -289,7 +290,7 @@ const Dashboard = ({
         className="survey-group-tabs mt-4"
         defaultActiveKey={surveyGroupId}
         activeKey={surveyGroupId}
-        onChange={onSurveyGroupTabChange}
+        onChange={handleSurveyGroupTabChange}
       >
         {surveyGroups?.map((group) => (
           <TabPane
