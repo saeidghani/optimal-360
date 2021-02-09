@@ -4,6 +4,7 @@ import { Tabs } from 'antd';
 import moment from 'moment';
 
 import Progress from '../../../Common/Progress';
+import Tooltip from '../../../Common/Tooltip';
 import { useQuery } from '../../../../hooks';
 import graphIcon from '../../../../assets/images/graph-icon.svg';
 import RelationsTable from './RelationsTable';
@@ -49,14 +50,18 @@ const SurveyGroup = ({
             case 'allRatees':
               newMode.title = 'All';
               newMode.key = 'all';
+              newMode.toolTip = 'Select All if you would like to rate all ratees together';
               break;
             case 'ratingGroup':
               newMode.title = 'Group';
               newMode.key = 'group';
+              newMode.toolTip = 'Select Group if you would like to rate people as a group';
               break;
             default:
               newMode.title = 'Individual';
               newMode.key = 'individual';
+              newMode.toolTip =
+                'Select Individual if you would like to rate each person separately';
           }
           if (newMode.title) modes.push(newMode);
         }
@@ -151,31 +156,33 @@ const SurveyGroup = ({
             onChange={handleTabChange}
           >
             {surveyModes?.map((mode) => (
-              <TabPane tab={mode?.title} key={mode?.key}>
-                <RelationsTable
-                  loading={loading}
-                  relations={relations}
-                  isSubmitted={isSubmitted}
-                  visitedSurveyGroups={visitedSurveyGroups}
-                  resetQuestions={resetQuestions}
-                  className={`${
-                    mode?.key === 'all'
-                      ? 'md:grid grid-cols-8 md:mt-0'
-                      : 'pt-4 mt-8 md:mt-0 md:pt-6 bg-white rounded-lg shadow overflow-auto'
-                  }`}
-                  tableClassName={`${
-                    mode?.key === 'all' ? 'col-span-5 overflow-auto' : 'overflow-auto'
-                  }`}
-                  extraDetailsClassName={`${
-                    mode?.key === 'all' ? 'row-start-1 col-start-6 col-span-3' : ''
-                  }`}
-                  extraDetails={
-                    mode?.key === 'all' ? (
-                      <div className="hidden md:block">{extraDetails}</div>
-                    ) : null
-                  }
-                />
-              </TabPane>
+              <Tooltip title={mode.toolTip}>
+                <TabPane tab={mode?.title} key={mode?.key}>
+                  <RelationsTable
+                    loading={loading}
+                    relations={relations}
+                    isSubmitted={isSubmitted}
+                    visitedSurveyGroups={visitedSurveyGroups}
+                    resetQuestions={resetQuestions}
+                    className={`${
+                      mode?.key === 'all'
+                        ? 'md:grid grid-cols-8 md:mt-0'
+                        : 'pt-4 mt-8 md:mt-0 md:pt-6 bg-white rounded-lg shadow overflow-auto'
+                    }`}
+                    tableClassName={`${
+                      mode?.key === 'all' ? 'col-span-5 overflow-auto' : 'overflow-auto'
+                    }`}
+                    extraDetailsClassName={`${
+                      mode?.key === 'all' ? 'row-start-1 col-start-6 col-span-3' : ''
+                    }`}
+                    extraDetails={
+                      mode?.key === 'all' ? (
+                        <div className="hidden md:block">{extraDetails}</div>
+                      ) : null
+                    }
+                  />
+                </TabPane>
+              </Tooltip>
             ))}
           </Tabs>
         </Fragment>

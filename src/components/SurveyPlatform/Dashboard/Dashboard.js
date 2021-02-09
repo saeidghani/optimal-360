@@ -8,6 +8,7 @@ import Layout from '../../Common/SurveyPlatformLayout';
 import Modal from '../../Common/Modal';
 import Button from '../../Common/Button';
 import Dropdown from '../../Common/Dropdown';
+import Tooltip from '../../Common/Tooltip';
 import { useQuery } from '../../../hooks';
 import { stringify } from '../../../hooks/useQuery';
 import { dynamicMap } from '../../../routes/RouteMap';
@@ -318,19 +319,23 @@ const Dashboard = ({
       {!loading && surveyGroups?.length > 0 && (
         <div className="md:flex justify-end">
           {surveyMode === 'all' && !isSubmitted && (
-            <Button
-              onClick={handleContinue}
-              className="mt-6 mr-3 w-full md:w-auto"
-              text="Continue Rating"
-            />
+            <Tooltip title="Continue where you left off or if you need to review completed ratings">
+              <Button
+                onClick={handleContinue}
+                className="mt-6 mr-3 w-full md:w-auto"
+                text="Continue Rating"
+              />
+            </Tooltip>
           )}
-          <Button
-            onClick={handleSubmit}
-            className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none
+          <Tooltip title="Submit All only becomes available when Total Completion Rate is 100%">
+            <Button
+              onClick={handleSubmit}
+              className="mt-6 bg-transparent text-primary-500 outline-none border-primary-500 shadow-none
           w-full md:w-auto md:border-none"
-            text="Submit All"
-            disabled={isSubmitted || !canSubmit}
-          />
+              text="Submit All"
+              disabled={isSubmitted || !canSubmit}
+            />
+          </Tooltip>
         </div>
       )}
     </Layout>
