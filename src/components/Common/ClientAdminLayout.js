@@ -17,7 +17,7 @@ import { useDispatch } from 'react-redux';
 import ProfileDropdown from './ProfileDropdown';
 import BreadCrumb from './BreadCrumb';
 import Tooltip from './Tooltip';
-import optimal360Logo from '../../assets/images/optimal360Logo.png';
+import optimal360Logo from '../../assets/images/optimal-360-logo.svg';
 import { dynamicMap } from '../../routes/RouteMap';
 import { fetchFullURL } from '../../lib/utils';
 import exportIcon from '../../assets/images/export-icon.svg';
@@ -67,7 +67,7 @@ const ClientAdminLayout = ({
         className="bg-white w-full hidden md:flex justify-between items-center header
       px-4 py-6 lg:px-20 lg:py-10"
       >
-        <img src={optimal360Logo} alt="" />
+        <img src={optimal360Logo} className="w-40" alt="" />
         <div className="lg:ml-16">
           <img
             src={organizationSrc ? fetchFullURL(organizationSrc) : fetchFullURL(logo)}

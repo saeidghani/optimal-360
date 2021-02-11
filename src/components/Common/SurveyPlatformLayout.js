@@ -9,12 +9,13 @@ import {
   LinkedinOutlined,
   InstagramOutlined,
   FacebookOutlined,
+  WechatOutlined,
 } from '@ant-design/icons';
 import Cookie from 'js-cookie';
 
 import ProfileDropdown from './ProfileDropdown';
 import { dynamicMap } from '../../routes/RouteMap';
-import logo from '../../assets/images/optimal360Logo.png';
+import logo from '../../assets/images/optimal-360-logo.svg';
 import BreadCrumb from './BreadCrumb';
 import { fetchFullURL } from '../../lib/utils';
 
@@ -81,7 +82,7 @@ const SurveyPlatformLayout = ({
         className="bg-white w-full hidden md:flex justify-between items-center
       px-4 py-6 lg:px-20 lg:py-10"
       >
-        <img src={logo} alt="" />
+        <img src={logo} className="w-40" alt="" />
         <div className="lg:ml-16">
           <img src={fetchFullURL(organizationSrc)} className="w-10 md:w-24" alt="" />
         </div>
@@ -139,12 +140,33 @@ const SurveyPlatformLayout = ({
           06740379
         </p>
         <div
-          className="flex justify-between items-center col-start-8 col-span-5
+          className="flex justify-between space-x-2 items-center col-start-8 col-span-5
         md:col-start-11 md:col-span-2 lg:px-8"
         >
-          <LinkedinOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
-          <InstagramOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
-          <FacebookOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
+          <a href="https://www.facebook.com/optimalconsultants" target="_blank" rel="noreferrer">
+            <LinkedinOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
+          </a>
+          <a
+            href="https://www.instagram.com/optimalasia/?ref=badge"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <InstagramOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
+          </a>
+          <a
+            href="https://www.linkedin.com/company/optimal-consulting-group-pte-ltd"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <FacebookOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
+          </a>
+          <a
+            href="https://www.optimalconsulting.com.sg/FileStore/product/160_optimal-wechat.jpg"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <WechatOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
+          </a>
         </div>
       </div>
     </div>
