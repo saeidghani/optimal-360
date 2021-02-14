@@ -237,7 +237,7 @@ export default {
       return actionWapper(async () => {
         const res = await axios({
           method: 'post',
-          url: '/super-user/survey-groups/demographic-data/export',
+          url: '/super-user/survey-groups/demographic-data-answer/export',
           data: {
             surveyGroupIds,
             fields,
@@ -635,6 +635,5 @@ export default {
       ...state,
       importRelationError: payload,
     }),
-
   },
 };
