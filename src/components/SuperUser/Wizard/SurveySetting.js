@@ -142,9 +142,9 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
   const initialValues = React.useMemo(() => {
     return {
       surveySetting: {
-        startDate: surveySetting?.startDate || '',
+        startDate: surveySetting?.startDate || moment(),
         endDate: surveySetting?.endDate || '',
-        itemCaution: surveySetting?.itemCaution || 0,
+        itemCaution: surveySetting?.itemCaution || 2,
       },
       raterGroups: formatRaterGroupItems(raterGroups),
       surveyModeInUserDashboard: {
@@ -283,8 +283,9 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
         ) : null}
 
         <div
-          className={`px-6 py-5 col-span-10 ${parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
-            } `}
+          className={`px-6 py-5 col-span-10 ${
+            parsedQuery?.wizardEditMode ? 'col-start-2' : 'col-start-3'
+          } `}
         >
           <Steps wizardSteps currentPosition={0} />
 
@@ -310,7 +311,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
                 const params = history?.location?.search;
 
                 history.push(`${path}${params}`);
-              } catch (error) { }
+              } catch (error) {}
             }}
           >
             {({ values, errors, touched, handleSubmit, setFieldValue }) => (

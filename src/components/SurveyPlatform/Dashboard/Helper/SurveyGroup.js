@@ -4,6 +4,7 @@ import { Tabs } from 'antd';
 import moment from 'moment';
 
 import Progress from '../../../Common/Progress';
+import Tooltip from '../../../Common/Tooltip';
 import { useQuery } from '../../../../hooks';
 import graphIcon from '../../../../assets/images/graph-icon.svg';
 import RelationsTable from './RelationsTable';
@@ -49,14 +50,18 @@ const SurveyGroup = ({
             case 'allRatees':
               newMode.title = 'All';
               newMode.key = 'all';
+              newMode.tooltip = 'Select All if you would like to rate all ratees together';
               break;
             case 'ratingGroup':
               newMode.title = 'Group';
               newMode.key = 'group';
+              newMode.tooltip = 'Select Group if you would like to rate people as a group';
               break;
             default:
               newMode.title = 'Individual';
               newMode.key = 'individual';
+              newMode.tooltip =
+                'Select Individual if you would like to rate each person separately';
           }
           if (newMode.title) modes.push(newMode);
         }
@@ -151,7 +156,14 @@ const SurveyGroup = ({
             onChange={handleTabChange}
           >
             {surveyModes?.map((mode) => (
-              <TabPane tab={mode?.title} key={mode?.key}>
+              <TabPane
+                tab={
+                  <Tooltip title={mode?.tooltip}>
+                    <span>{mode?.title}</span>
+                  </Tooltip>
+                }
+                key={mode?.key}
+              >
                 <RelationsTable
                   loading={loading}
                   relations={relations}

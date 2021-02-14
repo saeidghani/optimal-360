@@ -6,12 +6,12 @@ import { Formik, Form } from 'formik';
 
 import { map } from '../../../routes/RouteMap';
 
-import Logo from '../../Common/Logo';
 import Input from '../../Common/Input';
 import Checkbox from '../../Common/Checkbox';
 import Button from '../../Common/Button';
 
 import Shape from './Helper/AnimatedShape';
+import optimal360Logo from '../../../assets/images/optimal-360-logo.svg';
 
 const Login = ({ login, loading }) => {
   const schema = yup.object({
@@ -25,7 +25,7 @@ const Login = ({ login, loading }) => {
   return (
     <div className="min-h-screen bg-white relative flex flex-row items-center justify-center">
       <div className="absolute top-0 left-0 flex flex-row pl-8 pt-6 md:pl-20 lg:pl-32 lg:pt-8">
-        <Logo />
+        <img src={optimal360Logo} className="w-40" alt="" />
       </div>
       <div className="grid grid-cols-12 gap-x-4x w-full xl:mt-16">
         <div

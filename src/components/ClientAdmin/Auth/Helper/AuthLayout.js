@@ -6,8 +6,7 @@ import ProfileDropdown from '../../../Common/ProfileDropdown';
 
 import { dynamicMap } from '../../../../routes/RouteMap';
 
-import optimal360Logo from '../../../../assets/images/optimal360Logo.png';
-import optimal360MiniLogo from '../../../../assets/images/optimal360MiniLogo.png';
+import optimal360Logo from '../../../../assets/images/optimal-360-logo.svg';
 
 const Layout = ({ children, className, wrapperClassName, isLogin }) => {
   const profileDropdownOptions = [
@@ -35,8 +34,7 @@ const Layout = ({ children, className, wrapperClassName, isLogin }) => {
       } ${wrapperClassName}`}
     >
       <div className="w-full flex flex-row justify-between items-center px-8 py-6 md:px-20 lg:px-32 lg:py-10">
-        <img src={optimal360Logo} className="hidden md:block" alt="" />
-        <img src={optimal360MiniLogo} className="block md:hidden" alt="" />
+        <img src={optimal360Logo} className="w-40" alt="" />
         {isLogin && (
           <div className="flex justify-between items-center">
             <div className="hidden sm:flex justify-between items-center text-gray-500 text-base">

@@ -83,7 +83,7 @@ const SurveyGroups = ({
           ) : null}
 
           <Button
-            text="Export Demographic Data"
+            text="Export Survey"
             size="middle"
             textSize="xs"
             onClick={() => setIsExportModalVisible(true)}
@@ -91,47 +91,47 @@ const SurveyGroups = ({
 
           <h3 className="font-normal ml-3">Selected {selectedRows.length} items</h3>
         </div>
-      ) :
-        (
-          <div className="flex flex-row justify-between items-center">
-            <p className="font-normal text-xs leading-4">
-              {surveyGroupProject.name && surveyGroupProject.organization?.name
-                ? `${surveyGroupProject.name} | ${surveyGroupProject.organization.name}`
-                : ''}
-            </p>
+      ) : (
+        <div className="flex flex-row justify-between items-center">
+          <p className="font-normal text-xs leading-4">
+            {surveyGroupProject.name && surveyGroupProject.organization?.name
+              ? `${surveyGroupProject.name} | ${surveyGroupProject.organization.name}`
+              : ''}
+          </p>
 
-            <div className="flex flex-row items-center">
-              <Button
-                onClick={() => {
-                  // eslint-disable-next-line max-len
-                  const path = `${dynamicMap.superUser.addOrganization()}?prevUrl=${history?.location?.pathname
-                    }`;
+          <div className="flex flex-row items-center">
+            <Button
+              onClick={() => {
+                // eslint-disable-next-line max-len
+                const path = `${dynamicMap.superUser.addOrganization()}?prevUrl=${
+                  history?.location?.pathname
+                }`;
 
-                  history.push(path);
-                }}
-                size="middle"
-                textSize="xs"
-                text="New Organization"
-                type="gray"
-                className="ml-3"
-              />
+                history.push(path);
+              }}
+              size="middle"
+              textSize="xs"
+              text="New Organization"
+              type="gray"
+              className="ml-3"
+            />
 
-              <Button
-                onClick={() => {
-                  const path = dynamicMap.superUser.editProject();
-                  const params = stringify({ projectId });
+            <Button
+              onClick={() => {
+                const path = dynamicMap.superUser.editProject();
+                const params = stringify({ projectId });
 
-                  history.push(`${path}${params}`);
-                }}
-                size="middle"
-                textSize="xs"
-                text="Edit Project"
-                type="gray"
-                className="ml-3"
-              />
-            </div>
+                history.push(`${path}${params}`);
+              }}
+              size="middle"
+              textSize="xs"
+              text="Edit Project"
+              type="gray"
+              className="ml-3"
+            />
           </div>
-        );
+        </div>
+      );
     },
     // eslint-disable-next-line
     [surveyGroups.timeStamp, loading, setQuery, selectedRows.length],
@@ -153,7 +153,7 @@ const SurveyGroups = ({
         surveyGroupId,
       });
       // eslint-disable-next-line no-empty
-    } catch (err) { }
+    } catch (err) {}
   };
 
   const columns = React.useMemo(
@@ -188,8 +188,8 @@ const SurveyGroups = ({
               textClassName="underline text-primary-500"
             />
           ) : (
-              name
-            );
+            name
+          );
         },
         sorter: (a, b) => a.name > b.name,
         sortOrder: getSortOrder('name'),

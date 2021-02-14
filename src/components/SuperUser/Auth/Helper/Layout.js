@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Logo from '../../../Common/Logo';
+import optimal360Logo from '../../../../assets/images/optimal-360-logo.svg';
 
 const Layout = ({ children, className, wrapperClassName }) => (
   <div
@@ -9,7 +9,7 @@ const Layout = ({ children, className, wrapperClassName }) => (
        ${wrapperClassName}`}
   >
     <div className="absolute top-0 left-0 flex flex-row pl-8 pt-6 md:pl-20 lg:pl-32 lg:pt-12">
-      <Logo />
+      <img src={optimal360Logo} className="w-40" alt="" />
     </div>
 
     <div
