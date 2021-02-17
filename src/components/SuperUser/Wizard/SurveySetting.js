@@ -144,7 +144,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
       surveySetting: {
         startDate: surveySetting?.startDate || moment(),
         endDate: surveySetting?.endDate || '',
-        itemCaution: surveySetting?.itemCaution || 2,
+        itemCaution: surveySetting?.itemCaution || 30,
       },
       raterGroups: formatRaterGroupItems(raterGroups),
       surveyModeInUserDashboard: {

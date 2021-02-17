@@ -41,11 +41,23 @@ const SurveyQuestionsList = ({
   loading,
 }) => {
   const _ratingScales = [
-    { score: 0, description: '', label: '' },
-    { score: 1, description: '', label: '' },
-    { score: 2, description: '', label: '' },
-    { score: 3, description: '', label: '' },
-    { score: 4, description: '', label: '' },
+    {
+      score: 0,
+      description: 'Unable to rate behaviour or no opportunity to observe behaviour',
+      label: 'Not Clear',
+    },
+    { score: 1, description: 'Behaviour never shown, or never observed', label: 'Not at All' },
+    {
+      score: 2,
+      description: 'Behaviour rarely shown, maybe under specific circumstances',
+      label: 'Not Much',
+    },
+    {
+      score: 3,
+      description: 'Behaviour shown over half the time, but not always',
+      label: 'Somewhat',
+    },
+    { score: 4, description: 'Behaviour shown almost always (90% of the time)', label: 'Most' },
   ];
 
   const formRef = React.useRef();
@@ -507,7 +519,7 @@ const SurveyQuestionsList = ({
             {({ values, errors, touched, handleSubmit }) => (
               <Form className="pr-28" onSubmit={handleSubmit}>
                 <h4 className="text-secondary text-lg mb-8 mt-17">Rating Scale</h4>
-                <pre></pre>
+                <pre />
 
                 {values.ratingScales.map((row, i) => (
                   <div key={i} className="grid grid-cols-12">
