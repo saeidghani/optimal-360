@@ -25,7 +25,7 @@ const Login = ({ login, loading }) => {
   return (
     <div className="min-h-screen bg-white relative flex flex-row items-center justify-center">
       <div className="absolute top-0 left-0 flex flex-row pl-8 pt-6 md:pl-20 lg:pl-32 lg:pt-8">
-        <img src={optimal360Logo} className="w-40" alt="" />
+        <img src={optimal360Logo} className="w-40 h-12 object-contain" alt="" />
       </div>
       <div className="grid grid-cols-12 gap-x-4x w-full xl:mt-16">
         <div
