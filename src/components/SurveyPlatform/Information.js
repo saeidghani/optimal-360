@@ -41,7 +41,7 @@ const Information = ({ loading, fetchProfile, updateProfile, profile, organizati
       ageGroup,
       lengthOfService,
     } = profile?.data || {};
-    setSelectedSex(sex || 'female');
+    setSelectedSex(sex || '');
     setSelectItems({
       employmentLocation: employmentLocation || '',
       sector: sector || '',

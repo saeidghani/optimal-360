@@ -205,6 +205,33 @@ const IndividualQuestions = ({
     }
   };
 
+  const submitResponseOnNavClick = async () => {
+    const { response, responses } = responseHandler();
+
+    if (
+      questions?.data?.question?.required &&
+      ((!isFeedback && response?.questionResponse === null) ||
+        (isFeedback && !response?.feedbackResponse))
+    ) {
+      setNextIsDisabled(false);
+      return;
+    }
+    setNextIsDisabled(false);
+
+    if (questionNumber <= questions?.data?.totalQuestions) {
+      const questionId = questions?.data?.question?.id;
+      const body = {
+        isFeedback,
+        responses,
+      };
+      try {
+        await addQuestionResponses({ surveyGroupId, questionId, ...body });
+        setRelationValues({});
+        setNextIsDisabled(false);
+      } catch (errors) {}
+    }
+  };
+
   const goBack = () => {
     history.push(
       `${dynamicMap.surveyPlatform.individualQuestions({
@@ -308,6 +335,7 @@ const IndividualQuestions = ({
       organizationSrc={organization?.data?.organizationLogo}
       onSetExitModalVisible={setExitModalVisible}
       onSetExitPath={setExitPath}
+      onSubmit={submitResponseOnNavClick}
     >
       {!questions?.data?.isFeedback ? (
         <SelectQuestions

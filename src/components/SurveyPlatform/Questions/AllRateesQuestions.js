@@ -214,6 +214,25 @@ const AllRateesQuestions = ({
     }
   };
 
+  const submitResponseOnNavClick = async () => {
+    const responses = responseHandler();
+    if (responses?.length !== Object.keys(relationValues)?.length) {
+      return;
+    }
+    const questionId = questions?.data?.question?.id;
+    if (questionNumber <= questions?.data?.totalQuestions) {
+      const body = {
+        isFeedback,
+        responses,
+      };
+      try {
+        await addQuestionResponses({ surveyGroupId, questionId, ...body });
+        setRelationValues({});
+        setNextIsDisabled(false);
+      } catch (errors) {}
+    }
+  };
+
   const goBack = () => {
     history.push(
       `${dynamicMap.surveyPlatform.allRateesQuestions({
@@ -317,6 +336,7 @@ const AllRateesQuestions = ({
       organizationSrc={organization?.data?.organizationLogo}
       onSetExitModalVisible={setExitModalVisible}
       onSetExitPath={setExitPath}
+      onSubmit={submitResponseOnNavClick}
     >
       {!questions?.data?.isFeedback ? (
         <SelectQuestions

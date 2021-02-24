@@ -226,6 +226,24 @@ const RateeGroupQuestions = ({
     }
   };
 
+  const submitResponseOnNavClick = async () => {
+    const responses = responseHandler();
+    if (responses?.length !== Object.keys(relationValues)?.length) {
+      return;
+    }
+    if (questionNumber <= questions?.data?.totalQuestions) {
+      const questionId = questions?.data?.question?.id;
+      const body = {
+        isFeedback,
+        responses,
+      };
+      try {
+        await addQuestionResponses({ surveyGroupId, questionId, ...body });
+        setRelationValues({});
+      } catch (errors) {}
+    }
+  };
+
   const goBack = () => {
     history.push(
       `${dynamicMap.surveyPlatform.rateeGroupQuestions({
@@ -333,6 +351,7 @@ const RateeGroupQuestions = ({
       organizationSrc={organization?.data?.organizationLogo}
       onSetExitModalVisible={setExitModalVisible}
       onSetExitPath={setExitPath}
+      onSubmit={submitResponseOnNavClick}
     >
       {!questions?.data?.isFeedback ? (
         <SelectQuestions
