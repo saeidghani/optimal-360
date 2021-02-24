@@ -38,7 +38,7 @@ const RateeGroupQuestions = ({
     if (surveyGroupId) {
       fetchRelations({ surveyGroupId });
     }
-  }, [fetchRelations, surveyGroupId]);
+  }, [fetchRelations, surveyGroupId, questionNumber]);
 
   const progressAvg = useMemo(() => {
     const relationsGroup = relations?.data?.filter(

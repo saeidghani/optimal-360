@@ -44,7 +44,7 @@ const AllRateesQuestions = ({
     if (surveyGroupId) {
       fetchRelations({ surveyGroupId });
     }
-  }, [fetchRelations, surveyGroupId]);
+  }, [fetchRelations, surveyGroupId, questionNumber]);
 
   useEffect(() => {
     if (surveyGroupId && questionNumber && allRelationIds?.length > 0) {
