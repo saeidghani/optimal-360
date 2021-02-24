@@ -31,11 +31,13 @@ const SurveyPlatformLayout = ({
   visitedSurveyGroups,
   onSetExitModalVisible,
   onSetExitPath,
+  onSubmit,
 }) => {
   const history = useHistory();
 
   const handleNavItemClick = (path) => {
     if (history.location.pathname.includes('questions')) {
+      onSubmit();
       onSetExitModalVisible(true);
       onSetExitPath(path);
     } else {
@@ -185,6 +187,7 @@ SurveyPlatformLayout.propTypes = {
   visitedSurveyGroups: PropTypes.arrayOf(PropTypes.shape({})),
   onSetExitModalVisible: PropTypes.func,
   onSetExitPath: PropTypes.func,
+  onSubmit: PropTypes.func,
 };
 
 SurveyPlatformLayout.defaultProps = {
@@ -198,6 +201,7 @@ SurveyPlatformLayout.defaultProps = {
   visitedSurveyGroups: null,
   onSetExitModalVisible: () => {},
   onSetExitPath: () => {},
+  onSubmit: () => {},
 };
 
 export default SurveyPlatformLayout;
