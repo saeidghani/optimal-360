@@ -32,14 +32,7 @@ const SurveyGroup = ({
   return (
     <div>
       {surveyGroupId && <ViewByButtons />}
-      <OverallCompletion
-        totalRatees={completionRate?.data?.totalRatees}
-        totalRaters={completionRate?.data?.totalRaters}
-        totalSurveySubmissionRate={completionRate?.data?.totalSurveySubmissionRate}
-        totalSurveyRate={completionRate?.data?.totalSurveyRate}
-        totalAnsweredRate={completionRate?.data?.totalAnsweredRate}
-        totalQuestionRate={completionRate?.data?.totalQuestionRate}
-      />
+      <OverallCompletion {...completionRate?.data} />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 mt-10">
         {(completionRate?.data?.raterGroups || []).map((data) => (
           <RateCard {...data} />
