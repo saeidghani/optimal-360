@@ -25,7 +25,7 @@ const OrganizationsNewStaff = ({ addNewOrganizationStaff, loading }) => {
       .string()
       .min(8, 'password must  be at least 8 characters long')
       .required('password field is required'),
-    department: yup.string().required('Department field is required'),
+    department: yup.string(),
     jobDesignation: yup.string().required('Job Designation field is required'),
   });
 
