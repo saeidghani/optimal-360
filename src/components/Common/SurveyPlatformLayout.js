@@ -145,7 +145,7 @@ const SurveyPlatformLayout = ({
           className="flex justify-between space-x-2 items-center col-start-8 col-span-5
         md:col-start-11 md:col-span-2 lg:px-8"
         >
-          <a href="https://www.facebook.com/optimalconsultants" target="_blank" rel="noreferrer">
+          <a href="https://www.linkedin.com/company/optimal-consulting-group-pte-ltd" target="_blank" rel="noreferrer">
             <LinkedinOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
           </a>
           <a
@@ -156,7 +156,7 @@ const SurveyPlatformLayout = ({
             <InstagramOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
           </a>
           <a
-            href="https://www.linkedin.com/company/optimal-consulting-group-pte-ltd"
+            href="https://www.facebook.com/optimalconsultants"
             target="_blank"
             rel="noreferrer"
           >
