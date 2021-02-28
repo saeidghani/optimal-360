@@ -150,10 +150,34 @@ const ClientAdminLayout = ({
           Copyright 2020. Optimal 360 Ltd is registered in England and Wales with company number
           06740379
         </p>
-        <div className="flex justify-between items-center col-start-8 col-span-5 md:col-start-11 md:col-span-2 lg:px-8 social">
-          <LinkedinOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
-          <InstagramOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
-          <FacebookOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
+        <div
+          className="flex justify-between space-x-2 items-center col-start-8 col-span-5
+        md:col-start-11 md:col-span-2 lg:px-8"
+        >
+          <a href="https://www.linkedin.com/company/optimal-consulting-group-pte-ltd" target="_blank" rel="noreferrer">
+            <LinkedinOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
+          </a>
+          <a
+            href="https://www.instagram.com/optimalasia/?ref=badge"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <InstagramOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
+          </a>
+          <a
+            href="https://www.facebook.com/optimalconsultants"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <FacebookOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
+          </a>
+          <a
+            href="https://www.optimalconsulting.com.sg/FileStore/product/160_optimal-wechat.jpg"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <WechatOutlined style={{ fontSize: '24px', color: '#8D98BA' }} />
+          </a>
         </div>
       </div>
     </div>
