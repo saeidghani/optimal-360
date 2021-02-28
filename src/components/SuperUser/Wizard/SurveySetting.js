@@ -165,7 +165,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
       render: (value, { id, disabled, index }) => (
         <Input
           disabled={disabled}
-          inputClass="uppercase border border-antgray-300"
+          inputClass="border border-antgray-300"
           name="abbr"
           onChange={(e) => updateTable('abbr', e.target.value, id)}
           value={value}
@@ -180,7 +180,7 @@ const SurveySetting = ({ surveySettings, fetchSurveySettings, setSurveySettings,
       render: (value, { id, disabled, index }) => (
         <Input
           disabled={disabled}
-          inputClass="capitalize border border-antgray-300"
+          inputClass="border border-antgray-300"
           name="name"
           onChange={(e) => updateTable('name', e.target.value, id)}
           value={value}
