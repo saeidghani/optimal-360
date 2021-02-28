@@ -11,6 +11,7 @@ import {
   LinkedinOutlined,
   InstagramOutlined,
   FacebookOutlined,
+  WechatOutlined,
 } from '@ant-design/icons';
 
 import { useDispatch } from 'react-redux';
