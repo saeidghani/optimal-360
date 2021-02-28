@@ -111,7 +111,7 @@ const UpdateStaff = ({ fetchStaffDetails, staffDetails, setStaffDetails, loading
                   value={values.department}
                   name="department"
                   labelText="Department"
-                  placeholder="IT"
+                  placeholder="Department"
                   wrapperClassName="mb-2"
                   errorMessage={touched.department && errors.department}
                 />
