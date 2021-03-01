@@ -13,10 +13,11 @@ import {
   FacebookOutlined,
 } from '@ant-design/icons';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ProfileDropdown from './ProfileDropdown';
 import BreadCrumb from './BreadCrumb';
 import Tooltip from './Tooltip';
+import Button from './Button';
 import optimal360Logo from '../../assets/images/optimal-360-logo.svg';
 import { dynamicMap } from '../../routes/RouteMap';
 import { fetchFullURL } from '../../lib/utils';
@@ -41,6 +42,9 @@ const ClientAdminLayout = ({
   const [parsedQuery, , setQuery] = useQuery();
   const { logo } = parsedQuery || {};
   const dispatch = useDispatch();
+  const generateReportsLoading = useSelector(
+    (state) => state.loading.effects.clientAdmin.generateReports,
+  );
 
   const profileDropdownOptions = [
     {
@@ -95,13 +99,17 @@ const ClientAdminLayout = ({
             <span className="ml-2 text-xs lg:text-base">Guides</span>
           </div>
         </Link>
-        <div className="flex">
+        <div className="flex items-center">
           {!isReferenceGuide && (
             <Fragment>
               <Tooltip title="export">
-                <a onClick={() => handleExport(surveyGroupId)} download>
+                <Button
+                  onClick={() => handleExport(surveyGroupId)}
+                  loading={generateReportsLoading}
+                  type="link"
+                >
                   <img className="mr-5 cursor-pointer" src={exportIcon} alt="" />
-                </a>
+                </Button>
               </Tooltip>
               <Tooltip title="print">
                 <img
